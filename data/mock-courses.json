@@ -4,65 +4,117 @@
     "name": "Advanced Software Engineering",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Elektroteknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX34",
     "name": "Machine Learning Fundamentals",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Teknisk Fysik", "Elektroteknik", "Medicinsk Teknik"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Fysik",
+      "Elektroteknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TQXX35",
     "name": "Database Systems",
     "credits": 6,
     "level": "grundnivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX36",
     "name": "Web Development",
     "credits": 6,
     "level": "grundnivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 1,
     "pace": "100%",
-    "examination": ["PROJ", "LAB"],
+    "examination": [
+      "PROJ",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Medicinsk Teknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Medicinsk Teknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX37",
     "name": "Computer Networks",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
-    "block": [1, 3],
+    "block": [
+      1,
+      3
+    ],
     "pace": "50%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Distans",
-    "programs": ["Datateknik", "Elektroteknik"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TQXX38",
@@ -73,9 +125,16 @@
     "period": 1,
     "block": 1,
     "pace": "100%",
-    "examination": ["LAB", "PROJ"],
+    "examination": [
+      "LAB",
+      "PROJ"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Elektroteknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX39",
@@ -86,9 +145,17 @@
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Teknisk Fysik", "Elektroteknik", "Medicinsk Teknik"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Fysik",
+      "Elektroteknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TQXX40",
@@ -99,9 +166,15 @@
     "period": 1,
     "block": 3,
     "pace": "100%",
-    "examination": ["PROJ", "LAB"],
+    "examination": [
+      "PROJ",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Medicinsk Teknik"]
+    "programs": [
+      "Datateknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TQXX41",
@@ -110,11 +183,21 @@
     "level": "avancerad nivå",
     "term": 8,
     "period": 2,
-    "block": [1, 4],
+    "block": [
+      1,
+      4
+    ],
     "pace": "50%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Distans",
-    "programs": ["Datateknik", "Elektroteknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX42",
@@ -125,191 +208,341 @@
     "period": 2,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Elektroteknik", "Teknisk Fysik"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TQXX43",
     "name": "Cloud Computing",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 1,
     "pace": "100%",
-    "examination": ["PROJ", "LAB"],
+    "examination": [
+      "PROJ",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Elektroteknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX44",
     "name": "Human-Computer Interaction",
     "credits": 6,
     "level": "grundnivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["PROJ", "TEN"],
+    "examination": [
+      "PROJ",
+      "TEN"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Medicinsk Teknik", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Medicinsk Teknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TQXX45",
     "name": "Software Architecture",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
-    "block": [2, 4],
+    "block": [
+      2,
+      4
+    ],
     "pace": "50%",
-    "examination": ["PROJ", "TEN"],
+    "examination": [
+      "PROJ",
+      "TEN"
+    ],
     "campus": "Distans",
-    "programs": ["Datateknik", "Elektroteknik"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TQXX46",
     "name": "Operating Systems",
     "credits": 6,
     "level": "grundnivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Elektroteknik", "Teknisk Fysik"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TQXX47",
     "name": "Big Data Analytics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 2,
     "pace": "100%",
-    "examination": ["PROJ", "LAB"],
+    "examination": [
+      "PROJ",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Teknisk Fysik", "Industriell Ekonomi", "Teknisk Biologi"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Fysik",
+      "Industriell Ekonomi",
+      "Teknisk Biologi"
+    ]
   },
   {
     "id": "TQXX48",
     "name": "Programming Languages",
     "credits": 6,
     "level": "grundnivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Teknisk Fysik", "Elektroteknik"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Fysik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TQXX49",
     "name": "Computer Graphics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
-    "block": [1, 3],
+    "block": [
+      1,
+      3
+    ],
     "pace": "50%",
-    "examination": ["PROJ", "LAB"],
+    "examination": [
+      "PROJ",
+      "LAB"
+    ],
     "campus": "Distans",
-    "programs": ["Datateknik", "Teknisk Fysik", "Medicinsk Teknik"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Fysik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TQXX50",
     "name": "Information Systems",
     "credits": 6,
     "level": "grundnivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Industriell Ekonomi", "Medicinsk Teknik"]
+    "programs": [
+      "Datateknik",
+      "Industriell Ekonomi",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TFYY01",
     "name": "Quantum Physics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "UPG"],
+    "examination": [
+      "TEN",
+      "UPG"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Fysik", "Elektroteknik"]
+    "programs": [
+      "Teknisk Fysik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TFYY02",
     "name": "Statistical Mechanics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Fysik", "Teknisk Biologi"]
+    "programs": [
+      "Teknisk Fysik",
+      "Teknisk Biologi"
+    ]
   },
   {
     "id": "TFYY03",
     "name": "Solid State Physics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Fysik", "Elektroteknik"]
+    "programs": [
+      "Teknisk Fysik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TFYY04",
     "name": "Plasma Physics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
-    "block": [2, 4],
+    "block": [
+      2,
+      4
+    ],
     "pace": "50%",
-    "examination": ["TEN", "UPG"],
+    "examination": [
+      "TEN",
+      "UPG"
+    ],
     "campus": "Distans",
-    "programs": ["Teknisk Fysik"]
+    "programs": [
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TEEE01",
     "name": "Power Electronics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Elektroteknik", "Industriell Ekonomi"]
+    "programs": [
+      "Elektroteknik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TEEE02",
     "name": "Signal Processing",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB", "PROJ"],
+    "examination": [
+      "TEN",
+      "LAB",
+      "PROJ"
+    ],
     "campus": "Norrköping",
-    "programs": ["Elektroteknik", "Medicinsk Teknik"]
+    "programs": [
+      "Elektroteknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TEEE03",
@@ -320,9 +553,16 @@
     "period": 1,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Elektroteknik", "Teknisk Fysik", "Industriell Ekonomi"]
+    "programs": [
+      "Elektroteknik",
+      "Teknisk Fysik",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TEEE04",
@@ -333,22 +573,38 @@
     "period": 1,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Elektroteknik", "Datateknik", "Medicinsk Teknik"]
+    "programs": [
+      "Elektroteknik",
+      "Datateknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TIEE01",
     "name": "Operations Research",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Industriell Ekonomi", "Datateknik"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Datateknik"
+    ]
   },
   {
     "id": "TIEE02",
@@ -359,9 +615,15 @@
     "period": 2,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "PROJ", "UPG"],
+    "examination": [
+      "TEN",
+      "PROJ",
+      "UPG"
+    ],
     "campus": "Norrköping",
-    "programs": ["Industriell Ekonomi"]
+    "programs": [
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TIEE03",
@@ -370,50 +632,88 @@
     "level": "avancerad nivå",
     "term": 8,
     "period": 2,
-    "block": [2, 4],
+    "block": [
+      2,
+      4
+    ],
     "pace": "50%",
-    "examination": ["TEN", "UPG"],
+    "examination": [
+      "TEN",
+      "UPG"
+    ],
     "campus": "Distans",
-    "programs": ["Industriell Ekonomi", "Datateknik"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Datateknik"
+    ]
   },
   {
     "id": "TIEE04",
     "name": "Project Management",
     "credits": 6,
     "level": "grundnivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 4,
     "pace": "100%",
-    "examination": ["PROJ", "UPG"],
+    "examination": [
+      "PROJ",
+      "UPG"
+    ],
     "campus": "Linköping",
-    "programs": ["Industriell Ekonomi", "Elektroteknik", "Datateknik"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Elektroteknik",
+      "Datateknik"
+    ]
   },
   {
     "id": "TMEE01",
     "name": "Biomedical Imaging",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Medicinsk Teknik", "Elektroteknik", "Teknisk Fysik"]
+    "programs": [
+      "Medicinsk Teknik",
+      "Elektroteknik",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TMEE02",
     "name": "Medical Devices",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Norrköping",
-    "programs": ["Medicinsk Teknik", "Elektroteknik"]
+    "programs": [
+      "Medicinsk Teknik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TMEE03",
@@ -424,9 +724,15 @@
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Medicinsk Teknik", "Teknisk Fysik"]
+    "programs": [
+      "Medicinsk Teknik",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TMEE04",
@@ -435,37 +741,65 @@
     "level": "avancerad nivå",
     "term": 8,
     "period": 2,
-    "block": [1, 3],
+    "block": [
+      1,
+      3
+    ],
     "pace": "50%",
-    "examination": ["PROJ", "UPG"],
+    "examination": [
+      "PROJ",
+      "UPG"
+    ],
     "campus": "Distans",
-    "programs": ["Medicinsk Teknik"]
+    "programs": [
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TBEE01",
     "name": "Bioinformatics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Biologi", "Datateknik", "Medicinsk Teknik"]
+    "programs": [
+      "Teknisk Biologi",
+      "Datateknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TBEE02",
     "name": "Systems Biology",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB", "PROJ"],
+    "examination": [
+      "TEN",
+      "LAB",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Biologi", "Teknisk Fysik"]
+    "programs": [
+      "Teknisk Biologi",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TBEE03",
@@ -476,9 +810,15 @@
     "period": 1,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Norrköping",
-    "programs": ["Teknisk Biologi", "Medicinsk Teknik"]
+    "programs": [
+      "Teknisk Biologi",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TBEE04",
@@ -489,61 +829,112 @@
     "period": 2,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "LAB", "PROJ"],
+    "examination": [
+      "TEN",
+      "LAB",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Biologi"]
+    "programs": [
+      "Teknisk Biologi"
+    ]
   },
   {
     "id": "TMAT01",
     "name": "Advanced Mathematics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "UPG"],
+    "examination": [
+      "TEN",
+      "UPG"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Fysik", "Elektroteknik", "Datateknik"]
+    "programs": [
+      "Teknisk Fysik",
+      "Elektroteknik",
+      "Datateknik"
+    ]
   },
   {
     "id": "TMAT02",
     "name": "Numerical Analysis",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Norrköping",
-    "programs": ["Teknisk Fysik", "Datateknik", "Teknisk Biologi"]
+    "programs": [
+      "Teknisk Fysik",
+      "Datateknik",
+      "Teknisk Biologi"
+    ]
   },
   {
     "id": "TMAT03",
     "name": "Optimization Theory",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
-    "block": [1, 4],
+    "block": [
+      1,
+      4
+    ],
     "pace": "50%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Distans",
-    "programs": ["Industriell Ekonomi", "Datateknik", "Teknisk Fysik"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Datateknik",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TGEN01",
     "name": "Innovation and Entrepreneurship",
     "credits": 6,
     "level": "grundnivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 4,
     "pace": "100%",
-    "examination": ["PROJ", "UPG"],
+    "examination": [
+      "PROJ",
+      "UPG"
+    ],
     "campus": "Linköping",
-    "programs": ["Industriell Ekonomi", "Datateknik", "Elektroteknik", "Medicinsk Teknik", "Teknisk Biologi"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Datateknik",
+      "Elektroteknik",
+      "Medicinsk Teknik",
+      "Teknisk Biologi"
+    ]
   },
   {
     "id": "TGEN02",
@@ -554,22 +945,45 @@
     "period": 2,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Norrköping",
-    "programs": ["Industriell Ekonomi", "Elektroteknik", "Teknisk Biologi", "Medicinsk Teknik"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Elektroteknik",
+      "Teknisk Biologi",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TGEN03",
     "name": "Ethics in Technology",
     "credits": 6,
     "level": "grundnivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
-    "block": [2, 4],
+    "block": [
+      2,
+      4
+    ],
     "pace": "50%",
-    "examination": ["UPG", "SEM"],
+    "examination": [
+      "UPG",
+      "SEM"
+    ],
     "campus": "Distans",
-    "programs": ["Datateknik", "Elektroteknik", "Medicinsk Teknik", "Teknisk Biologi", "Industriell Ekonomi"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Medicinsk Teknik",
+      "Teknisk Biologi",
+      "Industriell Ekonomi"
+    ]
   },
   {
     "id": "TFYY05",
@@ -580,9 +994,15 @@
     "period": 1,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Fysik", "Elektroteknik"]
+    "programs": [
+      "Teknisk Fysik",
+      "Elektroteknik"
+    ]
   },
   {
     "id": "TFYY06",
@@ -593,48 +1013,87 @@
     "period": 2,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB", "PROJ"],
+    "examination": [
+      "TEN",
+      "LAB",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Teknisk Fysik", "Teknisk Biologi", "Medicinsk Teknik"]
+    "programs": [
+      "Teknisk Fysik",
+      "Teknisk Biologi",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TFYY07",
     "name": "Computational Physics",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Norrköping",
-    "programs": ["Teknisk Fysik", "Datateknik"]
+    "programs": [
+      "Teknisk Fysik",
+      "Datateknik"
+    ]
   },
   {
     "id": "TEEE05",
     "name": "Embedded Systems",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 1,
     "pace": "100%",
-    "examination": ["LAB", "PROJ"],
+    "examination": [
+      "LAB",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Elektroteknik", "Datateknik", "Medicinsk Teknik"]
+    "programs": [
+      "Elektroteknik",
+      "Datateknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TEEE06",
     "name": "Wireless Communications",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
-    "block": [1, 4],
+    "block": [
+      1,
+      4
+    ],
     "pace": "50%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Distans",
-    "programs": ["Elektroteknik", "Datateknik"]
+    "programs": [
+      "Elektroteknik",
+      "Datateknik"
+    ]
   },
   {
     "id": "TQXX51",
@@ -645,48 +1104,86 @@
     "period": 2,
     "block": 1,
     "pace": "100%",
-    "examination": ["TEN", "LAB"],
+    "examination": [
+      "TEN",
+      "LAB"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Teknisk Fysik"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Fysik"
+    ]
   },
   {
     "id": "TQXX52",
     "name": "Computer Vision",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
     "block": 4,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Linköping",
-    "programs": ["Datateknik", "Elektroteknik", "Medicinsk Teknik"]
+    "programs": [
+      "Datateknik",
+      "Elektroteknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TQXX53",
     "name": "Natural Language Processing",
     "credits": 6,
     "level": "avancerad nivå",
-    "term": 9,
+    "term": [
+      7,
+      9
+    ],
     "period": 2,
     "block": 3,
     "pace": "100%",
-    "examination": ["TEN", "PROJ"],
+    "examination": [
+      "TEN",
+      "PROJ"
+    ],
     "campus": "Norrköping",
-    "programs": ["Datateknik", "Teknisk Biologi"]
+    "programs": [
+      "Datateknik",
+      "Teknisk Biologi"
+    ]
   },
   {
     "id": "TIEE05",
     "name": "Quality Management",
     "credits": 6,
     "level": "grundnivå",
-    "term": 7,
+    "term": [
+      7,
+      9
+    ],
     "period": 1,
-    "block": [1, 3],
+    "block": [
+      1,
+      3
+    ],
     "pace": "50%",
-    "examination": ["TEN", "UPG"],
+    "examination": [
+      "TEN",
+      "UPG"
+    ],
     "campus": "Distans",
-    "programs": ["Industriell Ekonomi", "Elektroteknik", "Medicinsk Teknik"]
+    "programs": [
+      "Industriell Ekonomi",
+      "Elektroteknik",
+      "Medicinsk Teknik"
+    ]
   },
   {
     "id": "TIEE06",
@@ -697,8 +1194,13 @@
     "period": 1,
     "block": 2,
     "pace": "100%",
-    "examination": ["PROJ", "UPG"],
+    "examination": [
+      "PROJ",
+      "UPG"
+    ],
     "campus": "Linköping",
-    "programs": ["Industriell Ekonomi"]
+    "programs": [
+      "Industriell Ekonomi"
+    ]
   }
-] 
+]

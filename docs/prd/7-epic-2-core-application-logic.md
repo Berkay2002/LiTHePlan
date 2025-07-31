@@ -1,12 +1,12 @@
 # **7. Epic 2: Core Application Logic**
 *Goal: To build all the interactive features of the application using the mock data source.*
 
-*   **Story 2.1: Implement Filter UI & Logic**
-    *   **As a** student, **I want** to use a filter panel to narrow down the course list in real-time, **so that** I can find courses that match my needs.
-    *   **AC:**
-        1.  A filter panel is displayed with UI elements for all known filter criteria.
-        2.  Filter options are dynamically generated from the mock data.
-        3.  Applying filters updates the displayed course list instantly.
+*   ~~**Story 2.1: Implement Filter UI & Logic**~~
+    *   ~~**As a** student, **I want** to use a filter panel to narrow down the course list in real-time, **so that** I can find courses that match my needs.~~
+    *   ~~**AC:**~~
+        ~~1.  A filter panel is displayed with UI elements for all known filter criteria.~~
+        ~~2.  Filter options are dynamically generated from the mock data.~~
+        ~~3.  Applying filters updates the displayed course list instantly.~~
 
 *   **Story 2.2: Implement Pinboard and "Pin Course" Functionality**
     *   **As a** student, **I want** to add courses to a "My Profile" pinboard, **so that** I can build my study plan.

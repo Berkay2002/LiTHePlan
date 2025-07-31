@@ -4,7 +4,13 @@
       "mcp__ide__getDiagnostics",
       "Bash(npm run lint)",
       "Bash(npm install:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(rm:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": []
   }

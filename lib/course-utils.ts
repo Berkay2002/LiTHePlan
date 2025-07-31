@@ -1,3 +1,5 @@
+import { Course } from "@/types/course";
+
 /**
  * Utility functions for course-related styling and formatting
  */
@@ -39,4 +41,31 @@ export function formatPace(pace: string): string {
     default:
       return pace;
   }
+} 
+
+/**
+ * Check if a course is available in multiple terms
+ */
+export function isMultiTermCourse(course: Course): boolean {
+  return Array.isArray(course.term) && course.term.length > 1;
+}
+
+/**
+ * Get available terms for a course
+ */
+export function getAvailableTerms(course: Course): (7 | 8 | 9)[] {
+  if (Array.isArray(course.term)) {
+    return course.term;
+  }
+  return [course.term];
+}
+
+/**
+ * Check if a course is available in a specific term
+ */
+export function isCourseAvailableInTerm(course: Course, term: 7 | 8 | 9): boolean {
+  if (Array.isArray(course.term)) {
+    return course.term.includes(term);
+  }
+  return course.term === term;
 } 

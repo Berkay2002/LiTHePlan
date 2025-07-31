@@ -17,8 +17,8 @@ export interface Course {
   /** Course level in Swedish */
   level: 'grundnivå' | 'avancerad nivå';
   
-  /** Academic term (7 = first year, 8 = second year, 9 = third year) */
-  term: 7 | 8 | 9;
+  /** Academic term(s) (7 = first year, 8 = second year, 9 = third year) */
+  term: 7 | 8 | 9 | (7 | 8 | 9)[];
   
   /** Period within the term (1 or 2) */
   period: 1 | 2;
@@ -54,7 +54,8 @@ export function isValidCourse(course: unknown): course is Course {
     typeof courseObj.name === 'string' &&
     typeof courseObj.credits === 'number' &&
     (courseObj.level === 'grundnivå' || courseObj.level === 'avancerad nivå') &&
-    [7, 8, 9].includes(courseObj.term as number) &&
+    (typeof courseObj.term === 'number' && [7, 8, 9].includes(courseObj.term) ||
+     (Array.isArray(courseObj.term) && courseObj.term.every(t => typeof t === 'number' && [7, 8, 9].includes(t)))) &&
     [1, 2].includes(courseObj.period as number) &&
     (typeof courseObj.block === 'number' && [1, 2, 3, 4].includes(courseObj.block) || 
      (Array.isArray(courseObj.block) && courseObj.block.length === 2 && 

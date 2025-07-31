@@ -68,7 +68,7 @@ export function Pagination({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
       {/* Results info */}
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-white font-medium">
         Showing {startItem} to {endItem} of {totalItems} courses
       </div>
 

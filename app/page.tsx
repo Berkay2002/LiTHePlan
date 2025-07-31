@@ -3,17 +3,18 @@
 import { useState, useMemo } from "react";
 import { Course } from "@/types/course";
 import { CourseGrid } from "@/components/course/CourseGrid";
-import { FilterPanel, FilterState } from "@/components/course/FilterPanel";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Filter } from "lucide-react";
+import { FilterState, CollapsibleFilterSidebar } from "@/components/course/FilterPanel";
+import { Navbar } from "@/components/shared/Navbar";
+import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
+import { ProfileSummary } from "@/components/profile/ProfileSummary";
 import coursesData from "@/data/mock-courses.json";
 
 const COURSES_PER_PAGE = 12;
 
-export default function Home() {
+function HomeContent() {
   // Type assertion since we know the JSON structure matches our Course interface
   const courses: Course[] = coursesData as Course[];
+  const { state, removeCourse, clearTerm, clearProfile } = useProfile();
 
   // Initialize filter state
   const [filterState, setFilterState] = useState<FilterState>({
@@ -25,17 +26,33 @@ export default function Home() {
     campus: [],
     examination: [],
     programs: "",
+    search: "",
   });
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Sidebar state
+  // Sidebar state - Start open by default for better filter accessibility
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   // Filter logic function
   const filteredCourses = useMemo(() => {
     return courses.filter(course => {
+      // Search filter - search in name and course code only
+      if (filterState.search.trim()) {
+        const searchTerm = filterState.search.toLowerCase().trim();
+        const matchesName = course.name.toLowerCase().includes(searchTerm);
+        const matchesId = course.id.toLowerCase().includes(searchTerm);
+        
+        if (!matchesName && !matchesId) {
+          return false;
+        }
+      }
+
       // Level filter
       if (filterState.level.length > 0 && !filterState.level.includes(course.level)) {
         return false;
@@ -126,8 +143,14 @@ export default function Home() {
       campus: [],
       examination: [],
       programs: "",
+      search: "",
     });
     setCurrentPage(1); // Reset to first page when filters are reset
+  };
+
+  const handleSearchChange = (searchQuery: string) => {
+    setFilterState(prev => ({ ...prev, search: searchQuery }));
+    setCurrentPage(1); // Reset to first page when search changes
   };
 
   const handlePageChange = (page: number) => {
@@ -138,55 +161,37 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
+      {/* Navbar - Non-sticky */}
+      <Navbar 
+        searchQuery={filterState.search}
+        onSearchChange={handleSearchChange}
+        onMobileMenuToggle={toggleSidebar}
+        isMobileMenuOpen={sidebarOpen}
+      />
 
-          
-          {/* Mobile Filter Button */}
-          <div className="lg:hidden mt-6">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" className="w-full">
-                  <Filter className="mr-2 h-4 w-4" />
-                  Filters {(Object.entries(filterState).some(([key, value]) => key === 'programs' ? value : (value as any[]).length > 0)) && 
-                    `(${Object.entries(filterState).reduce((count, [key, value]) => key === 'programs' ? count + (value ? 1 : 0) : count + (value as any[]).length, 0)})`}
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-full sm:max-w-md overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>Filters</SheetTitle>
-                </SheetHeader>
-                <div className="mt-6 pb-6">
-                  <FilterPanel
-                    courses={courses}
-                    filterState={filterState}
-                    onFilterChange={handleFilterChange}
-                    onResetFilters={handleResetFilters}
-                  />
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Desktop Filter Panel */}
-          <div className="hidden lg:block lg:col-span-1">
-            <div className="sticky top-8 h-[calc(100vh-2rem)] overflow-y-auto will-change-transform" style={{ transform: 'translateZ(0)' }}>
-              <FilterPanel
-                courses={courses}
-                filterState={filterState}
-                onFilterChange={handleFilterChange}
-                onResetFilters={handleResetFilters}
-              />
-            </div>
-          </div>
-          
-          {/* Course Grid */}
-          <div className="lg:col-span-3">
+      {/* Main Content with Sidebar */}
+      <div className="flex">
+        {/* Collapsible Sidebar - Available on both desktop and mobile */}
+        <CollapsibleFilterSidebar
+          courses={courses}
+          filterState={filterState}
+          onFilterChange={handleFilterChange}
+          onResetFilters={handleResetFilters}
+          isOpen={sidebarOpen}
+          onToggle={toggleSidebar}
+        />
+
+        {/* Main Content Area */}
+        <div className="flex-1 transition-all duration-300 ease-in-out">
+          <div className={`container mx-auto px-4 py-8 transition-all duration-300 ease-in-out ${
+            sidebarOpen ? 'lg:pl-8' : 'lg:pl-16'
+          }`}>
+            
+
+            {/* Course Catalog View */}
             <CourseGrid 
               courses={paginatedCourses} 
-              isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' ? value : (value as any[]).length > 0)}
+              isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' || key === 'search' ? value : (value as (string | number)[]).length > 0)}
               activeFilters={filterState}
               currentPage={currentPage}
               totalPages={totalPages}
@@ -198,5 +203,13 @@ export default function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <ProfileProvider>
+      <HomeContent />
+    </ProfileProvider>
   );
 }

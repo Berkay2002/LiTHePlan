@@ -91,14 +91,14 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
+          className="fixed inset-0 bg-black/50 z-[9998] lg:hidden" 
           onClick={onToggle}
         />
       )}
 
       {/* Collapsible Sidebar - Made sticky/fixed */}
       <div className={cn(
-        "fixed top-0 left-0 h-screen bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-40 transition-all duration-300 ease-in-out",
+        "fixed top-0 left-0 h-screen bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-[9999] transition-all duration-300 ease-in-out",
         "flex flex-col ring-1 ring-air-superiority-blue-300/30",
         isOpen ? "w-80 lg:w-96 xl:w-[28rem] 2xl:w-[32rem]" : "w-0 lg:w-12",
         "lg:sticky lg:z-auto lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
@@ -112,7 +112,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               size="default"
               className="h-12 w-12 p-0 hover:bg-muted/80 transition-colors"
             >
-              <ChevronRight className="h-6 w-6 text-muted-foreground hover:text-foreground" />
+              <ChevronRight className="h-6 w-6 text-white hover:text-primary" />
             </Button>
             
             {/* Filter Count Badge - Top */}
@@ -137,7 +137,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 size="sm"
                 className="h-8 w-8 p-0 hover:bg-muted/80 transition-colors bg-background/80 backdrop-blur-sm border-r-0 rounded-l-md rounded-r-none"
               >
-                <ChevronLeft className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                <ChevronLeft className="h-4 w-4 text-white hover:text-primary" />
               </Button>
             </div>
 
@@ -147,14 +147,14 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="flex items-center gap-2">
                   {activeFilterCount > 0 && (
                     <>
-                      <Badge variant="secondary" className="px-2.5 py-1 text-xs font-medium bg-primary/10 text-primary border-primary/20">
+                      <Badge variant="secondary" className="px-2.5 py-1 text-xs font-medium bg-primary/10 text-white border-primary/20">
                         {activeFilterCount} active
                       </Badge>
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={onResetFilters}
-                        className="h-8 px-2 text-xs hover:bg-destructive/10 hover:text-destructive"
+                        className="h-8 px-2 text-xs text-white hover:bg-destructive/10 hover:text-destructive"
                       >
                         <X className="h-3 w-3 mr-1" />
                         Clear
@@ -166,7 +166,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                     variant="ghost"
                     size="sm"
                     onClick={onToggle}
-                    className="h-8 w-8 p-0 hover:bg-muted"
+                    className="h-8 w-8 p-0 text-white hover:bg-muted"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -179,9 +179,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               {/* Programs Filter - Dropdown */}
               <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Program</h3>
+                  <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Program</h3>
                   {filterState.programs && (
-                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                       Selected
                     </Badge>
                   )}
@@ -190,7 +190,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                   value={filterState.programs || undefined} 
                   onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
                 >
-                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-base xl:text-lg 2xl:text-xl">
+                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-base xl:text-lg 2xl:text-xl data-[placeholder]:text-white">
                     <SelectValue placeholder="Select a program..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -209,9 +209,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Level Filter */}
                 <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Level</h3>
+                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Level</h3>
                     {filterState.level.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                         {filterState.level.length}
                       </Badge>
                     )}
@@ -227,7 +227,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                         />
                         <label 
                           htmlFor={`level-${level}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {level === 'grundnivå' ? 'Basic' : 'Advanced'}
                         </label>
@@ -239,9 +239,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Study Pace Filter */}
                 <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Study Pace</h3>
+                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Study Pace</h3>
                     {filterState.pace.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                         {filterState.pace.length}
                       </Badge>
                     )}
@@ -257,7 +257,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                         />
                         <label 
                           htmlFor={`pace-${pace}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {pace}
                         </label>
@@ -272,9 +272,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Term Filter */}
                 <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Term</h3>
+                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Term</h3>
                     {filterState.term.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                         {filterState.term.length}
                       </Badge>
                     )}
@@ -290,7 +290,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                         />
                         <label 
                           htmlFor={`term-${term}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {term === 7 ? '7 & 9' : term}
                         </label>
@@ -302,9 +302,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Period Filter */}
                 <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Period</h3>
+                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Period</h3>
                     {filterState.period.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                         {filterState.period.length}
                       </Badge>
                     )}
@@ -320,7 +320,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                         />
                         <label 
                           htmlFor={`period-${period}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {period}
                         </label>
@@ -333,9 +333,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               {/* Block Filter - Improved 2x2 spacing */}
               <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Block</h3>
+                  <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Block</h3>
                   {filterState.block.length > 0 && (
-                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                       {filterState.block.length}
                     </Badge>
                   )}
@@ -351,7 +351,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                       />
                       <label 
                         htmlFor={`block-${block}`} 
-                        className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                        className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
                       >
                         {block}
                       </label>
@@ -366,9 +366,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Campus Filter */}
                 <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Campus</h3>
+                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Campus</h3>
                     {filterState.campus.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                         {filterState.campus.length}
                       </Badge>
                     )}
@@ -384,7 +384,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                         />
                         <label 
                           htmlFor={`campus-${campus}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {campus}
                         </label>
@@ -396,9 +396,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Examination Filter - Remove SEM and UPG */}
                 <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-foreground uppercase tracking-wide">Examination</h3>
+                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Examination</h3>
                     {filterState.examination.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
                         {filterState.examination.length}
                       </Badge>
                     )}
@@ -414,7 +414,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                         />
                         <label 
                           htmlFor={`exam-${exam}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer group-hover:text-primary transition-colors leading-tight"
+                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-tight"
                         >
                           {exam}
                         </label>
@@ -513,7 +513,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         {/* Programs Filter - Dropdown */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Program</h3>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
             {filterState.programs && (
               <Badge variant="outline" className="h-5 px-2 text-xs">
                 Selected
@@ -524,7 +524,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
             value={filterState.programs || undefined} 
             onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full data-[placeholder]:text-white">
               <SelectValue placeholder="Select a program..." />
             </SelectTrigger>
             <SelectContent>
@@ -543,7 +543,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Level Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Level</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Level</h3>
               {filterState.level.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.level.length}
@@ -573,7 +573,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Study Pace Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Study Pace</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Study Pace</h3>
               {filterState.pace.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.pace.length}
@@ -606,7 +606,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Term Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Term</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Term</h3>
               {filterState.term.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.term.length}
@@ -636,7 +636,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Period Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Period</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Period</h3>
               {filterState.period.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.period.length}
@@ -667,7 +667,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         {/* Block Filter - Standalone */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Block</h3>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Block</h3>
             {filterState.block.length > 0 && (
               <Badge variant="outline" className="h-5 px-2 text-xs">
                 {filterState.block.length}
@@ -699,7 +699,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Campus Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Campus</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Campus</h3>
               {filterState.campus.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.campus.length}
@@ -729,7 +729,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Examination Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">Examination</h3>
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Examination</h3>
               {filterState.examination.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.examination.length}

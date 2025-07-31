@@ -3,7 +3,7 @@ import mockCourses from '@/data/mock-courses.json';
 
 export default function TestCourseImport() {
   // Validate all courses conform to the interface
-  const courses: Course[] = mockCourses.filter(isValidCourse);
+  const courses: Course[] = (mockCourses as unknown[]).filter(isValidCourse);
   
   // Validate that we can access course properties
   const firstCourse = courses[0];

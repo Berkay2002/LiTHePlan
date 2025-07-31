@@ -17,6 +17,9 @@ This is the **Interactive Master's Profile Builder** - a Next.js application for
 ### Testing
 No testing framework is currently configured (skipped for rapid development).
 
+### Type Checking
+- `npm run build` - Includes TypeScript type checking as part of build process
+
 ## Architecture
 
 This is a **Next.js 15** application using the **App Router** with the following key technologies:
@@ -90,3 +93,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 - Component props must be explicitly typed
 - Filter state management uses React hooks (no external state library)
 - Course utility functions in `lib/course-utils.ts` for color coding and display logic
+- Type validation with `isValidCourse()` function in `types/course.ts`
