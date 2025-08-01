@@ -31,9 +31,9 @@ export function ShareButtons({ profileId, onViewShared }: ShareButtonsProps) {
   return (
     <div className="flex gap-2">
       <Button 
-        variant="secondary" 
+        variant="outline" 
         onClick={handleShare}
-        className="flex items-center"
+        className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
       >
         {copied ? (
           <>
@@ -49,9 +49,9 @@ export function ShareButtons({ profileId, onViewShared }: ShareButtonsProps) {
       </Button>
       
       <Button 
-        variant="secondary" 
+        variant="outline" 
         onClick={onViewShared}
-        className="flex items-center"
+        className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
       >
         <Eye className="h-4 w-4 mr-2" />
         View Shared

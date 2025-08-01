@@ -43,9 +43,9 @@ export function CourseList({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       {/* Course list */}
-      <div className="space-y-3">
+      <div className="space-y-3 w-full">
         {courses.map((course) => (
           <CourseListItem key={course.id} course={course} activeFilters={activeFilters} />
         ))}

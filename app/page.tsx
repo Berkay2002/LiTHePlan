@@ -41,8 +41,8 @@ function HomeContent() {
   // Sort state
   const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
-  // Sidebar state - Start open by default for better filter accessibility
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // Sidebar state - Start closed by default for better mobile experience
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -199,9 +199,13 @@ function HomeContent() {
         }`}>
           <div className="container mx-auto px-4 py-8 max-w-7xl">
             {/* View Toggle and Sort Controls */}
-            <div className="flex justify-between items-center mb-6">
-              <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
-              <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            <div className="w-full flex justify-between mb-6 ">
+              <div className="flex-shrink-0">
+                <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
+              </div>
+              <div className="flex-shrink-0">
+                <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+              </div>
             </div>
 
             {/* Course Catalog View */}

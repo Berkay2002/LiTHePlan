@@ -98,12 +98,12 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
 
       {/* Collapsible Sidebar - Fixed position */}
       <div className={cn(
-        "fixed top-16 left-0 h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
+        "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
         "flex flex-col ring-1 ring-air-superiority-blue-300/30",
         isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
         "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
       )}>
-        {/* Collapsed State - Arrow in Middle */}
+        {/* Collapsed State - Arrow in Middle (Desktop Only) */}
         {!isOpen && (
           <div className="hidden lg:flex flex-col items-center justify-center h-full w-12 relative">
             <Button
@@ -129,8 +129,8 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
         {/* Expanded State - Full Sidebar Content */}
         {isOpen && (
           <div className="flex flex-col h-full overflow-hidden relative">
-            {/* Close Arrow Button - Right Edge Center */}
-            <div className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10">
+            {/* Close Arrow Button - Right Edge Center (Desktop Only) */}
+            <div className="hidden lg:block absolute right-0 top-1/2 transform -translate-y-1/2 z-10">
               <Button
                 onClick={onToggle}
                 variant="ghost"
@@ -161,14 +161,14 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                       </Button>
                     </>
                   )}
-                  {/* Close button for mobile */}
+                  {/* Enhanced Close button for mobile */}
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={onToggle}
-                    className="h-8 w-8 p-0 text-white hover:bg-muted"
+                    className="h-10 w-10 p-0 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 rounded-full border border-white/30 hover:border-white/50"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-5 w-5" />
                   </Button>
                 </div>
               </div>

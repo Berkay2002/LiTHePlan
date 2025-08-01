@@ -33,11 +33,11 @@ export function ProfilePinboard({
     );
 
     return (
-      <Card key={term} className="w-full">
+      <Card key={term} className="w-full bg-card border-border shadow-lg">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CardTitle className="text-lg font-semibold">
+              <CardTitle className="text-lg font-semibold text-card-foreground">
                 Term {term}
               </CardTitle>
               <div className="flex items-center gap-2">
@@ -102,7 +102,7 @@ export function ProfilePinboard({
       {/* Profile Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">
+          <h2 className="text-2xl font-bold text-card-foreground">
             {profile.name}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
@@ -125,11 +125,11 @@ export function ProfilePinboard({
 
       {/* Profile Summary */}
       {summary.totalCourses > 0 && (
-        <Card className="bg-muted/30">
+        <Card className="bg-card/50 border-border shadow-lg">
           <CardContent className="pt-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-2xl font-bold text-card-foreground">
                   {summary.totalCourses}
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -137,7 +137,7 @@ export function ProfilePinboard({
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-2xl font-bold text-card-foreground">
                   {summary.totalCredits}
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -145,7 +145,7 @@ export function ProfilePinboard({
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-2xl font-bold text-card-foreground">
                   {summary.advancedCredits}
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -153,7 +153,7 @@ export function ProfilePinboard({
                 </div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-foreground">
+                <div className="text-2xl font-bold text-card-foreground">
                   {Math.round((summary.totalCredits / 90) * 100)}%
                 </div>
                 <div className="text-xs text-muted-foreground">
@@ -190,11 +190,11 @@ export function ProfilePinboard({
 
       {/* Empty State */}
       {summary.totalCourses === 0 && (
-        <Card className="bg-muted/30">
+        <Card className="bg-card/50 border-border shadow-lg">
           <CardContent className="pt-12 pb-12">
             <div className="flex flex-col items-center justify-center text-center">
               <Plus className="h-16 w-16 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">
+              <h3 className="text-lg font-semibold text-card-foreground mb-2">
                 Start Building Your Profile
               </h3>
               <p className="text-sm text-muted-foreground max-w-md">

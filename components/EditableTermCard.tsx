@@ -217,9 +217,9 @@ export function EditableTermCard({
   };
 
   return (
-    <Card className={`h-full ${className}`}>
+    <Card className={`h-full bg-card border-border shadow-lg ${className}`}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center justify-between">
+        <CardTitle className="text-lg font-semibold flex items-center justify-between text-card-foreground">
           {getTermLabel(termNumber)}
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className="text-xs">

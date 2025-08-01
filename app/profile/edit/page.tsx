@@ -20,11 +20,11 @@ function ProfileEditPageContent() {
 
   if (!state.current_profile) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
-              <h2 className="text-xl font-semibold text-foreground mb-2">
+              <h2 className="text-xl font-semibold text-card-foreground mb-2">
                 No Profile Found
               </h2>
               <p className="text-muted-foreground mb-6">
@@ -39,7 +39,7 @@ function ProfileEditPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 space-y-8">
         
         {/* Top Navigation Bar (Header) */}
@@ -77,9 +77,9 @@ function ProfileEditPageContent() {
         </div>
 
         {/* Optional: Profile Info Footer */}
-        <div className="text-center text-sm text-muted-foreground border-t pt-6">
+        <div className="text-center text-sm text-muted-foreground border-t border-border pt-6">
           <p>
-            <strong>{state.current_profile.name}</strong> • 
+            <strong className="text-card-foreground">{state.current_profile.name}</strong> • 
             Created {state.current_profile.created_at.toLocaleDateString()} • 
             Last updated {state.current_profile.updated_at.toLocaleDateString()}
           </p>

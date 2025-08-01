@@ -95,9 +95,9 @@ function ProfilePageContent() {
         <Navbar searchQuery="" onSearchChange={() => {}} />
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
-            <Card className="w-full max-w-md">
+            <Card className="w-full max-w-md bg-card border-border shadow-lg">
               <CardContent className="pt-6 text-center">
-                <h2 className="text-xl font-semibold text-foreground mb-2">
+                <h2 className="text-xl font-semibold text-card-foreground mb-2">
                   Profile Not Found
                 </h2>
                 <p className="text-muted-foreground mb-4">
@@ -132,7 +132,7 @@ function ProfilePageContent() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">
+              <h1 className="text-2xl font-bold text-card-foreground">
                 {profile.name}
               </h1>
               <p className="text-sm text-muted-foreground">

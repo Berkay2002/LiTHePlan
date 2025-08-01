@@ -18,12 +18,11 @@ export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobi
   return (
     <nav className="sticky top-0 z-40 w-full bg-air-superiority-blue-400 border-b-2 border-air-superiority-blue/20">
       <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center gap-3 lg:justify-between">
-          {/* Left Side */}
-          <div className="flex items-center gap-3 lg:flex-1">
-            {/* Mobile Menu Toggle */}
+        <div className="flex items-center justify-between">
+          {/* Left Side - Hamburger Menu */}
+          <div className="flex-shrink-0">
             {onMobileMenuToggle && (
-              <div className="lg:hidden flex-shrink-0">
+              <div className="lg:hidden">
                 <Button
                   onClick={onMobileMenuToggle}
                   variant="ghost"
@@ -43,29 +42,29 @@ export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobi
                 </Button>
               </div>
             )}
-            
-            {/* Search Bar - Centered on desktop, flexible on mobile */}
-            <div className="relative flex-1 lg:flex-none lg:w-full lg:max-w-md lg:mx-auto">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-air-superiority-blue-300" />
-                <Input
-                  type="text"
-                  placeholder="Search courses by name or code..."
-                  value={searchQuery}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
-                  className="pl-10 pr-10 h-10 w-full bg-white text-air-superiority-blue-300 placeholder:text-air-superiority-blue-400 border-2 border-air-superiority-blue/30 focus:border-picton-blue focus:ring-2 focus:ring-picton-blue/20 transition-all duration-200"
-                />
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleClearSearch}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-electric-blue/10 text-air-superiority-blue-300 hover:text-electric-blue"
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                )}
-              </div>
+          </div>
+          
+          {/* Center - Search Bar */}
+          <div className="flex-1 max-w-md mx-4 lg:mx-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-air-superiority-blue-300" />
+              <Input
+                type="text"
+                placeholder="Search courses by name or code..."
+                value={searchQuery}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
+                className="pl-10 pr-10 h-10 w-full bg-white text-air-superiority-blue-300 placeholder:text-air-superiority-blue-400 border-2 border-air-superiority-blue/30 focus:border-picton-blue focus:ring-2 focus:ring-picton-blue/20 transition-all duration-200"
+              />
+              {searchQuery && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearSearch}
+                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-electric-blue/10 text-air-superiority-blue-300 hover:text-electric-blue"
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              )}
             </div>
           </div>
 

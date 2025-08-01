@@ -22,14 +22,17 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
   const minAdvancedCredits = 60; // User specified 60hp minimum
   const advancedPercentage = Math.min((advancedCredits / minAdvancedCredits) * 100, 100);
   
-  // Calculate program distribution
+  // Calculate program distribution (advanced courses only)
   const programCredits: Record<string, number> = {};
   
   [7, 8, 9].forEach(term => {
     profile.terms[term as keyof typeof profile.terms].forEach(course => {
-      course.programs.forEach(program => {
-        programCredits[program] = (programCredits[program] || 0) + course.credits;
-      });
+      // Only count advanced courses for Top Programs
+      if (course.level === 'avancerad nivå') {
+        course.programs.forEach(program => {
+          programCredits[program] = (programCredits[program] || 0) + course.credits;
+        });
+      }
     });
   });
   
@@ -62,7 +65,7 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
     return { ...segment, startAngle, angle };
   });
 
-  const size = 180; // Reasonable size
+  const size = 220;
   const center = size / 2;
   const radius = size * 0.35;
 
@@ -82,7 +85,7 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
   };
 
   return (
-    <Card className={className}>
+    <Card className={`${className} bg-card border-border shadow-lg`}>
       <CardContent className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
@@ -90,7 +93,7 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
           <div className="flex flex-col items-center justify-center space-y-4">
             {/* Progress text above pie chart */}
             <div className="text-center">
-              <div className="text-xl font-bold text-foreground">
+              <div className="text-xl font-bold text-card-foreground">
                 {currentCredits} / {targetCredits} hp
               </div>
               <div className="text-sm text-muted-foreground">
@@ -133,9 +136,9 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
           <div className="space-y-6">
             
             {/* Advanced Credits Section */}
-            <div className="border rounded-lg p-4">
+            <div className="border border-border rounded-lg p-4 bg-card/50">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground">Advanced Credits</h3>
+                <h3 className="text-sm font-medium text-card-foreground">Advanced Credits</h3>
                 <Badge variant={advancedCredits >= minAdvancedCredits ? "default" : "secondary"}>
                   {advancedCredits} / {minAdvancedCredits} hp
                 </Badge>
@@ -156,9 +159,9 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
             </div>
 
             {/* Top Programs Section */}
-            <div className="border rounded-lg p-4">
+            <div className="border border-border rounded-lg p-4 bg-card/50">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-foreground">Top Programs</h3>
+                <h3 className="text-sm font-medium text-card-foreground">Top Programs</h3>
                 <Badge variant="outline" className="text-xs">
                   {Object.keys(programCredits).length} total
                 </Badge>
@@ -173,11 +176,11 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
                           <span className="text-xs font-medium text-muted-foreground w-4">
                             #{index + 1}
                           </span>
-                          <span className="text-sm font-medium truncate">
+                          <span className="text-sm font-medium truncate text-card-foreground">
                             {program}
                           </span>
                         </div>
-                        <span className="text-sm font-medium text-foreground">
+                        <span className="text-sm font-medium text-card-foreground">
                           {credits} / 30 hp
                         </span>
                       </div>

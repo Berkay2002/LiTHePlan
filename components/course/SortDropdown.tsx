@@ -33,7 +33,7 @@ export function SortDropdown({ sortOption, onSortChange }: SortDropdownProps) {
         value={sortOption || ''}
         onValueChange={(value) => onSortChange(value as SortOption)}
       >
-        <SelectTrigger className="w-56 h-8 text-sm bg-white/80 border-air-superiority-blue/30 text-air-superiority-blue hover:border-air-superiority-blue/50">
+        <SelectTrigger className="w-40 h-8 text-sm bg-white/80 border-air-superiority-blue/30 text-air-superiority-blue hover:border-air-superiority-blue/50">
           <SelectValue placeholder="Sort after..." />
         </SelectTrigger>
         <SelectContent className="bg-white border-air-superiority-blue/30">

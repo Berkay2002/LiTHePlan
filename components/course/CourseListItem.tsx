@@ -91,8 +91,123 @@ export function CourseListItem({ course, activeFilters = {
 
   return (
     <Card className="group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-2 border-air-superiority-blue/20 bg-card hover:border-picton-blue/40 hover:shadow-picton-blue/10">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-4">
+      <CardContent className="p-3 lg:p-4">
+                 {/* Mobile Layout */}
+         <div className="lg:hidden">
+           {/* Two-row layout for better alignment */}
+           <div className="space-y-2">
+             {/* Top row: Course name and action elements */}
+             <div className="flex items-start justify-between gap-3">
+               {/* Course name - takes available space */}
+               <div className="flex-1 min-w-0">
+                 <h3 className="text-sm font-semibold text-foreground group-hover:text-picton-blue transition-colors duration-300 leading-tight">
+                   {course.name}
+                 </h3>
+               </div>
+               
+               {/* Right side: Examination badges and action buttons */}
+               <div className="flex items-center gap-2 flex-shrink-0">
+                 {/* Examination badges */}
+                 <div className="flex flex-wrap gap-1">
+                   {(() => {
+                     const visibleExaminations = getVisibleExaminations(course.examination);
+                     return visibleExaminations.slice(0, 2).map((exam, index) => (
+                       <Badge key={index} variant="secondary" className="text-xs px-1.5 py-0.5 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20">
+                         {exam}
+                       </Badge>
+                     ));
+                   })()}
+                   {(() => {
+                     const visibleExaminations = getVisibleExaminations(course.examination);
+                     return visibleExaminations.length > 2 && (
+                       <Badge variant="secondary" className="text-xs px-1.5 py-0.5 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20">
+                         +{visibleExaminations.length - 2}
+                       </Badge>
+                     );
+                   })()}
+                 </div>
+                 
+                 {/* Action Buttons */}
+                 <div className="flex gap-1">
+                   <Button 
+                     size="sm" 
+                     className={`h-7 px-2 text-xs font-medium transition-all duration-300 shadow-sm ${
+                       isPinned 
+                         ? isHovered
+                           ? 'bg-custom-red hover:bg-custom-red-600 text-white'
+                           : 'bg-electric-blue hover:bg-electric-blue-600 text-white'
+                         : 'bg-picton-blue hover:bg-picton-blue-600 text-white'
+                     }`}
+                     onClick={() => {
+                       if (isPinned && isHovered) {
+                         removeCourse(course.id);
+                       } else if (!isPinned) {
+                         handleAddCourse();
+                       }
+                     }}
+                     onMouseEnter={() => setIsHovered(true)}
+                     onMouseLeave={() => setIsHovered(false)}
+                   >
+                     {isPinned ? (
+                       isHovered ? (
+                         <Trash2 className="h-3 w-3" />
+                       ) : (
+                         <Check className="h-3 w-3" />
+                       )
+                     ) : (
+                       <Plus className="h-3 w-3" />
+                     )}
+                   </Button>
+                   
+                   <Button 
+                     variant="outline" 
+                     size="sm" 
+                     className="h-7 px-2 text-xs font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
+                     onClick={() => {
+                       window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
+                     }}
+                   >
+                     <ExternalLink className="h-3 w-3" />
+                   </Button>
+                 </div>
+               </div>
+             </div>
+             
+             {/* Bottom row: Course details */}
+             <div className="flex items-center gap-3 text-xs text-muted-foreground">
+               <div className="text-air-superiority-blue font-mono font-bold">
+                 {course.id}
+               </div>
+               
+               {!shouldHideField('term') && (
+                 <span className="text-picton-blue font-medium">
+                   T{isMultiTerm ? availableTerms.join(',') : course.term}
+                 </span>
+               )}
+               
+               {shouldShowPeriod() && !shouldHideField('period') && (
+                 <span className="text-air-superiority-blue font-medium">
+                   P{course.period}
+                 </span>
+               )}
+               
+               {!shouldHideField('block') && (
+                 <span className="text-electric-blue-300 font-medium">
+                   B{formatBlocks(course.block)}
+                 </span>
+               )}
+               
+               {!shouldHideField('level') && (
+                 <span className="text-battleship-gray font-medium">
+                   {course.level === 'grundnivå' ? 'G' : 'A'}
+                 </span>
+               )}
+             </div>
+           </div>
+         </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex items-start gap-4">
           {/* Left section - Course Info */}
           <div className="flex-1 min-w-0">
             {/* Course Header */}

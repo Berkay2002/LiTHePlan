@@ -29,10 +29,10 @@ export function ProfileSummary({ profile, onToggleView, isProfileView }: Profile
   };
 
   return (
-    <Card className="w-full bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+    <Card className="w-full bg-card border-border shadow-lg">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+          <CardTitle className="text-lg font-semibold flex items-center gap-2 text-card-foreground">
             <BookOpen className="h-5 w-5" />
             Profile Summary
           </CardTitle>

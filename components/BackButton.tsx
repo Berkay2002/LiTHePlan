@@ -16,7 +16,11 @@ export function BackButton({
   text = "Back" 
 }: BackButtonProps) {
   const buttonContent = (
-    <Button variant="outline" onClick={onClick}>
+    <Button 
+      variant="outline" 
+      onClick={onClick}
+      className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+    >
       <ArrowLeft className="h-4 w-4 mr-2" />
       {text}
     </Button>
