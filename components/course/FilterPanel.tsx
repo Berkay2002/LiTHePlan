@@ -36,7 +36,25 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
-    term: [7, 8], // Combine terms 7 & 9 since they can have same courses
+    term: (() => {
+      // Extract all unique terms from courses, handling both single terms and arrays
+      const allTerms = new Set<number>();
+      courses.forEach(course => {
+        const courseTerms = Array.isArray(course.term) ? course.term : [course.term];
+        courseTerms.forEach(term => allTerms.add(term));
+      });
+      const uniqueTerms = Array.from(allTerms).sort();
+      
+      // Combine 7 & 9 into a single option, keep 8 separate
+      const termOptions: number[] = [];
+      if (uniqueTerms.includes(7) || uniqueTerms.includes(9)) {
+        termOptions.push(7); // This represents "7 & 9"
+      }
+      if (uniqueTerms.includes(8)) {
+        termOptions.push(8);
+      }
+      return termOptions;
+    })(),
     period: Array.from(new Set(courses.map(course => course.period))).sort(),
     block: Array.from(new Set(courses.flatMap(course => 
       Array.isArray(course.block) ? course.block : [course.block]
@@ -436,7 +454,25 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
-    term: [7, 8], // Combine terms 7 & 9 since they can have same courses
+    term: (() => {
+      // Extract all unique terms from courses, handling both single terms and arrays
+      const allTerms = new Set<number>();
+      courses.forEach(course => {
+        const courseTerms = Array.isArray(course.term) ? course.term : [course.term];
+        courseTerms.forEach(term => allTerms.add(term));
+      });
+      const uniqueTerms = Array.from(allTerms).sort();
+      
+      // Combine 7 & 9 into a single option, keep 8 separate
+      const termOptions: number[] = [];
+      if (uniqueTerms.includes(7) || uniqueTerms.includes(9)) {
+        termOptions.push(7); // This represents "7 & 9"
+      }
+      if (uniqueTerms.includes(8)) {
+        termOptions.push(8);
+      }
+      return termOptions;
+    })(),
     period: Array.from(new Set(courses.map(course => course.period))).sort(),
     block: Array.from(new Set(courses.flatMap(course => 
       Array.isArray(course.block) ? course.block : [course.block]

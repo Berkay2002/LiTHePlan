@@ -67,13 +67,16 @@ function HomeContent() {
         return false;
       }
 
-      // Term filter - combine terms 7 & 9 since they can have same courses
+      // Term filter - handle both single terms and term arrays
       if (filterState.term.length > 0) {
+        const courseTerms: (7 | 8 | 9)[] = Array.isArray(course.term) ? course.term : [course.term];
         const termMatches = filterState.term.some(selectedTerm => {
           if (selectedTerm === 7) {
-            return course.term === 7 || course.term === 9;
+            // Term 7 checkbox should match courses available in term 7 OR 9 (since they're combined)
+            return courseTerms.includes(7) || courseTerms.includes(9);
           }
-          return course.term === selectedTerm;
+          // Since we know selectedTerm comes from our filter options (7 or 8), it's safe to use
+          return courseTerms.includes(selectedTerm as 7 | 8 | 9);
         });
         if (!termMatches) {
           return false;
