@@ -97,7 +97,7 @@ function HomeContent() {
         return false;
       }
 
-      // Examination filter
+      // Examination filter - show courses that contain any of the selected examination types
       if (filterState.examination.length > 0) {
         const courseExaminations = course.examination;
         const hasMatchingExamination = filterState.examination.some(exam => 
@@ -182,10 +182,10 @@ function HomeContent() {
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 transition-all duration-300 ease-in-out">
-          <div className={`container mx-auto px-4 py-8 transition-all duration-300 ease-in-out ${
-            sidebarOpen ? 'lg:pl-8' : 'lg:pl-16'
-          }`}>
+        <div className={`flex-1 transition-all duration-300 ease-in-out ${
+          sidebarOpen ? 'lg:ml-80 xl:ml-96' : 'lg:ml-12'
+        }`}>
+          <div className="container mx-auto px-4 py-8">
             
 
             {/* Course Catalog View */}

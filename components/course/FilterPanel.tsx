@@ -91,17 +91,17 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-[9998] lg:hidden" 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
           onClick={onToggle}
         />
       )}
 
-      {/* Collapsible Sidebar - Made sticky/fixed */}
+      {/* Collapsible Sidebar - Fixed position */}
       <div className={cn(
-        "fixed top-0 left-0 h-screen bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-[9999] transition-all duration-300 ease-in-out",
+        "fixed top-16 left-0 h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
         "flex flex-col ring-1 ring-air-superiority-blue-300/30",
-        isOpen ? "w-80 lg:w-96 xl:w-[28rem] 2xl:w-[32rem]" : "w-0 lg:w-12",
-        "lg:sticky lg:z-auto lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+        isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
+        "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
       )}>
         {/* Collapsed State - Arrow in Middle */}
         {!isOpen && (
@@ -175,13 +175,13 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
             </div>
 
             {/* Scrollable Filter Content */}
-            <div className="flex-1 overflow-y-auto p-4 lg:p-6 xl:p-8 2xl:p-10 space-y-6 lg:space-y-8 xl:space-y-10 2xl:space-y-12">
+            <div className="flex-1 overflow-y-auto p-4 lg:p-4 xl:p-6 space-y-4 lg:space-y-4 xl:space-y-5">
               {/* Programs Filter - Dropdown */}
-              <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+              <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Program</h3>
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
                   {filterState.programs && (
-                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                       Selected
                     </Badge>
                   )}
@@ -190,7 +190,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                   value={filterState.programs || undefined} 
                   onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
                 >
-                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-base xl:text-lg 2xl:text-xl data-[placeholder]:text-white">
+                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-sm xl:text-sm data-[placeholder]:text-white">
                     <SelectValue placeholder="Select a program..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -205,29 +205,29 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               </div>
 
               {/* Level and Study Pace - Side by Side */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10 2xl:gap-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 xl:gap-6">
                 {/* Level Filter */}
-                <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+                <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Level</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Level</h3>
                     {filterState.level.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                         {filterState.level.length}
                       </Badge>
                     )}
                   </div>
-                  <div className="grid gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
+                  <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.level.map((level) => (
-                      <div key={level} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                      <div key={level} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`level-${level}`}
                           checked={filterState.level.includes(level)}
                           onCheckedChange={() => handleFilterChange('level', level)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4"
                         />
                         <label 
                           htmlFor={`level-${level}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
+                                                      className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {level === 'grundnivå' ? 'Basic' : 'Advanced'}
                         </label>
@@ -237,27 +237,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 </div>
 
                 {/* Study Pace Filter */}
-                <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+                <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Study Pace</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Study Pace</h3>
                     {filterState.pace.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                         {filterState.pace.length}
                       </Badge>
                     )}
                   </div>
-                  <div className="grid gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
+                  <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.pace.map((pace) => (
-                      <div key={pace} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                      <div key={pace} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`pace-${pace}`}
                           checked={filterState.pace.includes(pace)}
                           onCheckedChange={() => handleFilterChange('pace', pace)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4"
                         />
                         <label 
                           htmlFor={`pace-${pace}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {pace}
                         </label>
@@ -268,29 +268,29 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               </div>
 
               {/* Term and Period - Side by Side */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10 2xl:gap-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 xl:gap-6">
                 {/* Term Filter */}
-                <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+                <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Term</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Term</h3>
                     {filterState.term.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                         {filterState.term.length}
                       </Badge>
                     )}
                   </div>
-                  <div className="grid gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
+                  <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.term.map((term) => (
-                      <div key={term} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                      <div key={term} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`term-${term}`}
                           checked={filterState.term.includes(term)}
                           onCheckedChange={() => handleFilterChange('term', term)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4"
                         />
                         <label 
                           htmlFor={`term-${term}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {term === 7 ? '7 & 9' : term}
                         </label>
@@ -300,27 +300,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 </div>
 
                 {/* Period Filter */}
-                <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+                <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Period</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Period</h3>
                     {filterState.period.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                         {filterState.period.length}
                       </Badge>
                     )}
                   </div>
-                  <div className="grid gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
+                  <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.period.map((period) => (
-                      <div key={period} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                      <div key={period} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`period-${period}`}
                           checked={filterState.period.includes(period)}
                           onCheckedChange={() => handleFilterChange('period', period)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4"
                         />
                         <label 
                           htmlFor={`period-${period}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {period}
                         </label>
@@ -331,27 +331,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               </div>
 
               {/* Block Filter - Improved 2x2 spacing */}
-              <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+              <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Block</h3>
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Block</h3>
                   {filterState.block.length > 0 && (
-                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                       {filterState.block.length}
                     </Badge>
                   )}
                 </div>
-                <div className="grid grid-cols-2 gap-4 lg:gap-6 xl:gap-8 2xl:gap-10">
+                <div className="grid grid-cols-2 gap-3 lg:gap-4 xl:gap-5">
                   {filterOptions.block.map((block) => (
-                    <div key={block} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                    <div key={block} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                       <Checkbox
                         id={`block-${block}`}
                         checked={filterState.block.includes(block)}
                         onCheckedChange={() => handleFilterChange('block', block)}
-                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7 flex-shrink-0"
+                        className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
                       />
                       <label 
                         htmlFor={`block-${block}`} 
-                        className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                        className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
                       >
                         {block}
                       </label>
@@ -362,29 +362,29 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
 
 
               {/* Campus and Examination - Side by Side */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 xl:gap-10 2xl:gap-12">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-5 xl:gap-6">
                 {/* Campus Filter */}
-                <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+                <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Campus</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Campus</h3>
                     {filterState.campus.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                         {filterState.campus.length}
                       </Badge>
                     )}
                   </div>
-                  <div className="grid gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
+                  <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.campus.map((campus) => (
-                      <div key={campus} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                      <div key={campus} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`campus-${campus}`}
                           checked={filterState.campus.includes(campus)}
                           onCheckedChange={() => handleFilterChange('campus', campus)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4"
                         />
                         <label 
                           htmlFor={`campus-${campus}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors"
                         >
                           {campus}
                         </label>
@@ -394,27 +394,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 </div>
 
                 {/* Examination Filter - Remove SEM and UPG */}
-                <div className="space-y-3 lg:space-y-4 xl:space-y-5 2xl:space-y-6">
+                <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-base xl:text-xl 2xl:text-2xl font-semibold text-white uppercase tracking-wide">Examination</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Examination</h3>
                     {filterState.examination.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-sm xl:text-lg 2xl:text-xl text-white">
+                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
                         {filterState.examination.length}
                       </Badge>
                     )}
                   </div>
-                  <div className="grid gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
+                  <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.examination.filter(exam => exam !== 'SEM' && exam !== 'UPG').map((exam) => (
-                      <div key={exam} className="flex items-center space-x-3 lg:space-x-4 xl:space-x-5 2xl:space-x-6 group">
+                      <div key={exam} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`exam-${exam}`}
                           checked={filterState.examination.includes(exam)}
                           onCheckedChange={() => handleFilterChange('examination', exam)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-5 lg:w-5 xl:h-6 xl:w-6 2xl:h-7 2xl:w-7"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4"
                         />
                         <label 
                           htmlFor={`exam-${exam}`} 
-                          className="text-sm lg:text-base xl:text-lg 2xl:text-xl font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-tight"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-tight"
                         >
                           {exam}
                         </label>
@@ -513,7 +513,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         {/* Programs Filter - Dropdown */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
+            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Program</h3>
             {filterState.programs && (
               <Badge variant="outline" className="h-5 px-2 text-xs">
                 Selected
@@ -524,9 +524,9 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
             value={filterState.programs || undefined} 
             onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
           >
-            <SelectTrigger className="w-full data-[placeholder]:text-white">
-              <SelectValue placeholder="Select a program..." />
-            </SelectTrigger>
+                      <SelectTrigger className="w-full text-xs data-[placeholder]:text-white">
+            <SelectValue placeholder="Select a program..." />
+          </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Programs</SelectItem>
               {filterOptions.programs.map((program) => (
@@ -543,7 +543,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Level Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Level</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Level</h3>
               {filterState.level.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.level.length}
@@ -561,7 +561,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                   />
                   <label 
                     htmlFor={`level-${level}`} 
-                    className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors"
+                    className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors"
                   >
                     {level === 'grundnivå' ? 'Basic Level' : 'Advanced Level'}
                   </label>
@@ -573,7 +573,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Study Pace Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Study Pace</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Study Pace</h3>
               {filterState.pace.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.pace.length}
@@ -591,7 +591,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                   />
                   <label 
                     htmlFor={`pace-${pace}`} 
-                    className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors"
+                    className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors"
                   >
                     {pace}
                   </label>
@@ -606,7 +606,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Term Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Term</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Term</h3>
               {filterState.term.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.term.length}
@@ -624,7 +624,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                   />
                   <label 
                     htmlFor={`term-${term}`} 
-                    className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors"
+                    className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors"
                   >
                     {term === 7 ? '7 & 9' : term}
                   </label>
@@ -636,7 +636,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Period Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Period</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Period</h3>
               {filterState.period.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.period.length}
@@ -654,7 +654,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                   />
                   <label 
                     htmlFor={`period-${period}`} 
-                    className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors"
+                    className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors"
                   >
                     {period}
                   </label>
@@ -667,7 +667,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         {/* Block Filter - Standalone */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Block</h3>
+            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Block</h3>
             {filterState.block.length > 0 && (
               <Badge variant="outline" className="h-5 px-2 text-xs">
                 {filterState.block.length}
@@ -685,7 +685,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                 />
                 <label 
                   htmlFor={`block-${block}`} 
-                  className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors"
+                  className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors"
                 >
                   {block}
                 </label>
@@ -699,7 +699,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Campus Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Campus</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Campus</h3>
               {filterState.campus.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.campus.length}
@@ -717,7 +717,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                   />
                   <label 
                     htmlFor={`campus-${campus}`} 
-                    className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors"
+                    className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors"
                   >
                     {campus}
                   </label>
@@ -729,7 +729,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           {/* Examination Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">Examination</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Examination</h3>
               {filterState.examination.length > 0 && (
                 <Badge variant="outline" className="h-5 px-2 text-xs">
                   {filterState.examination.length}
@@ -747,7 +747,7 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
                   />
                   <label 
                     htmlFor={`exam-${exam}`} 
-                    className="text-base font-medium cursor-pointer group-hover:text-primary transition-colors leading-tight"
+                    className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-tight"
                   >
                     {exam}
                   </label>

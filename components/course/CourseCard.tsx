@@ -81,13 +81,13 @@ export function CourseCard({ course, activeFilters = {
     setShowTermModal(false);
   };
 
-  // Helper function to filter examination badges - only show non-selected examination types
+  // Helper function to filter examination badges - show only selected examination types when filter is active
   const getVisibleExaminations = (examinations: string[]) => {
     const selectedExaminations = activeFilters.examination || [];
     if (selectedExaminations.length === 0) return examinations;
     
-    // Return examinations that are NOT in the selected filters
-    return examinations.filter(exam => !selectedExaminations.includes(exam));
+    // Return examinations that ARE in the selected filters
+    return examinations.filter(exam => selectedExaminations.includes(exam));
   };
 
   return (
@@ -95,18 +95,18 @@ export function CourseCard({ course, activeFilters = {
       <CardContent className="p-5 flex-1 flex flex-col">
         {/* Main Course Header */}
         <div className="mb-5">
-          <h3 className="text-xl font-semibold text-foreground line-clamp-2 mb-3 leading-tight group-hover:text-picton-blue transition-colors duration-300">
+          <h3 className="text-lg font-semibold text-foreground line-clamp-2 mb-3 leading-tight group-hover:text-picton-blue transition-colors duration-300">
             {course.name}
           </h3>
           <div className="flex items-center justify-between">
-            <div className="text-base text-air-superiority-blue font-mono font-bold">
+            <div className="text-sm text-air-superiority-blue font-mono font-bold">
               {course.id}
             </div>
             <div className="flex flex-wrap gap-1.5">
               {(() => {
                 const visibleExaminations = getVisibleExaminations(course.examination);
                 return visibleExaminations.map((exam, index) => (
-                  <Badge key={index} variant="secondary" className="text-sm px-3 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20 hover:bg-electric-blue/20 transition-all duration-200">
+                  <Badge key={index} variant="secondary" className="text-xs px-3 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20 hover:bg-electric-blue/20 transition-all duration-200">
                     {exam}
                   </Badge>
                 ));
@@ -126,30 +126,30 @@ export function CourseCard({ course, activeFilters = {
         }}>
           {!shouldHideField('term') && (
             <div className="text-center p-3 bg-picton-blue/10 rounded-lg border border-picton-blue/20 hover:border-picton-blue/30 transition-colors duration-200">
-              <div className="text-sm text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Term</div>
-              <div className="text-base font-bold text-picton-blue">
+              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Term</div>
+              <div className="text-sm font-bold text-picton-blue">
                 {isMultiTerm ? availableTerms.join(', ') : course.term}
               </div>
             </div>
           )}
           {shouldShowPeriod() && !shouldHideField('period') && (
             <div className="text-center p-3 bg-air-superiority-blue/10 rounded-lg border border-air-superiority-blue/20 hover:border-air-superiority-blue/30 transition-colors duration-200">
-              <div className="text-sm text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Period</div>
-              <div className="text-base font-bold text-air-superiority-blue">{course.period}</div>
+              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Period</div>
+              <div className="text-sm font-bold text-air-superiority-blue">{course.period}</div>
             </div>
           )}
           {!shouldHideField('block') && (
             <div className="text-center p-3 bg-electric-blue/10 rounded-lg border border-electric-blue/20 hover:border-electric-blue/30 transition-colors duration-200">
-              <div className="text-sm text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
+              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
                 {Array.isArray(course.block) ? 'Blocks' : 'Block'}
               </div>
-              <div className="text-base font-bold text-electric-blue-300">{formatBlocks(course.block)}</div>
+              <div className="text-sm font-bold text-electric-blue-300">{formatBlocks(course.block)}</div>
             </div>
           )}
           {!shouldHideField('level') && (
             <div className="text-center p-3 bg-battleship-gray/10 rounded-lg border border-battleship-gray/20 hover:border-battleship-gray/30 transition-colors duration-200">
-              <div className="text-sm text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Level</div>
-              <div className="text-sm font-bold text-battleship-gray">
+              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Level</div>
+              <div className="text-xs font-bold text-battleship-gray">
                 {course.level === 'grundnivå' ? 'G' : 'A'}
               </div>
             </div>
@@ -165,13 +165,13 @@ export function CourseCard({ course, activeFilters = {
                 {!shouldHideField('campus') && (
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-air-superiority-blue" />
-                    <span className="text-base font-medium text-air-superiority-blue-300">{course.campus}</span>
+                    <span className="text-sm font-medium text-air-superiority-blue-300">{course.campus}</span>
                   </div>
                 )}
                 {!shouldHideField('pace') && (
                   <div className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-battleship-gray" />
-                    <span className="text-base font-medium text-battleship-gray-300">{formatPace(course.pace)}</span>
+                    <span className="text-sm font-medium text-battleship-gray-300">{formatPace(course.pace)}</span>
                   </div>
                 )}
               </div>
@@ -182,7 +182,7 @@ export function CourseCard({ course, activeFilters = {
               <div>
                 <div className="flex flex-wrap gap-1.5">
                   {course.programs.map((program, index) => (
-                    <Badge key={index} variant="outline" className="text-sm px-3 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 hover:bg-picton-blue/20 hover:border-picton-blue/40 transition-all duration-200">
+                    <Badge key={index} variant="outline" className="text-xs px-3 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 hover:bg-picton-blue/20 hover:border-picton-blue/40 transition-all duration-200">
                       {program}
                     </Badge>
                   ))}
@@ -197,7 +197,7 @@ export function CourseCard({ course, activeFilters = {
           <div className="grid grid-cols-2 gap-3">
             <Button 
               size="default" 
-              className={`h-10 text-base font-medium transition-all duration-300 shadow-lg ${
+              className={`h-10 text-sm font-medium transition-all duration-300 shadow-lg ${
                 isPinned 
                   ? isHovered
                     ? 'bg-custom-red hover:bg-custom-red-600 text-white'
@@ -236,7 +236,7 @@ export function CourseCard({ course, activeFilters = {
             <Button 
               variant="outline" 
               size="default" 
-              className="h-10 text-base font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
+              className="h-10 text-sm font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
               onClick={() => {
                 window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
               }}
