@@ -80,7 +80,7 @@ export function Pagination({
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="h-8 px-3"
+          className="h-8 px-3 text-white border-white/30 hover:bg-white/10 hover:text-white disabled:text-white/50 disabled:border-white/20"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
           Previous
@@ -91,7 +91,7 @@ export function Pagination({
           {getPageNumbers().map((page, index) => (
             <div key={index}>
               {page === "..." ? (
-                <Button variant="ghost" size="sm" disabled className="h-8 w-8 p-0">
+                <Button variant="ghost" size="sm" disabled className="h-8 w-8 p-0 text-white/50">
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               ) : (
@@ -99,7 +99,11 @@ export function Pagination({
                   variant={currentPage === page ? "default" : "outline"}
                   size="sm"
                   onClick={() => onPageChange(page as number)}
-                  className="h-8 w-8 p-0"
+                  className={`h-8 w-8 p-0 ${
+                    currentPage === page 
+                      ? 'bg-white text-gray-900 hover:bg-white/90' 
+                      : 'text-white border-white/30 hover:bg-white/10 hover:text-white'
+                  }`}
                 >
                   {page}
                 </Button>
@@ -114,7 +118,7 @@ export function Pagination({
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="h-8 px-3"
+          className="h-8 px-3 text-white border-white/30 hover:bg-white/10 hover:text-white disabled:text-white/50 disabled:border-white/20"
         >
           Next
           <ChevronRight className="h-4 w-4 ml-1" />

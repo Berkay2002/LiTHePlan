@@ -3,6 +3,9 @@
 import { useState, useMemo } from "react";
 import { Course } from "@/types/course";
 import { CourseGrid } from "@/components/course/CourseGrid";
+import { CourseList } from "@/components/course/CourseList";
+import { ViewToggle, ViewMode } from "@/components/course/ViewToggle";
+import { SortDropdown, SortOption, sortCourses } from "@/components/course/SortDropdown";
 import { FilterState, CollapsibleFilterSidebar } from "@/components/course/FilterPanel";
 import { Navbar } from "@/components/shared/Navbar";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
@@ -32,6 +35,12 @@ function HomeContent() {
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
 
+  // View mode state
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+
+  // Sort state
+  const [sortOption, setSortOption] = useState<SortOption | null>(null);
+
   // Sidebar state - Start open by default for better filter accessibility
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -39,9 +48,9 @@ function HomeContent() {
     setSidebarOpen(!sidebarOpen);
   };
 
-  // Filter logic function
-  const filteredCourses = useMemo(() => {
-    return courses.filter(course => {
+  // Filter and sort logic function
+  const filteredAndSortedCourses = useMemo(() => {
+    const filtered = courses.filter(course => {
       // Search filter - search in name and course code only
       if (filterState.search.trim()) {
         const searchTerm = filterState.search.toLowerCase().trim();
@@ -118,15 +127,18 @@ function HomeContent() {
 
       return true;
     });
-  }, [courses, filterState]);
+    
+    // Apply sorting to filtered results
+    return sortCourses(filtered, sortOption);
+  }, [courses, filterState, sortOption]);
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredCourses.length / COURSES_PER_PAGE);
+  const totalPages = Math.ceil(filteredAndSortedCourses.length / COURSES_PER_PAGE);
   const paginatedCourses = useMemo(() => {
     const startIndex = (currentPage - 1) * COURSES_PER_PAGE;
     const endIndex = startIndex + COURSES_PER_PAGE;
-    return filteredCourses.slice(startIndex, endIndex);
-  }, [filteredCourses, currentPage]);
+    return filteredAndSortedCourses.slice(startIndex, endIndex);
+  }, [filteredAndSortedCourses, currentPage]);
 
   const handleFilterChange = (newFilters: FilterState) => {
     setFilterState(newFilters);
@@ -182,23 +194,40 @@ function HomeContent() {
         />
 
         {/* Main Content Area */}
-        <div className={`flex-1 transition-all duration-300 ease-in-out ${
+        <div className={`w-full transition-all duration-300 ease-in-out ${
           sidebarOpen ? 'lg:ml-80 xl:ml-96' : 'lg:ml-12'
         }`}>
-          <div className="container mx-auto px-4 py-8">
-            
+          <div className="container mx-auto px-4 py-8 max-w-7xl">
+            {/* View Toggle and Sort Controls */}
+            <div className="flex justify-between items-center mb-6">
+              <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
+              <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            </div>
 
             {/* Course Catalog View */}
-            <CourseGrid 
-              courses={paginatedCourses} 
-              isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' || key === 'search' ? value : (value as (string | number)[]).length > 0)}
-              activeFilters={filterState}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              totalCourses={filteredCourses.length}
-              itemsPerPage={COURSES_PER_PAGE}
-              onPageChange={handlePageChange}
-            />
+            {viewMode === 'grid' ? (
+              <CourseGrid 
+                courses={paginatedCourses} 
+                isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' || key === 'search' ? value : (value as (string | number)[]).length > 0)}
+                activeFilters={filterState}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalCourses={filteredAndSortedCourses.length}
+                itemsPerPage={COURSES_PER_PAGE}
+                onPageChange={handlePageChange}
+              />
+            ) : (
+              <CourseList 
+                courses={paginatedCourses} 
+                isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' || key === 'search' ? value : (value as (string | number)[]).length > 0)}
+                activeFilters={filterState}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalCourses={filteredAndSortedCourses.length}
+                itemsPerPage={COURSES_PER_PAGE}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -118,7 +118,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
             {/* Filter Count Badge - Top */}
             {activeFilterCount > 0 && (
               <div className="absolute top-4">
-                <Badge variant="secondary" className="h-5 w-5 p-0 text-xs flex items-center justify-center bg-primary text-primary-foreground">
+                <Badge variant="secondary" className="h-4 w-4 p-0 text-xs flex items-center justify-center bg-primary text-primary-foreground">
                   {activeFilterCount}
                 </Badge>
               </div>
