@@ -10,7 +10,7 @@ import { ProfileSummary } from '@/components/profile/ProfileSummary';
 import { Navbar } from '@/components/shared/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Share2, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Share2, Check } from 'lucide-react';
 import Link from 'next/link';
 import { ProfileProvider } from '@/components/profile/ProfileContext';
 
@@ -166,7 +166,7 @@ function ProfilePageContent() {
           />
         </div>
 
-        {/* Profile Pinboard */}
+        {/* Profile Pinboard (Read-only) */}
         <ProfilePinboard
           profile={profile}
           onRemoveCourse={() => {}} // Read-only for shared profiles

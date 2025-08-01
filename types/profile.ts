@@ -156,9 +156,9 @@ export function validateProfile(profile: StudentProfile): ProfileValidationResul
     });
   });
   
-  // Check advanced credits requirement (30hp minimum)
-  if (advancedCredits < 30) {
-    warnings.push(`Advanced credits (${advancedCredits}hp) is below the recommended 30hp minimum`);
+  // Check advanced credits requirement (60hp minimum)  
+  if (advancedCredits < 60) {
+    warnings.push(`Advanced credits (${advancedCredits}hp) is below the recommended 60hp minimum`);
   }
   
   // Check total credits (90hp target)

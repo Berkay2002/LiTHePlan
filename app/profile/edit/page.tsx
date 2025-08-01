@@ -2,56 +2,36 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
-import { StudentProfile } from '@/types/profile';
-import { ProfilePinboard } from '@/components/profile/ProfilePinboard';
-import { ProfileSummary } from '@/components/profile/ProfileSummary';
-import { Navbar } from '@/components/shared/Navbar';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Save, Share2, Check } from 'lucide-react';
-import Link from 'next/link';
+import React from 'react';
+import { BackButton } from '@/components/BackButton';
+import { ShareButtons } from '@/components/ShareButtons';
+import { ProfileStatsCard } from '@/components/ProfileStatsCard';
+import { EditableTermCard } from '@/components/EditableTermCard';
 import { useProfile, ProfileProvider } from '@/components/profile/ProfileContext';
 
 function ProfileEditPageContent() {
-  const { state, removeCourse, clearTerm, clearProfile } = useProfile();
-  const [copied, setCopied] = useState(false);
+  const { state, removeCourse, clearTerm } = useProfile();
 
-  const handleShare = async () => {
-    if (!state.current_profile) return;
-    
-    try {
-      const url = `${window.location.origin}/profile/${state.current_profile.id}`;
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy URL:', err);
+  const handleViewShared = () => {
+    if (state.current_profile) {
+      window.open(`/profile/${state.current_profile.id}`, '_blank');
     }
   };
 
   if (!state.current_profile) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar searchQuery="" onSearchChange={() => {}} />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center min-h-[400px]">
-            <Card className="w-full max-w-md">
-              <CardContent className="pt-6 text-center">
-                <h2 className="text-xl font-semibold text-foreground mb-2">
-                  No Profile Found
-                </h2>
-                <p className="text-muted-foreground mb-4">
-                  You need to add courses to your profile first.
-                </p>
-                <Link href="/">
-                  <Button>
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Course Catalog
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-foreground mb-2">
+                No Profile Found
+              </h2>
+              <p className="text-muted-foreground mb-6">
+                You need to add courses to your profile first.
+              </p>
+              <BackButton href="/" text="Back to Course Catalog" />
+            </div>
           </div>
         </div>
       </div>
@@ -59,67 +39,51 @@ function ProfileEditPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar searchQuery="" onSearchChange={() => {}} />
-      
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Catalog
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                Edit Profile
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Manage your course selections and share your profile
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Button onClick={handleShare} variant="outline" size="sm">
-              {copied ? (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Share2 className="h-4 w-4 mr-2" />
-                  Share Profile
-                </>
-              )}
-            </Button>
-            <Link href={`/profile/${state.current_profile.id}`}>
-              <Button variant="outline" size="sm">
-                View Shared Profile
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        {/* Profile Summary */}
-        <div className="mb-6">
-          <ProfileSummary 
-            profile={state.current_profile}
-            onToggleView={() => {}} // No toggle needed on edit page
-            isProfileView={true}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        
+        {/* Top Navigation Bar (Header) */}
+        <div className="flex justify-between items-center">
+          <BackButton href="/" text="Back" />
+          <ShareButtons 
+            profileId={state.current_profile.id} 
+            onViewShared={handleViewShared} 
           />
         </div>
 
-        {/* Editable Profile Pinboard */}
-        <ProfilePinboard
-          profile={state.current_profile}
-          onRemoveCourse={removeCourse}
-          onClearTerm={clearTerm}
-          onClearProfile={clearProfile}
-        />
+        {/* Middle Section: Profile Statistics Card */}
+        <ProfileStatsCard profile={state.current_profile} />
+
+        {/* Bottom Section: Term Cards (Editable) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <EditableTermCard 
+            termNumber={7} 
+            courses={state.current_profile.terms[7]}
+            onRemoveCourse={removeCourse}
+            onClearTerm={clearTerm}
+          />
+          <EditableTermCard 
+            termNumber={8} 
+            courses={state.current_profile.terms[8]}
+            onRemoveCourse={removeCourse}
+            onClearTerm={clearTerm}
+          />
+          <EditableTermCard 
+            termNumber={9} 
+            courses={state.current_profile.terms[9]}
+            onRemoveCourse={removeCourse}
+            onClearTerm={clearTerm}
+          />
+        </div>
+
+        {/* Optional: Profile Info Footer */}
+        <div className="text-center text-sm text-muted-foreground border-t pt-6">
+          <p>
+            <strong>{state.current_profile.name}</strong> • 
+            Created {state.current_profile.created_at.toLocaleDateString()} • 
+            Last updated {state.current_profile.updated_at.toLocaleDateString()}
+          </p>
+        </div>
       </div>
     </div>
   );
