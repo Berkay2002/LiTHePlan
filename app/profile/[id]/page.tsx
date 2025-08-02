@@ -5,9 +5,9 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { StudentProfile } from '@/types/profile';
-import { ProfilePinboard } from '@/components/profile/ProfilePinboard';
-import { ProfileSummary } from '@/components/profile/ProfileSummary';
-import { Navbar } from '@/components/shared/Navbar';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { ProfileStatsCard } from '@/components/ProfileStatsCard';
+import { TermCard } from '@/components/TermCard';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Share2, Check } from 'lucide-react';
@@ -75,105 +75,115 @@ function ProfilePageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar searchQuery="" onSearchChange={() => {}} />
-        <div className="container mx-auto px-4 py-8 pt-20">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading profile...</p>
+      <PageLayout navbarMode="profile-edit">
+        <div className="min-h-screen bg-background">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading profile...</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   if (error || !profile) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar searchQuery="" onSearchChange={() => {}} />
-        <div className="container mx-auto px-4 py-8 pt-20">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <Card className="w-full max-w-md bg-card border-border shadow-lg">
-              <CardContent className="pt-6 text-center">
-                <h2 className="text-xl font-semibold text-card-foreground mb-2">
-                  Profile Not Found
-                </h2>
-                <p className="text-muted-foreground mb-4">
-                  The profile you&apos;re looking for doesn&apos;t exist or has been removed.
-                </p>
-                <Link href="/">
-                  <Button>
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Course Catalog
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+      <PageLayout navbarMode="profile-edit">
+        <div className="min-h-screen bg-background">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <Card className="w-full max-w-md bg-card border-border shadow-lg">
+                <CardContent className="pt-6 text-center">
+                  <h2 className="text-xl font-semibold text-card-foreground mb-2">
+                    Profile Not Found
+                  </h2>
+                  <p className="text-muted-foreground mb-4">
+                    The profile you&apos;re looking for doesn&apos;t exist or has been removed.
+                  </p>
+                  <Link href="/">
+                    <Button>
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back to Course Catalog
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar searchQuery="" onSearchChange={() => {}} />
-      
-      <div className="container mx-auto px-4 py-8 pt-20">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <Button variant="outline" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Catalog
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-card-foreground">
-                {profile.name}
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Created {profile.created_at.toLocaleDateString()} • 
-                Last updated {profile.updated_at.toLocaleDateString()}
-              </p>
-            </div>
-          </div>
+    <PageLayout 
+      navbarMode="profile-edit"
+      profileId={profile.id}
+    >
+      <div className="min-h-screen bg-background pt-20">
+        <div className="container mx-auto px-4 py-8 space-y-8">
           
-          <Button onClick={handleShare} variant="outline" size="sm">
-            {copied ? (
-              <>
-                <Check className="h-4 w-4 mr-2" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Share2 className="h-4 w-4 mr-2" />
-                Share Profile
-              </>
-            )}
-          </Button>
-        </div>
+          {/* Header with Share Button */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/">
+                <Button variant="outline" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Catalog
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-2xl font-bold text-card-foreground">
+                  {profile.name}
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Created {profile.created_at.toLocaleDateString()} • 
+                  Last updated {profile.updated_at.toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+            
+            <Button onClick={handleShare} variant="outline" size="sm">
+              {copied ? (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  Copied!
+                </>
+              ) : (
+                <>
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share Profile
+                </>
+              )}
+            </Button>
+          </div>
 
-        {/* Profile Summary */}
-        <div className="mb-6">
-          <ProfileSummary 
-            profile={profile}
-          />
-        </div>
+          {/* Profile Statistics Card */}
+          <ProfileStatsCard profile={profile} />
 
-        {/* Profile Pinboard (Read-only) */}
-        <ProfilePinboard
-          profile={profile}
-          onRemoveCourse={() => {}} // Read-only for shared profiles
-          onClearTerm={() => {}} // Read-only for shared profiles
-          onClearProfile={() => {}} // Read-only for shared profiles
-          readOnly={true}
-        />
+          {/* Term Cards (Read-only) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <TermCard 
+              termNumber={7} 
+              courses={profile.terms[7]}
+            />
+            <TermCard 
+              termNumber={8} 
+              courses={profile.terms[8]}
+            />
+            <TermCard 
+              termNumber={9} 
+              courses={profile.terms[9]}
+            />
+          </div>
+
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
 
