@@ -192,6 +192,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -216,6 +217,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -239,6 +241,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -263,6 +266,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -287,6 +291,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -309,6 +314,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -331,6 +337,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -353,6 +360,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -377,6 +385,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -399,6 +408,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -417,28 +427,6 @@
     "notes": ""
   },
   {
-    "id": "TDP030",
-    "name": "Language Technology",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Programming"
-    ],
-    "notes": ""
-  },
-  {
     "id": "TDTS04",
     "name": "Computer Networks and Distributed Systems",
     "credits": 8,
@@ -451,29 +439,6 @@
     ],
     "block": [
       "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Computer Science and Engineering",
-      "Programming"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TDDD12",
-    "name": "Database Technology",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "4"
     ],
     "pace": "100%",
     "examination": [],
@@ -607,7 +572,7 @@
     "notes": ""
   },
   {
-    "id": "TMKO06",
+    "id": "TMK006",
     "name": "Biopolymers and Biocomposites",
     "credits": 6,
     "level": "avancerad nivå",
@@ -682,6 +647,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -707,6 +673,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -730,6 +697,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -753,6 +721,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -775,6 +744,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -797,6 +767,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -822,6 +793,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -845,6 +817,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -868,6 +841,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -979,7 +953,7 @@
     "notes": ""
   },
   {
-    "id": "TFYBO3",
+    "id": "TFYB03",
     "name": "Advanced Quantum Mechanics",
     "credits": 6,
     "level": "avancerad nivå",
@@ -1049,7 +1023,7 @@
     "notes": ""
   },
   {
-    "id": "TNEO41",
+    "id": "TNE041",
     "name": "Modern Physics",
     "credits": 6,
     "level": "grundnivå",
@@ -1123,6 +1097,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1148,6 +1123,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1171,6 +1147,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1196,6 +1173,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1223,6 +1201,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1246,6 +1225,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1270,6 +1250,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1293,6 +1274,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1316,6 +1298,7 @@
     "credits": 12,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1341,6 +1324,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1364,6 +1348,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1387,6 +1372,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1411,6 +1397,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1434,6 +1421,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1451,11 +1439,12 @@
     "notes": ""
   },
   {
-    "id": "TFYBO1",
+    "id": "TFYB01",
     "name": "Advanced Electromagnetics",
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1473,11 +1462,12 @@
     "notes": ""
   },
   {
-    "id": "TFYBO2",
+    "id": "TFYB02",
     "name": "Elementary Particles and Quantum Fields",
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1495,11 +1485,12 @@
     "notes": ""
   },
   {
-    "id": "TFYMO1",
+    "id": "TFYM01",
     "name": "Solid State Physics I",
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -1690,6 +1681,7 @@
     "credits": 7.5,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -2023,7 +2015,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -2127,12 +2120,13 @@
     "notes": ""
   },
   {
-    "id": "TNGO22",
+    "id": "TNG022",
     "name": "Modelling and Simulation",
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -2205,7 +2199,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -2318,7 +2313,7 @@
     "notes": ""
   },
   {
-    "id": "TMKO01",
+    "id": "TMK001",
     "name": "Advanced Materials and the Environment",
     "credits": 6,
     "level": "avancerad nivå",
@@ -2341,7 +2336,7 @@
     "notes": ""
   },
   {
-    "id": "TMKO04",
+    "id": "TMK004",
     "name": "Composite Materials",
     "credits": 6,
     "level": "avancerad nivå",
@@ -2520,7 +2515,7 @@
     "notes": ""
   },
   {
-    "id": "TMKO03",
+    "id": "TMK003",
     "name": "Metals for Lightweight Applications",
     "credits": 6,
     "level": "avancerad nivå",
@@ -2705,7 +2700,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2728,7 +2724,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2751,7 +2748,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2773,7 +2771,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -2797,7 +2796,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2814,56 +2814,13 @@
     "notes": ""
   },
   {
-    "id": "TMKO02",
+    "id": "TMK002",
     "name": "Engineering Materials and Manufacturing Technology",
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Mechanical Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TKT78",
-    "name": "Product Development",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "1"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Mechanical Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TKT79",
-    "name": "Collaborative Multidisciplinary Design Optimization",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2885,7 +2842,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2907,7 +2865,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2929,7 +2888,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2951,7 +2911,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2973,7 +2934,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -2995,7 +2957,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3018,7 +2981,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3042,7 +3006,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3066,7 +3031,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3089,7 +3055,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3111,7 +3078,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3133,7 +3101,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3156,7 +3125,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3178,7 +3148,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3201,7 +3172,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3223,7 +3195,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3246,7 +3219,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3263,12 +3237,13 @@
     "notes": ""
   },
   {
-    "id": "TMKO05",
+    "id": "TMK005",
     "name": "Additive Manufacturing for Industrial Applications",
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3290,7 +3265,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3314,7 +3290,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3336,7 +3313,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3358,7 +3336,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3380,7 +3359,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3403,7 +3383,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -3779,7 +3760,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3829,7 +3811,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3852,7 +3835,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -3877,7 +3861,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -3930,7 +3915,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -3955,7 +3941,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -3978,7 +3965,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -4003,7 +3991,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -4026,7 +4015,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -4049,7 +4039,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -4072,7 +4063,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -4123,7 +4115,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -4147,7 +4140,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -4197,35 +4191,14 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
     ],
     "block": [
       "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Norrköping",
-    "programs": [
-      "Logistics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TNKO98",
-    "name": "Planning of Public Transportation and Railway Traffic",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "4"
     ],
     "pace": "100%",
     "examination": [],
@@ -4826,28 +4799,6 @@
     "notes": ""
   },
   {
-    "id": "TNMO67",
-    "name": "Scientific Visualization",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Norrköping",
-    "programs": [
-      "Information Technology"
-    ],
-    "notes": ""
-  },
-  {
     "id": "TSBB11",
     "name": "Images and Graphics, Project Course, CDIO",
     "credits": 12,
@@ -5051,8 +5002,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7",
-      "9"
+      "8"
     ],
     "period": [
       "2"
@@ -5314,7 +5264,7 @@
     "notes": ""
   },
   {
-    "id": "TEIO13",
+    "id": "TEI013",
     "name": "Leadership and Industrial Transformation",
     "credits": 6,
     "level": "avancerad nivå",
@@ -5477,7 +5427,7 @@
     "notes": "The course may not be included in a degree together with: TEIE44"
   },
   {
-    "id": "TEIO06",
+    "id": "TEI006",
     "name": "Innovative Entrepreneurship",
     "credits": 6,
     "level": "avancerad nivå",
@@ -5502,7 +5452,7 @@
     "notes": ""
   },
   {
-    "id": "TEIO41",
+    "id": "TEI041",
     "name": "Corporate Social Responsibility",
     "credits": 6,
     "level": "avancerad nivå",
@@ -5568,11 +5518,12 @@
     "notes": ""
   },
   {
-    "id": "TEIO07",
+    "id": "TEI007",
     "name": "Project Based Organization and Management",
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5590,7 +5541,7 @@
     "notes": ""
   },
   {
-    "id": "TEIO32",
+    "id": "TEI032",
     "name": "Project Management and Organization",
     "credits": 6,
     "level": "grundnivå",
@@ -5618,7 +5569,7 @@
     "notes": ""
   },
   {
-    "id": "TEIO90",
+    "id": "TEI090",
     "name": "Innovation Management",
     "credits": 6,
     "level": "avancerad nivå",
@@ -5649,6 +5600,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5671,6 +5623,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5693,6 +5646,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5715,6 +5669,7 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5737,6 +5692,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5759,6 +5715,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5782,6 +5739,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5804,6 +5762,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -5873,7 +5832,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -5895,7 +5855,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -5917,7 +5878,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -5941,7 +5903,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -5963,7 +5926,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6075,7 +6039,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -6098,7 +6063,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -6120,7 +6086,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -6143,7 +6110,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -6165,7 +6133,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -6189,7 +6158,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -6213,7 +6183,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -6237,7 +6208,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -6259,7 +6231,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6281,7 +6254,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6303,7 +6277,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6326,7 +6301,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6348,7 +6324,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6370,7 +6347,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -6460,7 +6438,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -6471,28 +6450,6 @@
       "1"
     ],
     "pace": "50%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Energy and Environmental Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TKMK16",
-    "name": "Sustainable Material Selection",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "4"
-    ],
-    "pace": "100%",
     "examination": [],
     "campus": "Linköping",
     "programs": [
@@ -6688,28 +6645,6 @@
     "campus": "Linköping",
     "programs": [
       "Computer Science and Engineering",
-      "Electrical Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TSEI68",
-    "name": "Analog Filters",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
       "Electrical Engineering"
     ],
     "notes": ""
@@ -6928,50 +6863,6 @@
     "notes": ""
   },
   {
-    "id": "TSEI07",
-    "name": "Digital Filters",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Electrical Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TSFS10",
-    "name": "Battery Systems",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Electrical Engineering"
-    ],
-    "notes": ""
-  },
-  {
     "id": "TSIT11",
     "name": "Quantum Algorithms and Quantum Information",
     "credits": 6,
@@ -7130,7 +7021,8 @@
     "credits": 12,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -7155,7 +7047,8 @@
     "credits": 12,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -7179,7 +7072,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -7203,7 +7097,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -7284,7 +7179,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -7335,7 +7231,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7357,7 +7254,8 @@
     "credits": 2,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7380,7 +7278,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7402,7 +7301,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7477,7 +7377,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7499,7 +7400,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7574,7 +7476,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7597,7 +7500,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7672,7 +7576,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -7804,7 +7709,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -7827,7 +7733,8 @@
     "credits": 4,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -7849,7 +7756,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -7871,7 +7779,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -7893,7 +7802,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -7906,28 +7816,6 @@
     "campus": "Norrköping",
     "programs": [
       "Applied Physics",
-      "Electrical Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TNG022",
-    "name": "Modelling and Simulation",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Norrköping",
-    "programs": [
       "Electrical Engineering"
     ],
     "notes": ""
@@ -8045,7 +7933,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -8067,7 +7956,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -8289,6 +8179,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -8311,6 +8202,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -8333,6 +8225,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -8357,6 +8250,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -8379,6 +8273,7 @@
     "credits": 12,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -8403,6 +8298,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -8605,7 +8501,7 @@
     "notes": ""
   },
   {
-    "id": "TDDIO8",
+    "id": "TDDI08",
     "name": "Embedded Systems Design",
     "credits": 4,
     "level": "grundnivå",
@@ -8736,7 +8632,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -8788,7 +8685,8 @@
     "credits": 4,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -8811,7 +8709,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -8908,56 +8807,13 @@
     "notes": ""
   },
   {
-    "id": "TDDIO3",
-    "name": "Advanced Computer Architecture",
-    "credits": 4,
-    "level": "grundnivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "4"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Computer Science and Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TDTS10",
-    "name": "Computer Architecture",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Computer Science and Engineering"
-    ],
-    "notes": ""
-  },
-  {
     "id": "TNG033",
     "name": "Programming in C++",
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -8979,7 +8835,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -8996,56 +8853,13 @@
     "notes": ""
   },
   {
-    "id": "TDDO04",
-    "name": "Software Testing",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Computer Science"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TDDO08",
-    "name": "Logic Programming",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "4"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Computer Science"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TDDO07",
+    "id": "TDD007",
     "name": "Real Time Systems",
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -9125,7 +8939,8 @@
     "examination": [],
     "campus": "Linköping",
     "programs": [
-      "Chemistry"
+      "Biotechnology",
+      "Chemical Biology"
     ],
     "notes": ""
   },
@@ -9135,6 +8950,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -9157,6 +8973,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -9181,6 +8998,7 @@
     "credits": 3,
     "level": "grundnivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -9205,6 +9023,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -9227,6 +9046,7 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
+      "7",
       "9"
     ],
     "period": [
@@ -9241,30 +9061,6 @@
     "programs": [
       "Chemical Biology",
       "Chemistry"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "NKED27",
-    "name": "Protein Chemistry",
-    "credits": 15,
-    "level": "avancerad nivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "1",
-      "2",
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Chemical Biology"
     ],
     "notes": ""
   },
@@ -9315,30 +9111,6 @@
     "notes": ""
   },
   {
-    "id": "TFKE71",
-    "name": "Protein Chemistry",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "1",
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Biotechnology",
-      "Chemical Biology"
-    ],
-    "notes": ""
-  },
-  {
     "id": "TFKE73",
     "name": "Therapeutic Proteins",
     "credits": 6,
@@ -9366,7 +9138,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9391,7 +9164,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9413,7 +9187,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -9437,7 +9212,8 @@
     "credits": 3,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9462,7 +9238,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -9488,7 +9265,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -9511,7 +9289,8 @@
     "credits": 7.5,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -9537,7 +9316,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -9710,7 +9490,8 @@
     "credits": 12,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1",
@@ -9734,7 +9515,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9856,7 +9638,8 @@
     "credits": 12,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9880,7 +9663,8 @@
     "credits": 7.5,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9905,7 +9689,8 @@
     "credits": 7.5,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9930,7 +9715,8 @@
     "credits": 7.5,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9955,7 +9741,8 @@
     "credits": 7.5,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "1"
@@ -9980,30 +9767,8 @@
     "credits": 6,
     "level": "avancerad nivå",
     "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "3",
-      "4"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Biology"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "NBID75",
-    "name": "Modelling of Biological Systems",
-    "credits": 9,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -10026,7 +9791,8 @@
     "credits": 7.5,
     "level": "avancerad nivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -10051,7 +9817,8 @@
     "credits": 6,
     "level": "grundnivå",
     "term": [
-      "7"
+      "7",
+      "9"
     ],
     "period": [
       "2"
@@ -10064,184 +9831,6 @@
     "campus": "Linköping",
     "programs": [
       "Biology"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TFYB03",
-    "name": "Advanced Quantum Mechanics",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "1"
-    ],
-    "block": [
-      "4"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Applied Physics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TFYB01",
-    "name": "Advanced Electromagnetics",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Applied Physics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TFYB02",
-    "name": "Elementary Particles and Quantum Fields",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "1"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Applied Physics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TFYM01",
-    "name": "Solid State Physics I",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Applied Physics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TNAO10",
-    "name": "Matrix Methods for AI",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Norrköping",
-    "programs": [
-      "Applied Mathematics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TNKE05",
-    "name": "Applied Optimization II",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Norrköping",
-    "programs": [
-      "Applied Mathematics"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TMKOO4",
-    "name": "Composite Materials",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "1",
-      "2"
-    ],
-    "block": [
-      "1",
-      "4"
-    ],
-    "pace": "50%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Aeronautical Engineering"
-    ],
-    "notes": ""
-  },
-  {
-    "id": "TMKOO3",
-    "name": "Metals for Lightweight Applications",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "8"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [],
-    "campus": "Linköping",
-    "programs": [
-      "Aeronautical Engineering"
     ],
     "notes": ""
   },
@@ -10322,33 +9911,6 @@
     "campus": "Linköping",
     "programs": [],
     "notes": "The course may not be included in a degree together with: TGTU76, TGTU83"
-  },
-  {
-    "id": "TNM107",
-    "name": "Scientific Method",
-    "credits": 6,
-    "level": "avancerad nivå",
-    "term": [
-      "7",
-      "9"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "3"
-    ],
-    "pace": "100%",
-    "examination": [
-      "SEM",
-      "UPG"
-    ],
-    "campus": "Norrköping",
-    "programs": [
-      "Computer Science and Engineering",
-      "Media Technology and Engineering"
-    ],
-    "notes": "The course may not be included in a degree together with: TDDD89"
   },
   {
     "id": "TDDE58",
@@ -10676,7 +10238,7 @@
     "notes": ""
   },
   {
-    "id": "TEIO87",
+    "id": "TEI087",
     "name": "Project Management",
     "credits": 6,
     "level": "grundnivå",
@@ -11191,7 +10753,7 @@
     "notes": "The course may not be included in a degree together with: TNM054"
   },
   {
-    "id": "TEIO29",
+    "id": "TEI029",
     "name": "Leadership and Organization",
     "credits": 6,
     "level": "grundnivå",
@@ -11396,29 +10958,6 @@
     "programs": [
       "Industrial Engineering and Management"
     ],
-    "notes": ""
-  },
-  {
-    "id": "TEAE11",
-    "name": "Intellectual Property Law",
-    "credits": 6,
-    "level": "grundnivå",
-    "term": [
-      "7",
-      "9"
-    ],
-    "period": [
-      "2"
-    ],
-    "block": [
-      "2"
-    ],
-    "pace": "100%",
-    "examination": [
-      "TEN"
-    ],
-    "campus": "Norrköping",
-    "programs": [],
     "notes": ""
   },
   {
@@ -11754,7 +11293,7 @@
     "notes": ""
   },
   {
-    "id": "TEIO95",
+    "id": "TEI095",
     "name": "E-health: Innovation and Entrepreneurship",
     "credits": 6,
     "level": "grundnivå",

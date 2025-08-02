@@ -8,7 +8,7 @@ import { ViewToggle, ViewMode } from "@/components/course/ViewToggle";
 import { SortDropdown, SortOption, sortCourses } from "@/components/course/SortDropdown";
 import { FilterState, CollapsibleFilterSidebar } from "@/components/course/FilterPanel";
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
-import { Navbar } from "@/components/shared/Navbar";
+import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
 import coursesData from "@/data/new-real-courses.json";
 
@@ -198,16 +198,15 @@ function HomeContent() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Navbar - Non-sticky */}
-      <Navbar 
-        searchQuery={filterState.search}
-        onSearchChange={handleSearchChange}
-        onMobileMenuToggle={toggleSidebar}
-        isMobileMenuOpen={sidebarOpen}
-      />
-
-      {/* Main Content with Sidebar */}
+    <PageLayout 
+      navbarMode="main"
+      searchQuery={filterState.search}
+      onSearchChange={handleSearchChange}
+      onMobileMenuToggle={toggleSidebar}
+      isMobileMenuOpen={sidebarOpen}
+    >
+      <div className="min-h-screen bg-background">
+        {/* Main Content with Sidebar */}
       <div className="flex">
         {/* Left Filter Sidebar */}
         <CollapsibleFilterSidebar
@@ -234,18 +233,18 @@ function HomeContent() {
         }`}>
           <div className="container mx-auto px-4 py-8 max-w-7xl">
             {/* View Toggle and Sort Controls */}
-            <div className="w-full max-w-full mb-6 px-2 sm:px-0">
-              <div className="flex justify-between items-center gap-4 min-w-0">
+            <div className="w-full max-w-full mb-6 px-1 sm:px-2 lg:px-0">
+              <div className="flex justify-between items-center gap-2 sm:gap-4 min-w-0 overflow-hidden">
                 {/* Left Column - Sort Controls */}
-                <div className="flex-shrink-0 min-w-0">
+                <div className="flex-shrink min-w-0 overflow-hidden">
                   <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
                 </div>
                 
                 {/* Spacer for visual separation */}
-                <div className="flex-1 min-w-4"></div>
+                <div className="flex-1 min-w-2"></div>
                 
                 {/* Right Column - View Toggle */}
-                <div className="flex-shrink-0 min-w-0">
+                <div className="flex-shrink-0">
                   <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
                 </div>
               </div>
@@ -279,7 +278,8 @@ function HomeContent() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </PageLayout>
   );
 }
 

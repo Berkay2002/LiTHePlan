@@ -3,15 +3,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Share2, Eye, Check } from "lucide-react";
+import { Share2, Check } from "lucide-react";
 import { useState } from "react";
 
 interface ShareButtonsProps {
   profileId?: string;
-  onViewShared?: () => void;
+  hideTextOnMobile?: boolean;
 }
 
-export function ShareButtons({ profileId, onViewShared }: ShareButtonsProps) {
+export function ShareButtons({ profileId, hideTextOnMobile = false }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -29,33 +29,31 @@ export function ShareButtons({ profileId, onViewShared }: ShareButtonsProps) {
   };
 
   return (
-    <div className="flex gap-2">
-      <Button 
-        variant="outline" 
-        onClick={handleShare}
-        className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
-      >
-        {copied ? (
-          <>
-            <Check className="h-4 w-4 mr-2" />
-            Copied!
-          </>
-        ) : (
-          <>
-            <Share2 className="h-4 w-4 mr-2" />
-            Share
-          </>
-        )}
-      </Button>
-      
-      <Button 
-        variant="outline" 
-        onClick={onViewShared}
-        className="border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
-      >
-        <Eye className="h-4 w-4 mr-2" />
-        View Shared
-      </Button>
-    </div>
+    <Button 
+      variant="outline" 
+      size="sm"
+      onClick={handleShare}
+      className="h-9 px-2 sm:px-3 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+    >
+      {copied ? (
+        <>
+          <Check className={`h-4 w-4 ${hideTextOnMobile ? '' : 'mr-2'} ${hideTextOnMobile ? 'sm:mr-2' : ''}`} />
+          {hideTextOnMobile ? (
+            <span className="hidden sm:inline">Copied!</span>
+          ) : (
+            'Copied!'
+          )}
+        </>
+      ) : (
+        <>
+          <Share2 className={`h-4 w-4 ${hideTextOnMobile ? '' : 'mr-2'} ${hideTextOnMobile ? 'sm:mr-2' : ''}`} />
+          {hideTextOnMobile ? (
+            <span className="hidden sm:inline">Share</span>
+          ) : (
+            'Share'
+          )}
+        </>
+      )}
+    </Button>
   );
 }

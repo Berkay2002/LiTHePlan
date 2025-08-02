@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types/course";
 import { getLevelColor } from "@/lib/course-utils";
+import { getConflictBorderClass, getAllPeriodConflicts, ConflictInfo } from "@/lib/conflict-utils";
 import { X, Trash2, GripVertical, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 
@@ -16,6 +17,7 @@ interface DraggableTermCardProps {
   onMoveCourse?: (courseId: string, fromTerm: 7 | 8 | 9, toTerm: 7 | 8 | 9) => void;
   className?: string;
   isDragDisabled?: boolean;
+  showBlockTimeline?: boolean;
 }
 
 export function DraggableTermCard({ 
@@ -25,7 +27,8 @@ export function DraggableTermCard({
   onClearTerm, 
   onMoveCourse,
   className,
-  isDragDisabled = false
+  isDragDisabled = false,
+  showBlockTimeline = true
 }: DraggableTermCardProps) {
   const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
   
@@ -163,8 +166,11 @@ export function DraggableTermCard({
     }
   };
 
-  const renderDraggableCourse = (course: Course, index: number, currentPeriod: 1 | 2) => {
+  const renderDraggableCourse = (course: Course, index: number, currentPeriod: 1 | 2, conflictMap: Map<string, ConflictInfo>) => {
     const uniqueId = `${course.id}-term${termNumber}-period${currentPeriod}`;
+    const hasConflict = conflictMap.has(course.id);
+    // Only show conflict borders when block timeline is visible
+    const conflictBorderClass = showBlockTimeline ? getConflictBorderClass(hasConflict) : '';
     
     return (
       <Draggable
@@ -181,7 +187,7 @@ export function DraggableTermCard({
               snapshot.isDragging 
                 ? 'shadow-lg border-primary/50 bg-primary/5' 
                 : 'hover:bg-accent/50'
-            } ${isDragDisabled || termNumber === 8 ? 'opacity-75' : ''}`}
+            } ${isDragDisabled || termNumber === 8 ? 'opacity-75' : ''} ${conflictBorderClass}`}
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-start gap-2 flex-1 min-w-0">
@@ -245,9 +251,9 @@ export function DraggableTermCard({
               )}
             </div>
 
-            {/* Transfer buttons - only show for terms 7 and 9, and when onMoveCourse is available */}
+            {/* Transfer buttons - right-aligned, only show for terms 7 and 9, and when onMoveCourse is available */}
             {onMoveCourse && termNumber !== 8 && (
-              <div className="flex gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex justify-end gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
                 {termNumber === 7 && (
                   <Button
                     variant="outline"
@@ -280,7 +286,72 @@ export function DraggableTermCard({
     );
   };
 
-  const renderPeriodCourses = (periodCourses: Course[], currentPeriod: 1 | 2) => {
+  const renderNonDraggableCourse = (course: Course, currentPeriod: 1 | 2, conflictMap: Map<string, ConflictInfo>) => {
+    const hasConflict = conflictMap.has(course.id);
+    // Only show conflict borders when block timeline is visible
+    const conflictBorderClass = showBlockTimeline ? getConflictBorderClass(hasConflict) : '';
+    
+    return (
+      <div
+        key={`${course.id}-term${termNumber}-period${currentPeriod}`}
+        className={`p-4 rounded-lg border bg-card transition-colors group hover:bg-accent/50 ${conflictBorderClass}`}
+      >
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-sm leading-tight">
+                  {course.name}
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {course.id} • {course.credits} hp
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
+                }}
+                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                title="View course on LiU website"
+              >
+                <ExternalLink className="h-3 w-3" />
+              </Button>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onRemoveCourse(course.id)}
+            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive ml-2"
+          >
+            <X className="h-3 w-3" />
+          </Button>
+        </div>
+        
+        {/* Enhanced Block Indicators */}
+        {renderBlockIndicators(course, currentPeriod)}
+        
+        <div className="flex flex-wrap gap-1 mt-3">
+          <Badge 
+            variant="secondary" 
+            className={`text-xs ${getLevelColor(course.level)}`}
+          >
+            {course.level === 'avancerad nivå' ? 'Advanced' : 'Basic'}
+          </Badge>
+          
+          {course.campus && (
+            <Badge variant="outline" className="text-xs">
+              {course.campus}
+            </Badge>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderPeriodCourses = (periodCourses: Course[], currentPeriod: 1 | 2, isDraggable: boolean = true) => {
     if (periodCourses.length === 0) {
       return (
         <div className="text-center py-4 text-muted-foreground">
@@ -289,14 +360,23 @@ export function DraggableTermCard({
       );
     }
 
+    // Get all conflicts for this period
+    const conflictMap = getAllPeriodConflicts(periodCourses, currentPeriod);
+
+    if (!isDraggable) {
+      return periodCourses.map((course) => 
+        renderNonDraggableCourse(course, currentPeriod, conflictMap)
+      );
+    }
+
     return periodCourses.map((course, index) => 
-      renderDraggableCourse(course, index, currentPeriod)
+      renderDraggableCourse(course, index, currentPeriod, conflictMap)
     );
   };
 
   return (
-    <Card className={`h-full bg-card border-border shadow-lg ${className}`}>
-      <CardHeader className="pb-3">
+    <Card className={`h-full bg-card border-border shadow-lg flex flex-col ${className}`}>
+      <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="text-lg font-semibold flex items-center justify-between text-card-foreground">
           {getTermLabel(termNumber)}
           <div className="flex items-center gap-2">
@@ -323,89 +403,126 @@ export function DraggableTermCard({
         )}
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 flex-1 flex flex-col">
         {courses.length === 0 ? (
-          <Droppable droppableId={`term-${termNumber}`} type="COURSE">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={`text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg transition-colors ${
-                  snapshot.isDraggingOver 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-border'
-                }`}
-              >
-                <p className="text-sm">No courses selected</p>
-                <p className="text-xs mt-1">Add courses from the catalog or drag them here</p>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+          // Only make terms 7 and 9 droppable when empty, not term 8
+          termNumber === 8 ? (
+            <div className="flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg border-border">
+              <p className="text-sm">No courses selected</p>
+              <p className="text-xs mt-1">Term 8 courses cannot be moved</p>
+            </div>
+          ) : (
+            <Droppable droppableId={`term-${termNumber}`} type="COURSE">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg transition-colors ${
+                    snapshot.isDraggingOver 
+                      ? 'border-primary bg-primary/5' 
+                      : 'border-border'
+                  }`}
+                >
+                  <p className="text-sm">No courses selected</p>
+                  <p className="text-xs mt-1">Add courses from the catalog or drag them here</p>
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          )
         ) : (
-          <>
-            {/* Period 1 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">Period 1</h4>
-                <Badge variant="outline" className="text-xs">
-                  {coursesByPeriod[1]
-                    .filter(course => (Array.isArray(course.period) ? course.period.includes('1') : course.period === '1') || course.pace === '50%')
-                    .reduce((sum, course) => {
-                      return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
-                    }, 0)} hp
-                </Badge>
+          // Only make terms 7 and 9 droppable, term 8 should not be droppable
+          termNumber === 8 ? (
+            <div className="space-y-4">
+              {/* Period 1 */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-medium text-muted-foreground">Period 1</h4>
+                  <Badge variant="outline" className="text-xs">
+                    {coursesByPeriod[1]
+                      .filter(course => (Array.isArray(course.period) ? course.period.includes('1') : course.period === '1') || course.pace === '50%')
+                      .reduce((sum, course) => {
+                        return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
+                      }, 0)} hp
+                  </Badge>
+                </div>
+                {showBlockTimeline && coursesByPeriod[1].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
+                <div className="space-y-3 min-h-[60px]">
+                  {renderPeriodCourses(coursesByPeriod[1], 1, false)}
+                </div>
               </div>
-              {coursesByPeriod[1].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
-              <Droppable droppableId={`term-${termNumber}-period-1`} type="COURSE">
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`space-y-3 min-h-[60px] rounded-lg p-2 transition-colors ${
-                      snapshot.isDraggingOver 
-                        ? 'bg-primary/5 border-2 border-dashed border-primary' 
-                        : ''
-                    }`}
-                  >
-                    {renderPeriodCourses(coursesByPeriod[1], 1)}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </div>
 
-            {/* Period 2 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">Period 2</h4>
-                <Badge variant="outline" className="text-xs">
-                  {coursesByPeriod[2]
-                    .filter(course => (Array.isArray(course.period) ? course.period.includes('2') : course.period === '2') || course.pace === '50%')
-                    .reduce((sum, course) => {
-                      return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
-                    }, 0)} hp
-                </Badge>
+              {/* Period 2 */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-medium text-muted-foreground">Period 2</h4>
+                  <Badge variant="outline" className="text-xs">
+                    {coursesByPeriod[2]
+                      .filter(course => (Array.isArray(course.period) ? course.period.includes('2') : course.period === '2') || course.pace === '50%')
+                      .reduce((sum, course) => {
+                        return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
+                      }, 0)} hp
+                  </Badge>
+                </div>
+                {showBlockTimeline && coursesByPeriod[2].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
+                <div className="space-y-3 min-h-[60px]">
+                  {renderPeriodCourses(coursesByPeriod[2], 2, false)}
+                </div>
               </div>
-              {coursesByPeriod[2].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
-              <Droppable droppableId={`term-${termNumber}-period-2`} type="COURSE">
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`space-y-3 min-h-[60px] rounded-lg p-2 transition-colors ${
-                      snapshot.isDraggingOver 
-                        ? 'bg-primary/5 border-2 border-dashed border-primary' 
-                        : ''
-                    }`}
-                  >
-                    {renderPeriodCourses(coursesByPeriod[2], 2)}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
             </div>
-          </>
+          ) : (
+            <Droppable droppableId={`term-${termNumber}`} type="COURSE">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`space-y-4 flex-1 rounded-lg transition-colors ${
+                    snapshot.isDraggingOver 
+                      ? 'bg-primary/5 border-2 border-dashed border-primary' 
+                      : ''
+                  }`}
+                >
+                {/* Period 1 */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-medium text-muted-foreground">Period 1</h4>
+                    <Badge variant="outline" className="text-xs">
+                      {coursesByPeriod[1]
+                        .filter(course => (Array.isArray(course.period) ? course.period.includes('1') : course.period === '1') || course.pace === '50%')
+                        .reduce((sum, course) => {
+                          return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
+                        }, 0)} hp
+                    </Badge>
+                  </div>
+                  {showBlockTimeline && coursesByPeriod[1].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
+                  <div className="space-y-3 min-h-[60px]">
+                    {renderPeriodCourses(coursesByPeriod[1], 1)}
+                  </div>
+                </div>
+
+                {/* Period 2 */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-medium text-muted-foreground">Period 2</h4>
+                    <Badge variant="outline" className="text-xs">
+                      {coursesByPeriod[2]
+                        .filter(course => (Array.isArray(course.period) ? course.period.includes('2') : course.period === '2') || course.pace === '50%')
+                        .reduce((sum, course) => {
+                          return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
+                        }, 0)} hp
+                    </Badge>
+                  </div>
+                  {showBlockTimeline && coursesByPeriod[2].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
+                  <div className="space-y-3 min-h-[60px]">
+                    {renderPeriodCourses(coursesByPeriod[2], 2)}
+                  </div>
+                </div>
+
+                {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          )
         )}
       </CardContent>
     </Card>

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types/course";
 import { getLevelColor } from "@/lib/course-utils";
+import { getConflictBorderClass, getAllPeriodConflicts } from "@/lib/conflict-utils";
 import { X, Trash2, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 
 interface EditableTermCardProps {
@@ -14,6 +15,7 @@ interface EditableTermCardProps {
   onClearTerm: (term: 7 | 8 | 9) => void;
   onMoveCourse?: (courseId: string, fromTerm: 7 | 8 | 9, toTerm: 7 | 8 | 9) => void;
   className?: string;
+  showBlockTimeline?: boolean;
 }
 
 export function EditableTermCard({ 
@@ -22,7 +24,8 @@ export function EditableTermCard({
   onRemoveCourse, 
   onClearTerm, 
   onMoveCourse,
-  className 
+  className,
+  showBlockTimeline = true
 }: EditableTermCardProps) {
   const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
   
@@ -169,11 +172,19 @@ export function EditableTermCard({
       );
     }
 
-    return periodCourses.map((course) => (
-      <div
-        key={`${course.id}-period-${currentPeriod}`}
-        className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors group"
-      >
+    // Get all conflicts for this period
+    const conflictMap = getAllPeriodConflicts(periodCourses, currentPeriod);
+
+    return periodCourses.map((course) => {
+      const hasConflict = conflictMap.has(course.id);
+      // Only show conflict borders when block timeline is visible
+      const conflictBorderClass = showBlockTimeline ? getConflictBorderClass(hasConflict) : '';
+      
+      return (
+        <div
+          key={`${course.id}-period-${currentPeriod}`}
+          className={`p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors group ${conflictBorderClass}`}
+        >
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
@@ -226,9 +237,9 @@ export function EditableTermCard({
           )}
         </div>
 
-        {/* Transfer buttons - only show for terms 7 and 9, and when onMoveCourse is available */}
+        {/* Transfer buttons - right-aligned, only show for terms 7 and 9, and when onMoveCourse is available */}
         {onMoveCourse && termNumber !== 8 && (
-          <div className="flex gap-1 mt-3 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+          <div className="flex justify-end gap-1 mt-3 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
             {termNumber === 7 && (
               <Button
                 variant="outline"
@@ -255,8 +266,9 @@ export function EditableTermCard({
             )}
           </div>
         )}
-      </div>
-    ));
+        </div>
+      );
+    });
   };
 
   return (
@@ -303,7 +315,7 @@ export function EditableTermCard({
                     }, 0)} hp
                 </Badge>
               </div>
-              {coursesByPeriod[1].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
+              {showBlockTimeline && coursesByPeriod[1].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
               <div className="space-y-3">
                 {renderEditableCoursesList(coursesByPeriod[1], 1)}
               </div>
@@ -322,7 +334,7 @@ export function EditableTermCard({
                     }, 0)} hp
                 </Badge>
               </div>
-              {coursesByPeriod[2].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
+              {showBlockTimeline && coursesByPeriod[2].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
               <div className="space-y-3">
                 {renderEditableCoursesList(coursesByPeriod[2], 2)}
               </div>

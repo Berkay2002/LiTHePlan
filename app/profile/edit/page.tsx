@@ -3,8 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { BackButton } from '@/components/BackButton';
-import { ShareButtons } from '@/components/ShareButtons';
+import { PageLayout } from '@/components/layout/PageLayout';
 import { ProfileStatsCard } from '@/components/ProfileStatsCard';
 import { EditableTermCard } from '@/components/EditableTermCard';
 import { DraggableTermCard } from '@/components/DraggableTermCard';
@@ -14,6 +13,7 @@ import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
   const [isMobile, setIsMobile] = useState(false);
+  const [showBlockTimeline, setShowBlockTimeline] = useState(true);
 
   // Detect if we're on mobile/tablet to disable drag and drop
   useEffect(() => {
@@ -27,11 +27,6 @@ function ProfileEditPageContent() {
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
-  const handleViewShared = () => {
-    if (state.current_profile) {
-      window.open(`/profile/${state.current_profile.id}`, '_blank');
-    }
-  };
 
   const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -52,9 +47,9 @@ function ProfileEditPageContent() {
     // Extract course ID from draggableId (format: courseId-termX-periodY)
     const courseId = draggableId.split('-term')[0];
     
-    // Extract term numbers from droppable IDs
-    const sourceTermMatch = source.droppableId.match(/term-(\d+)/);
-    const destTermMatch = destination.droppableId.match(/term-(\d+)/);
+    // Extract term numbers from droppable IDs (now just term-X format)
+    const sourceTermMatch = source.droppableId.match(/term-(\d+)(?:-period-\d+)?$/);
+    const destTermMatch = destination.droppableId.match(/term-(\d+)(?:-period-\d+)?$/);
     
     if (!sourceTermMatch || !destTermMatch) {
       return;
@@ -81,42 +76,42 @@ function ProfileEditPageContent() {
 
   if (!state.current_profile) {
     return (
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <h2 className="text-xl font-semibold text-card-foreground mb-2">
-                No Profile Found
-              </h2>
-              <p className="text-muted-foreground mb-6">
-                You need to add courses to your profile first.
-              </p>
-              <BackButton href="/" text="Back to Course Catalog" />
+      <PageLayout 
+        navbarMode="profile-edit"
+      >
+        <div className="min-h-screen bg-background">
+          <div className="container mx-auto px-4 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <div className="text-center">
+                <h2 className="text-xl font-semibold text-card-foreground mb-2">
+                  No Profile Found
+                </h2>
+                <p className="text-muted-foreground mb-6">
+                  You need to add courses to your profile first.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 space-y-8">
-          
-          {/* Top Navigation Bar (Header) */}
-          <div className="flex justify-between items-center">
-            <BackButton href="/" text="Back" />
-            <ShareButtons 
-              profileId={state.current_profile.id} 
-              onViewShared={handleViewShared} 
-            />
-          </div>
+    <PageLayout 
+      navbarMode="profile-edit"
+      profileId={state.current_profile.id}
+      showBlockTimeline={showBlockTimeline}
+      onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
+    >
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="min-h-screen bg-background">
+          <div className="container mx-auto px-4 py-8 space-y-8">
 
-          {/* Middle Section: Profile Statistics Card */}
+          {/* Profile Statistics Card */}
           <ProfileStatsCard profile={state.current_profile} />
 
-          {/* Bottom Section: Term Cards (Draggable on Desktop) */}
+          {/* Term Cards (Draggable on Desktop) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {isMobile ? (
               // Use regular EditableTermCard on mobile
@@ -127,12 +122,14 @@ function ProfileEditPageContent() {
                   onRemoveCourse={removeCourse}
                   onClearTerm={clearTerm}
                   onMoveCourse={moveCourse}
+                  showBlockTimeline={showBlockTimeline}
                 />
                 <EditableTermCard 
                   termNumber={8} 
                   courses={state.current_profile.terms[8]}
                   onRemoveCourse={removeCourse}
                   onClearTerm={clearTerm}
+                  showBlockTimeline={showBlockTimeline}
                 />
                 <EditableTermCard 
                   termNumber={9} 
@@ -140,6 +137,7 @@ function ProfileEditPageContent() {
                   onRemoveCourse={removeCourse}
                   onClearTerm={clearTerm}
                   onMoveCourse={moveCourse}
+                  showBlockTimeline={showBlockTimeline}
                 />
               </>
             ) : (
@@ -152,6 +150,7 @@ function ProfileEditPageContent() {
                   onClearTerm={clearTerm}
                   onMoveCourse={moveCourse}
                   isDragDisabled={false}
+                  showBlockTimeline={showBlockTimeline}
                 />
                 <DraggableTermCard 
                   termNumber={8} 
@@ -159,6 +158,7 @@ function ProfileEditPageContent() {
                   onRemoveCourse={removeCourse}
                   onClearTerm={clearTerm}
                   isDragDisabled={true}
+                  showBlockTimeline={showBlockTimeline}
                 />
                 <DraggableTermCard 
                   termNumber={9} 
@@ -167,22 +167,16 @@ function ProfileEditPageContent() {
                   onClearTerm={clearTerm}
                   onMoveCourse={moveCourse}
                   isDragDisabled={false}
+                  showBlockTimeline={showBlockTimeline}
                 />
               </>
             )}
           </div>
 
-          {/* Optional: Profile Info Footer */}
-          <div className="text-center text-sm text-muted-foreground border-t border-border pt-6">
-            <p>
-              <strong className="text-card-foreground">{state.current_profile.name}</strong> • 
-              Created {state.current_profile.created_at.toLocaleDateString()} • 
-              Last updated {state.current_profile.updated_at.toLocaleDateString()}
-            </p>
-          </div>
         </div>
       </div>
-    </DragDropContext>
+      </DragDropContext>
+    </PageLayout>
   );
 }
 
