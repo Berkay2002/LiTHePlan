@@ -25,23 +25,41 @@ export function ShareButtons({ profileId, hideTextOnMobile = false, profile }: S
       
       let shareableId = profileId;
 
-      // ✨ Enhanced: Get profile ID from cloud if authenticated and profile provided
+      // ✨ Enhanced: Save profile to cloud and get shareable ID
       if (user && profile && !profileId) {
         try {
-          const supabase = createClient();
-          
-          // Get the user's profile ID from Supabase
-          const { data } = await supabase
-            .from('academic_profiles')
-            .select('id')
-            .eq('user_id', user.sub)
-            .single();
-            
-          if (data) {
-            shareableId = data.id;
+          // First, save the current profile to the database
+          const saveResponse = await fetch('/api/profile', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ profile }),
+          });
+
+          if (saveResponse.ok) {
+            const saveResult = await saveResponse.json();
+            shareableId = saveResult.id;
+            console.log('✅ Profile saved and shareable ID obtained:', shareableId);
+          } else {
+            console.error('❌ Failed to save profile for sharing');
+            // Try to get existing profile as fallback
+            const supabase = createClient();
+            const { data } = await supabase
+              .from('academic_profiles')
+              .select('id')
+              .eq('user_id', user.sub)
+              .order('created_at', { ascending: false })
+              .limit(1)
+              .single();
+              
+            if (data) {
+              shareableId = data.id;
+              console.log('📦 Using existing profile ID as fallback:', shareableId);
+            }
           }
         } catch (error) {
-          console.error('Failed to get profile ID:', error);
+          console.error('Failed to save/get profile ID:', error);
         }
       }
 

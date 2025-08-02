@@ -13,9 +13,10 @@ import { Card, CardContent } from '@/components/ui/card';
 
 function ProfilePageContent() {
   const params = useParams();
-  const profileId = params.id as string;
+  const profileId = params.id as string; // This is the database UUID (academic_profiles.id)
   
   const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [databaseId, setDatabaseId] = useState<string | null>(null); // Store the database UUID separately
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,6 +47,7 @@ function ProfilePageContent() {
         };
         
         setProfile(loadedProfile);
+        setDatabaseId(profileId); // Store the database UUID for sharing
       } catch (err) {
         setError('Failed to load profile');
         console.error('Error loading profile:', err);
@@ -102,7 +104,7 @@ function ProfilePageContent() {
   return (
     <PageLayout 
       navbarMode="profile-edit"
-      profileId={profile.id}
+      profileId={databaseId || undefined} // Use the database UUID, not the profile's internal ID
     >
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 space-y-8">

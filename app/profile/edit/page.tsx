@@ -100,7 +100,6 @@ function ProfileEditPageContent() {
   return (
     <PageLayout 
       navbarMode="profile-edit"
-      profileId={state.current_profile.id}
       showBlockTimeline={showBlockTimeline}
       onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
     >
