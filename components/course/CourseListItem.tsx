@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Plus, ExternalLink, Check, Trash2 } from "lucide-react";
-import { formatPace, isMultiTermCourse, getAvailableTerms } from "@/lib/course-utils";
+import { formatPace, isMultiTermCourse, getAvailableTerms, formatBlocks } from "@/lib/course-utils";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "./TermSelectionModal";
 import { isCourseInProfile } from "@/lib/profile-utils";
@@ -50,14 +50,6 @@ export function CourseListItem({ course, activeFilters = {
     return false;
   };
 
-  // Helper function to format block display
-  const formatBlocks = (block: number | [number, number]) => {
-    if (Array.isArray(block)) {
-      return `${block[0]} & ${block[1]}`;
-    }
-    return block.toString();
-  };
-
   // Helper function to determine if period should be shown (not for 50% courses)
   const shouldShowPeriod = () => {
     return course.pace === '100%';
@@ -70,7 +62,10 @@ export function CourseListItem({ course, activeFilters = {
     } else {
       // Single term course - add directly with the available term
       const termToAdd = Array.isArray(course.term) ? course.term[0] : course.term;
-      addCourse(course, termToAdd);
+      const parsedTerm = parseInt(termToAdd);
+      if (!isNaN(parsedTerm) && [7, 8, 9].includes(parsedTerm)) {
+        addCourse(course, parsedTerm as 7 | 8 | 9);
+      }
     }
   };
 
@@ -112,7 +107,7 @@ export function CourseListItem({ course, activeFilters = {
                    {(() => {
                      const visibleExaminations = getVisibleExaminations(course.examination);
                      return visibleExaminations.slice(0, 2).map((exam, index) => (
-                       <Badge key={index} variant="secondary" className="text-xs px-1.5 py-0.5 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20">
+                       <Badge key={`${exam}-${index}`} variant="secondary" className="text-xs px-1.5 py-0.5 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20">
                          {exam}
                        </Badge>
                      ));
@@ -226,7 +221,7 @@ export function CourseListItem({ course, activeFilters = {
                 {(() => {
                   const visibleExaminations = getVisibleExaminations(course.examination);
                   return visibleExaminations.map((exam, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs px-2 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20">
+                    <Badge key={`${exam}-${index}`} variant="secondary" className="text-xs px-2 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20">
                       {exam}
                     </Badge>
                   ));
@@ -291,7 +286,7 @@ export function CourseListItem({ course, activeFilters = {
               {course.programs.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   {course.programs.slice(0, 2).map((program, index) => (
-                    <Badge key={index} variant="outline" className="text-xs px-2 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30">
+                    <Badge key={`${program}-${index}`} variant="outline" className="text-xs px-2 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30">
                       {program}
                     </Badge>
                   ))}

@@ -89,7 +89,7 @@ export function Pagination({
         {/* Page numbers */}
         <div className="flex items-center gap-1">
           {getPageNumbers().map((page, index) => (
-            <div key={index}>
+            <div key={`page-${page}-${index}`}>
               {page === "..." ? (
                 <Button variant="ghost" size="sm" disabled className="h-8 w-8 p-0 text-white/50">
                   <MoreHorizontal className="h-4 w-4" />

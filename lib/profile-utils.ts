@@ -90,8 +90,8 @@ export function addCourseToProfile(profile: StudentProfile, course: StudentProfi
   
   // Validate course is available in target term
   const isAvailableInTerm = Array.isArray(course.term) 
-    ? course.term.includes(term)
-    : course.term === term;
+    ? course.term.includes(term.toString())
+    : parseInt(course.term) === term;
   
   if (!isAvailableInTerm) {
     const availableTerms = Array.isArray(course.term) ? course.term.join(', ') : course.term;

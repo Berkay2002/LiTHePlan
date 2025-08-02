@@ -144,7 +144,7 @@ export function validateProfile(profile: StudentProfile): ProfileValidationResul
       // Validate course term matches profile term
       // For multi-term courses, check if the profile term is one of the available terms
       const courseTerms = Array.isArray(course.term) ? course.term : [course.term];
-      if (!courseTerms.includes(term as 7 | 8 | 9)) {
+      if (!courseTerms.includes(term.toString())) {
         errors.push(`Course ${course.id} term (${courseTerms.join(', ')}) doesn't include profile term (${term})`);
       }
       

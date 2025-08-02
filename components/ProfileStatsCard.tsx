@@ -106,7 +106,7 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
               <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
                 {segmentsWithAngles.map((segment, index) => (
                   <path
-                    key={index}
+                    key={`segment-${segment.label}-${index}`}
                     d={createPath(segment.startAngle, segment.angle)}
                     fill={segment.color}
                     stroke="white"
@@ -119,7 +119,7 @@ export function ProfileStatsCard({ profile, className }: ProfileStatsCardProps) 
             {/* Simple Legend */}
             <div className="flex flex-wrap gap-4 justify-center">
               {segmentsWithAngles.map((segment, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <div key={`legend-${segment.label}-${index}`} className="flex items-center gap-2">
                   <div 
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: segment.color }}

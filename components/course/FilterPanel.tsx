@@ -37,31 +37,28 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
     term: (() => {
-      // Extract all unique terms from courses, handling both single terms and arrays
-      const allTerms = new Set<number>();
+      // Extract all unique terms from courses - now they're string arrays
+      const allTerms = new Set<string>();
       courses.forEach(course => {
-        const courseTerms = Array.isArray(course.term) ? course.term : [course.term];
-        courseTerms.forEach(term => allTerms.add(term));
+        course.term.forEach(term => allTerms.add(term));
       });
       const uniqueTerms = Array.from(allTerms).sort();
       
-      // Combine 7 & 9 into a single option, keep 8 separate
+      // Combine "7" & "9" into a single option, keep "8" separate
       const termOptions: number[] = [];
-      if (uniqueTerms.includes(7) || uniqueTerms.includes(9)) {
+      if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
         termOptions.push(7); // This represents "7 & 9"
       }
-      if (uniqueTerms.includes(8)) {
+      if (uniqueTerms.includes("8")) {
         termOptions.push(8);
       }
       return termOptions;
     })(),
-    period: Array.from(new Set(courses.map(course => course.period))).sort(),
-    block: Array.from(new Set(courses.flatMap(course => 
-      Array.isArray(course.block) ? course.block : [course.block]
-    ))).sort(),
+    period: Array.from(new Set(courses.flatMap(course => course.period).map(p => parseInt(p)).filter(p => !isNaN(p)))).sort(),
+    block: Array.from(new Set(courses.flatMap(course => course.block).map(b => parseInt(b)).filter(b => !isNaN(b)))).sort(),
     pace: Array.from(new Set(courses.map(course => course.pace))),
     campus: Array.from(new Set(courses.map(course => course.campus))),
-    examination: Array.from(new Set(courses.flatMap(course => course.examination))).sort(),
+    examination: Array.from(new Set(courses.flatMap(course => course.examination))).filter(exam => ['TEN', 'LAB', 'PROJ', 'SEM', 'UPG'].includes(exam)).sort(),
     programs: Array.from(new Set(courses.flatMap(course => course.programs))).sort(),
   };
 
@@ -198,11 +195,6 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
-                  {filterState.programs && (
-                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                      Selected
-                    </Badge>
-                  )}
                 </div>
                 <Select 
                   value={filterState.programs || undefined} 
@@ -228,15 +220,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Level</h3>
-                    {filterState.level.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                        {filterState.level.length}
-                      </Badge>
-                    )}
                   </div>
                   <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.level.map((level) => (
-                      <div key={level} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                      <div key={`sidebar-level-${level}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`level-${level}`}
                           checked={filterState.level.includes(level)}
@@ -258,15 +245,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Study Pace</h3>
-                    {filterState.pace.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                        {filterState.pace.length}
-                      </Badge>
-                    )}
                   </div>
                   <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.pace.map((pace) => (
-                      <div key={pace} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                      <div key={`sidebar-pace-${pace}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`pace-${pace}`}
                           checked={filterState.pace.includes(pace)}
@@ -291,15 +273,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Term</h3>
-                    {filterState.term.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                        {filterState.term.length}
-                      </Badge>
-                    )}
                   </div>
                   <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.term.map((term) => (
-                      <div key={term} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                      <div key={`sidebar-term-${term}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`term-${term}`}
                           checked={filterState.term.includes(term)}
@@ -321,15 +298,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Period</h3>
-                    {filterState.period.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                        {filterState.period.length}
-                      </Badge>
-                    )}
                   </div>
                   <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.period.map((period) => (
-                      <div key={period} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                      <div key={`sidebar-period-${period}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`period-${period}`}
                           checked={filterState.period.includes(period)}
@@ -352,15 +324,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Block</h3>
-                  {filterState.block.length > 0 && (
-                    <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                      {filterState.block.length}
-                    </Badge>
-                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-3 lg:gap-4 xl:gap-5">
                   {filterOptions.block.map((block) => (
-                    <div key={block} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                    <div key={`sidebar-block-${block}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                       <Checkbox
                         id={`block-${block}`}
                         checked={filterState.block.includes(block)}
@@ -385,15 +352,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Campus</h3>
-                    {filterState.campus.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                        {filterState.campus.length}
-                      </Badge>
-                    )}
                   </div>
                   <div className="grid gap-2 lg:gap-3 xl:gap-3">
                     {filterOptions.campus.map((campus) => (
-                      <div key={campus} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                      <div key={`sidebar-campus-${campus}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`campus-${campus}`}
                           checked={filterState.campus.includes(campus)}
@@ -415,15 +377,10 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="space-y-2 lg:space-y-3 xl:space-y-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Examination</h3>
-                    {filterState.examination.length > 0 && (
-                      <Badge variant="outline" className="h-5 lg:h-6 xl:h-7 2xl:h-8 px-2 lg:px-3 xl:px-4 2xl:px-5 text-xs lg:text-xs xl:text-xs text-white">
-                        {filterState.examination.length}
-                      </Badge>
-                    )}
                   </div>
                   <div className="grid gap-2 lg:gap-3 xl:gap-3">
-                    {filterOptions.examination.filter(exam => exam !== 'SEM' && exam !== 'UPG').map((exam) => (
-                      <div key={exam} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
+                    {filterOptions.examination.map((exam) => (
+                      <div key={`sidebar-exam-${exam}`} className="flex items-center space-x-2 lg:space-x-3 xl:space-x-3 group">
                         <Checkbox
                           id={`exam-${exam}`}
                           checked={filterState.examination.includes(exam)}
@@ -455,31 +412,28 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
     term: (() => {
-      // Extract all unique terms from courses, handling both single terms and arrays
-      const allTerms = new Set<number>();
+      // Extract all unique terms from courses - now they're string arrays
+      const allTerms = new Set<string>();
       courses.forEach(course => {
-        const courseTerms = Array.isArray(course.term) ? course.term : [course.term];
-        courseTerms.forEach(term => allTerms.add(term));
+        course.term.forEach(term => allTerms.add(term));
       });
       const uniqueTerms = Array.from(allTerms).sort();
       
-      // Combine 7 & 9 into a single option, keep 8 separate
+      // Combine "7" & "9" into a single option, keep "8" separate
       const termOptions: number[] = [];
-      if (uniqueTerms.includes(7) || uniqueTerms.includes(9)) {
+      if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
         termOptions.push(7); // This represents "7 & 9"
       }
-      if (uniqueTerms.includes(8)) {
+      if (uniqueTerms.includes("8")) {
         termOptions.push(8);
       }
       return termOptions;
     })(),
-    period: Array.from(new Set(courses.map(course => course.period))).sort(),
-    block: Array.from(new Set(courses.flatMap(course => 
-      Array.isArray(course.block) ? course.block : [course.block]
-    ))).sort(),
+    period: Array.from(new Set(courses.flatMap(course => course.period).map(p => parseInt(p)).filter(p => !isNaN(p)))).sort(),
+    block: Array.from(new Set(courses.flatMap(course => course.block).map(b => parseInt(b)).filter(b => !isNaN(b)))).sort(),
     pace: Array.from(new Set(courses.map(course => course.pace))),
     campus: Array.from(new Set(courses.map(course => course.campus))),
-    examination: Array.from(new Set(courses.flatMap(course => course.examination))).sort(),
+    examination: Array.from(new Set(courses.flatMap(course => course.examination))).filter(exam => ['TEN', 'LAB', 'PROJ', 'SEM', 'UPG'].includes(exam)).sort(),
     programs: Array.from(new Set(courses.flatMap(course => course.programs))).sort(),
   };
 
@@ -550,11 +504,6 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Program</h3>
-            {filterState.programs && (
-              <Badge variant="outline" className="h-5 px-2 text-xs">
-                Selected
-              </Badge>
-            )}
           </div>
           <Select 
             value={filterState.programs || undefined} 
@@ -580,15 +529,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Level</h3>
-              {filterState.level.length > 0 && (
-                <Badge variant="outline" className="h-5 px-2 text-xs">
-                  {filterState.level.length}
-                </Badge>
-              )}
             </div>
             <div className="grid gap-3">
               {filterOptions.level.map((level) => (
-                <div key={level} className="flex items-center space-x-3 group">
+                <div key={`mobile-level-${level}`} className="flex items-center space-x-3 group">
                   <Checkbox
                     id={`level-${level}`}
                     checked={filterState.level.includes(level)}
@@ -610,15 +554,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Study Pace</h3>
-              {filterState.pace.length > 0 && (
-                <Badge variant="outline" className="h-5 px-2 text-xs">
-                  {filterState.pace.length}
-                </Badge>
-              )}
             </div>
             <div className="grid gap-3">
               {filterOptions.pace.map((pace) => (
-                <div key={pace} className="flex items-center space-x-3 group">
+                <div key={`mobile-pace-${pace}`} className="flex items-center space-x-3 group">
                   <Checkbox
                     id={`pace-${pace}`}
                     checked={filterState.pace.includes(pace)}
@@ -643,15 +582,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Term</h3>
-              {filterState.term.length > 0 && (
-                <Badge variant="outline" className="h-5 px-2 text-xs">
-                  {filterState.term.length}
-                </Badge>
-              )}
             </div>
             <div className="grid gap-3">
               {filterOptions.term.map((term) => (
-                <div key={term} className="flex items-center space-x-3 group">
+                <div key={`mobile-term-${term}`} className="flex items-center space-x-3 group">
                   <Checkbox
                     id={`term-${term}`}
                     checked={filterState.term.includes(term)}
@@ -673,15 +607,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Period</h3>
-              {filterState.period.length > 0 && (
-                <Badge variant="outline" className="h-5 px-2 text-xs">
-                  {filterState.period.length}
-                </Badge>
-              )}
             </div>
             <div className="grid gap-3">
               {filterOptions.period.map((period) => (
-                <div key={period} className="flex items-center space-x-3 group">
+                <div key={`mobile-period-${period}`} className="flex items-center space-x-3 group">
                   <Checkbox
                     id={`period-${period}`}
                     checked={filterState.period.includes(period)}
@@ -704,15 +633,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Block</h3>
-            {filterState.block.length > 0 && (
-              <Badge variant="outline" className="h-5 px-2 text-xs">
-                {filterState.block.length}
-              </Badge>
-            )}
           </div>
           <div className="grid grid-cols-2 gap-3">
             {filterOptions.block.map((block) => (
-              <div key={block} className="flex items-center space-x-3 group">
+              <div key={`mobile-block-${block}`} className="flex items-center space-x-3 group">
                 <Checkbox
                   id={`block-${block}`}
                   checked={filterState.block.includes(block)}
@@ -736,15 +660,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Campus</h3>
-              {filterState.campus.length > 0 && (
-                <Badge variant="outline" className="h-5 px-2 text-xs">
-                  {filterState.campus.length}
-                </Badge>
-              )}
             </div>
             <div className="grid gap-3">
               {filterOptions.campus.map((campus) => (
-                <div key={campus} className="flex items-center space-x-3 group">
+                <div key={`mobile-campus-${campus}`} className="flex items-center space-x-3 group">
                   <Checkbox
                     id={`campus-${campus}`}
                     checked={filterState.campus.includes(campus)}
@@ -766,15 +685,10 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Examination</h3>
-              {filterState.examination.length > 0 && (
-                <Badge variant="outline" className="h-5 px-2 text-xs">
-                  {filterState.examination.length}
-                </Badge>
-              )}
             </div>
             <div className="grid gap-3">
-              {filterOptions.examination.filter(exam => exam !== 'SEM' && exam !== 'UPG').map((exam) => (
-                <div key={exam} className="flex items-center space-x-3 group">
+              {filterOptions.examination.map((exam) => (
+                <div key={`mobile-exam-${exam}`} className="flex items-center space-x-3 group">
                   <Checkbox
                     id={`exam-${exam}`}
                     checked={filterState.examination.includes(exam)}

@@ -166,12 +166,12 @@ export function ProfilePinboard({
             {(summary.errors.length > 0 || summary.warnings.length > 0) && (
               <div className="mt-4 space-y-2">
                 {summary.errors.map((error, index) => (
-                  <div key={index} className="text-sm text-destructive bg-destructive/10 p-2 rounded">
+                  <div key={`error-${index}-${error.slice(0, 20)}`} className="text-sm text-destructive bg-destructive/10 p-2 rounded">
                     ⚠️ {error}
                   </div>
                 ))}
                 {summary.warnings.map((warning, index) => (
-                  <div key={index} className="text-sm text-amber-600 bg-amber-50 p-2 rounded">
+                  <div key={`warning-${index}-${warning.slice(0, 20)}`} className="text-sm text-amber-600 bg-amber-50 p-2 rounded">
                     ℹ️ {warning}
                   </div>
                 ))}

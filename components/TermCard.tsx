@@ -25,15 +25,8 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
 
   // Group courses by period - 50% courses appear in both periods
   const coursesByPeriod = {
-    1: courses.filter(course => course.period === 1 || course.pace === '50%'),
-    2: courses.filter(course => course.period === 2 || course.pace === '50%')
-  };
-
-  const formatBlocks = (block: number | [number, number]) => {
-    if (Array.isArray(block)) {
-      return `Block ${block.join(', ')}`;
-    }
-    return `Block ${block}`;
+    1: courses.filter(course => course.period.includes('1') || course.pace === '50%'),
+    2: courses.filter(course => course.period.includes('2') || course.pace === '50%')
   };
 
   const getBlockBadgeColor = (blockNum: number) => {
@@ -52,9 +45,9 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
     
     if (is50Percent && Array.isArray(course.block)) {
       // For 50% courses: block[0] = period 1, block[1] = period 2
-      blocks = [course.block[currentPeriod - 1]];
+      blocks = [parseInt(course.block[currentPeriod - 1])];
     } else {
-      blocks = Array.isArray(course.block) ? course.block : [course.block];
+      blocks = Array.isArray(course.block) ? course.block.map(b => parseInt(b)) : [parseInt(course.block)];
     }
     
     return (
@@ -80,7 +73,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
 
   const renderPeriodBlockTimeline = (periodCourses: Course[], currentPeriod: 1 | 2) => {
     // Create a visual timeline showing which blocks are occupied for this specific period
-    const blockOccupancy = { 1: [], 2: [], 3: [], 4: [] };
+    const blockOccupancy: { [key: number]: Array<{ course: Course; is50Percent: boolean }> } = { 1: [], 2: [], 3: [], 4: [] };
     
     periodCourses.forEach(course => {
       let blocks: number[];
@@ -88,9 +81,9 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
       
       if (is50Percent && Array.isArray(course.block)) {
         // For 50% courses: use the block for the current period
-        blocks = [course.block[currentPeriod - 1]];
+        blocks = [parseInt(course.block[currentPeriod - 1])];
       } else {
-        blocks = Array.isArray(course.block) ? course.block : [course.block];
+        blocks = Array.isArray(course.block) ? course.block.map(b => parseInt(b)) : [parseInt(course.block)];
       }
       
       blocks.forEach(blockNum => {
@@ -216,7 +209,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
                 <h4 className="text-sm font-medium text-muted-foreground">Period 1</h4>
                 <Badge variant="outline" className="text-xs">
                   {coursesByPeriod[1]
-                    .filter(course => course.period === 1 || course.pace === '50%')
+                    .filter(course => course.period.includes('1') || course.pace === '50%')
                     .reduce((sum, course) => {
                       // For 50% courses, only count half the credits per period
                       return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
@@ -235,7 +228,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
                 <h4 className="text-sm font-medium text-muted-foreground">Period 2</h4>
                 <Badge variant="outline" className="text-xs">
                   {coursesByPeriod[2]
-                    .filter(course => course.period === 2 || course.pace === '50%')
+                    .filter(course => course.period.includes('2') || course.pace === '50%')
                     .reduce((sum, course) => {
                       // For 50% courses, only count half the credits per period
                       return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);

@@ -1,0 +1,2058 @@
+[
+    {
+      "id": "THTY27",
+      "name": "Tyska med teknisk inriktning",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Muntlig presentation med skriftligt underlag",
+        "Sammanlagt 3 duggor",
+        "Inlämningsuppgifter samt aktiv närvaro i diskussioner"
+      ],
+      "campus": "Ortsoberoende",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TNM086",
+      "name": "VR-teknik!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Muntlig examination",
+        "Laborationskurs"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Medieteknik"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNM116"
+    },
+    {
+      "id": "TGTU95",
+      "name": "Vetenskapens och teknologins filosofi!",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Obligatoriska seminarier",
+        "Hemtentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TGTU76, TGTU83"
+    },
+    {
+      "id": "TNM107",
+      "name": "Vetenskaplig metod!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Seminarier",
+        "Inlämningsuppgifter"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Datateknik",
+        "Medieteknik"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TDDD89"
+    },
+    {
+      "id": "TDDE58",
+      "name": "Trådlösa kommunikationsnätverk",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laboration",
+        "Skriftlig tentamen",
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSKS13",
+      "name": "Trådlös kommunikation",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationskurs i form av projektuppgift",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSEK07",
+      "name": "Test och mätning av integrerade kretsar",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektarbete och muntlig presentation",
+        "Laborationer"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TGTU49",
+      "name": "Teknikhistoria",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Seminarier",
+        "Hemtentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TGTU94",
+      "name": "Teknik och etik!",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Mindre uppsats",
+        "seminarie",
+        "Hemtentamen"
+      ],
+      "campus": "Norrköping",
+      "programs": [],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TGTU01"
+    },
+    {
+      "id": "TSBK03",
+      "name": "Teknik för avancerade datorspel",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "-"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projektuppgift",
+        "Laborationskurs med duggor"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Medieteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSTE17",
+      "name": "Systemkonstruktion CDIO",
+      "credits": 12,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Inlämningsuppgifter om entreprenörskap",
+        "Inlämningsuppgifter",
+        "En laborationskurs",
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TNM100",
+      "name": "Strukturerade metoder för användarupplevelse (UX)!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "3"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Grupparbete",
+        "Grupparbete",
+        "Individuell inlämningsuppgift"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Datateknik",
+        "Medieteknik"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TDDD53"
+    },
+    {
+      "id": "THSP27",
+      "name": "Spanska med teknisk inriktning",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Muntlig presentation med skriftligt underlag",
+        "Sammanlagt 3 duggor",
+        "Inlämningsuppgifter samt aktiv närvaro i diskussioner"
+      ],
+      "campus": "Ortsoberoende",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TGTU91",
+      "name": "Retorik i teori och praktik",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Fullgjorda och godkända skriftliga uppgifter",
+        "Fullgjorda och godkända muntliga uppgifter"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TNKA10",
+      "name": "Retorik i tal, text och bild!",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "1"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Seminarier och skriftlig uppgift",
+        "Muntliga presentationer och skriftlig utvärdering"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Grafisk design och kommunikation"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNKA08"
+    },
+    {
+      "id": "TSRT10",
+      "name": "Reglerteknisk projektkurs, CDIO",
+      "credits": 12,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Inlämningsuppgifter om entreprenörskap",
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEIO87",
+      "name": "Projektledning",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "1"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Uppgift",
+        "Kontrollskrivning"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TAOP87",
+      "name": "Projekt i tillämpad optimering",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Muntlig och skriftlig redovisning av projekt. Närvaro vid..."
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Matematik",
+        "Tillämpad matematik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE46",
+      "name": "Programvarukvalitet",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "2",
+        "2"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projektarbete",
+        "Datorlaborationer"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDD49",
+      "name": "Programmering i C# och .NET Framework",
+      "credits": 4,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationer"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Programmering"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEIG01",
+      "name": "Organisation för cybersäkerhet",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Gruppseminarier och uppgifter",
+        "Skriftlig salstentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TAOP61",
+      "name": "Optimering av realistiska, sammansatta system",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektarbete",
+        "En skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Matematik",
+        "Tillämpad matematik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TBMI26",
+      "name": "Neuronnät och lärande system",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationskurs",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Elektroteknik",
+        "Medicinsk teknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TGTU84",
+      "name": "Mångfald och genus inom teknikutveckling",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Seminarier",
+        "Inlämningsuppgifter"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TAMS39",
+      "name": "Multivariat statistik",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationer och inlämningsuppgifter/projekt",
+        "Muntlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Matematik",
+        "Tillämpad matematik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSFS09",
+      "name": "Modellering och reglering av motorer och drivlinor",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "3"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Miniprojekt",
+        "Miniprojekt",
+        "Miniprojekt",
+        "En skriftlig tentamen för högre betyg"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik",
+        "Maskinteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSRT92",
+      "name": "Modellering och inlärning för dynamiska system",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Datortenta",
+        "Laboration"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TMKA11",
+      "name": "Modellbaserad utveckling av system-av-system",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektarbete",
+        "Inlämningsuppgifter"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Maskinteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE02",
+      "name": "Mjukvarutekniskt entreprenörskap",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TKMJ24",
+      "name": "Miljöteknik",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektarbete",
+        "Digital salstentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Energi- och miljöteknik",
+        "Produktutveckling",
+        "Maskinteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TKMJ15",
+      "name": "Miljömanagement",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Gruppuppgifter",
+        "Digital salstentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Energi- och miljöteknik",
+        "Industriell ekonomi",
+        "Maskinteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TBMT32",
+      "name": "Medicintekniska utblickar",
+      "credits": 2,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "3",
+        "3"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Uppsats",
+        "Aktiv närvaro på minst 6 föreläsningar samt studiebesök"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Medicinsk teknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TBMI31",
+      "name": "Medicinsk information och kunskap",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationer",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Medicinsk teknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE01",
+      "name": "Maskininlärning!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Datorbaserade laborationsuppgifter",
+        "Datortentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNM108"
+    },
+    {
+      "id": "TNM103",
+      "name": "Ljudteknik!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationer",
+        "Hemtentamen"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Medieteknik"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNM054"
+    },
+    {
+      "id": "TEIO29",
+      "name": "Ledarskap och organisation!",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Muntlig tentamen",
+        "Skriftlig gruppuppgift",
+        "Deltagande i seminarier och inlämning av individuell uppgift"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TEIO13"
+    },
+    {
+      "id": "TDDD20",
+      "name": "Konstruktion och analys av algoritmer",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TINT02",
+      "name": "Interkulturell kompetens och interkulturell kommunikation, fortsättningskurs",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "-",
+        "-"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projektarbete med muntlig presentation och opposition",
+        "Individuell skriftlig analys samt ventilation i grupp",
+        "Inlämningsuppgifter samt aktivt deltagande i seminarier"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TEIM13",
+      "name": "Interkulturell kommunikation",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Kontrollskrivning",
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TSRT07",
+      "name": "Industriell reglerteknik",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationskurs",
+        "Datortentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEIM11",
+      "name": "Industriell marknadsföring",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektuppgift med muntlig och skriftlig redovisning",
+        "Digital salstentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEAE01",
+      "name": "Industriell ekonomi, grundkurs",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Obligatorisk projektuppgift som löses och redovisas i grupp",
+        "Skriftlig tentamen",
+        "Laborationer"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEIE53",
+      "name": "Industriell ekonomi",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationer",
+        "Projektuppgift som genomförs i grupp",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEAE11",
+      "name": "Immaterialrätt",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Skriftlig tentamen"
+      ],
+      "campus": "Norrköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TDDD50",
+      "name": "Grön IT",
+      "credits": 4,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Aktivt deltagande vid seminarier samt rapportskrivning",
+        "Muntlig presentation och ledning av seminarium"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Programmering"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TNM110",
+      "name": "Grafisk design och kommunikation!",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Skriftlig tentamen för höjning av slutbetyget med ett steg",
+        "Inlämningsuppgifter, kan ge betyg 3 eller 4",
+        "Laborationskurs"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Medieteknik"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNM069"
+    },
+    {
+      "id": "TDDD57",
+      "name": "Fysisk interaktion och spelprogrammering",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektuppgift",
+        "Laborationskurs med duggor"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Medieteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "THFR27",
+      "name": "Franska med teknisk inriktning",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Muntlig presentation med skriftligt underlag",
+        "Sammanlagt 3 duggor",
+        "Inlämningsuppgifter samt aktiv närvaro i diskussioner"
+      ],
+      "campus": "Ortsoberoende",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TSFS02",
+      "name": "Fordonsdynamik med reglering",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationskurs",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik",
+        "Maskinteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TGTU99",
+      "name": "Etiska frågor inom AI",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "2"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Aktivt deltagande på seminarier",
+        "Individuellt skriftligt arbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDP024",
+      "name": "Enterprise Systems",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Seminarie",
+        "Laborationer"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Programmering"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "THEN18",
+      "name": "Engelska",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Muntlig tentamen och inlämningsuppgifter",
+        "En skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TFEI71",
+      "name": "Elektriska mätsystem!",
+      "credits": 4,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "En laborationskurs",
+        "Kontinuerlig examination"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TFMT13"
+    },
+    {
+      "id": "TDEI19",
+      "name": "Ekonomisk styrning",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Case-seminarier",
+        "Inlämningsuppgift",
+        "Kontrollskrivning"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TBMI04",
+      "name": "E-hälsa: visioner och verktyg",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2+4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Basgrupper och seminarier",
+        "Skriftlig rapport skriven i grupp och individuell reflektion"
+      ],
+      "campus": "Linköping, US",
+      "programs": [
+        "Medicinsk teknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TBMI28",
+      "name": "E-hälsa: projekt",
+      "credits": 12,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projektarbete"
+      ],
+      "campus": "Linköping, US",
+      "programs": [
+        "Informationsteknologi",
+        "Teknisk biologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Medicinsk teknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEIO95",
+      "name": "E-hälsa: innovation och entreprenörskap",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "2+4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projekt",
+        "Basgrupper"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Industriell ekonomi"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE70",
+      "name": "Djup maskininlärning",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Datorbaserade laborationsuppgifter",
+        "Digital tentamen",
+        "Miniprojekt"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSEA84",
+      "name": "Digitalt konstruktionsprojekt",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "3"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSFS06",
+      "name": "Diagnos och övervakning",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laborationskurs",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TNM112",
+      "name": "Deep Learning för medieteknik",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Skriftlig tentamen",
+        "Laborationskurs"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Datateknik",
+        "Medieteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSEA44",
+      "name": "Datorteknik - ett datorsystem på ett chip",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Miniprojekt"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Datateknik",
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEIE88",
+      "name": "Datajuridisk översiktskurs",
+      "credits": 4,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "TDDE60",
+      "name": "Cybersäkerhet och människan",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "4"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Aktivt deltagande i seminarier",
+        "Aktivt deltagande i scenariobaserade övningar",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TNM089",
+      "name": "Bildteknik",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektarbete med muntlig och skriftlig redovisning"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Medieteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TNM097",
+      "name": "Bildreproduktion och bildkvalitet",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Frivillig muntlig tentamen för högre betyg",
+        "Projektarbete",
+        "Laborationer"
+      ],
+      "campus": "Norrköping",
+      "programs": [
+        "Medieteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TBMT02",
+      "name": "Bildgenererande teknik inom medicinen",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Basgruppsarbete",
+        "Laboration",
+        "Hemtentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik",
+        "Medicinsk teknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE21",
+      "name": "Avancerad projektkurs: Säkra distribuerade och inbyggda system",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projekt"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE63",
+      "name": "Avancerad projektkurs: Informationssäkerhet",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projekt"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE19",
+      "name": "Avancerad projektkurs: AI och maskininlärning",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projekt"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TDDE15",
+      "name": "Avancerad maskininlärning!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Datorlaborationer",
+        "Datortentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNM108"
+    },
+    {
+      "id": "TDDD53",
+      "name": "Avancerad interaktionsdesign!",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Individuell uppgift",
+        "Grupparbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap",
+        "Produktutveckling"
+      ],
+      "notes": "Kursen får ej ingå i examen tillsammans med: TNM100"
+    },
+    {
+      "id": "TDDE57",
+      "name": "Analys och utvärdering av kommunikationsnätverk",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "1"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Laboration",
+        "Skriftlig tentamen",
+        "Projektarbete"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Informationsteknologi",
+        "Datateknik",
+        "Datavetenskap"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSTE27",
+      "name": "Analoga och tidsdiskreta integrerade kretsar",
+      "credits": 6,
+      "level": "avancerad nivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1"
+      ],
+      "block": [
+        "3"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Projektuppgift"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TSTE93",
+      "name": "Analog konstruktion",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "1",
+        "1"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Projektarbete och laborationer"
+      ],
+      "campus": "Linköping",
+      "programs": [
+        "Elektroteknik"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "TEAE13",
+      "name": "Affärsrätt",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "8"
+      ],
+      "period": [
+        "2"
+      ],
+      "block": [
+        "2"
+      ],
+      "pace": "100%",
+      "examination": [
+        "Skriftlig tentamen"
+      ],
+      "campus": "Linköping",
+      "programs": [],
+      "notes": ""
+    },
+    {
+      "id": "THEN09",
+      "name": "Advanced English",
+      "credits": 6,
+      "level": "grundnivå",
+      "term": [
+        "7",
+        "9"
+      ],
+      "period": [
+        "1",
+        "2"
+      ],
+      "block": [
+        "4",
+        "4"
+      ],
+      "pace": "50%",
+      "examination": [
+        "Muntliga och skriftliga uppgifter",
+        "Skriftlig tentamen"
+      ],
+      "campus": "Norrköping",
+      "programs": [],
+      "notes": ""
+    }
+  ]

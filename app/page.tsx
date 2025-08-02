@@ -10,7 +10,7 @@ import { FilterState, CollapsibleFilterSidebar } from "@/components/course/Filte
 import { Navbar } from "@/components/shared/Navbar";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
 import { ProfileSummary } from "@/components/profile/ProfileSummary";
-import coursesData from "@/data/mock-courses.json";
+import coursesData from "@/data/new-real-courses.json";
 
 const COURSES_PER_PAGE = 12;
 
@@ -67,32 +67,37 @@ function HomeContent() {
         return false;
       }
 
-      // Term filter - handle both single terms and term arrays
+      // Term filter - handle string arrays
       if (filterState.term.length > 0) {
-        const courseTerms: (7 | 8 | 9)[] = Array.isArray(course.term) ? course.term : [course.term];
+        const courseTerms = course.term; // Already an array of strings
         const termMatches = filterState.term.some(selectedTerm => {
           if (selectedTerm === 7) {
-            // Term 7 checkbox should match courses available in term 7 OR 9 (since they're combined)
-            return courseTerms.includes(7) || courseTerms.includes(9);
+            // Term 7 checkbox should match courses available in term "7" OR "9" (since they're combined)
+            return courseTerms.includes("7") || courseTerms.includes("9");
           }
-          // Since we know selectedTerm comes from our filter options (7 or 8), it's safe to use
-          return courseTerms.includes(selectedTerm as 7 | 8 | 9);
+          // Convert selectedTerm to string for comparison
+          return courseTerms.includes(selectedTerm.toString());
         });
         if (!termMatches) {
           return false;
         }
       }
 
-      // Period filter
-      if (filterState.period.length > 0 && !filterState.period.includes(course.period)) {
-        return false;
+      // Period filter - handle string arrays
+      if (filterState.period.length > 0) {
+        const hasMatchingPeriod = filterState.period.some(selectedPeriod => 
+          course.period.includes(selectedPeriod.toString())
+        );
+        if (!hasMatchingPeriod) {
+          return false;
+        }
       }
 
-      // Block filter - handle both single blocks and dual blocks for 50% courses
+      // Block filter - handle string arrays
       if (filterState.block.length > 0) {
-        const courseBlocks = Array.isArray(course.block) ? course.block : [course.block];
+        const courseBlocks = course.block; // Already an array of strings
         const hasMatchingBlock = filterState.block.some(selectedBlock => 
-          courseBlocks.includes(selectedBlock)
+          courseBlocks.includes(selectedBlock.toString())
         );
         if (!hasMatchingBlock) {
           return false;
@@ -109,13 +114,21 @@ function HomeContent() {
         return false;
       }
 
-      // Examination filter - show courses that contain any of the selected examination types
+      // Examination filter - show courses where all selected types exist in the course
       if (filterState.examination.length > 0) {
         const courseExaminations = course.examination;
-        const hasMatchingExamination = filterState.examination.some(exam => 
-          courseExaminations.includes(exam)
+        // If course has no examination types but filter is active, skip this course
+        if (courseExaminations.length === 0) {
+          return false;
+        }
+        
+        // Check if ALL selected examination types exist in the course
+        // This means you can only select examination types that the course actually has
+        const allSelectedTypesExistInCourse = filterState.examination.every(exam => 
+          courseExaminations.includes(exam as 'TEN' | 'LAB' | 'PROJ' | 'SEM' | 'UPG')
         );
-        if (!hasMatchingExamination) {
+        
+        if (!allSelectedTypesExistInCourse) {
           return false;
         }
       }

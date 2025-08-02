@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Plus, ExternalLink, Check, Trash2 } from "lucide-react";
-import { formatPace, isMultiTermCourse, getAvailableTerms } from "@/lib/course-utils";
+import { formatPace, isMultiTermCourse, getAvailableTerms, formatBlocks } from "@/lib/course-utils";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "./TermSelectionModal";
 import { isCourseInProfile } from "@/lib/profile-utils";
@@ -38,25 +38,8 @@ export function CourseCard({ course, activeFilters = {
 
   // Helper function to check if a field should be hidden based on active filters
   const shouldHideField = (fieldName: keyof typeof activeFilters) => {
-    const filterValues = activeFilters[fieldName];
-    if (!filterValues || filterValues.length === 0) return false;
-    
-    // Special handling for examination and programs - never hide these sections
-    if (fieldName === 'examination' || fieldName === 'programs') return false;
-    
-    // If only one filter value is selected, hide the field
-    if (filterValues.length === 1) return true;
-    
-    // If multiple values selected, show the field to distinguish between options
+    // Never hide any fields - always show course information
     return false;
-  };
-
-  // Helper function to format block display
-  const formatBlocks = (block: number | [number, number]) => {
-    if (Array.isArray(block)) {
-      return `${block[0]} & ${block[1]}`;
-    }
-    return block.toString();
   };
 
   // Helper function to determine if period should be shown (not for 50% courses)
@@ -71,7 +54,10 @@ export function CourseCard({ course, activeFilters = {
     } else {
       // Single term course - add directly with the available term
       const termToAdd = Array.isArray(course.term) ? course.term[0] : course.term;
-      addCourse(course, termToAdd);
+      const parsedTerm = parseInt(termToAdd);
+      if (!isNaN(parsedTerm) && [7, 8, 9].includes(parsedTerm)) {
+        addCourse(course, parsedTerm as 7 | 8 | 9);
+      }
     }
   };
 
@@ -81,13 +67,10 @@ export function CourseCard({ course, activeFilters = {
     setShowTermModal(false);
   };
 
-  // Helper function to filter examination badges - show only selected examination types when filter is active
+  // Helper function to get all examination badges - always show all examinations for the course
   const getVisibleExaminations = (examinations: string[]) => {
-    const selectedExaminations = activeFilters.examination || [];
-    if (selectedExaminations.length === 0) return examinations;
-    
-    // Return examinations that ARE in the selected filters
-    return examinations.filter(exam => selectedExaminations.includes(exam));
+    // Always show all examinations that the course actually has
+    return examinations;
   };
 
   return (
@@ -106,7 +89,7 @@ export function CourseCard({ course, activeFilters = {
               {(() => {
                 const visibleExaminations = getVisibleExaminations(course.examination);
                 return visibleExaminations.map((exam, index) => (
-                  <Badge key={index} variant="secondary" className="text-xs px-3 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20 hover:bg-electric-blue/20 transition-all duration-200">
+                  <Badge key={`${exam}-${index}`} variant="secondary" className="text-xs px-3 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20 hover:bg-electric-blue/20 transition-all duration-200">
                     {exam}
                   </Badge>
                 ));
@@ -117,12 +100,12 @@ export function CourseCard({ course, activeFilters = {
 
         {/* Key Information Grid */}
         <div className="grid gap-3 mb-4" style={{
-          gridTemplateColumns: `repeat(${[
+          gridTemplateColumns: `repeat(${Math.max(1, [
             !shouldHideField('term'),
             shouldShowPeriod() && !shouldHideField('period'), 
             !shouldHideField('block'),
             !shouldHideField('level')
-          ].filter(Boolean).length}, minmax(0, 1fr))`
+          ].filter(Boolean).length)}, minmax(0, 1fr))`
         }}>
           {!shouldHideField('term') && (
             <div className="text-center p-3 bg-picton-blue/10 rounded-lg border border-picton-blue/20 hover:border-picton-blue/30 transition-colors duration-200">
@@ -182,7 +165,7 @@ export function CourseCard({ course, activeFilters = {
               <div>
                 <div className="flex flex-wrap gap-1.5">
                   {course.programs.map((program, index) => (
-                    <Badge key={index} variant="outline" className="text-xs px-3 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 hover:bg-picton-blue/20 hover:border-picton-blue/40 transition-all duration-200">
+                    <Badge key={`${program}-${index}`} variant="outline" className="text-xs px-3 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 hover:bg-picton-blue/20 hover:border-picton-blue/40 transition-all duration-200">
                       {program}
                     </Badge>
                   ))}

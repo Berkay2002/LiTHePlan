@@ -145,13 +145,13 @@ export function ProfileSummary({ profile, onToggleView, isProfileView }: Profile
             {(summary.errors.length > 0 || summary.warnings.length > 0) && (
               <div className="space-y-2 pt-2 border-t border-border/40">
                 {summary.errors.map((error, index) => (
-                  <div key={index} className="flex items-start gap-2 text-xs">
+                  <div key={`error-${index}-${error.slice(0, 20)}`} className="flex items-start gap-2 text-xs">
                     <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 flex-shrink-0" />
                     <span className="text-destructive">{error}</span>
                   </div>
                 ))}
                 {summary.warnings.map((warning, index) => (
-                  <div key={index} className="flex items-start gap-2 text-xs">
+                  <div key={`warning-${index}-${warning.slice(0, 20)}`} className="flex items-start gap-2 text-xs">
                     <AlertTriangle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
                     <span className="text-amber-600">{warning}</span>
                   </div>

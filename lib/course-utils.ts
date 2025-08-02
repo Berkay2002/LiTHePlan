@@ -55,9 +55,9 @@ export function isMultiTermCourse(course: Course): boolean {
  */
 export function getAvailableTerms(course: Course): (7 | 8 | 9)[] {
   if (Array.isArray(course.term)) {
-    return course.term;
+    return course.term.map(t => parseInt(t) as 7 | 8 | 9);
   }
-  return [course.term];
+  return [parseInt(course.term) as 7 | 8 | 9];
 }
 
 /**
@@ -65,7 +65,20 @@ export function getAvailableTerms(course: Course): (7 | 8 | 9)[] {
  */
 export function isCourseAvailableInTerm(course: Course, term: 7 | 8 | 9): boolean {
   if (Array.isArray(course.term)) {
-    return course.term.includes(term);
+    return course.term.includes(term.toString());
   }
-  return course.term === term;
+  return parseInt(course.term) === term;
+}
+
+/**
+ * Format block(s) for display
+ */
+export function formatBlocks(blocks: string[]): string {
+  if (!blocks || blocks.length === 0) {
+    return 'N/A';
+  }
+  if (blocks.length === 1) {
+    return blocks[0];
+  }
+  return blocks.join(', ');
 } 

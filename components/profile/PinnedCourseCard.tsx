@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { X, ExternalLink, Clock, MapPin } from 'lucide-react';
+import { formatBlocks } from '@/lib/course-utils';
 
 interface PinnedCourseCardProps {
   course: Course;
@@ -14,13 +15,6 @@ interface PinnedCourseCardProps {
 }
 
 export function PinnedCourseCard({ course, onRemove, term, readOnly = false }: PinnedCourseCardProps) {
-  const formatBlocks = (block: number | [number, number]) => {
-    if (Array.isArray(block)) {
-      return `${block[0]}-${block[1]}`;
-    }
-    return block.toString();
-  };
-
   const formatPace = (pace: string) => {
     return pace === '100%' ? 'Full-time' : 'Part-time';
   };
@@ -87,11 +81,11 @@ export function PinnedCourseCard({ course, onRemove, term, readOnly = false }: P
         {/* Programs */}
         {course.programs.length > 0 && (
           <div className="flex flex-wrap gap-1">
-            {course.programs.slice(0, 2).map((program, index) => (
-              <Badge key={index} variant="outline" className="text-xs px-2 py-0.5">
-                {program}
-              </Badge>
-            ))}
+                      {course.programs.slice(0, 2).map((program, index) => (
+            <Badge key={`${program}-${index}`} variant="outline" className="text-xs px-2 py-0.5">
+              {program}
+            </Badge>
+          ))}
             {course.programs.length > 2 && (
               <Badge variant="outline" className="text-xs px-2 py-0.5">
                 +{course.programs.length - 2} more

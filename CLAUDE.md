@@ -10,7 +10,7 @@ This is the **Interactive Master's Profile Builder** - a Next.js application for
 
 ### Development
 - `npm run dev` - Start development server on http://localhost:3000
-- `npm run build` - Build production version
+- `npm run build` - Build production version (includes TypeScript type checking)
 - `npm start` - Start production server
 - `npm run lint` - Run ESLint
 
@@ -31,28 +31,42 @@ This is a **Next.js 15** application using the **App Router** with the following
 
 ### Development Strategy
 The project follows a **"mock data first"** approach:
-- **Phase 1**: Uses local JSON file (`/data/mock-courses.json`) for course data
+- **Phase 1**: Uses local JSON file (`/data/new-real-courses.json`) for course data
 - **Phase 2**: Will transition to Supabase database via API routes
+
+### State Management
+- **Profile State**: React Context with useReducer pattern in `ProfileContext.tsx`
+- **Course Filtering**: Local component state with React hooks
+- **Data Persistence**: localStorage for profile data
 
 ## Key Files & Structure
 
 ```
 app/
-├── api/              # API routes (App Router pattern)
-├── page.tsx          # Main course catalog page
-└── profile/[id]/     # Shared profile pages
+├── api/              # API routes (App Router pattern) - not yet implemented
+├── page.tsx          # Main course catalog with filtering
+├── layout.tsx        # Root layout with fonts
+└── profile/
+    ├── [id]/page.tsx # Shared profile viewing
+    └── edit/page.tsx # Profile editing interface
 
 components/
-├── course/           # Course discovery & filtering components
-├── profile/          # Profile builder components
-├── shared/           # General-purpose components
+├── course/           # Course discovery & filtering
+├── profile/          # Profile builder with Context API
+├── shared/           # Navigation and utilities
 └── ui/               # shadcn/ui base components
 
 data/
-└── mock-courses.json # Mock course data for development
+└── new-real-courses.json # Current course dataset
+
+lib/
+├── course-utils.ts   # Color coding and display logic
+├── profile-utils.ts  # Profile persistence and validation
+└── utils.ts          # General utilities
 
 types/
-└── course.ts         # Course interface and validation
+├── course.ts         # Course interface and validation
+└── profile.ts        # Profile state and operations
 ```
 
 ## Data Models
@@ -60,15 +74,24 @@ types/
 ### Course Interface
 The core data structure in `types/course.ts`:
 - Swedish university course with terms 7-9 (master's level)
-- Fields: id, name, credits, level, term, period, block, pace, examination, campus
-- Level types: 'grundnivå' | 'avancerad nivå'
+- Fields: id, name, credits, level, term, period, block, pace, examination, campus, programs
+- Level types: 'grundnivå' | 'avancerad nivå' 
 - Campus options: 'Linköping' | 'Norrköping' | 'Distans'
+- Array fields: term, period, block, examination (multi-value support)
+
+### StudentProfile Interface
+Profile management in `types/profile.ts`:
+- Courses organized by terms (7, 8, 9) with 90hp target
+- Metadata tracking (total_credits, advanced_credits, validation)
+- Profile operations: ADD_COURSE, REMOVE_COURSE, CLEAR_TERM, CLEAR_PROFILE
 
 ### Current Implementation
-- Main page (`app/page.tsx`) loads mock data directly from JSON
+- Main page (`app/page.tsx`) loads data from `new-real-courses.json`
+- ProfileContext manages state with useReducer pattern
 - Real-time filtering with React hooks and useMemo
-- Course cards display with shadcn/ui components
-- Filter panel with multiple criteria (level, term, period, block, pace, campus, examination)
+- Grid/list view toggle with pagination
+- Filter panel with multiple criteria and search
+- Profile pinboard with localStorage persistence
 
 ## Styling & Components
 
@@ -89,8 +112,19 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ## Development Notes
 
 - TypeScript is strictly enforced - all components must be typed
-- Uses App Router pattern for API routes: `/app/api/[route]/route.ts`
+- Uses App Router pattern for API routes: `/app/api/[route]/route.ts` (not yet implemented)
 - Component props must be explicitly typed
-- Filter state management uses React hooks (no external state library)
-- Course utility functions in `lib/course-utils.ts` for color coding and display logic
-- Type validation with `isValidCourse()` function in `types/course.ts`
+- ProfileContext provides global profile state with localStorage persistence
+- Course utilities in `lib/course-utils.ts` handle styling and formatting
+- Profile utilities in `lib/profile-utils.ts` handle CRUD operations and validation
+- Type guards: `isValidCourse()` and `isValidStudentProfile()` for runtime validation
+- Multi-value course fields (term, period, block) support flexible scheduling
+
+## Important Implementation Details
+
+- Profile state persists in localStorage via `ProfileContext`
+- Course data loaded directly from JSON (no API yet)
+- Filter state managed locally in page components
+- Profile validation enforces 90hp total, 60hp advanced minimum
+- All course operations go through ProfileContext actions
+- Component structure follows atomic design principles
