@@ -1,4 +1,4 @@
-import { Search, X, Menu, User, ChevronLeft } from "lucide-react";
+import { Search, X, Menu, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -9,11 +9,9 @@ interface NavbarProps {
   onSearchChange: (query: string) => void;
   onMobileMenuToggle?: () => void;
   isMobileMenuOpen?: boolean;
-  onProfileSidebarToggle?: () => void;
-  isProfileSidebarOpen?: boolean;
 }
 
-export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobileMenuOpen, onProfileSidebarToggle, isProfileSidebarOpen }: NavbarProps) {
+export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobileMenuOpen }: NavbarProps) {
   const handleClearSearch = () => {
     onSearchChange("");
   };

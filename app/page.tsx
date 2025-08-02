@@ -205,8 +205,6 @@ function HomeContent() {
         onSearchChange={handleSearchChange}
         onMobileMenuToggle={toggleSidebar}
         isMobileMenuOpen={sidebarOpen}
-        onProfileSidebarToggle={toggleProfileSidebar}
-        isProfileSidebarOpen={profileSidebarOpen}
       />
 
       {/* Main Content with Sidebar */}
@@ -250,7 +248,6 @@ function HomeContent() {
               <CourseGrid 
                 courses={paginatedCourses} 
                 isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' || key === 'search' ? value : (value as (string | number)[]).length > 0)}
-                activeFilters={filterState}
                 currentPage={currentPage}
                 totalPages={totalPages}
                 totalCourses={filteredAndSortedCourses.length}

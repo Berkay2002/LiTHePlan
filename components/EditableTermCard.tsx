@@ -139,13 +139,13 @@ export function EditableTermCard({
             );
           })}
         </div>
-        {Object.entries(blockOccupancy).some(([blockNum, courses]) => 
+        {Object.entries(blockOccupancy).some(([, courses]) => 
           courses.length > 1
         ) && (
           <div className="text-xs text-red-600 mt-2 flex items-center">
             <span className="mr-1">⚠️</span>
             Scheduling conflicts detected in block{Object.entries(blockOccupancy)
-              .filter(([blockNum, courses]) => courses.length > 1)
+              .filter(([, courses]) => courses.length > 1)
               .map(([blockNum]) => ` ${blockNum}`)
               .join(',')}
           </div>

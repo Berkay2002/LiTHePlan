@@ -22,7 +22,7 @@ export function CourseListItem({ course, activeFilters = {
   block: [],
   pace: [],
   campus: [],
-  examination: [],
+  examination: {},
   programs: "",
   search: ""
 } }: CourseListItemProps) {
@@ -77,11 +77,11 @@ export function CourseListItem({ course, activeFilters = {
 
   // Helper function to filter examination badges - show only selected examination types when filter is active
   const getVisibleExaminations = (examinations: string[]) => {
-    const selectedExaminations = activeFilters.examination || [];
-    if (selectedExaminations.length === 0) return examinations;
+    const examinationFilters = activeFilters.examination || {};
+    if (Object.keys(examinationFilters).length === 0) return examinations;
     
-    // Return examinations that ARE in the selected filters
-    return examinations.filter(exam => selectedExaminations.includes(exam));
+    // Return examinations that are set to 'include' in the filters
+    return examinations.filter(exam => examinationFilters[exam] === 'include');
   };
 
   return (

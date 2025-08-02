@@ -161,8 +161,6 @@ function ProfilePageContent() {
         <div className="mb-6">
           <ProfileSummary 
             profile={profile}
-            onToggleView={() => {}} // No toggle needed on profile page
-            isProfileView={true}
           />
         </div>
 

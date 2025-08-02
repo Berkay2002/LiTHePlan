@@ -86,7 +86,6 @@ export function ProfilePinboard({
                    key={course.id}
                    course={course}
                    onRemove={onRemoveCourse}
-                   term={term}
                    readOnly={readOnly}
                  />
               ))}

@@ -1,12 +1,10 @@
 import { Course } from "@/types/course";
 import { CourseCard } from "./CourseCard";
-import { FilterState } from "./FilterPanel";
 import { Pagination } from "@/components/shared/Pagination";
 
 interface CourseGridProps {
   courses: Course[];
   isFiltered?: boolean;
-  activeFilters?: FilterState;
   // Pagination props
   currentPage?: number;
   totalPages?: number;
@@ -17,8 +15,7 @@ interface CourseGridProps {
 
 export function CourseGrid({ 
   courses, 
-  isFiltered = false, 
-  activeFilters,
+  isFiltered = false,
   currentPage,
   totalPages,
   totalCourses,
@@ -47,7 +44,7 @@ export function CourseGrid({
       {/* Course grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full">
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} activeFilters={activeFilters} />
+          <CourseCard key={course.id} course={course} />
         ))}
       </div>
 
