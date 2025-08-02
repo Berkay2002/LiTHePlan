@@ -77,7 +77,7 @@ function ProfilePageContent() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar searchQuery="" onSearchChange={() => {}} />
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 pt-20">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
@@ -93,7 +93,7 @@ function ProfilePageContent() {
     return (
       <div className="min-h-screen bg-background">
         <Navbar searchQuery="" onSearchChange={() => {}} />
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 pt-20">
           <div className="flex items-center justify-center min-h-[400px]">
             <Card className="w-full max-w-md bg-card border-border shadow-lg">
               <CardContent className="pt-6 text-center">
@@ -121,7 +121,7 @@ function ProfilePageContent() {
     <div className="min-h-screen bg-background">
       <Navbar searchQuery="" onSearchChange={() => {}} />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 pt-20">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">

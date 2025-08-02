@@ -33,7 +33,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
   };
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-air-superiority-blue-400 border-b-2 border-air-superiority-blue/20">
+    <nav className="fixed top-0 left-0 right-0 z-40 w-full bg-air-superiority-blue-400 border-b-2 border-air-superiority-blue/20">
       <div className="container mx-auto px-4 py-3">
         {props.mode === 'main' ? (
           <>

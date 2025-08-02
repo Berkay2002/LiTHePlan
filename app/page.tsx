@@ -226,7 +226,7 @@ function HomeContent() {
         />
 
         {/* Main Content Area */}
-        <div className={`w-full transition-all duration-300 ease-in-out ${
+        <div className={`w-full transition-all duration-300 ease-in-out pt-20 ${
           sidebarOpen ? 'lg:ml-80 xl:ml-96' : 'lg:ml-12'
         } ${
           profileSidebarOpen ? 'lg:mr-80 xl:mr-96' : 'lg:mr-12'
