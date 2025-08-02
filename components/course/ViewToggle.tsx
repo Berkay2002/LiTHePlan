@@ -15,7 +15,7 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
         variant={viewMode === 'grid' ? 'default' : 'outline'}
         size="sm"
         onClick={() => onViewModeChange('grid')}
-        className={`h-8 px-3 transition-all duration-200 ${
+        className={`h-10 px-2 sm:px-3 transition-all duration-200 ${
           viewMode === 'grid'
             ? 'bg-picton-blue hover:bg-picton-blue-600 text-white shadow-sm border-picton-blue'
             : 'bg-white/80 text-air-superiority-blue border-air-superiority-blue/30 hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/50'
@@ -28,7 +28,7 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
         variant={viewMode === 'list' ? 'default' : 'outline'}
         size="sm"
         onClick={() => onViewModeChange('list')}
-        className={`h-8 px-3 transition-all duration-200 ${
+        className={`h-10 px-2 sm:px-3 transition-all duration-200 ${
           viewMode === 'list'
             ? 'bg-picton-blue hover:bg-picton-blue-600 text-white shadow-sm border-picton-blue'
             : 'bg-white/80 text-air-superiority-blue border-air-superiority-blue/30 hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/50'

@@ -18,36 +18,13 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
   const [currentTermIndex, setCurrentTermIndex] = useState(0);
   const terms = [7, 8, 9];
 
-  if (!profile) {
-    return (
-      <div className={cn(
-        "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-l-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
-        "flex flex-col ring-1 ring-air-superiority-blue-300/30",
-        isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-        "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
-      )}>
-        {!isOpen && (
-          <div className="hidden lg:flex flex-col items-center justify-center h-full w-12 relative">
-            <Button
-              onClick={onToggle}
-              variant="ghost"
-              size="default"
-              className="h-12 w-12 p-0 hover:bg-muted/80 transition-colors"
-            >
-              <ChevronLeft className="h-6 w-6 text-white hover:text-primary" />
-            </Button>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  const currentCredits = profile.metadata.total_credits;
+  // Calculate values only if profile exists
+  const currentCredits = profile?.metadata.total_credits ?? 0;
   const targetCredits = 90;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
   
   // Calculate advanced credits
-  const advancedCredits = profile.metadata.advanced_credits;
+  const advancedCredits = profile?.metadata.advanced_credits ?? 0;
   const basicCredits = currentCredits - advancedCredits;
   
   // Pie chart segments
@@ -89,7 +66,7 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
   };
 
   const currentTerm = terms[currentTermIndex];
-  const currentTermCourses = profile.terms[currentTerm as keyof typeof profile.terms];
+  const currentTermCourses = profile?.terms[currentTerm as keyof typeof profile.terms] ?? [];
 
   const nextTerm = () => {
     setCurrentTermIndex((prev) => (prev + 1) % terms.length);
@@ -141,7 +118,7 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
               
               {/* Tooltip on hover */}
               <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                Open Profile
+                {profile ? "Open Profile" : "Start Building Profile"}
               </div>
             </div>
           </div>
@@ -164,7 +141,7 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
                 
                 {/* Tooltip on hover */}
                 <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                  Close Profile
+                  {profile ? "Close Profile" : "Close Sidebar"}
                 </div>
               </div>
             </div>
@@ -172,7 +149,9 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
             {/* Mobile Header */}
             <div className="flex-shrink-0 p-4 border-b border-air-superiority-blue-300/40 bg-air-superiority-blue-300/30 lg:hidden">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-white">Profile Overview</h2>
+                <h2 className="text-sm font-semibold text-white">
+                  {profile ? "Profile Overview" : "Your Profile"}
+                </h2>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -185,8 +164,29 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
             </div>
 
             {/* Scrollable Profile Content */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 space-y-4 lg:space-y-4 xl:space-y-5">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 space-y-4 lg:space-y-4 xl:space-y-5 filter-panel-scroll">
               
+              {!profile ? (
+                /* Empty State - No Profile */
+                <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+                  <div className="space-y-4">
+                    <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto">
+                      <ChevronRight className="h-8 w-8 text-white/60" />
+                    </div>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-semibold text-white">Start Building Your Profile</h3>
+                      <p className="text-sm text-white/80 max-w-xs">
+                        Add courses to start seeing your progress and term planning here. Browse the course catalog and click the "+" button to add courses to your profile.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2 text-xs text-white/60">
+                    <p>💡 Tip: You can add up to 90 credits</p>
+                    <p>📚 Mix advanced and basic level courses</p>
+                  </div>
+                </div>
+              ) : (
+                <>
               {/* Profile Progress Section */}
               <div className="space-y-3">
                 <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Progress</h3>
@@ -303,6 +303,8 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
                   </CardContent>
                 </Card>
               </div>
+                </>
+              )}
             </div>
           </div>
         )}

@@ -234,12 +234,20 @@ function HomeContent() {
         }`}>
           <div className="container mx-auto px-4 py-8 max-w-7xl">
             {/* View Toggle and Sort Controls */}
-            <div className="w-full flex justify-between mb-6 ">
-              <div className="flex-shrink-0">
-                <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
-              </div>
-              <div className="flex-shrink-0">
-                <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+            <div className="w-full max-w-full mb-6 px-2 sm:px-0">
+              <div className="flex justify-between items-center gap-4 min-w-0">
+                {/* Left Column - Sort Controls */}
+                <div className="flex-shrink-0 min-w-0">
+                  <SortDropdown sortOption={sortOption} onSortChange={setSortOption} />
+                </div>
+                
+                {/* Spacer for visual separation */}
+                <div className="flex-1 min-w-4"></div>
+                
+                {/* Right Column - View Toggle */}
+                <div className="flex-shrink-0 min-w-0">
+                  <ViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+                </div>
               </div>
             </div>
 
@@ -248,6 +256,8 @@ function HomeContent() {
               <CourseGrid 
                 courses={paginatedCourses} 
                 isFiltered={Object.entries(filterState).some(([key, value]) => key === 'programs' || key === 'search' ? value : (value as (string | number)[]).length > 0)}
+                sidebarOpen={sidebarOpen}
+                profileSidebarOpen={profileSidebarOpen}
                 currentPage={currentPage}
                 totalPages={totalPages}
                 totalCourses={filteredAndSortedCourses.length}

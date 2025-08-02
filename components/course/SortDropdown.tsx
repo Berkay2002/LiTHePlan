@@ -33,8 +33,8 @@ export function SortDropdown({ sortOption, onSortChange }: SortDropdownProps) {
         value={sortOption || ''}
         onValueChange={(value) => onSortChange(value as SortOption)}
       >
-        <SelectTrigger className="w-40 h-8 text-sm bg-white/80 border-air-superiority-blue/30 text-air-superiority-blue hover:border-air-superiority-blue/50">
-          <SelectValue placeholder="Sort after..." />
+        <SelectTrigger className="w-32 sm:w-40 h-10 text-sm bg-white/80 border-air-superiority-blue/30 text-air-superiority-blue hover:border-air-superiority-blue/50">
+          <SelectValue placeholder="Sort..." />
         </SelectTrigger>
         <SelectContent className="bg-white border-air-superiority-blue/30">
           {sortOptions.map((option) => (
@@ -49,7 +49,7 @@ export function SortDropdown({ sortOption, onSortChange }: SortDropdownProps) {
           variant="ghost"
           size="sm"
           onClick={() => onSortChange(null)}
-          className="h-8 px-2 text-xs text-air-superiority-blue hover:bg-air-superiority-blue/10"
+          className="h-10 px-2 text-xs text-air-superiority-blue hover:bg-air-superiority-blue/10"
         >
           Clear
         </Button>

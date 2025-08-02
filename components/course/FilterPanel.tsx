@@ -227,7 +227,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
             </div>
 
             {/* Scrollable Filter Content */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 pb-20 lg:pb-4 xl:pb-6 space-y-4 lg:space-y-4 xl:space-y-5">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 pb-20 lg:pb-4 xl:pb-6 space-y-4 lg:space-y-4 xl:space-y-5 filter-panel-scroll">
               {/* Programs Filter - Dropdown */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">

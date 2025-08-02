@@ -5,6 +5,9 @@ import { Pagination } from "@/components/shared/Pagination";
 interface CourseGridProps {
   courses: Course[];
   isFiltered?: boolean;
+  // Sidebar state props for responsive layout
+  sidebarOpen?: boolean;
+  profileSidebarOpen?: boolean;
   // Pagination props
   currentPage?: number;
   totalPages?: number;
@@ -16,6 +19,8 @@ interface CourseGridProps {
 export function CourseGrid({ 
   courses, 
   isFiltered = false,
+  sidebarOpen = false,
+  profileSidebarOpen = false,
   currentPage,
   totalPages,
   totalCourses,
@@ -39,10 +44,16 @@ export function CourseGrid({
     );
   }
 
+  // Determine grid columns based on sidebar states
+  const bothSidebarsOpen = sidebarOpen && profileSidebarOpen;
+  const gridClasses = bothSidebarsOpen 
+    ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:gap-5 w-full"
+    : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full";
+
   return (
     <div className="space-y-6 w-full">
       {/* Course grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full">
+      <div className={gridClasses}>
         {courses.map((course) => (
           <CourseCard key={course.id} course={course} />
         ))}
