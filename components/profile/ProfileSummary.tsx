@@ -2,18 +2,15 @@
 
 import { StudentProfile } from '@/types/profile';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { BookOpen, Target, AlertTriangle, CheckCircle } from 'lucide-react';
 import { getProfileSummary } from '@/lib/profile-utils';
 
 interface ProfileSummaryProps {
   profile: StudentProfile;
-  onToggleView: () => void;
-  isProfileView: boolean;
 }
 
-export function ProfileSummary({ profile, onToggleView, isProfileView }: ProfileSummaryProps) {
+export function ProfileSummary({ profile }: ProfileSummaryProps) {
   const summary = getProfileSummary(profile);
 
   const getCompletionColor = () => {

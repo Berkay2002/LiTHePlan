@@ -1,16 +1,19 @@
-import { Search, X, Menu, User } from "lucide-react";
+import { Search, X, Menu, User, ChevronLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
 
 interface NavbarProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onMobileMenuToggle?: () => void;
   isMobileMenuOpen?: boolean;
+  onProfileSidebarToggle?: () => void;
+  isProfileSidebarOpen?: boolean;
 }
 
-export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobileMenuOpen }: NavbarProps) {
+export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobileMenuOpen, onProfileSidebarToggle, isProfileSidebarOpen }: NavbarProps) {
   const handleClearSearch = () => {
     onSearchChange("");
   };
@@ -19,8 +22,20 @@ export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobi
     <nav className="sticky top-0 z-40 w-full bg-air-superiority-blue-400 border-b-2 border-air-superiority-blue/20">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Left Side - Hamburger Menu */}
+          {/* Left Side - Logo (Desktop) / Hamburger Menu (Mobile) */}
           <div className="flex-shrink-0">
+            {/* Desktop Logo - Far Left */}
+            <div className="hidden lg:block">
+              <Link href="/" className="block">
+                <LiTHePlanLogo 
+                  width={300} 
+                  height={50} 
+                  className="h-10 w-auto transition-opacity hover:opacity-80" 
+                />
+              </Link>
+            </div>
+            
+            {/* Mobile Hamburger Menu */}
             {onMobileMenuToggle && (
               <div className="lg:hidden">
                 <Button
@@ -68,16 +83,17 @@ export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobi
             </div>
           </div>
 
-          {/* Right Side - Profile Button */}
-          <div className="flex-shrink-0">
+          {/* Right Side - Profile Button (Far Right) */}
+          <div className="flex-shrink-0 flex items-center gap-2">
+            {/* Profile Edit Link */}
             <Link href="/profile/edit">
               <Button
                 variant="ghost"
                 size="sm"
                 className="h-10 w-10 p-0 hover:bg-picton-blue/10 transition-all duration-200 border border-white/30 hover:border-picton-blue/50"
-                title="My Profile"
+                title="Edit Profile"
               >
-                <User className="h-5 w-5 text-white hover:text-picton-blue transition-colors duration-200" />
+                <User className="h-6 w-6 text-white hover:text-picton-blue transition-colors duration-200" />
               </Button>
             </Link>
           </div>

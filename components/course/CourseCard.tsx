@@ -9,24 +9,12 @@ import { useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "./TermSelectionModal";
 import { isCourseInProfile } from "@/lib/profile-utils";
 
-import { FilterState } from "./FilterPanel";
 
 interface CourseCardProps {
   course: Course;
-  activeFilters?: FilterState;
 }
 
-export function CourseCard({ course, activeFilters = {
-  level: [],
-  term: [],
-  period: [],
-  block: [],
-  pace: [],
-  campus: [],
-  examination: [],
-  programs: "",
-  search: ""
-} }: CourseCardProps) {
+export function CourseCard({ course }: CourseCardProps) {
   const { state, addCourse, removeCourse } = useProfile();
   const isPinned = state.current_profile ? isCourseInProfile(state.current_profile, course.id) : false;
   const [isHovered, setIsHovered] = useState(false);
@@ -36,8 +24,8 @@ export function CourseCard({ course, activeFilters = {
   const isMultiTerm = isMultiTermCourse(course);
   const availableTerms = getAvailableTerms(course);
 
-  // Helper function to check if a field should be hidden based on active filters
-  const shouldHideField = (fieldName: keyof typeof activeFilters) => {
+  // Helper function to check if a field should be hidden
+  const shouldHideField = () => {
     // Never hide any fields - always show course information
     return false;
   };
@@ -101,13 +89,13 @@ export function CourseCard({ course, activeFilters = {
         {/* Key Information Grid */}
         <div className="grid gap-3 mb-4" style={{
           gridTemplateColumns: `repeat(${Math.max(1, [
-            !shouldHideField('term'),
-            shouldShowPeriod() && !shouldHideField('period'), 
-            !shouldHideField('block'),
-            !shouldHideField('level')
+            !shouldHideField(),
+            shouldShowPeriod() && !shouldHideField(), 
+            !shouldHideField(),
+            !shouldHideField()
           ].filter(Boolean).length)}, minmax(0, 1fr))`
         }}>
-          {!shouldHideField('term') && (
+          {!shouldHideField() && (
             <div className="text-center p-3 bg-picton-blue/10 rounded-lg border border-picton-blue/20 hover:border-picton-blue/30 transition-colors duration-200">
               <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Term</div>
               <div className="text-sm font-bold text-picton-blue">
@@ -115,13 +103,13 @@ export function CourseCard({ course, activeFilters = {
               </div>
             </div>
           )}
-          {shouldShowPeriod() && !shouldHideField('period') && (
+          {shouldShowPeriod() && !shouldHideField() && (
             <div className="text-center p-3 bg-air-superiority-blue/10 rounded-lg border border-air-superiority-blue/20 hover:border-air-superiority-blue/30 transition-colors duration-200">
               <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Period</div>
               <div className="text-sm font-bold text-air-superiority-blue">{course.period}</div>
             </div>
           )}
-          {!shouldHideField('block') && (
+          {!shouldHideField() && (
             <div className="text-center p-3 bg-electric-blue/10 rounded-lg border border-electric-blue/20 hover:border-electric-blue/30 transition-colors duration-200">
               <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
                 {Array.isArray(course.block) ? 'Blocks' : 'Block'}
@@ -129,7 +117,7 @@ export function CourseCard({ course, activeFilters = {
               <div className="text-sm font-bold text-electric-blue-300">{formatBlocks(course.block)}</div>
             </div>
           )}
-          {!shouldHideField('level') && (
+          {!shouldHideField() && (
             <div className="text-center p-3 bg-battleship-gray/10 rounded-lg border border-battleship-gray/20 hover:border-battleship-gray/30 transition-colors duration-200">
               <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">Level</div>
               <div className="text-xs font-bold text-battleship-gray">
@@ -143,15 +131,15 @@ export function CourseCard({ course, activeFilters = {
         <div className="space-y-3 flex-1">
           <div className="p-4 bg-air-superiority-blue/8 rounded-lg border border-air-superiority-blue/10 space-y-3">
             {/* Campus and Pace - only show if not filtered to single values */}
-            {(!shouldHideField('campus') || !shouldHideField('pace')) && (
+            {(!shouldHideField() || !shouldHideField()) && (
               <div className="flex items-center justify-between">
-                {!shouldHideField('campus') && (
+                {!shouldHideField() && (
                   <div className="flex items-center gap-2">
                     <MapPin className="h-5 w-5 text-air-superiority-blue" />
                     <span className="text-sm font-medium text-air-superiority-blue-300">{course.campus}</span>
                   </div>
                 )}
-                {!shouldHideField('pace') && (
+                {!shouldHideField() && (
                   <div className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-battleship-gray" />
                     <span className="text-sm font-medium text-battleship-gray-300">{formatPace(course.pace)}</span>

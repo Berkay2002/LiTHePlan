@@ -1,6 +1,6 @@
 // lib/profile-utils.ts
 
-import { StudentProfile, ProfileState, createEmptyProfile, validateProfile } from '@/types/profile';
+import { StudentProfile, createEmptyProfile, validateProfile } from '@/types/profile';
 
 // Re-export createEmptyProfile for convenience
 export { createEmptyProfile };
@@ -139,6 +139,47 @@ export function removeCourseFromProfile(profile: StudentProfile, courseId: strin
     terms: {
       ...profile.terms,
       [term]: profile.terms[term].filter(course => course.id !== courseId)
+    }
+  };
+  
+  // Update metadata
+  const validation = validateProfile(updatedProfile);
+  updatedProfile.metadata = {
+    total_credits: validation.total_credits,
+    advanced_credits: validation.advanced_credits,
+    is_valid: validation.is_valid
+  };
+  
+  return updatedProfile;
+}
+
+/**
+ * Move a course from one term to another
+ */
+export function moveCourseInProfile(profile: StudentProfile, courseId: string, fromTerm: 7 | 8 | 9, toTerm: 7 | 8 | 9): StudentProfile {
+  // Find the course in the from term
+  const course = profile.terms[fromTerm].find(c => c.id === courseId);
+  if (!course) {
+    throw new Error(`Course ${courseId} not found in term ${fromTerm}`);
+  }
+  
+  // For validation, we need to check if the course has an original_term property
+  // or use the course's current term info. Since courses can be offered in multiple terms,
+  // we'll be more permissive and only check if the target term is 7 or 9 (the allowed terms)
+  if (toTerm !== 7 && toTerm !== 9) {
+    throw new Error(`Can only move courses to terms 7 or 9. Target term ${toTerm} is not allowed.`);
+  }
+  
+  // Create updated course with new term
+  const updatedCourse = { ...course, term: toTerm };
+  
+  const updatedProfile: StudentProfile = {
+    ...profile,
+    updated_at: new Date(),
+    terms: {
+      ...profile.terms,
+      [fromTerm]: profile.terms[fromTerm].filter(c => c.id !== courseId),
+      [toTerm]: [...profile.terms[toTerm], updatedCourse]
     }
   };
   

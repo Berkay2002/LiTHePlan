@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Clock, MapPin, GraduationCap } from "lucide-react";
+import { Calendar, MapPin, GraduationCap } from "lucide-react";
 import { Course } from "@/types/course";
 
 interface TermSelectionModalProps {

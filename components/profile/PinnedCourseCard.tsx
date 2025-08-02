@@ -10,11 +10,10 @@ import { formatBlocks } from '@/lib/course-utils';
 interface PinnedCourseCardProps {
   course: Course;
   onRemove: (courseId: string) => void;
-  term: 7 | 8 | 9;
   readOnly?: boolean;
 }
 
-export function PinnedCourseCard({ course, onRemove, term, readOnly = false }: PinnedCourseCardProps) {
+export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedCourseCardProps) {
   const formatPace = (pace: string) => {
     return pace === '100%' ? 'Full-time' : 'Part-time';
   };

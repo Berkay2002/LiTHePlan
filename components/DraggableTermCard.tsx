@@ -1,29 +1,32 @@
-// components/EditableTermCard.tsx
+// components/DraggableTermCard.tsx
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Course } from "@/types/course";
 import { getLevelColor } from "@/lib/course-utils";
-import { X, Trash2, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
+import { X, Trash2, GripVertical, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 
-interface EditableTermCardProps {
+interface DraggableTermCardProps {
   termNumber: 7 | 8 | 9;
   courses: Course[];
   onRemoveCourse: (courseId: string) => void;
   onClearTerm: (term: 7 | 8 | 9) => void;
   onMoveCourse?: (courseId: string, fromTerm: 7 | 8 | 9, toTerm: 7 | 8 | 9) => void;
   className?: string;
+  isDragDisabled?: boolean;
 }
 
-export function EditableTermCard({ 
+export function DraggableTermCard({ 
   termNumber, 
   courses, 
   onRemoveCourse, 
   onClearTerm, 
   onMoveCourse,
-  className 
-}: EditableTermCardProps) {
+  className,
+  isDragDisabled = false
+}: DraggableTermCardProps) {
   const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
   
   const getTermLabel = (term: number) => {
@@ -160,7 +163,124 @@ export function EditableTermCard({
     }
   };
 
-  const renderEditableCoursesList = (periodCourses: Course[], currentPeriod: 1 | 2) => {
+  const renderDraggableCourse = (course: Course, index: number, currentPeriod: 1 | 2) => {
+    const uniqueId = `${course.id}-term${termNumber}-period${currentPeriod}`;
+    
+    return (
+      <Draggable
+        key={uniqueId}
+        draggableId={uniqueId}
+        index={index}
+        isDragDisabled={isDragDisabled || termNumber === 8} // Disable drag for term 8
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            className={`p-4 rounded-lg border bg-card transition-colors group ${
+              snapshot.isDragging 
+                ? 'shadow-lg border-primary/50 bg-primary/5' 
+                : 'hover:bg-accent/50'
+            } ${isDragDisabled || termNumber === 8 ? 'opacity-75' : ''}`}
+          >
+            <div className="flex items-start justify-between mb-2">
+              <div className="flex items-start gap-2 flex-1 min-w-0">
+                {!isDragDisabled && termNumber !== 8 && (
+                  <div
+                    {...provided.dragHandleProps}
+                    className="mt-1 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing"
+                  >
+                    <GripVertical className="h-4 w-4" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm leading-tight">
+                        {course.name}
+                      </h4>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {course.id} • {course.credits} hp
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
+                      }}
+                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                      title="View course on LiU website"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onRemoveCourse(course.id)}
+                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive ml-2"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+            
+            {/* Enhanced Block Indicators */}
+            {renderBlockIndicators(course, currentPeriod)}
+            
+            <div className="flex flex-wrap gap-1 mt-3">
+              <Badge 
+                variant="secondary" 
+                className={`text-xs ${getLevelColor(course.level)}`}
+              >
+                {course.level === 'avancerad nivå' ? 'Advanced' : 'Basic'}
+              </Badge>
+              
+              {course.campus && (
+                <Badge variant="outline" className="text-xs">
+                  {course.campus}
+                </Badge>
+              )}
+            </div>
+
+            {/* Transfer buttons - only show for terms 7 and 9, and when onMoveCourse is available */}
+            {onMoveCourse && termNumber !== 8 && (
+              <div className="flex gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                {termNumber === 7 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onMoveCourse(course.id, 7, 9)}
+                    className="h-6 px-2 text-xs"
+                    title="Move to Term 9"
+                  >
+                    <ArrowRight className="h-3 w-3 mr-1" />
+                    Term 9
+                  </Button>
+                )}
+                {termNumber === 9 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onMoveCourse(course.id, 9, 7)}
+                    className="h-6 px-2 text-xs"
+                    title="Move to Term 7"
+                  >
+                    <ArrowLeft className="h-3 w-3 mr-1" />
+                    Term 7
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Draggable>
+    );
+  };
+
+  const renderPeriodCourses = (periodCourses: Course[], currentPeriod: 1 | 2) => {
     if (periodCourses.length === 0) {
       return (
         <div className="text-center py-4 text-muted-foreground">
@@ -169,94 +289,9 @@ export function EditableTermCard({
       );
     }
 
-    return periodCourses.map((course) => (
-      <div
-        key={`${course.id}-period-${currentPeriod}`}
-        className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors group"
-      >
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm leading-tight truncate">
-                  {course.name}
-                </h4>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {course.id} • {course.credits} hp
-                </p>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => {
-                  window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
-                }}
-                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
-                title="View course on LiU website"
-              >
-                <ExternalLink className="h-3 w-3" />
-              </Button>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onRemoveCourse(course.id)}
-            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive ml-2"
-          >
-            <X className="h-3 w-3" />
-          </Button>
-        </div>
-        
-        {/* Enhanced Block Indicators */}
-        {renderBlockIndicators(course, currentPeriod)}
-        
-        <div className="flex flex-wrap gap-1 mt-3">
-          <Badge 
-            variant="secondary" 
-            className={`text-xs ${getLevelColor(course.level)}`}
-          >
-            {course.level === 'avancerad nivå' ? 'Advanced' : 'Basic'}
-          </Badge>
-          
-          {course.campus && (
-            <Badge variant="outline" className="text-xs">
-              {course.campus}
-            </Badge>
-          )}
-        </div>
-
-        {/* Transfer buttons - only show for terms 7 and 9, and when onMoveCourse is available */}
-        {onMoveCourse && termNumber !== 8 && (
-          <div className="flex gap-1 mt-3 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-            {termNumber === 7 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onMoveCourse(course.id, 7, 9)}
-                className="h-6 px-2 text-xs"
-                title="Move to Term 9"
-              >
-                <ArrowRight className="h-3 w-3 mr-1" />
-                Term 9
-              </Button>
-            )}
-            {termNumber === 9 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onMoveCourse(course.id, 9, 7)}
-                className="h-6 px-2 text-xs"
-                title="Move to Term 7"
-              >
-                <ArrowLeft className="h-3 w-3 mr-1" />
-                Term 7
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
-    ));
+    return periodCourses.map((course, index) => 
+      renderDraggableCourse(course, index, currentPeriod)
+    );
   };
 
   return (
@@ -280,14 +315,33 @@ export function EditableTermCard({
             )}
           </div>
         </CardTitle>
+        {isDragDisabled && termNumber !== 8 && (
+          <p className="text-xs text-muted-foreground">Desktop only: Drag courses between terms</p>
+        )}
+        {termNumber === 8 && (
+          <p className="text-xs text-muted-foreground">Term 8 courses cannot be moved</p>
+        )}
       </CardHeader>
       
       <CardContent className="space-y-4">
         {courses.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground">
-            <p className="text-sm">No courses selected</p>
-            <p className="text-xs mt-1">Add courses from the catalog</p>
-          </div>
+          <Droppable droppableId={`term-${termNumber}`} type="COURSE">
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={`text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg transition-colors ${
+                  snapshot.isDraggingOver 
+                    ? 'border-primary bg-primary/5' 
+                    : 'border-border'
+                }`}
+              >
+                <p className="text-sm">No courses selected</p>
+                <p className="text-xs mt-1">Add courses from the catalog or drag them here</p>
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         ) : (
           <>
             {/* Period 1 */}
@@ -298,15 +352,27 @@ export function EditableTermCard({
                   {coursesByPeriod[1]
                     .filter(course => (Array.isArray(course.period) ? course.period.includes('1') : course.period === '1') || course.pace === '50%')
                     .reduce((sum, course) => {
-                      // For 50% courses, only count half the credits per period
                       return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
                     }, 0)} hp
                 </Badge>
               </div>
               {coursesByPeriod[1].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
-              <div className="space-y-3">
-                {renderEditableCoursesList(coursesByPeriod[1], 1)}
-              </div>
+              <Droppable droppableId={`term-${termNumber}-period-1`} type="COURSE">
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`space-y-3 min-h-[60px] rounded-lg p-2 transition-colors ${
+                      snapshot.isDraggingOver 
+                        ? 'bg-primary/5 border-2 border-dashed border-primary' 
+                        : ''
+                    }`}
+                  >
+                    {renderPeriodCourses(coursesByPeriod[1], 1)}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
             </div>
 
             {/* Period 2 */}
@@ -317,15 +383,27 @@ export function EditableTermCard({
                   {coursesByPeriod[2]
                     .filter(course => (Array.isArray(course.period) ? course.period.includes('2') : course.period === '2') || course.pace === '50%')
                     .reduce((sum, course) => {
-                      // For 50% courses, only count half the credits per period
                       return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
                     }, 0)} hp
                 </Badge>
               </div>
               {coursesByPeriod[2].length > 0 && renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
-              <div className="space-y-3">
-                {renderEditableCoursesList(coursesByPeriod[2], 2)}
-              </div>
+              <Droppable droppableId={`term-${termNumber}-period-2`} type="COURSE">
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`space-y-3 min-h-[60px] rounded-lg p-2 transition-colors ${
+                      snapshot.isDraggingOver 
+                        ? 'bg-primary/5 border-2 border-dashed border-primary' 
+                        : ''
+                    }`}
+                  >
+                    {renderPeriodCourses(coursesByPeriod[2], 2)}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
             </div>
           </>
         )}

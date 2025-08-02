@@ -7,9 +7,9 @@ import { CourseList } from "@/components/course/CourseList";
 import { ViewToggle, ViewMode } from "@/components/course/ViewToggle";
 import { SortDropdown, SortOption, sortCourses } from "@/components/course/SortDropdown";
 import { FilterState, CollapsibleFilterSidebar } from "@/components/course/FilterPanel";
+import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { Navbar } from "@/components/shared/Navbar";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
-import { ProfileSummary } from "@/components/profile/ProfileSummary";
 import coursesData from "@/data/new-real-courses.json";
 
 const COURSES_PER_PAGE = 12;
@@ -17,7 +17,9 @@ const COURSES_PER_PAGE = 12;
 function HomeContent() {
   // Type assertion since we know the JSON structure matches our Course interface
   const courses: Course[] = coursesData as Course[];
-  const { state, removeCourse, clearTerm, clearProfile } = useProfile();
+  
+  // Access profile context
+  const { state } = useProfile();
 
   // Initialize filter state
   const [filterState, setFilterState] = useState<FilterState>({
@@ -27,7 +29,7 @@ function HomeContent() {
     block: [],
     pace: [],
     campus: [],
-    examination: [],
+    examination: {},
     programs: "",
     search: "",
   });
@@ -39,13 +41,18 @@ function HomeContent() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   // Sort state
-  const [sortOption, setSortOption] = useState<SortOption | null>(null);
+  const [sortOption, setSortOption] = useState<SortOption | null>('name-asc');
 
   // Sidebar state - Start closed by default for better mobile experience
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileSidebarOpen, setProfileSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const toggleProfileSidebar = () => {
+    setProfileSidebarOpen(!profileSidebarOpen);
   };
 
   // Filter and sort logic function
@@ -114,22 +121,25 @@ function HomeContent() {
         return false;
       }
 
-      // Examination filter - show courses where all selected types exist in the course
-      if (filterState.examination.length > 0) {
+      // Examination filter - tri-state per-type filtering
+      const examinationFilters = Object.entries(filterState.examination);
+      if (examinationFilters.length > 0) {
         const courseExaminations = course.examination;
-        // If course has no examination types but filter is active, skip this course
-        if (courseExaminations.length === 0) {
-          return false;
-        }
         
-        // Check if ALL selected examination types exist in the course
-        // This means you can only select examination types that the course actually has
-        const allSelectedTypesExistInCourse = filterState.examination.every(exam => 
-          courseExaminations.includes(exam as 'TEN' | 'LAB' | 'PROJ' | 'SEM' | 'UPG')
-        );
-        
-        if (!allSelectedTypesExistInCourse) {
-          return false;
+        for (const [examType, mode] of examinationFilters) {
+          if (mode === 'ignore') continue; // Skip ignored examination types
+          
+          const courseHasExamType = courseExaminations.includes(examType as 'TEN' | 'LAB' | 'PROJ' | 'SEM' | 'UPG');
+          
+          if (mode === 'include' && !courseHasExamType) {
+            // Required examination type is missing
+            return false;
+          }
+          
+          if (mode === 'exclude' && courseHasExamType) {
+            // Forbidden examination type is present
+            return false;
+          }
         }
       }
 
@@ -169,7 +179,7 @@ function HomeContent() {
       block: [],
       pace: [],
       campus: [],
-      examination: [],
+      examination: {},
       programs: "",
       search: "",
     });
@@ -195,11 +205,13 @@ function HomeContent() {
         onSearchChange={handleSearchChange}
         onMobileMenuToggle={toggleSidebar}
         isMobileMenuOpen={sidebarOpen}
+        onProfileSidebarToggle={toggleProfileSidebar}
+        isProfileSidebarOpen={profileSidebarOpen}
       />
 
       {/* Main Content with Sidebar */}
       <div className="flex">
-        {/* Collapsible Sidebar - Available on both desktop and mobile */}
+        {/* Left Filter Sidebar */}
         <CollapsibleFilterSidebar
           courses={courses}
           filterState={filterState}
@@ -208,10 +220,19 @@ function HomeContent() {
           isOpen={sidebarOpen}
           onToggle={toggleSidebar}
         />
+        
+        {/* Right Profile Sidebar */}
+        <ProfileSidebar
+          profile={state.current_profile}
+          isOpen={profileSidebarOpen}
+          onToggle={toggleProfileSidebar}
+        />
 
         {/* Main Content Area */}
         <div className={`w-full transition-all duration-300 ease-in-out ${
           sidebarOpen ? 'lg:ml-80 xl:ml-96' : 'lg:ml-12'
+        } ${
+          profileSidebarOpen ? 'lg:mr-80 xl:mr-96' : 'lg:mr-12'
         }`}>
           <div className="container mx-auto px-4 py-8 max-w-7xl">
             {/* View Toggle and Sort Controls */}

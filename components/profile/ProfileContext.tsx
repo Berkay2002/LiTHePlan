@@ -7,6 +7,7 @@ import {
   saveProfileToStorage, 
   addCourseToProfile, 
   removeCourseFromProfile, 
+  moveCourseInProfile,
   clearTermInProfile, 
   clearProfile as clearProfileUtil,
   createEmptyProfile 
@@ -16,6 +17,7 @@ type ProfileAction =
   | { type: 'LOAD_PROFILE'; profile: StudentProfile }
   | { type: 'ADD_COURSE'; course: StudentProfile['terms'][7][0]; term: 7 | 8 | 9 }
   | { type: 'REMOVE_COURSE'; courseId: string }
+  | { type: 'MOVE_COURSE'; courseId: string; fromTerm: 7 | 8 | 9; toTerm: 7 | 8 | 9 }
   | { type: 'CLEAR_TERM'; term: 7 | 8 | 9 }
   | { type: 'CLEAR_PROFILE' }
   | { type: 'SET_EDITING'; isEditing: boolean }
@@ -25,6 +27,7 @@ interface ProfileContextType {
   state: ProfileState;
   addCourse: (course: StudentProfile['terms'][7][0], term: 7 | 8 | 9) => void;
   removeCourse: (courseId: string) => void;
+  moveCourse: (courseId: string, fromTerm: 7 | 8 | 9, toTerm: 7 | 8 | 9) => void;
   clearTerm: (term: 7 | 8 | 9) => void;
   clearProfile: () => void;
   setEditing: (isEditing: boolean) => void;
@@ -70,6 +73,16 @@ function profileReducer(state: ProfileState, action: ProfileAction): ProfileStat
       return {
         ...state,
         current_profile: updatedProfile,
+        unsaved_changes: true
+      };
+    
+    case 'MOVE_COURSE':
+      if (!state.current_profile) return state;
+      const movedProfile = moveCourseInProfile(state.current_profile, action.courseId, action.fromTerm, action.toTerm);
+      saveProfileToStorage(movedProfile);
+      return {
+        ...state,
+        current_profile: movedProfile,
         unsaved_changes: true
       };
     
@@ -137,6 +150,10 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     dispatch({ type: 'REMOVE_COURSE', courseId });
   };
 
+  const moveCourse = (courseId: string, fromTerm: 7 | 8 | 9, toTerm: 7 | 8 | 9) => {
+    dispatch({ type: 'MOVE_COURSE', courseId, fromTerm, toTerm });
+  };
+
   const clearTerm = (term: 7 | 8 | 9) => {
     dispatch({ type: 'CLEAR_TERM', term });
   };
@@ -157,6 +174,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     state,
     addCourse,
     removeCourse,
+    moveCourse,
     clearTerm,
     clearProfile,
     setEditing,
