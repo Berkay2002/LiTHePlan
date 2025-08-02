@@ -37,21 +37,30 @@ export function CourseCard({ course }: CourseCardProps) {
 
   // Handle adding course - show modal if multi-term, otherwise add directly
   const handleAddCourse = () => {
+    console.log('🎯 handleAddCourse clicked for course:', course.id);
+    console.log('🔄 isMultiTerm:', isMultiTerm, 'availableTerms:', availableTerms);
+    
     if (isMultiTerm && availableTerms.length > 1) {
+      console.log('📋 Showing term selection modal');
       setShowTermModal(true);
     } else {
       // Single term course - add directly with the available term
       const termToAdd = Array.isArray(course.term) ? course.term[0] : course.term;
       const parsedTerm = parseInt(termToAdd);
+      console.log('➕ Adding directly - termToAdd:', termToAdd, 'parsedTerm:', parsedTerm);
+      
       if (!isNaN(parsedTerm) && [7, 8, 9].includes(parsedTerm)) {
+        console.log('✅ Calling addCourse with:', { course: course.id, term: parsedTerm });
         addCourse(course, parsedTerm as 7 | 8 | 9);
+      } else {
+        console.error('❌ Invalid term for course:', { courseId: course.id, termToAdd, parsedTerm });
       }
     }
   };
 
   // Handle term selection from modal
-  const handleTermSelected = (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
-    addCourse(selectedCourse, selectedTerm);
+  const handleTermSelected = async (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
+    await addCourse(selectedCourse, selectedTerm);
     setShowTermModal(false);
   };
 
@@ -176,10 +185,15 @@ export function CourseCard({ course }: CourseCardProps) {
                   : 'bg-picton-blue hover:bg-picton-blue-600 text-white'
               }`}
               onClick={() => {
+                console.log('🖱️ Button clicked for course:', course.id, { isPinned, isHovered });
                 if (isPinned && isHovered) {
+                  console.log('🗑️ Removing course');
                   removeCourse(course.id);
                 } else if (!isPinned) {
+                  console.log('➕ Adding course via handleAddCourse');
                   handleAddCourse();
+                } else {
+                  console.log('⚠️ No action taken - button click ignored');
                 }
               }}
               onMouseEnter={() => setIsHovered(true)}

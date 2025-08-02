@@ -7,6 +7,7 @@
   - [High-Level Architecture](#high-level-architecture)
   - [Tech Stack](#tech-stack)
   - [Data Models](#data-models)
+  - [Supabase Authentication](#supabase-authentication)
   - [API Specification](#api-specification)
   - [Frontend Architecture](#frontend-architecture)
   - [Unified Project Structure (Corrected)](#unified-project-structure-corrected)

@@ -26,7 +26,8 @@ This is a **Next.js 15** application using the **App Router** with the following
 
 - **Frontend**: React 19, TypeScript, Tailwind CSS, shadcn/ui components
 - **Backend**: Next.js API Routes (App Router pattern in `/app/api/`)
-- **Database**: Supabase (Postgres) - for profile sharing functionality
+- **Database**: Supabase (Postgres) - for authentication and profile sharing
+- **Authentication**: Supabase Auth with JWT-based session management
 - **Deployment**: Vercel
 
 ### Development Strategy
@@ -36,30 +37,41 @@ The project follows a **"mock data first"** approach:
 
 ### State Management
 - **Profile State**: React Context with useReducer pattern in `ProfileContext.tsx`
+- **Authentication State**: React Context in `lib/auth-context.tsx` with Supabase Auth
 - **Course Filtering**: Local component state with React hooks
-- **Data Persistence**: localStorage for profile data
+- **Data Persistence**: localStorage for profile data, Supabase for user profiles
 
 ## Key Files & Structure
 
 ```
 app/
-├── api/              # API routes (App Router pattern) - not yet implemented
+├── api/              # API routes (App Router pattern)
+│   ├── auth/callback/route.ts  # Supabase auth callback
+│   ├── courses/route.ts        # Course data API
+│   └── profile/               # Profile management API
+├── login/page.tsx    # Authentication login page
+├── signup/page.tsx   # User registration page
 ├── page.tsx          # Main course catalog with filtering
-├── layout.tsx        # Root layout with fonts
+├── layout.tsx        # Root layout with fonts and auth provider
 └── profile/
     ├── [id]/page.tsx # Shared profile viewing
     └── edit/page.tsx # Profile editing interface
 
 components/
+├── auth/             # Authentication components
+│   ├── AuthStatus.tsx   # User status display
+│   └── LoginForm.tsx    # Login form component
 ├── course/           # Course discovery & filtering
 ├── profile/          # Profile builder with Context API
 ├── shared/           # Navigation and utilities
-└── ui/               # shadcn/ui base components
+├── ui/               # shadcn/ui base components
+└── login-form.tsx    # Additional login form component
 
 data/
 └── new-real-courses.json # Current course dataset
 
 lib/
+├── auth-context.tsx  # Supabase authentication context
 ├── course-utils.ts   # Color coding and display logic
 ├── profile-utils.ts  # Profile persistence and validation
 └── utils.ts          # General utilities
@@ -67,6 +79,8 @@ lib/
 types/
 ├── course.ts         # Course interface and validation
 └── profile.ts        # Profile state and operations
+
+middleware.ts         # Next.js middleware for auth protection
 ```
 
 ## Data Models
@@ -107,24 +121,38 @@ Profile management in `types/profile.ts`:
 ```
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 ```
 
 ## Development Notes
 
 - TypeScript is strictly enforced - all components must be typed
-- Uses App Router pattern for API routes: `/app/api/[route]/route.ts` (not yet implemented)
+- Uses App Router pattern for API routes: `/app/api/[route]/route.ts`
 - Component props must be explicitly typed
 - ProfileContext provides global profile state with localStorage persistence
+- AuthContext in `lib/auth-context.tsx` manages Supabase authentication state
 - Course utilities in `lib/course-utils.ts` handle styling and formatting
 - Profile utilities in `lib/profile-utils.ts` handle CRUD operations and validation
 - Type guards: `isValidCourse()` and `isValidStudentProfile()` for runtime validation
 - Multi-value course fields (term, period, block) support flexible scheduling
+- Middleware.ts handles route protection and optimized auth checks using JWT claims
 
 ## Important Implementation Details
 
 - Profile state persists in localStorage via `ProfileContext`
-- Course data loaded directly from JSON (no API yet)
+- Authentication state managed via `AuthContext` with Supabase integration
+- Course data loaded directly from JSON, with API routes available for future DB integration
 - Filter state managed locally in page components
 - Profile validation enforces 90hp total, 60hp advanced minimum
 - All course operations go through ProfileContext actions
+- Authentication uses Supabase's optimized JWT claims checking (2-3ms response times)
+- Middleware protects routes and maintains session state
 - Component structure follows atomic design principles
+
+## Authentication Implementation
+
+- **Fast Auth Checks**: Uses Supabase's new JWT signing keys for 2-3ms auth verification
+- **Route Protection**: Middleware.ts protects `/dashboard/*` routes (example implementation)
+- **User Profiles**: Links to Supabase `profiles` table for username and additional user data
+- **Session Management**: Automatic session refresh and state synchronization
+- **Auth Components**: Login/signup forms with proper error handling and validation

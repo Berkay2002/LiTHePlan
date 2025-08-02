@@ -1,0 +1,395 @@
+Superbase or makes it really easy to add
+authentication and authorization to your
+apps. In this video, we're going to look
+at how JWT signing keys can be used to
+greatly improve the performance of
+Superbase or we're going to refactor an
+existing Nex.js app to use JWT signing
+keys. And then at the end of the video,
+I'll show you a single command that you
+can use to get up and running with a
+brand new Nex.js app completely wired up
+with Superbase or JWT signing keys
+without really needing to do anything.
+we're about to cover. So, let's get into
+it.
+Here I have an Nex.js app wired up to
+Superbase to handle authentication. So,
+if I sign in as John at superbase.com
+and my super seccure password, we'll see
+this protected page that we can only see
+if we're authenticated. And we have a
+little bit of information about the
+currently signed in user. If we have a
+look at the code for this page, we're
+creating a Superbase client and then
+calling the get user method to work out
+whether or not the user is signed in. If
+they're not, then we redirect them to
+the orth page. And if we have a user,
+then we render out this page we're
+seeing in the browser. So the first
+change we're going to make is rather
+than calling this get user method, we're
+instead going to call get claims. And
+then rather than getting back a user, we
+get back a claims object, which is very
+similar to what we get back from get
+user. And so that's what we want to
+render out on the page here. Rather than
+our user, we want our claims. And now if
+we go back to the browser, we see a very
+similar object that contains some
+information about our user. So our app
+is still functioning in the same way.
+We've just refactored our orth check to
+use get claims rather than get user. So
+get claims is how we recommend doing
+this kind of orth check going forward.
+This doesn't give us huge performance or
+security gains yet. it will later in
+this video, but right now this just sets
+us up to be able to use JWT signing
+keys, which we highly recommend you
+start using. So, similarly to the get
+user method, get claims is currently
+making a network request to the
+Superbase OR server. It's passing across
+that JWT and it's saying is this user
+authenticated? Is this JWT valid? And
+then once it gets back that response, it
+can determine whether it redirects the
+user to the login page or renders the
+page they're actually requesting. Now,
+this is probably a good time to mention
+that this video gets pretty technical.
+If you start to feel a little bit lost,
+that's totally understandable, but it
+really boils down to this one simple
+rule. Symmetric JWTs or how JWTs have
+worked with Superbase since the
+beginning need to be verified by the
+Superbase or server. So, that's the only
+thing that can say this user is valid
+and this JWT can be trusted. But with
+JWT signing keys which we're about to
+configure, you get asymmetric JWTs which
+means they can be verified by the
+Superbase or server but they can also be
+verified by your application. So again
+symmetric keys need to go off to another
+server to be verified whereas asymmetric
+keys can be verified by your
+application. So one less network request
+that needs to happen and this get claims
+method can handle either of those cases.
+So it tries to verify the user locally
+if it's an asymmetric key. But if we're
+using the older symmetric keys, it will
+automatically handle sending this off to
+the superbase or server to see whether
+it's valid. So that's why we recommend
+using get claims cuz it can do either.
+It's handling that complexity for you.
+And when we call get claims, we get back
+these claims, but we also get back a
+header, which we can use to see some
+information about that JWT. So if we
+save this and head back over to the
+browser, we can see the signing
+algorithm that was used is HS256, which
+is a symmetric signing algorithm,
+meaning we can't validate this JWT
+within our application. So every time we
+refresh, this is going off to the
+Superbase OR server to validate that
+JWT. And so up in our middleware file,
+which runs on every single page load,
+we're also calling get user, which will
+always make that network request to the
+Superbase OR server. So let's test how
+long this actually takes. So let's take
+a timestamp for our start time which we
+can get with date.now and then after
+we've called get user let's console log
+finished JWT verification in and then
+take another timestamp and minus off
+that start time and then that's how many
+milliseconds this request has taken. And
+so since this happens server side let's
+open up our server console and then go
+back to the browser and refresh this
+page. And if we have a look at how long
+this took, it was 1.2 seconds. Now,
+there is some cing and stuff that
+happens behind the scenes. So, if we
+refresh this and have a look, it's not
+quite as dramatic at 850 milliseconds.
+And if we refresh again, we see 313
+milliseconds, but it's going to hover
+around that mark every time we refresh.
+And so, the reason this is taking so
+long is firstly, I'm here in Australia
+and my superbase region is set to
+Europe. So I'm very far away
+geographically from where my superbase
+or server is. So anytime I have to do
+that round trip, I need to wait for it.
+So this is the perfect example of where
+I would benefit from using asymmetric
+JWTs or JWT signing keys because then my
+application could verify the state of my
+user without needing to send that
+network request to Superbase. And we can
+try with get claims. So rather than get
+user, we'll do get claims. That gives us
+back our claims. We'll also update our
+comments because we're such good
+citizens. So, get claims here and get
+claims here. And then that should be it
+because our middleware is just taking
+that user and checking if we don't have
+a user and we're trying to navigate
+anywhere but the homepage or the login
+page or anything or related then we want
+to again redirect the user to that login
+page. So, we're checking that on every
+single request. So, now that this is
+refactored to use get claims, let's
+check the performance. So again, we'll
+refresh our page and have a look at that
+first request again about 1.2 seconds.
+And then we'll do a few more subsequent
+requests. And we're seeing it's hovering
+around that same mark. So about 300
+milliseconds. And there's not really
+anything we can do to improve the
+performance of this without implementing
+JWT signing keys. So let's do that now.
+So over in the Superbase dashboard, we
+want to go to project settings and then
+over to JWT keys. And you can see we're
+currently using our legacy JWT secret to
+sign all of our JWT keys. And here it's
+nudging us towards using JWT signing
+keys for these reasons. So let's go over
+to the JWT signing keys tab and migrate
+our JWT signing secret across to JWT
+signing keys. This is telling us that
+we're currently using symmetric JWTs.
+This will allow us to use asymmetric
+JWTs and it won't actually cause any
+downtime to our project. So let's
+migrate the JWT secret. And you can see
+this has created a new standby key which
+is our asymmetric key. But it has also
+kept our current key which is our legacy
+HS256 key which we know is a symmetric
+JWT signing algorithm. So nothing's
+actually changed in our Superbase
+project at this point. If any new JWTs
+need to be created, they will still use
+that legacy symmetric JWT to create
+them. And we can confirm this by going
+back to our application and refreshing.
+And we can see we're still using that
+HS256 key. And if we have a look in our
+server console, it's still taking a long
+time to verify because it's still going
+off to the Superbase or server. So the
+way we move across to using this new
+asymmetric key is by rotating our keys.
+But we can't do that just yet. If we
+have a look over at the legacy JWT
+secret tab, we'll see we've now got this
+caution sign. It says we've now migrated
+to these new signing keys. But our
+add-on and service role keys which we're
+using as API keys to connect to
+Superbase, they themselves are JWTs
+which used the old legacy signing key.
+So if we have a look at our API keys,
+both our anon and service ro key are
+JWTs. And if we go over to our nextjs
+app and look at ourv.local file, this is
+what we're using here to connect to
+superbase. And we'll see these are also
+the legacy API keys because we recommend
+migrating across to the new API keys
+which uses a publishable and secret key
+rather than add-on and service role. So
+let's create some new API keys. This is
+telling us it will create a publishable
+and secret key and that's what we should
+use to connect our application to
+Superbase. So let's create those keys.
+And now we can copy our publishable key
+and head over to our next.js app and
+replace our add-on key with this
+publishable key. And you'll see in this
+project our environment variable is
+actually named next_pub
+superbase publishable or anon key
+because these can now be used
+interchangeably. And so we can have a
+look at how we're using this environment
+variable in our application. So it's
+used to check we actually have those
+environment variables but then to create
+our superbase client in the browser as
+well as in middleware and on the server.
+But anyway point is they can be used
+interchangeably. So anywhere you're
+using your anon key, you can replace it
+with the value of your publishable key.
+And anywhere you're using the service ro
+key, you can replace it with this secret
+key. So now that we've migrated across
+to these new API keys, we can have a
+look at our legacy keys. We can confirm
+they're no longer being used. So I'm
+confident my Nex.js application is the
+only thing using these and we've now
+refactored those to use our new API
+keys. And so I can disable these
+JWTbased API keys. So this is warning us
+that we want to make sure that no
+applications are still using these. So
+let's proceed to disabling these API
+keys. We'll need to type disable to
+confirm. But you'll see that even if you
+realize later, oh, there was this other
+mobile app that was using this, you can
+reenable these legacy API keys. So
+you're not locked out permanently. But
+we've now refactored our Superbase
+project to use these new API keys. And
+since they're not JWTs and they're not
+signed with that old signing secret, we
+can now head back over to our JWT
+section and see that we're still using
+that legacy JWT signing secret. But now
+that we've migrated across to those new
+API keys, we can fully migrate across to
+our JWT signing keys. And so let's
+rotate our keys. So this is telling us
+that the standby key will now become the
+current key, meaning that's what will be
+used anytime we're minting a new JWT.
+And the current key will become the
+previous key. And to proceed, we need to
+confirm all of our applications
+components have picked up the standby
+key and that any non-expired JWTs will
+still be valid until we explicitly
+revoke the currently used key. So, we'll
+have a look at that in a second. It's
+also a good time to call out that if
+you're using the old signing key to mint
+your own JWTs and manually verifying
+that somewhere else, you'll need to make
+sure that you refactor that manually
+across to use this new signing key
+before you rotate it. But that's not the
+case for me. So, I'm going to rotate
+this signing key. And so, now we're
+using our new JWT signing key to create
+new JWTs, but our previous key can still
+be used to verify JWTs. So, this will be
+used for creating new JWTs, but either
+of these are valid until these tokens
+expire. But once you're sure you're no
+longer using this legacy symmetric JWT
+signing secret, you can revoke it. which
+means any JWTs that used this signing
+secret will no longer be trusted. They
+will not be valid JWTs. So by revoking
+the signing key, all applications
+trusting it will no longer do so if
+there are JWTs or access tokens that are
+valid at the time of revocation. They
+will no longer be trusted, causing users
+with these JWTs to be signed out. when
+they sign back in, it will use the new
+JWT signing secret and they'll get all
+of the benefits of the asymmetric JWT,
+but they will be forced to sign out. So,
+if you're sure that is all good, you can
+copy this UU ID into this field and
+revoke the signing key, moving it to the
+revoked key section. Again, this can be
+moved back to being a standby key if you
+realize that was a mistake. But now that
+we've revoked that key, our Nex.js app,
+if we refresh, ah, it's kicked us out.
+This is the exact thing your users will
+experience if they're using one of the
+old symmetric JWTs. But if we
+authenticate, we can see that signing
+algorithm has been updated to ES. And if
+we take a look at our servers console,
+our verification finished in 5
+milliseconds. And if we refresh again
+and have a look at the console, 2
+milliseconds. And if we refresh another
+few times, we can see it's hovering
+around that two or three milliseconds to
+verify that JWT because it's now
+happening in our application rather than
+going off to the Superbase OR server. So
+if you just want to create a brand new
+Nex.js application with all of this
+already wired up for you, then check out
+this single command. Let's use MPX to
+run the create-ext-
+app package. And we're going to make
+sure this is running the latest version.
+Now we can specify the example with -ash
+superbase and then the name of our
+project. So in my case JWT signing keys.
+Now if we run this one, it's going to
+use that superbase template to create
+our next.js app. So now we can change
+into that directory and open it up in VS
+Code. And this is the exact same project
+that I've been using for this example.
+So if we have a look at that protected
+page, we can see it's already been set
+up to use that get claims method. And
+also in the middleware file where we're
+updating the user session, this has also
+been configured to use get claims. So
+the only thing we need to do to wire
+this up to our Superbase project is
+update our environment variables. So
+take this.example
+file and rename itemv.local.
+We can then head over to our superbase
+project and click this connect button.
+change this tab to app frameworks and we
+can see our URL and our publishable key
+have already been populated. So let's
+copy these and go back over to our
+next.js project and the naming for this
+one is just slightly different. So let's
+paste this underneath our superbase URL
+is fine but let's copy the name of our
+publishable or anon key environment
+variable and replace this one that is
+publishable default key. Now we can get
+rid of these ones and save this file and
+then run mpm rundev. open this one up in
+a browser and we have exactly the same
+application. It's even reusing my JWT
+because I was already authenticated. But
+if we log out, we can log back in as one
+of our users and see that same protected
+page using our get claims method and
+therefore our asymmetric JWT signing
+key. So now that you've got orth sorted,
+let's learn about branching. But for
+that, you need to check out this video
+right here. We look at managing branches
+directly from the Superbase dashboard,
+which is an awesome way to quickly
+prototype new ideas.

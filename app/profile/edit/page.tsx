@@ -28,7 +28,7 @@ function ProfileEditPageContent() {
   }, []);
 
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
 
     // If dropped outside a droppable area
@@ -66,7 +66,7 @@ function ProfileEditPageContent() {
     // Only allow moving between different terms
     if (sourceTerm !== destTerm) {
       try {
-        moveCourse(courseId, sourceTerm, destTerm);
+        await moveCourse(courseId, sourceTerm, destTerm);
       } catch (error) {
         console.error('Failed to move course:', error);
         // You could show a toast notification here

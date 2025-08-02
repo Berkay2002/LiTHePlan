@@ -4,12 +4,12 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { StudentProfile } from '@/types/profile';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ProfileStatsCard } from '@/components/ProfileStatsCard';
 import { SimpleTermCard } from '@/components/SimpleTermCard';
 import { Card, CardContent } from '@/components/ui/card';
-import { ProfileProvider } from '@/components/profile/ProfileContext';
 
 function ProfilePageContent() {
   const params = useParams();
@@ -24,27 +24,28 @@ function ProfilePageContent() {
       try {
         setLoading(true);
         
-        // For now, we'll load from localStorage since we don't have the API yet
-        // In the future, this will be an API call to /api/profile/[id]
-        const savedProfiles = localStorage.getItem('student_profile');
-        if (savedProfiles) {
-          const parsed = JSON.parse(savedProfiles);
-          const loadedProfile: StudentProfile = {
-            ...parsed,
-            created_at: new Date(parsed.created_at),
-            updated_at: new Date(parsed.updated_at)
-          };
-          
-          // Check if this is the current user's profile or a shared one
-          if (loadedProfile.id === profileId) {
-            setProfile(loadedProfile);
-          } else {
-            // In the future, this would fetch from the API
+        // Fetch the shared profile from Supabase API
+        const response = await fetch(`/api/profile/${profileId}`);
+        
+        if (!response.ok) {
+          if (response.status === 404) {
             setError('Profile not found');
+          } else {
+            setError('Failed to load profile');
           }
-        } else {
-          setError('Profile not found');
+          return;
         }
+        
+        const profileData = await response.json();
+        
+        // Convert date strings back to Date objects if needed
+        const loadedProfile: StudentProfile = {
+          ...profileData,
+          created_at: profileData.created_at ? new Date(profileData.created_at) : new Date(),
+          updated_at: profileData.updated_at ? new Date(profileData.updated_at) : new Date()
+        };
+        
+        setProfile(loadedProfile);
       } catch (err) {
         setError('Failed to load profile');
         console.error('Error loading profile:', err);
@@ -105,6 +106,20 @@ function ProfilePageContent() {
     >
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 space-y-8">
+          
+          {/* Shared Profile Header */}
+          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+            <div className="flex items-center">
+              <div className="ml-3">
+                <p className="text-blue-800 font-medium">
+                  📖 <strong>Shared Profile</strong> - You&apos;re viewing someone else&apos;s course profile
+                </p>
+                <p className="text-blue-700 text-sm mt-1">
+                  This is a read-only view. To build your own profile, <Link href="/profile/edit" className="underline">click here</Link>.
+                </p>
+              </div>
+            </div>
+          </div>
 
           {/* Profile Statistics Card */}
           <ProfileStatsCard profile={profile} />
@@ -132,9 +147,5 @@ function ProfilePageContent() {
 }
 
 export default function ProfilePage() {
-  return (
-    <ProfileProvider>
-      <ProfilePageContent />
-    </ProfileProvider>
-  );
+  return <ProfilePageContent />;
 } 

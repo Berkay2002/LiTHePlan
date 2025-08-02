@@ -13,7 +13,13 @@
       "Bash(npm run build:*)",
       "Bash(python:*)",
       "Bash(rg:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(curl:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

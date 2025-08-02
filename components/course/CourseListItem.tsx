@@ -56,7 +56,7 @@ export function CourseListItem({ course, activeFilters = {
   };
 
   // Handle adding course - show modal if multi-term, otherwise add directly
-  const handleAddCourse = () => {
+  const handleAddCourse = async () => {
     if (isMultiTerm && availableTerms.length > 1) {
       setShowTermModal(true);
     } else {
@@ -64,14 +64,14 @@ export function CourseListItem({ course, activeFilters = {
       const termToAdd = Array.isArray(course.term) ? course.term[0] : course.term;
       const parsedTerm = parseInt(termToAdd);
       if (!isNaN(parsedTerm) && [7, 8, 9].includes(parsedTerm)) {
-        addCourse(course, parsedTerm as 7 | 8 | 9);
+        await addCourse(course, parsedTerm as 7 | 8 | 9);
       }
     }
   };
 
   // Handle term selection from modal
-  const handleTermSelected = (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
-    addCourse(selectedCourse, selectedTerm);
+  const handleTermSelected = async (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
+    await addCourse(selectedCourse, selectedTerm);
     setShowTermModal(false);
   };
 

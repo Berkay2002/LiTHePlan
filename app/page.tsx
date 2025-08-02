@@ -1,22 +1,26 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Course } from "@/types/course";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
+import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { ViewToggle, ViewMode } from "@/components/course/ViewToggle";
 import { SortDropdown, SortOption, sortCourses } from "@/components/course/SortDropdown";
 import { FilterState, CollapsibleFilterSidebar } from "@/components/course/FilterPanel";
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
-import coursesData from "@/data/new-real-courses.json";
+import { useCourses } from "@/hooks/useCourses";
+import { InfoBanner } from "@/components/InfoBanner";
 
 const COURSES_PER_PAGE = 12;
 
 function HomeContent() {
-  // Type assertion since we know the JSON structure matches our Course interface
-  const courses: Course[] = coursesData as Course[];
+  // Fetch courses from Supabase API with caching enabled
+  const { courses, loading, error } = useCourses({ 
+    loadAll: true,  // We need all courses for client-side filtering
+    enableCache: true 
+  });
   
   // Access profile context
   const { state } = useProfile();
@@ -197,6 +201,88 @@ function HomeContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Show loading state with skeleton
+  if (loading) {
+    return (
+      <PageLayout 
+        navbarMode="main"
+        searchQuery={filterState.search}
+        onSearchChange={handleSearchChange}
+        onMobileMenuToggle={toggleSidebar}
+        isMobileMenuOpen={sidebarOpen}
+      >
+        <div className="min-h-screen bg-background">
+          <div className="flex">
+            {/* Filter Sidebar - Skeleton */}
+            <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-80 bg-background border-r border-border`}>
+              <div className="p-4 space-y-4">
+                <div className="h-6 bg-muted rounded w-24 animate-pulse"></div>
+                <div className="space-y-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-4 bg-muted rounded animate-pulse"></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="flex-1 min-w-0">
+              <div className="p-6">
+                {/* Top Controls - Skeleton */}
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-8 bg-muted rounded w-24 animate-pulse"></div>
+                    <div className="h-8 bg-muted rounded w-32 animate-pulse"></div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="h-8 bg-muted rounded w-20 animate-pulse"></div>
+                    <div className="h-8 bg-muted rounded w-16 animate-pulse"></div>
+                  </div>
+                </div>
+
+                {/* Loading indicator */}
+                <div className="flex items-center justify-center mb-6">
+                  <div className="flex items-center gap-3 px-4 py-2 bg-muted/50 rounded-lg">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
+                    <p className="text-sm text-muted-foreground">Loading courses...</p>
+                  </div>
+                </div>
+
+                {/* Course Grid Skeleton */}
+                <CourseGridSkeleton count={12} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <PageLayout 
+        navbarMode="main"
+        searchQuery={filterState.search}
+        onSearchChange={handleSearchChange}
+        onMobileMenuToggle={toggleSidebar}
+        isMobileMenuOpen={sidebarOpen}
+      >
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">Error loading courses: {error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout 
       navbarMode="main"
@@ -232,6 +318,8 @@ function HomeContent() {
           profileSidebarOpen ? 'lg:mr-80 xl:mr-96' : 'lg:mr-12'
         }`}>
           <div className="container mx-auto px-4 py-8 max-w-7xl">
+            {/* Info Banner */}
+            <InfoBanner />
             {/* View Toggle and Sort Controls */}
             <div className="w-full max-w-full mb-6 px-1 sm:px-2 lg:px-0">
               <div className="flex justify-between items-center gap-2 sm:gap-4 min-w-0 overflow-hidden">
