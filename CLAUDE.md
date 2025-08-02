@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **Interactive Master's Profile Builder** - a Next.js application for Linköping University civil engineering students to discover, filter, and plan their master's course selections. The app allows students to explore courses across different specializations and build custom 90hp academic profiles for their final 3 semesters.
+This is **LiTHePlan** - a Next.js application for Linköping University civil engineering students to discover, filter, and plan their master's course selections. The app allows students to explore courses across different specializations and build custom 90hp academic profiles for their final 3 semesters.
 
 ## Commands
 

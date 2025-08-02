@@ -2,6 +2,7 @@ import { Search, X, Menu, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import Image from "next/image";
 
 interface NavbarProps {
   searchQuery: string;
@@ -19,8 +20,18 @@ export function Navbar({ searchQuery, onSearchChange, onMobileMenuToggle, isMobi
     <nav className="sticky top-0 z-40 w-full bg-air-superiority-blue-400 border-b-2 border-air-superiority-blue/20">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Left Side - Hamburger Menu */}
-          <div className="flex-shrink-0">
+          {/* Left Side - Logo and Hamburger Menu */}
+          <div className="flex items-center space-x-3 flex-shrink-0">
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/LiTHePlan.png"
+                alt="LiTHePlan"
+                width={120}
+                height={40}
+                className="h-8 w-auto hover:opacity-90 transition-opacity duration-200"
+                priority
+              />
+            </Link>
             {onMobileMenuToggle && (
               <div className="lg:hidden">
                 <Button
