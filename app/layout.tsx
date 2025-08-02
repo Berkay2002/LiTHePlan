@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://litheplan.tech'),
   title: "LiTHePlan",
   description: "Plan your master's program courses at Linköping University - Build unique 90hp academic profiles across different specializations",
   icons: {

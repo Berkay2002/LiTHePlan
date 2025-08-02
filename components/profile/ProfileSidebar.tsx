@@ -176,7 +176,7 @@ export function ProfileSidebar({ profile, isOpen, onToggle }: ProfileSidebarProp
                     <div className="space-y-2">
                       <h3 className="text-lg font-semibold text-white">Start Building Your Profile</h3>
                       <p className="text-sm text-white/80 max-w-xs">
-                        Add courses to start seeing your progress and term planning here. Browse the course catalog and click the "+" button to add courses to your profile.
+                        Add courses to start seeing your progress and term planning here. Browse the course catalog and click the &ldquo;+&rdquo; button to add courses to your profile.
                       </p>
                     </div>
                   </div>
