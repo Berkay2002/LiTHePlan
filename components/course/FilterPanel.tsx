@@ -126,7 +126,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
 
       {/* Collapsible Sidebar - Fixed position */}
       <div className={cn(
-        "fixed top-0 left-0 h-screen lg:top-20 lg:h-[calc(100vh-5rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
+        "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
         "flex flex-col ring-1 ring-air-superiority-blue-300/30",
         isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
         "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
