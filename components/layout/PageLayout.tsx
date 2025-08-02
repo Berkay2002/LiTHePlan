@@ -23,10 +23,21 @@ interface ProfileEditPageLayoutProps {
 type PageLayoutProps = MainPageLayoutProps | ProfileEditPageLayoutProps;
 
 export function PageLayout(props: PageLayoutProps) {
-  return (
-    <>
-      <DynamicNavbar {...props} mode={props.navbarMode} />
-      {props.children}
-    </>
-  );
+  if (props.navbarMode === 'main') {
+    const { navbarMode, children, ...navbarProps } = props;
+    return (
+      <>
+        <DynamicNavbar {...navbarProps} mode={navbarMode} />
+        {children}
+      </>
+    );
+  } else {
+    const { navbarMode, children, ...navbarProps } = props;
+    return (
+      <>
+        <DynamicNavbar {...navbarProps} mode={navbarMode} />
+        {children}
+      </>
+    );
+  }
 }
