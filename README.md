@@ -24,7 +24,7 @@ LiTHePlan transforms the course planning experience by providing a centralized, 
 ## 📚 Course Database & Programs
 
 ### **Database Overview**
-This application contains **503 courses** from Linköping University's master's level programs (terms 7-9), covering courses relevant to **15 official civil engineering programs** and additional specialization areas.
+This application contains **475 courses** from Linköping University's master's level programs (terms 7-9), covering courses relevant to **15 official civil engineering programs** and additional specialization areas.
 
 ### **Official Civil Engineering Programs (Civilingenjör)**
 The application supports course planning for all **15 civil engineering programs** at Linköping University (300 hp each):
@@ -47,51 +47,50 @@ The application supports course planning for all **15 civil engineering programs
 
 ### **Course Distribution by Specialization Areas**
 
-**🔧 Technology & Computing** (212 courses)
-- Computer Science and Engineering (110 courses)
-- Electrical Engineering (102 courses) 
+**🔧 Technology & Computing** (339 courses)
+- Computer Science and Engineering (106 courses)
+- Electrical Engineering (98 courses) 
 - Computer Science (76 courses)
-- Information Technology (60 courses)
-- Media Technology and Engineering (31 courses)
+- Information Technology (59 courses)
 
-**📐 Mathematics & Physics** (73 courses)
-- Applied Mathematics (39 courses)
+**📐 Mathematics & Physics** (74 courses)
+- Applied Mathematics (37 courses)
 - Mathematics (37 courses)
-- Applied Physics (31 courses)
-- Physics (27 courses)
 
-**⚙️ Mechanical & Transportation** (87 courses)
-- Mechanical Engineering (67 courses)
-- Aeronautical Engineering (18 courses)
-- Transportation Systems Engineering (18 courses)
+**⚙️ Mechanical & Transportation** (65 courses)
+- Mechanical Engineering (65 courses)
 
-**💼 Management & Design** (75 courses)
+**💼 Management & Design** (69 courses)
 - Industrial Engineering and Management (41 courses)
-- Product Development (18 courses)
-- Design (11 courses)
-- Graphic Design and Communication (8 courses)
+- Media Technology and Engineering (28 courses)
 
-**🧬 Life Sciences & Biology** (65 courses)
-- Biomedical Engineering (20 courses)
-- Engineering Biology (20 courses)
-- Chemical Biology (18 courses)
-- Biology (14 courses)
-- Biotechnology (8 courses)
+**🧬 Life Sciences & Biology** (46 courses)
+- Applied Physics (27 courses)
+- Biology (19 courses)
 
-**🌱 Other Engineering & Sciences** (35 courses)
+**🌱 Other Engineering & Sciences** (106 courses)
 - Energy and Environmental Engineering (16 courses)
-- Chemistry (8 courses)
+- Biomedical Engineering (15 courses)
+- Engineering Biology (15 courses)
+- Biotechnology (12 courses)
+- Chemistry (11 courses)
+- Chemical Biology (10 courses)
+- Design (9 courses)
 - Programming (7 courses)
 - Logistics (4 courses)
+- Product Development (4 courses)
+- Graphic Design and Communication (3 courses)
 
 *Note: Some course categories represent broader specialization areas or elective options that may be available across multiple civil engineering programs.*
 
 ### **Database Statistics**
-- **71.8%** advanced level courses (361 courses)
-- **28.2%** basic level courses (142 courses)
-- **80.5%** courses at Linköping campus
-- **18.1%** courses at Norrköping campus
-- **89.7%** standard 6hp courses
+- **72.2%** advanced level courses (343 courses)
+- **27.8%** basic level courses (132 courses)
+- **80.8%** courses at Linköping campus (384 courses)
+- **17.7%** courses at Norrköping campus (84 courses)
+- **89.7%** standard 6hp courses (426 courses)
+- **6.3%** courses with special notes/restrictions (30 courses)
+- **25 different program areas** represented
 
 ### **⚠️ Important Data Disclaimer**
 This course database was **independently compiled and is NOT officially provided by Linköping University (LiU)**. While every effort has been made to ensure accuracy:
@@ -110,16 +109,19 @@ For the most current course information, please consult:
 ## ✨ Key Features
 
 ### 🔍 **Smart Course Discovery**
-- Comprehensive catalog of 503 master's level courses (terms 7-9)
-- Real-time filtering by multiple criteria across 25 programs
+- Comprehensive catalog of 475 master's level courses (terms 7-9)
+- Real-time filtering by multiple criteria across 25+ program specializations
 - Grid and list view options with pagination
 - Advanced search functionality
+- **Course conflict detection and resolution system**
+- **OBS warnings** for courses with special restrictions
 
 ### 📌 **Interactive Profile Builder**
 - Visual "pinboard" for organizing courses across 3 semesters
-- Drag-and-drop course management
+- **Intelligent course conflict resolution** with user-friendly modal
 - Real-time credit tracking (targeting 90hp total)
 - Term-by-term course organization
+- **Mobile-friendly touch interactions**
 
 ### ✅ **Requirements Validation**
 - Automatic validation of degree requirements
@@ -127,11 +129,11 @@ For the most current course information, please consult:
 - Real-time feedback on profile completeness
 - Visual indicators for requirement compliance
 
-### 🔗 **Profile Sharing**
-- Export profiles to shareable formats
-- Generate unique URLs for profile sharing
+### 🔗 **Profile Sharing & Authentication**
+- **User accounts** with Supabase authentication
+- **Save and share profiles** with unique URLs
 - Facilitate discussions with academic advisors
-- Collaborative planning support
+- **Persistent profile storage** across devices
 
 ### 📱 **Responsive Design**
 - Fully responsive across desktop, tablet, and mobile
@@ -150,8 +152,8 @@ For the most current course information, please consult:
 
 ### Backend & Data
 - **Next.js API Routes** for backend logic
-- **Local JSON** for course data (mock-first approach)
-- **Supabase** for future database needs
+- **Supabase** database with 475 courses from LiU
+- **PostgreSQL** for data storage and querying
 - **Vercel** for deployment
 
 ### Development
@@ -164,6 +166,7 @@ For the most current course information, please consult:
 ### Prerequisites
 - Node.js 18+ 
 - npm or yarn package manager
+- Supabase environment variables configured in `.env.local` (for database statistics)
 
 ### Installation
 
@@ -192,6 +195,7 @@ For the most current course information, please consult:
 - `npm run build` - Build production version (includes TypeScript checking)
 - `npm start` - Start production server
 - `npm run lint` - Run ESLint
+- `node scripts/fetch-course-stats.js` - Generate database statistics from Supabase
 
 ## 📁 Project Structure
 
@@ -201,14 +205,16 @@ profile-builder/
 │   ├── page.tsx           # Main course catalog page
 │   ├── layout.tsx         # Root layout
 │   ├── profile/           # Profile management pages
-│   └── api/               # API routes (future)
+│   └── api/               # API routes for Supabase integration
 ├── components/            # React components
 │   ├── course/           # Course discovery & filtering
 │   ├── profile/          # Profile builder components
 │   ├── shared/           # Navigation and utilities
 │   └── ui/               # shadcn/ui base components
-├── data/                 # Course data
-│   └── new-real-courses.json  # Current course dataset
+├── scripts/              # Utility scripts
+│   └── fetch-course-stats.js  # Database statistics generator
+├── utils/                # Supabase utilities
+│   └── supabase/         # Supabase client configuration
 ├── lib/                  # Utilities and helpers
 │   ├── course-utils.ts   # Course formatting and styling
 │   ├── profile-utils.ts  # Profile management logic
@@ -281,17 +287,36 @@ The project follows a **"mock data first"** development strategy:
 - **TypeScript First**: Strict typing for all components and data flows
 - **Accessibility**: Full WCAG compliance with shadcn/ui components
 
+## 📊 Database Statistics Script
+
+A Node.js script is included to generate comprehensive statistics from the Supabase database:
+
+```bash
+node scripts/fetch-course-stats.js
+```
+
+This script provides detailed analytics including:
+- Course distribution by level, campus, credits, and pace
+- Program coverage analysis 
+- Term and scheduling breakdowns
+- Examination type statistics
+- Courses with special restrictions
+- README-ready summary data
+
+The script requires Supabase environment variables to be configured in `.env.local`.
+
 ## 🔄 Development Workflow
 
 ### Current Implementation Status
 - ✅ Course catalog with advanced filtering
 - ✅ Interactive profile builder (pinboard)
-- ✅ Requirements validation
-- ✅ Local storage persistence
-- ✅ Responsive design
-- ✅ Profile sharing UI (mock)
-- 🔄 Real data integration (pending university dataset)
-- 🔄 User authentication (future phase)
+- ✅ Requirements validation and credit tracking
+- ✅ **Course conflict detection and resolution system**
+- ✅ **User authentication** with Supabase
+- ✅ **Profile sharing and persistence** 
+- ✅ **Real Supabase database integration** (475 courses)
+- ✅ Mobile-responsive design with touch interactions
+- ✅ **OBS warning system** for course restrictions
 
 ### Key Implementation Details
 - **Profile Operations**: ADD_COURSE, REMOVE_COURSE, CLEAR_TERM, CLEAR_PROFILE
