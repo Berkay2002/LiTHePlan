@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Course } from "@/types/course";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,6 +36,9 @@ export interface CollapsibleFilterSidebarProps extends FilterPanelProps {
 }
 
 export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange, isOpen, onToggle }: CollapsibleFilterSidebarProps) {
+  const [showProgramTooltip, setShowProgramTooltip] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
@@ -195,12 +200,22 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
                   <TooltipProvider>
-                    <Tooltip>
+                    <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                       <TooltipTrigger asChild>
-                        <Info className="h-4 w-4 text-white/60 hover:text-white cursor-help transition-colors duration-200" />
+                        <button 
+                          className="flex items-center justify-center p-1 rounded-md hover:bg-white/10 transition-colors duration-200 touch-manipulation"
+                          onClick={() => isMobile && setShowProgramTooltip(!showProgramTooltip)}
+                          onBlur={() => isMobile && setShowProgramTooltip(false)}
+                        >
+                          <Info className="h-5 w-5 text-white/70 hover:text-white cursor-help transition-colors duration-200" />
+                        </button>
                       </TooltipTrigger>
-                      <TooltipContent className="max-w-xs" sideOffset={4}>
-                        <p>Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
+                      <TooltipContent 
+                        className="max-w-xs bg-gray-900 text-white border-gray-700" 
+                        sideOffset={4}
+                        onPointerDownOutside={() => isMobile && setShowProgramTooltip(false)}
+                      >
+                        <p className="text-xs text-white">Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -209,13 +224,13 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                   value={filterState.programs || undefined} 
                   onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
                 >
-                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-sm xl:text-sm data-[placeholder]:text-white">
+                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-sm xl:text-sm data-[placeholder]:text-white text-white">
                     <SelectValue placeholder="Select a program..." />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Programs</SelectItem>
+                  <SelectContent className="bg-gray-800 border-gray-600">
+                    <SelectItem value="all" className="text-white hover:bg-gray-700 focus:bg-gray-700">All Programs</SelectItem>
                     {filterOptions.programs.map((program) => (
-                      <SelectItem key={program} value={program}>
+                      <SelectItem key={program} value={program} className="text-white hover:bg-gray-700 focus:bg-gray-700">
                         {program}
                       </SelectItem>
                     ))}
@@ -436,6 +451,9 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
 
 // Keep the original FilterPanel for backward compatibility (used in mobile Sheet)
 export function FilterPanel({ courses, filterState, onFilterChange }: FilterPanelProps) {
+  const [showProgramTooltip, setShowProgramTooltip] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
@@ -515,12 +533,22 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Program</h3>
             <TooltipProvider>
-              <Tooltip>
+              <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                 <TooltipTrigger asChild>
-                  <Info className="h-4 w-4 text-white/60 hover:text-white cursor-help transition-colors duration-200" />
+                  <button 
+                    className="flex items-center justify-center p-1 rounded-md hover:bg-white/10 transition-colors duration-200 touch-manipulation"
+                    onClick={() => isMobile && setShowProgramTooltip(!showProgramTooltip)}
+                    onBlur={() => isMobile && setShowProgramTooltip(false)}
+                  >
+                    <Info className="h-5 w-5 text-white/70 hover:text-white cursor-help transition-colors duration-200" />
+                  </button>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs" sideOffset={4}>
-                  <p>Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
+                <TooltipContent 
+                  className="max-w-xs bg-gray-900 text-white border-gray-700" 
+                  sideOffset={4}
+                  onPointerDownOutside={() => isMobile && setShowProgramTooltip(false)}
+                >
+                  <p className="text-xs text-white">Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -529,13 +557,13 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
             value={filterState.programs || undefined} 
             onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
           >
-                      <SelectTrigger className="w-full text-xs data-[placeholder]:text-white">
+                      <SelectTrigger className="w-full text-xs data-[placeholder]:text-white text-white">
             <SelectValue placeholder="Select a program..." />
           </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Programs</SelectItem>
+            <SelectContent className="bg-gray-800 border-gray-600">
+              <SelectItem value="all" className="text-white hover:bg-gray-700 focus:bg-gray-700">All Programs</SelectItem>
               {filterOptions.programs.map((program) => (
-                <SelectItem key={program} value={program}>
+                <SelectItem key={program} value={program} className="text-white hover:bg-gray-700 focus:bg-gray-700">
                   {program}
                 </SelectItem>
               ))}

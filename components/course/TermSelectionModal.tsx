@@ -29,9 +29,9 @@ export function TermSelectionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-background text-foreground">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">
+          <DialogTitle className="text-lg font-semibold text-white">
             Select Term for Course
           </DialogTitle>
         </DialogHeader>
@@ -39,13 +39,13 @@ export function TermSelectionModal({
         <div className="space-y-4">
           {/* Course Info */}
           <div className="text-center space-y-2">
-            <h3 className="font-semibold text-lg">{course.name}</h3>
-            <p className="text-sm text-muted-foreground">{course.id}</p>
+            <h3 className="font-semibold text-lg text-white">{course.name}</h3>
+            <p className="text-sm text-gray-300">{course.id}</p>
           </div>
 
           {/* Term Selection */}
           <div className="space-y-3">
-            <p className="text-sm text-muted-foreground text-center">
+            <p className="text-sm text-gray-300 text-center">
               Click a term to add this course to your profile:
             </p>
             
@@ -54,7 +54,7 @@ export function TermSelectionModal({
                 <Button
                   key={term}
                   variant="outline"
-                  className="justify-start h-auto p-4 hover:bg-picton-blue hover:text-white transition-colors"
+                  className="justify-start h-auto p-4 text-white border-gray-600 hover:bg-picton-blue hover:text-white transition-colors"
                   onClick={() => handleTermSelect(term)}
                 >
                   <div className="flex items-center gap-3">

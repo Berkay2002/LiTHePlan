@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Course } from "@/types/course";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Plus, ExternalLink, Check, Trash2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { MapPin, Clock, Plus, ExternalLink, Check, Trash2, AlertTriangle } from "lucide-react";
 import { formatPace, isMultiTermCourse, getAvailableTerms, formatBlocks } from "@/lib/course-utils";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "./TermSelectionModal";
+import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import { isCourseInProfile } from "@/lib/profile-utils";
+import { findCourseConflicts } from "@/lib/course-conflict-utils";
 
 
 interface CourseCardProps {
@@ -19,10 +23,18 @@ export function CourseCard({ course }: CourseCardProps) {
   const isPinned = state.current_profile ? isCourseInProfile(state.current_profile, course.id) : false;
   const [isHovered, setIsHovered] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
+  const [showConflictModal, setShowConflictModal] = useState(false);
+  const [, setPendingTerm] = useState<7 | 8 | 9 | null>(null);
+  const [conflictingCourses, setConflictingCourses] = useState<{ conflictingCourse: Course; conflictingCourseId: string }[]>([]);
+  const [showNotesTooltip, setShowNotesTooltip] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
   
   // Check if this course is available in multiple terms
   const isMultiTerm = isMultiTermCourse(course);
   const availableTerms = getAvailableTerms(course);
+  
+  // Check if adding this course would cause conflicts
+  const wouldHaveConflicts = state.current_profile ? findCourseConflicts(course, state.current_profile).length > 0 : false;
 
   // Helper function to check if a field should be hidden
   const shouldHideField = () => {
@@ -35,22 +47,37 @@ export function CourseCard({ course }: CourseCardProps) {
     return course.pace === '100%';
   };
 
-  // Handle adding course - show modal if multi-term, otherwise add directly
+  // This function is no longer used since we always check conflicts first
+
+  // Handle adding course - always check conflicts first, then handle term selection
   const handleAddCourse = () => {
     console.log('🎯 handleAddCourse clicked for course:', course.id);
     console.log('🔄 isMultiTerm:', isMultiTerm, 'availableTerms:', availableTerms);
     
+    // Always check conflicts first, regardless of term count
+    const conflicts = state.current_profile ? findCourseConflicts(course, state.current_profile) : [];
+    
+    if (conflicts.length > 0) {
+      // Show conflict modal first
+      console.log('⚠️ Conflicts detected, showing conflict modal first');
+      setConflictingCourses(conflicts);
+      setPendingTerm(null); // Will be set after conflict resolution
+      setShowConflictModal(true);
+      return;
+    }
+    
+    // No conflicts, proceed with term selection or direct add
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log('📋 Showing term selection modal');
+      console.log('📋 No conflicts, showing term selection modal');
       setShowTermModal(true);
     } else {
-      // Single term course - add directly with the available term
+      // Single term course - add directly
       const termToAdd = Array.isArray(course.term) ? course.term[0] : course.term;
       const parsedTerm = parseInt(termToAdd);
-      console.log('➕ Adding directly - termToAdd:', termToAdd, 'parsedTerm:', parsedTerm);
+      console.log('➕ No conflicts, adding directly - termToAdd:', termToAdd, 'parsedTerm:', parsedTerm);
       
       if (!isNaN(parsedTerm) && [7, 8, 9].includes(parsedTerm)) {
-        console.log('✅ Calling addCourse with:', { course: course.id, term: parsedTerm });
+        console.log('✅ Adding course with:', { course: course.id, term: parsedTerm });
         addCourse(course, parsedTerm as 7 | 8 | 9);
       } else {
         console.error('❌ Invalid term for course:', { courseId: course.id, termToAdd, parsedTerm });
@@ -58,10 +85,58 @@ export function CourseCard({ course }: CourseCardProps) {
     }
   };
 
-  // Handle term selection from modal
+  // Handle term selection from modal (conflicts already checked)
   const handleTermSelected = async (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
-    await addCourse(selectedCourse, selectedTerm);
+    console.log('🔄 Term selected:', selectedTerm, 'for course:', selectedCourse.id);
     setShowTermModal(false);
+    
+    // Add course directly since conflicts were already checked
+    console.log('✅ Adding course with selected term (conflicts pre-checked)');
+    await addCourse(selectedCourse, selectedTerm);
+  };
+
+  // Handle conflict resolution - user chooses new course
+  const handleChooseNewCourse = async (newCourse: Course) => {
+    console.log('✅ User chose new course:', newCourse.id);
+    setShowConflictModal(false);
+    
+    // Remove conflicting courses first
+    for (const { conflictingCourseId } of conflictingCourses) {
+      console.log('🗑️ Removing conflicting course:', conflictingCourseId);
+      removeCourse(conflictingCourseId);
+    }
+    
+    // Now handle term selection for the new course
+    if (isMultiTerm && availableTerms.length > 1) {
+      console.log('📋 Showing term selection for new course after conflict resolution');
+      setShowTermModal(true);
+    } else {
+      const termToAdd = Array.isArray(newCourse.term) ? newCourse.term[0] : newCourse.term;
+      const parsedTerm = parseInt(termToAdd) as 7 | 8 | 9;
+      console.log('➕ Adding new course with default term:', parsedTerm);
+      await addCourse(newCourse, parsedTerm);
+    }
+    
+    // Reset state
+    setConflictingCourses([]);
+    setPendingTerm(null);
+  };
+
+  // Handle conflict resolution - user chooses existing course
+  const handleChooseExistingCourse = (existingCourse: Course) => {
+    console.log('📚 User chose to keep existing course:', existingCourse.id);
+    setShowConflictModal(false);
+    setConflictingCourses([]);
+    setPendingTerm(null);
+    // No action needed - existing course stays in profile
+  };
+
+  // Handle conflict resolution - user cancels
+  const handleCancelConflictResolution = () => {
+    console.log('❌ User cancelled conflict resolution');
+    setShowConflictModal(false);
+    setConflictingCourses([]);
+    setPendingTerm(null);
   };
 
   // Helper function to get all examination badges - always show all examinations for the course
@@ -75,9 +150,32 @@ export function CourseCard({ course }: CourseCardProps) {
       <CardContent className="p-5 flex-1 flex flex-col">
         {/* Main Course Header */}
         <div className="mb-5">
-          <h3 className="text-lg font-semibold text-foreground line-clamp-2 mb-3 leading-tight group-hover:text-picton-blue transition-colors duration-300">
-            {course.name}
-          </h3>
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="text-lg font-semibold text-foreground line-clamp-2 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1">
+              {course.name}
+            </h3>
+            {course.notes && (
+              <Tooltip open={isMobile ? showNotesTooltip : undefined}>
+                <TooltipTrigger asChild>
+                  <button
+                    className="flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-1 rounded-md border border-amber-200 ml-2 flex-shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                    onClick={() => isMobile && setShowNotesTooltip(!showNotesTooltip)}
+                    onBlur={() => isMobile && setShowNotesTooltip(false)}
+                  >
+                    <AlertTriangle className="h-4 w-4" />
+                    <span className="text-xs font-bold">OBS</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="top" 
+                  className="max-w-xs bg-gray-900 text-white border-gray-700"
+                  onPointerDownOutside={() => isMobile && setShowNotesTooltip(false)}
+                >
+                  <p className="text-xs text-white">{course.notes}</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
           <div className="flex items-center justify-between">
             <div className="text-sm text-air-superiority-blue font-mono font-bold">
               {course.id}
@@ -182,7 +280,9 @@ export function CourseCard({ course }: CourseCardProps) {
                   ? isHovered
                     ? 'bg-custom-red hover:bg-custom-red-600 text-white'
                     : 'bg-electric-blue hover:bg-electric-blue-600 text-white'
-                  : 'bg-picton-blue hover:bg-picton-blue-600 text-white'
+                  : wouldHaveConflicts
+                    ? 'bg-amber-500 hover:bg-amber-600 text-white border-2 border-amber-400'
+                    : 'bg-picton-blue hover:bg-picton-blue-600 text-white'
               }`}
               onClick={() => {
                 console.log('🖱️ Button clicked for course:', course.id, { isPinned, isHovered });
@@ -211,6 +311,11 @@ export function CourseCard({ course }: CourseCardProps) {
                     Added
                   </>
                 )
+              ) : wouldHaveConflicts ? (
+                <>
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  Resolve Conflict
+                </>
               ) : (
                 <>
                   <Plus className="h-4 w-4 mr-2" />
@@ -240,6 +345,17 @@ export function CourseCard({ course }: CourseCardProps) {
         course={course}
         availableTerms={availableTerms}
         onTermSelected={handleTermSelected}
+      />
+      
+      {/* Conflict Resolution Modal */}
+      <ConflictResolutionModal
+        isOpen={showConflictModal}
+        onClose={() => setShowConflictModal(false)}
+        newCourse={course}
+        conflictingCourses={conflictingCourses}
+        onChooseNew={handleChooseNewCourse}
+        onChooseExisting={handleChooseExistingCourse}
+        onCancel={handleCancelConflictResolution}
       />
     </Card>
   );

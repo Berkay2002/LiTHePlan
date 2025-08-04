@@ -1,10 +1,13 @@
 // components/profile/PinnedCourseCard.tsx
 
+import { useState } from 'react';
 import { Course } from '@/types/course';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X, ExternalLink, Clock, MapPin } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { X, ExternalLink, Clock, MapPin, AlertTriangle } from 'lucide-react';
 import { formatBlocks } from '@/lib/course-utils';
 
 interface PinnedCourseCardProps {
@@ -14,6 +17,9 @@ interface PinnedCourseCardProps {
 }
 
 export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedCourseCardProps) {
+  const [showNotesTooltip, setShowNotesTooltip] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
   const formatPace = (pace: string) => {
     return pace === '100%' ? 'Full-time' : 'Part-time';
   };
@@ -23,9 +29,32 @@ export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedC
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-base text-foreground line-clamp-2 leading-tight">
-              {course.name}
-            </h3>
+            <div className="flex items-start gap-2">
+              <h3 className="font-semibold text-base text-foreground line-clamp-2 leading-tight flex-1">
+                {course.name}
+              </h3>
+              {course.notes && (
+                <Tooltip open={isMobile ? showNotesTooltip : undefined}>
+                  <TooltipTrigger asChild>
+                    <button
+                      className="flex items-center gap-1 bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 flex-shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                      onClick={() => isMobile && setShowNotesTooltip(!showNotesTooltip)}
+                      onBlur={() => isMobile && setShowNotesTooltip(false)}
+                    >
+                      <AlertTriangle className="h-3 w-3" />
+                      <span className="text-xs font-bold">OBS</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent 
+                    side="top" 
+                    className="max-w-xs bg-gray-900 text-white border-gray-700"
+                    onPointerDownOutside={() => isMobile && setShowNotesTooltip(false)}
+                  >
+                    <p className="text-xs text-white">{course.notes}</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+            </div>
             <p className="text-sm text-muted-foreground mt-1">
               {course.id} • {course.credits}hp
             </p>

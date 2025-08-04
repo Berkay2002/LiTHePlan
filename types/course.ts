@@ -37,6 +37,9 @@ export interface Course {
   
   /** Programs eligible to take this course */
   programs: string[];
+  
+  /** Optional notes about course restrictions or warnings */
+  notes?: string | null;
 }
 
 /**
@@ -60,6 +63,7 @@ export function isValidCourse(course: unknown): course is Course {
     (courseObj.pace === '100%' || courseObj.pace === '50%') &&
     (Array.isArray(courseObj.examination) && courseObj.examination.every(e => typeof e === 'string' && ['TEN', 'LAB', 'PROJ', 'SEM', 'UPG'].includes(e))) &&
     ['Linköping', 'Norrköping', 'Distans'].includes(courseObj.campus as string) &&
-    Array.isArray(courseObj.programs)
+    Array.isArray(courseObj.programs) &&
+    (courseObj.notes === undefined || courseObj.notes === null || typeof courseObj.notes === 'string')
   );
 } 
