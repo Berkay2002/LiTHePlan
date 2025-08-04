@@ -65,9 +65,23 @@ export function CourseCardSkeleton() {
   );
 }
 
-export function CourseGridSkeleton({ count = 12 }: { count?: number }) {
+export function CourseGridSkeleton({ 
+  count = 12,
+  sidebarOpen = false,
+  profileSidebarOpen = false 
+}: { 
+  count?: number;
+  sidebarOpen?: boolean;
+  profileSidebarOpen?: boolean;
+}) {
+  // Match CourseGrid layout logic
+  const bothSidebarsOpen = sidebarOpen && profileSidebarOpen;
+  const gridClasses = bothSidebarsOpen 
+    ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:gap-5 w-full"
+    : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full";
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className={gridClasses}>
       {Array.from({ length: count }).map((_, index) => (
         <CourseCardSkeleton key={index} />
       ))}

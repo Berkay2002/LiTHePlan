@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, X, Menu, User, Eye, EyeOff, LogIn } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, X, Menu, User as UserIcon, Eye, EyeOff, LogIn } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,7 +9,8 @@ import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
 import { BackButton } from "@/components/BackButton";
 import { ShareButtons } from "@/components/ShareButtons";
 
-import { useAuth } from "@/lib/auth-context";
+import { createClient } from '@/utils/supabase/client';
+import type { User } from '@supabase/supabase-js';
 import { useProfileSafe } from "@/components/profile/ProfileContext";
 
 interface MainPageNavbarProps {
@@ -29,7 +31,36 @@ interface ProfileEditNavbarProps {
 type DynamicNavbarProps = MainPageNavbarProps | ProfileEditNavbarProps;
 
 export function DynamicNavbar(props: DynamicNavbarProps) {
-  const { user, loading, signOut } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Handle auth state
+  useEffect(() => {
+    const supabase = createClient();
+    
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setLoading(false);
+    };
+
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const signOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
   
   // Safely get profile context without throwing errors
   const profileContext = useProfileSafe();
@@ -92,11 +123,11 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    {/* User greeting - shown when authenticated */}
+                    {/* User greeting - shown when authenticated on desktop only */}
                     {user && (
                       <div className="flex items-center text-white text-sm mr-2">
-                        <span className="hidden sm:inline font-medium">
-                          Hi, {user.username || user.email?.split('@')[0] || `User ${user.sub.slice(0, 8)}`}!
+                        <span className="hidden xl:inline font-medium">
+                          Hi, {user.email?.split('@')[0] || `User ${user.id.slice(0, 8)}`}!
                         </span>
                       </div>
                     )}
@@ -109,7 +140,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                         className="h-10 px-3 hover:bg-picton-blue/10 transition-all duration-200 border border-white/30 hover:border-picton-blue/50"
                         title="Build your course profile (no login required)"
                       >
-                        <User className="h-4 w-4 text-white hover:text-picton-blue transition-colors duration-200 mr-2" />
+                        <UserIcon className="h-4 w-4 text-white hover:text-picton-blue transition-colors duration-200 mr-2" />
                         <span className="text-white hover:text-picton-blue transition-colors duration-200 text-sm font-medium">
                           Course Profile
                         </span>
@@ -138,8 +169,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                         >
-                          <LogIn className="h-4 w-4 mr-2" />
-                          Sign In (Optional)
+                          <LogIn className="h-4 w-4" />
                         </Button>
                       </Link>
                     )}
@@ -174,15 +204,15 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               </div>
               
               {/* Center - Search Bar (Perfectly Centered) */}
-              <div className="flex-1 px-3">
-                <div className="relative max-w-sm mx-auto">
+              <div className="flex-1 px-2">
+                <div className="relative max-w-xs mx-auto">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-air-superiority-blue-300" />
                   <Input
                     type="text"
-                    placeholder="Search courses..."
+                    placeholder="Search..."
                     value={props.searchQuery}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => props.onSearchChange(e.target.value)}
-                    className="pl-10 pr-10 h-10 w-full bg-white text-air-superiority-blue-300 placeholder:text-air-superiority-blue-400 border-2 border-air-superiority-blue/30 focus:border-picton-blue focus:ring-2 focus:ring-picton-blue/20 transition-all duration-200"
+                    className="pl-10 pr-10 h-10 w-full bg-white text-air-superiority-blue-300 placeholder:text-air-superiority-blue-400 border border-white/30 focus:border-picton-blue focus:ring-2 focus:ring-picton-blue/20 transition-all duration-200"
                   />
                   {props.searchQuery && (
                     <Button
@@ -206,27 +236,16 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
-                    {/* User greeting - mobile version */}
-                    {user && (
-                      <div className="flex items-center text-white text-xs mr-1">
-                        <span className="font-medium">
-                          Hi, {user.username || user.email?.split('@')[0] || `User ${user.sub.slice(0, 8)}`}!
-                        </span>
-                      </div>
-                    )}
                     
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-10 px-2 hover:bg-picton-blue/10 transition-all duration-200 border border-white/30 hover:border-picton-blue/50"
+                        className="h-10 w-10 p-0 hover:bg-picton-blue/10 transition-all duration-200 border border-white/30 hover:border-picton-blue/50"
                         title="Build your course profile (no login required)"
                       >
-                        <User className="h-4 w-4 text-white hover:text-picton-blue transition-colors duration-200 mr-1" />
-                        <span className="text-white hover:text-picton-blue transition-colors duration-200 text-xs font-medium">
-                          Profile
-                        </span>
+                        <UserIcon className="h-4 w-4 text-white hover:text-picton-blue transition-colors duration-200" />
                       </Button>
                     </Link>
                     
@@ -239,10 +258,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           await signOut();
                           window.location.reload();
                         }}
-                        className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                        className="h-10 w-10 p-0 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                       >
-                        <LogIn className="w-4 h-4 mr-2" />
-                        Sign Out
+                        <LogIn className="w-4 h-4" />
                       </Button>
                     ) : (
                       <Link href="/login">
@@ -252,8 +270,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                         >
-                          <LogIn className="h-4 w-4 mr-2" />
-                          Sign In (Optional)
+                          <LogIn className="h-4 w-4" />
                         </Button>
                       </Link>
                     )}
@@ -289,7 +306,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     variant="outline" 
                     size="sm"
                     onClick={props.onToggleBlockTimeline}
-                    className="h-10 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+                    className="h-10 px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                   >
                     {props.showBlockTimeline ? (
                       <>
@@ -311,8 +328,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 
                 {/* Authentication status - always show on all pages */}
                 {loading ? (
-                  <div className="flex items-center gap-2 text-card-foreground">
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-2 text-white">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     <span className="text-sm hidden sm:inline">Loading...</span>
                   </div>
                 ) : (
@@ -326,7 +343,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           await signOut();
                           window.location.reload();
                         }}
-                        className="h-10 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+                        className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                       >
                         <LogIn className="w-4 h-4 mr-2" />
                         <span className="hidden sm:inline">Sign Out</span>
@@ -336,7 +353,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-10 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+                          className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                         >
                           <LogIn className="h-4 w-4 mr-2" />
@@ -370,7 +387,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     variant="outline" 
                     size="sm"
                     onClick={props.onToggleBlockTimeline}
-                    className="h-10 px-2 sm:px-3 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+                    className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                   >
                     {props.showBlockTimeline ? (
                       <>
@@ -393,8 +410,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 
                 {/* Authentication status - mobile */}
                 {loading ? (
-                  <div className="flex items-center gap-1 text-card-foreground">
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-1 text-white">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
@@ -407,21 +424,19 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           await signOut();
                           window.location.reload();
                         }}
-                        className="h-10 px-2 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+                        className="h-10 w-10 p-0 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                       >
-                        <LogIn className="w-4 h-4 sm:mr-2" />
-                        <span className="hidden sm:inline">Sign Out</span>
+                        <LogIn className="w-4 h-4" />
                       </Button>
                     ) : (
                       <Link href="/login">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-10 px-2 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+                          className="h-10 w-10 p-0 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                         >
-                          <LogIn className="h-4 w-4 sm:mr-2" />
-                          <span className="hidden sm:inline">Sign In</span>
+                          <LogIn className="h-4 w-4" />
                         </Button>
                       </Link>
                     )}

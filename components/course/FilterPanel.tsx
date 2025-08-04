@@ -2,10 +2,10 @@ import { Course } from "@/types/course";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { X, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
 
@@ -33,7 +33,7 @@ export interface CollapsibleFilterSidebarProps extends FilterPanelProps {
   onToggle: () => void;
 }
 
-export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange, onResetFilters, isOpen, onToggle }: CollapsibleFilterSidebarProps) {
+export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange, isOpen, onToggle }: CollapsibleFilterSidebarProps) {
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
@@ -98,20 +98,6 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
     onFilterChange(newFilters);
   };
 
-  const getActiveFilterCount = () => {
-    return Object.entries(filterState).reduce((count, [key, value]) => {
-      if (key === 'programs' || key === 'search') {
-        return count + (value ? 1 : 0);
-      }
-      if (key === 'examination') {
-        // Count non-ignore examination filters
-        return count + Object.values(value as { [key: string]: string }).filter(mode => mode !== 'ignore').length;
-      }
-      return count + (value as (string | number)[]).length;
-    }, 0);
-  };
-
-  const activeFilterCount = getActiveFilterCount();
 
   return (
     <>
@@ -151,14 +137,6 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               </div>
             </div>
             
-            {/* Filter Count Badge */}
-            {activeFilterCount > 0 && (
-              <div className="absolute top-6 right-1">
-                <div className="h-5 w-5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                  <span className="text-xs font-bold text-white">{activeFilterCount}</span>
-                </div>
-              </div>
-            )}
           </div>
         )}
 
@@ -197,22 +175,6 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  {activeFilterCount > 0 && (
-                    <>
-                      <Badge variant="secondary" className="px-2.5 py-1 text-xs font-medium bg-primary/10 text-white border-primary/20">
-                        {activeFilterCount} active
-                      </Badge>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        onClick={onResetFilters}
-                        className="h-8 px-2 text-xs text-white hover:bg-destructive/10 hover:text-destructive"
-                      >
-                        <X className="h-3 w-3 mr-1" />
-                        Clear
-                      </Button>
-                    </>
-                  )}
                   {/* Enhanced Close button for mobile */}
                   <Button
                     variant="ghost"
@@ -232,6 +194,16 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Info className="h-4 w-4 text-white/60 hover:text-white cursor-help transition-colors duration-200" />
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs" sideOffset={4}>
+                        <p>Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <Select 
                   value={filterState.programs || undefined} 
@@ -463,7 +435,7 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
 }
 
 // Keep the original FilterPanel for backward compatibility (used in mobile Sheet)
-export function FilterPanel({ courses, filterState, onFilterChange, onResetFilters }: FilterPanelProps) {
+export function FilterPanel({ courses, filterState, onFilterChange }: FilterPanelProps) {
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(courses.map(course => course.level))),
@@ -528,42 +500,12 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
     onFilterChange(newFilters);
   };
 
-  const getActiveFilterCount = () => {
-    return Object.entries(filterState).reduce((count, [key, value]) => {
-      if (key === 'programs' || key === 'search') {
-        return count + (value ? 1 : 0);
-      }
-      if (key === 'examination') {
-        // Count non-ignore examination filters
-        return count + Object.values(value as { [key: string]: string }).filter(mode => mode !== 'ignore').length;
-      }
-      return count + (value as (string | number)[]).length;
-    }, 0);
-  };
-
-  const activeFilterCount = getActiveFilterCount();
 
   return (
     <Card className="w-full border border-air-superiority-blue-300/40 bg-air-superiority-blue-400 shadow-lg shadow-air-superiority-blue-300/20 ring-1 ring-air-superiority-blue-300/30">
       <CardHeader className="pb-3 bg-air-superiority-blue-300/30 rounded-t-lg border-b border-air-superiority-blue-300/40">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold tracking-tight text-card-foreground">Filters</CardTitle>
-          {activeFilterCount > 0 && (
-            <div className="flex items-center gap-3">
-              <Badge variant="secondary" className="px-2.5 py-1 text-xs font-medium bg-primary/10 text-primary border-primary/20">
-                {activeFilterCount} active
-              </Badge>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={onResetFilters}
-                className="h-8 px-2 text-xs hover:bg-destructive/10 hover:text-destructive"
-              >
-                <X className="h-3 w-3 mr-1" />
-                Clear
-              </Button>
-            </div>
-          )}
         </div>
         <Separator className="mt-3 bg-air-superiority-blue-300/40" />
       </CardHeader>
@@ -572,6 +514,16 @@ export function FilterPanel({ courses, filterState, onFilterChange, onResetFilte
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Program</h3>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="h-4 w-4 text-white/60 hover:text-white cursor-help transition-colors duration-200" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs" sideOffset={4}>
+                  <p>Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <Select 
             value={filterState.programs || undefined} 

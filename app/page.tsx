@@ -1,9 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
+import { FilterSidebarSkeleton } from "@/components/course/FilterSidebarSkeleton";
+import { ProfileSidebarSkeleton } from "@/components/profile/ProfileSidebarSkeleton";
+import { TopControlsSkeleton } from "@/components/course/ControlsSkeleton";
 import { ViewToggle, ViewMode } from "@/components/course/ViewToggle";
 import { SortDropdown, SortOption, sortCourses } from "@/components/course/SortDropdown";
 import { FilterState, CollapsibleFilterSidebar } from "@/components/course/FilterPanel";
@@ -47,8 +50,23 @@ function HomeContent() {
   // Sort state
   const [sortOption, setSortOption] = useState<SortOption | null>('name-asc');
 
-  // Sidebar state - Start closed by default for better mobile experience
+  // Sidebar state - Start open on desktop, closed on mobile/tablet
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Set initial sidebar state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      // Open sidebar for desktop (1024px and above), closed for tablet/mobile
+      setSidebarOpen(window.innerWidth >= 1024);
+    };
+    
+    // Set initial state
+    handleResize();
+    
+    // Listen for resize events
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const [profileSidebarOpen, setProfileSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -213,43 +231,32 @@ function HomeContent() {
       >
         <div className="min-h-screen bg-background">
           <div className="flex">
-            {/* Filter Sidebar - Skeleton */}
-            <div className={`${sidebarOpen ? 'block' : 'hidden'} lg:block w-80 bg-background border-r border-border`}>
-              <div className="p-4 space-y-4">
-                <div className="h-6 bg-muted rounded w-24 animate-pulse"></div>
-                <div className="space-y-2">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="h-4 bg-muted rounded animate-pulse"></div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            {/* Left Filter Sidebar Skeleton - Responsive based on screen size */}
+            <FilterSidebarSkeleton
+              isOpen={sidebarOpen}
+              onToggle={toggleSidebar}
+            />
+            
+            {/* Right Profile Sidebar Skeleton - Default closed state */}
+            <ProfileSidebarSkeleton
+              isOpen={false}
+              onToggle={() => {}}
+            />
 
-            {/* Main Content */}
-            <div className="flex-1 min-w-0">
-              <div className="p-6">
-                {/* Top Controls - Skeleton */}
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="h-8 bg-muted rounded w-24 animate-pulse"></div>
-                    <div className="h-8 bg-muted rounded w-32 animate-pulse"></div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="h-8 bg-muted rounded w-20 animate-pulse"></div>
-                    <div className="h-8 bg-muted rounded w-16 animate-pulse"></div>
-                  </div>
-                </div>
+            {/* Main Content Area - Match real layout with proper margins */}
+            <div className={`w-full pt-20 ${
+              sidebarOpen ? 'lg:ml-80 xl:ml-96' : 'lg:ml-12'
+            } lg:mr-12`}>
+              <div className="container mx-auto px-4 py-8 max-w-7xl">
+                {/* Top Controls - Skeleton with integrated loading indicator */}
+                <TopControlsSkeleton />
 
-                {/* Loading indicator */}
-                <div className="flex items-center justify-center mb-6">
-                  <div className="flex items-center gap-3 px-4 py-2 bg-muted/50 rounded-lg">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
-                    <p className="text-sm text-muted-foreground">Loading courses...</p>
-                  </div>
-                </div>
-
-                {/* Course Grid Skeleton */}
-                <CourseGridSkeleton count={12} />
+                {/* Course Grid Skeleton - Always assume sidebar is open during loading */}
+                <CourseGridSkeleton 
+                  count={12} 
+                  sidebarOpen={true}
+                  profileSidebarOpen={false}
+                />
               </div>
             </div>
           </div>

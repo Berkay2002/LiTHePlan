@@ -22,7 +22,7 @@ export function BackButton({
       variant="outline" 
       size="sm"
       onClick={onClick}
-      className="h-9 px-2 sm:px-3 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+      className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
     >
       <ArrowLeft className={`h-4 w-4 ${hideTextOnMobile ? '' : 'mr-2'} ${hideTextOnMobile ? 'sm:mr-2' : ''}`} />
       {hideTextOnMobile ? (

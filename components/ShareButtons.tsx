@@ -2,11 +2,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Share2, Check, User } from "lucide-react";
-import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
+import { Share2, Check, User as UserIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { createClient } from '@/utils/supabase/client';
+import type { User } from '@supabase/supabase-js';
 import { StudentProfile } from "@/types/profile";
-import { createClient } from "@/utils/supabase/client";
 
 interface ShareButtonsProps {
   profileId?: string;
@@ -17,7 +17,27 @@ interface ShareButtonsProps {
 export function ShareButtons({ profileId, hideTextOnMobile = false, profile }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { user } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+
+  // Handle auth state
+  useEffect(() => {
+    const supabase = createClient();
+    
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleShare = async () => {
     try {
@@ -48,7 +68,7 @@ export function ShareButtons({ profileId, hideTextOnMobile = false, profile }: S
             const { data } = await supabase
               .from('academic_profiles')
               .select('id')
-              .eq('user_id', user.sub)
+              .eq('user_id', user.id)
               .order('created_at', { ascending: false })
               .limit(1)
               .single();
@@ -89,7 +109,7 @@ export function ShareButtons({ profileId, hideTextOnMobile = false, profile }: S
           onClick={handleShare}
           disabled={saving}
           title="Save profile to cloud and share"
-          className="h-10 px-2 sm:px-3 border-border bg-card text-card-foreground hover:bg-accent hover:text-accent-foreground"
+          className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
         >
           {saving ? (
             <>
@@ -123,9 +143,9 @@ export function ShareButtons({ profileId, hideTextOnMobile = false, profile }: S
           size="sm"
           onClick={() => window.location.href = '/login'}
           title="Sign up to save profiles permanently and share with others"
-          className="h-10 px-2 sm:px-3 gap-1"
+          className="h-10 px-2 sm:px-3 gap-1 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
         >
-          <User className="w-4 h-4" />
+          <UserIcon className="w-4 h-4" />
           <span className="hidden sm:inline">Sign Up to Share</span>
           <span className="sm:hidden">Sign Up</span>
         </Button>

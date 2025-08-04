@@ -178,29 +178,26 @@
     @apply bg-background text-foreground;
   }
   
-  /* Custom scrollbar styling for filter panel */
+  /* Hide scrollbars for filter panel */
   .filter-panel-scroll::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
+    background: transparent;
   }
   
   .filter-panel-scroll::-webkit-scrollbar-track {
-    background: var(--color-air-superiority-blue-300);
-    border-radius: 4px;
+    background: transparent;
   }
   
   .filter-panel-scroll::-webkit-scrollbar-thumb {
-    background: var(--color-air-superiority-blue-500);
-    border-radius: 4px;
-    border: 1px solid var(--color-air-superiority-blue-400);
+    background: transparent;
   }
   
   .filter-panel-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--color-picton-blue-500);
+    background: transparent;
   }
   
-  /* Firefox scrollbar styling */
+  /* Firefox scrollbar hiding */
   .filter-panel-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-air-superiority-blue-500) var(--color-air-superiority-blue-300);
+    scrollbar-width: none;
   }
 }

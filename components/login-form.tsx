@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useAuth } from "@/lib/auth-context"
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from '@/utils/supabase/client'
 import Image from "next/image"
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
@@ -25,7 +24,6 @@ export function LoginForm({
   const [username, setUsername] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { signIn, signUp } = useAuth()
   const router = useRouter()
   const supabase = createClient()
 
@@ -68,7 +66,15 @@ export function LoginForm({
           setLoading(false)
           return
         }
-        result = await signUp(emailOrUsername, password, username)
+        result = await supabase.auth.signUp({ 
+          email: emailOrUsername, 
+          password,
+          options: {
+            data: {
+              username: username || null
+            }
+          }
+        })
       } else {
         // For login, check if input is username or email
         if (!isEmail(emailOrUsername)) {
@@ -82,7 +88,7 @@ export function LoginForm({
           emailToUse = lookedUpEmail
         }
         
-        result = await signIn(emailToUse, password)
+        result = await supabase.auth.signInWithPassword({ email: emailToUse, password })
       }
 
       if (result.error) {

@@ -3,20 +3,20 @@
 
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { useAuth } from '@/lib/auth-context';
+import type { User } from '@supabase/supabase-js';
 
 export function useRealtimeProfiles(
+  user: User | null,
   onProfileUpdate: (profile: any) => void,
   onProfileInsert: (profile: any) => void,
   onProfileDelete: (profileId: string) => void
 ) {
-  const { user } = useAuth();
 
   useEffect(() => {
     // Only run on client-side and when user is authenticated
     if (typeof window === 'undefined' || !user) return;
 
-    console.log('🔄 Setting up Realtime subscription for user:', user.sub);
+    console.log('🔄 Setting up Realtime subscription for user:', user.id);
 
     const supabase = createClient();
     
@@ -29,7 +29,7 @@ export function useRealtimeProfiles(
           event: '*', // Listen to INSERT, UPDATE, DELETE
           schema: 'public',
           table: 'academic_profiles',
-          filter: `user_id=eq.${user.sub}`, // Only this user's profiles
+          filter: `user_id=eq.${user.id}`, // Only this user's profiles
         },
         (payload) => {
           console.log('📡 Realtime event received:', payload);

@@ -7,6 +7,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { ProfileStatsCard } from '@/components/ProfileStatsCard';
 import { EditableTermCard } from '@/components/EditableTermCard';
 import { DraggableTermCard } from '@/components/DraggableTermCard';
+import { ProfileSkeletonLoader } from '@/components/ProfileSkeletonLoader';
 import { useProfile, ProfileProvider } from '@/components/profile/ProfileContext';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 
@@ -78,21 +79,10 @@ function ProfileEditPageContent() {
     return (
       <PageLayout 
         navbarMode="profile-edit"
+        showBlockTimeline={showBlockTimeline}
+        onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
       >
-        <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-4 py-8">
-            <div className="flex items-center justify-center min-h-[400px]">
-              <div className="text-center">
-                <h2 className="text-xl font-semibold text-card-foreground mb-2">
-                  No Profile Found
-                </h2>
-                <p className="text-muted-foreground mb-6">
-                  You need to add courses to your profile first.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProfileSkeletonLoader />
       </PageLayout>
     );
   }

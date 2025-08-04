@@ -1,11 +1,35 @@
 'use client'
 
-import { useAuth } from '@/lib/auth-context'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/utils/supabase/client'
 import { Button } from '@/components/ui/button'
 import { LogOut } from 'lucide-react'
+import type { User } from '@supabase/supabase-js'
 
 export function AuthStatus() {
-  const { user, loading, signOut } = useAuth()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const supabase = createClient()
+    
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setLoading(false)
+    }
+
+    getUser()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [])
 
   if (loading) {
     return (
@@ -21,7 +45,8 @@ export function AuthStatus() {
   }
 
   const handleSignOut = async () => {
-    await signOut()
+    const supabase = createClient()
+    await supabase.auth.signOut()
     window.location.reload()
   }
 
@@ -29,7 +54,7 @@ export function AuthStatus() {
     <div className="flex items-center gap-2">
       <div className="flex items-center gap-2 text-white text-sm">
         <span className="hidden sm:inline font-medium">
-          Hi, {user.username || user.email?.split('@')[0] || `User ${user.sub.slice(0, 8)}`}!
+          Hi, {user.email?.split('@')[0] || `User ${user.id.slice(0, 8)}`}!
         </span>
       </div>
       

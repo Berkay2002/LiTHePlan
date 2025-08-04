@@ -1,7 +1,7 @@
 // components/profile/ProfileContext.tsx
 'use client'
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, useState, ReactNode } from 'react';
 import { StudentProfile, ProfileState } from '@/types/profile';
 import { 
   loadProfileFromStorage, 
@@ -13,9 +13,9 @@ import {
   clearProfile as clearProfileUtil,
   createEmptyProfile 
 } from '@/lib/profile-utils';
-import { useAuth } from '@/lib/auth-context';
-import { useRealtimeProfiles } from '@/hooks/useRealtimeProfiles';
 import { createClient } from '@/utils/supabase/client';
+import type { User } from '@supabase/supabase-js';
+import { useRealtimeProfiles } from '@/hooks/useRealtimeProfiles';
 
 type ProfileAction = 
   | { type: 'LOAD_PROFILE'; profile: StudentProfile }
@@ -132,7 +132,30 @@ interface ProfileProviderProps {
 }
 
 export function ProfileProvider({ children }: ProfileProviderProps) {
-  const { user, loading } = useAuth();
+  const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Handle auth state
+  useEffect(() => {
+    const supabase = createClient();
+    
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      setAuthLoading(false);
+    };
+
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+        setAuthLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
   const [state, dispatch] = useReducer(profileReducer, {
     current_profile: null,
     is_editing: false,
@@ -145,7 +168,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
       // Save to Supabase when authenticated - use Supabase client directly
       try {
         console.log('🔐 Attempting to save profile for user:', { 
-          userId: user.sub, 
+          userId: user.id, 
           userEmail: user.email,
           profileName: profile.name 
         });
@@ -157,7 +180,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         const { data: existing, error: selectError } = await supabase
           .from('academic_profiles')
           .select('id')
-          .eq('user_id', user.sub)
+          .eq('user_id', user.id)
           .single();
 
         if (selectError && selectError.code !== 'PGRST116') {
@@ -184,7 +207,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
           const { data: newProfile, error } = await supabase
             .from('academic_profiles')
             .insert({
-              user_id: user.sub,
+              user_id: user.id,
               name: profile.name || 'My Course Profile',
               profile_data: profile,
               is_public: true
@@ -213,7 +236,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         const { data, error } = await supabase
           .from('academic_profiles')
           .select('*')
-          .eq('user_id', user.sub)
+          .eq('user_id', user.id)
           .order('created_at', { ascending: false });
 
         if (error) {
@@ -237,7 +260,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
   // Load profile on mount and when authentication state changes
   useEffect(() => {
-    if (loading) return; // Wait for auth to finish loading
+    if (authLoading) return; // Wait for auth to finish loading
     
     const loadInitialProfile = async () => {
       const savedProfile = await loadProfile();
@@ -247,10 +270,11 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     };
     
     loadInitialProfile();
-  }, [user, loading, loadProfile]);
+  }, [user, authLoading, loadProfile]);
 
   // Set up Realtime subscriptions for authenticated users
   useRealtimeProfiles(
+    user,
     // onProfileUpdate
     (updatedProfile) => {
       console.log('🔄 Profile updated via Realtime:', updatedProfile);

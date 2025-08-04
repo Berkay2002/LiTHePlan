@@ -19,7 +19,9 @@
       "Bash(curl:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }
