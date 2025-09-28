@@ -204,7 +204,7 @@ export function CourseCard({ course }: CourseCardProps) {
         {/* Main Course Header */}
         <div className="mb-5">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground line-clamp-2 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1 min-h-[3.5rem]">
+            <h3 className="text-lg font-semibold text-foreground line-clamp-3 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1 min-h-[4.5rem]">
               {course.name}
             </h3>
             {course.notes && (
