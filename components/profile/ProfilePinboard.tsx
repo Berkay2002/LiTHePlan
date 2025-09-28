@@ -5,13 +5,18 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProfileSummary } from "@/lib/profile-utils";
+import {
+  MASTER_PROGRAM_TARGET_CREDITS,
+  MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 import type { StudentProfile } from "@/types/profile";
 import { PinnedCourseCard } from "./PinnedCourseCard";
 
 interface ProfilePinboardProps {
   profile: StudentProfile;
   onRemoveCourse: (courseId: string) => void;
-  onClearTerm: (term: 7 | 8 | 9) => void;
+  onClearTerm: (term: MasterProgramTerm) => void;
   onClearProfile: () => void;
   readOnly?: boolean;
 }
@@ -25,7 +30,7 @@ export function ProfilePinboard({
 }: ProfilePinboardProps) {
   const summary = getProfileSummary(profile);
 
-  const renderTermSection = (term: 7 | 8 | 9) => {
+  const renderTermSection = (term: MasterProgramTerm) => {
     const courses = profile.terms[term];
     const termCredits = courses.reduce(
       (sum, course) => sum + course.credits,
@@ -158,7 +163,9 @@ export function ProfilePinboard({
               </div>
               <div>
                 <div className="text-2xl font-bold text-card-foreground">
-                  {Math.round((summary.totalCredits / 90) * 100)}%
+                  {Math.round(
+                    (summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS) * 100
+                  )}%
                 </div>
                 <div className="text-xs text-muted-foreground">Complete</div>
               </div>
@@ -191,9 +198,7 @@ export function ProfilePinboard({
 
       {/* Term Sections */}
       <div className="space-y-6">
-        {renderTermSection(7)}
-        {renderTermSection(8)}
-        {renderTermSection(9)}
+        {MASTER_PROGRAM_TERMS.map((term) => renderTermSection(term))}
       </div>
 
       {/* Empty State */}

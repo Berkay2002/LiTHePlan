@@ -13,6 +13,11 @@ import {
   ProfileProvider,
   useProfile,
 } from "@/components/profile/ProfileContext";
+import {
+  IMMUTABLE_MASTER_PROGRAM_TERMS,
+  MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 
 function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
@@ -62,11 +67,31 @@ function ProfileEditPageContent() {
       return;
     }
 
-    const sourceTerm = Number.parseInt(sourceTermMatch[1]) as 7 | 8 | 9;
-    const destTerm = Number.parseInt(destTermMatch[1]) as 7 | 8 | 9;
+    const parseTerm = (
+      match: RegExpMatchArray | null
+    ): MasterProgramTerm | null => {
+      if (!match) {
+        return null;
+      }
+
+      const parsed = Number.parseInt(match[1], 10);
+      return (
+        MASTER_PROGRAM_TERMS.find((term) => term === parsed) ?? null
+      );
+    };
+
+    const sourceTerm = parseTerm(sourceTermMatch);
+    const destTerm = parseTerm(destTermMatch);
+
+    if (!(sourceTerm && destTerm)) {
+      return;
+    }
 
     // Only allow moving between terms 7 and 9 (not 8)
-    if (sourceTerm === 8 || destTerm === 8) {
+    if (
+      IMMUTABLE_MASTER_PROGRAM_TERMS.includes(sourceTerm) ||
+      IMMUTABLE_MASTER_PROGRAM_TERMS.includes(destTerm)
+    ) {
       return;
     }
 
@@ -107,64 +132,38 @@ function ProfileEditPageContent() {
 
             {/* Term Cards (Draggable on Desktop) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {isMobile ? (
-                // Use regular EditableTermCard on mobile
-                <>
-                  <EditableTermCard
-                    courses={state.current_profile.terms[7]}
-                    onClearTerm={clearTerm}
-                    onMoveCourse={moveCourse}
-                    onRemoveCourse={removeCourse}
-                    showBlockTimeline={showBlockTimeline}
-                    termNumber={7}
-                  />
-                  <EditableTermCard
-                    courses={state.current_profile.terms[8]}
-                    onClearTerm={clearTerm}
-                    onRemoveCourse={removeCourse}
-                    showBlockTimeline={showBlockTimeline}
-                    termNumber={8}
-                  />
-                  <EditableTermCard
-                    courses={state.current_profile.terms[9]}
-                    onClearTerm={clearTerm}
-                    onMoveCourse={moveCourse}
-                    onRemoveCourse={removeCourse}
-                    showBlockTimeline={showBlockTimeline}
-                    termNumber={9}
-                  />
-                </>
-              ) : (
-                // Use DraggableTermCard on desktop
-                <>
-                  <DraggableTermCard
-                    courses={state.current_profile.terms[7]}
-                    isDragDisabled={false}
-                    onClearTerm={clearTerm}
-                    onMoveCourse={moveCourse}
-                    onRemoveCourse={removeCourse}
-                    showBlockTimeline={showBlockTimeline}
-                    termNumber={7}
-                  />
-                  <DraggableTermCard
-                    courses={state.current_profile.terms[8]}
-                    isDragDisabled={true}
-                    onClearTerm={clearTerm}
-                    onRemoveCourse={removeCourse}
-                    showBlockTimeline={showBlockTimeline}
-                    termNumber={8}
-                  />
-                  <DraggableTermCard
-                    courses={state.current_profile.terms[9]}
-                    isDragDisabled={false}
-                    onClearTerm={clearTerm}
-                    onMoveCourse={moveCourse}
-                    onRemoveCourse={removeCourse}
-                    showBlockTimeline={showBlockTimeline}
-                    termNumber={9}
-                  />
-                </>
-              )}
+              {isMobile
+                ? MASTER_PROGRAM_TERMS.map((term) => {
+                    const isImmutable =
+                      IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
+                    return (
+                      <EditableTermCard
+                        key={term}
+                        courses={state.current_profile.terms[term]}
+                        onClearTerm={clearTerm}
+                        onMoveCourse={isImmutable ? undefined : moveCourse}
+                        onRemoveCourse={removeCourse}
+                        showBlockTimeline={showBlockTimeline}
+                        termNumber={term}
+                      />
+                    );
+                  })
+                : MASTER_PROGRAM_TERMS.map((term) => {
+                    const isImmutable =
+                      IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
+                    return (
+                      <DraggableTermCard
+                        key={term}
+                        courses={state.current_profile.terms[term]}
+                        isDragDisabled={isImmutable}
+                        onClearTerm={clearTerm}
+                        onMoveCourse={isImmutable ? undefined : moveCourse}
+                        onRemoveCourse={removeCourse}
+                        showBlockTimeline={showBlockTimeline}
+                        termNumber={term}
+                      />
+                    );
+                  })}
             </div>
           </div>
         </div>

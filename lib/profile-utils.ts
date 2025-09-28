@@ -6,6 +6,15 @@ import {
   validateProfile,
 } from "@/types/profile";
 
+import {
+  MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
+  MASTER_PROGRAM_TARGET_CREDITS,
+  MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
+
+type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
+
 // Re-export createEmptyProfile for convenience
 export { createEmptyProfile };
 
@@ -69,10 +78,8 @@ export function isCourseInProfile(
   profile: StudentProfile,
   courseId: string
 ): boolean {
-  return [7, 8, 9].some((term) =>
-    profile.terms[term as keyof typeof profile.terms].some(
-      (course) => course.id === courseId
-    )
+  return MASTER_PROGRAM_TERMS.some((term) =>
+    profile.terms[term].some((course) => course.id === courseId)
   );
 }
 
@@ -82,8 +89,8 @@ export function isCourseInProfile(
 export function getCourseTermInProfile(
   profile: StudentProfile,
   courseId: string
-): 7 | 8 | 9 | null {
-  for (const term of [7, 8, 9] as const) {
+): MasterProgramTerm | null {
+  for (const term of MASTER_PROGRAM_TERMS) {
     if (profile.terms[term].some((course) => course.id === courseId)) {
       return term;
     }
@@ -96,8 +103,8 @@ export function getCourseTermInProfile(
  */
 export function addCourseToProfile(
   profile: StudentProfile,
-  course: StudentProfile["terms"][7][0],
-  term: 7 | 8 | 9
+  course: ProfileCourse,
+  term: MasterProgramTerm
 ): StudentProfile {
   // Check if course is already in profile
   if (isCourseInProfile(profile, course.id)) {
@@ -182,8 +189,8 @@ export function removeCourseFromProfile(
 export function moveCourseInProfile(
   profile: StudentProfile,
   courseId: string,
-  fromTerm: 7 | 8 | 9,
-  toTerm: 7 | 8 | 9
+  fromTerm: MasterProgramTerm,
+  toTerm: MasterProgramTerm
 ): StudentProfile {
   // Find the course in the from term
   const course = profile.terms[fromTerm].find((c) => c.id === courseId);
@@ -194,7 +201,7 @@ export function moveCourseInProfile(
   // For validation, we need to check if the course has an original_term property
   // or use the course's current term info. Courses can be offered in any of the
   // three master's terms (7, 8, or 9), so restrict the move only to that range.
-  if (![7, 8, 9].includes(toTerm)) {
+  if (!MASTER_PROGRAM_TERMS.includes(toTerm)) {
     throw new Error(
       `Can only move courses to terms 7, 8 or 9. Target term ${toTerm} is not allowed.`
     );
@@ -229,7 +236,7 @@ export function moveCourseInProfile(
  */
 export function clearTermInProfile(
   profile: StudentProfile,
-  term: 7 | 8 | 9
+  term: MasterProgramTerm
 ): StudentProfile {
   const updatedProfile: StudentProfile = {
     ...profile,
@@ -255,13 +262,15 @@ export function clearTermInProfile(
  * Clear all courses from the profile
  */
 export function clearProfile(profile: StudentProfile): StudentProfile {
+  const emptyTerms = Object.fromEntries(
+    MASTER_PROGRAM_TERMS.map((term) => [term, []])
+  ) as StudentProfile["terms"];
+
   const updatedProfile: StudentProfile = {
     ...profile,
     updated_at: new Date(),
     terms: {
-      7: [],
-      8: [],
-      9: [],
+      ...emptyTerms,
     },
     metadata: {
       total_credits: 0,
@@ -280,15 +289,15 @@ export function getProfileSummary(profile: StudentProfile) {
   const validation = validateProfile(profile);
 
   return {
-    totalCourses: [7, 8, 9].reduce(
-      (sum, term) =>
-        sum + profile.terms[term as keyof typeof profile.terms].length,
+    totalCourses: MASTER_PROGRAM_TERMS.reduce(
+      (sum, term) => sum + profile.terms[term].length,
       0
     ),
     totalCredits: validation.total_credits,
     advancedCredits: validation.advanced_credits,
-    isComplete: validation.total_credits === 90,
-    meetsAdvancedRequirement: validation.advanced_credits >= 30,
+    isComplete: validation.total_credits === MASTER_PROGRAM_TARGET_CREDITS,
+    meetsAdvancedRequirement:
+      validation.advanced_credits >= MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
     errors: validation.errors,
     warnings: validation.warnings,
   };

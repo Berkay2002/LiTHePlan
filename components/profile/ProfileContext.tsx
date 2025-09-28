@@ -22,24 +22,27 @@ import {
   removeCourseFromProfile,
   saveProfileToStorage,
 } from "@/lib/profile-utils";
+import { type MasterProgramTerm } from "@/lib/profile-constants";
 import type { ProfileState, StudentProfile } from "@/types/profile";
 import { createClient } from "@/utils/supabase/client";
+
+type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
 
 type ProfileAction =
   | { type: "LOAD_PROFILE"; profile: StudentProfile }
   | {
       type: "ADD_COURSE";
-      course: StudentProfile["terms"][7][0];
-      term: 7 | 8 | 9;
+      course: ProfileCourse;
+      term: MasterProgramTerm;
     }
   | { type: "REMOVE_COURSE"; courseId: string }
   | {
       type: "MOVE_COURSE";
       courseId: string;
-      fromTerm: 7 | 8 | 9;
-      toTerm: 7 | 8 | 9;
+      fromTerm: MasterProgramTerm;
+      toTerm: MasterProgramTerm;
     }
-  | { type: "CLEAR_TERM"; term: 7 | 8 | 9 }
+  | { type: "CLEAR_TERM"; term: MasterProgramTerm }
   | { type: "CLEAR_PROFILE" }
   | { type: "SET_EDITING"; isEditing: boolean }
   | { type: "SET_UNSAVED_CHANGES"; hasChanges: boolean };
@@ -47,16 +50,16 @@ type ProfileAction =
 interface ProfileContextType {
   state: ProfileState;
   addCourse: (
-    course: StudentProfile["terms"][7][0],
-    term: 7 | 8 | 9
+    course: ProfileCourse,
+    term: MasterProgramTerm
   ) => Promise<void>;
   removeCourse: (courseId: string) => Promise<void>;
   moveCourse: (
     courseId: string,
-    fromTerm: 7 | 8 | 9,
-    toTerm: 7 | 8 | 9
+    fromTerm: MasterProgramTerm,
+    toTerm: MasterProgramTerm
   ) => Promise<void>;
-  clearTerm: (term: 7 | 8 | 9) => Promise<void>;
+  clearTerm: (term: MasterProgramTerm) => Promise<void>;
   clearProfile: () => Promise<void>;
   setEditing: (isEditing: boolean) => void;
   setUnsavedChanges: (hasChanges: boolean) => void;
@@ -350,10 +353,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     }
   );
 
-  const addCourse = async (
-    course: StudentProfile["terms"][7][0],
-    term: 7 | 8 | 9
-  ) => {
+  const addCourse = async (course: ProfileCourse, term: MasterProgramTerm) => {
     let updatedProfile: StudentProfile;
 
     if (state.current_profile) {
@@ -379,8 +379,8 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
   const moveCourse = async (
     courseId: string,
-    fromTerm: 7 | 8 | 9,
-    toTerm: 7 | 8 | 9
+    fromTerm: MasterProgramTerm,
+    toTerm: MasterProgramTerm
   ) => {
     if (!state.current_profile) return;
     const updatedProfile = moveCourseInProfile(
@@ -393,7 +393,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     dispatch({ type: "LOAD_PROFILE", profile: updatedProfile });
   };
 
-  const clearTerm = async (term: 7 | 8 | 9) => {
+  const clearTerm = async (term: MasterProgramTerm) => {
     if (!state.current_profile) return;
     const updatedProfile = clearTermInProfile(state.current_profile, term);
     await saveProfile(updatedProfile);

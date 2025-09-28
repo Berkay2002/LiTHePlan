@@ -1,3 +1,7 @@
+import {
+  MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 /**
@@ -53,11 +57,14 @@ export function isMultiTermCourse(course: Course): boolean {
 /**
  * Get available terms for a course
  */
-export function getAvailableTerms(course: Course): (7 | 8 | 9)[] {
-  if (Array.isArray(course.term)) {
-    return course.term.map((t) => Number.parseInt(t) as 7 | 8 | 9);
-  }
-  return [Number.parseInt(course.term) as 7 | 8 | 9];
+export function getAvailableTerms(course: Course): MasterProgramTerm[] {
+  const terms = Array.isArray(course.term) ? course.term : [course.term];
+
+  return terms
+    .map((term) => Number.parseInt(term, 10))
+    .filter((term): term is MasterProgramTerm =>
+      MASTER_PROGRAM_TERMS.includes(term as MasterProgramTerm)
+    );
 }
 
 /**
@@ -65,12 +72,12 @@ export function getAvailableTerms(course: Course): (7 | 8 | 9)[] {
  */
 export function isCourseAvailableInTerm(
   course: Course,
-  term: 7 | 8 | 9
+  term: MasterProgramTerm
 ): boolean {
   if (Array.isArray(course.term)) {
     return course.term.includes(term.toString());
   }
-  return Number.parseInt(course.term) === term;
+  return Number.parseInt(course.term, 10) === term;
 }
 
 /**

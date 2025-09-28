@@ -1,0 +1,14 @@
+export const MASTER_PROGRAM_TERMS = [7, 8, 9] as const;
+export type MasterProgramTerm = (typeof MASTER_PROGRAM_TERMS)[number];
+export const IMMUTABLE_MASTER_PROGRAM_TERMS: readonly MasterProgramTerm[] = [8];
+
+export const MASTER_PROGRAM_TARGET_CREDITS = 90;
+export const MASTER_PROGRAM_MIN_ADVANCED_CREDITS = 60;
+export const PROGRAM_FOCUS_TARGET_CREDITS = 30;
+
+export const PROGRESS_CIRCLE_SIZE = 200;
+export const PROGRESS_CIRCLE_STROKE_WIDTH = 12;
+
+export const PROFILE_STATS_PIE_CHART_SIZE = 220;
+export const PROFILE_SIDEBAR_PIE_CHART_SIZE = 180;
+export const PIE_CHART_RADIUS_FACTOR = 0.35;

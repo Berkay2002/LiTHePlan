@@ -3,10 +3,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLevelColor } from "@/lib/course-utils";
+import { type MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface TermCardProps {
-  termNumber: 7 | 8 | 9;
+  termNumber: MasterProgramTerm;
   courses: Course[];
   className?: string;
 }
@@ -14,18 +15,7 @@ interface TermCardProps {
 export function TermCard({ termNumber, courses, className }: TermCardProps) {
   const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
 
-  const getTermLabel = (term: number) => {
-    switch (term) {
-      case 7:
-        return "Termin 7";
-      case 8:
-        return "Termin 8";
-      case 9:
-        return "Termin 9";
-      default:
-        return `Termin ${term}`;
-    }
-  };
+  const getTermLabel = (term: MasterProgramTerm) => `Termin ${term}`;
 
   // Group courses by period - 50% courses appear in both periods
   const coursesByPeriod = {

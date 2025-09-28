@@ -6,14 +6,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { type MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface TermSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   course: Course | null;
-  availableTerms: (7 | 8 | 9)[];
-  onTermSelected: (course: Course, selectedTerm: 7 | 8 | 9) => void;
+  availableTerms: MasterProgramTerm[];
+  onTermSelected: (course: Course, selectedTerm: MasterProgramTerm) => void;
 }
 
 export function TermSelectionModal({
@@ -23,7 +24,13 @@ export function TermSelectionModal({
   availableTerms,
   onTermSelected,
 }: TermSelectionModalProps) {
-  const handleTermSelect = (term: 7 | 8 | 9) => {
+  const termDescriptions: Record<MasterProgramTerm, string> = {
+    7: "First Year",
+    8: "Second Year",
+    9: "Third Year",
+  };
+
+  const handleTermSelect = (term: MasterProgramTerm) => {
     if (course) {
       onTermSelected(course, term);
       onClose();
@@ -67,11 +74,7 @@ export function TermSelectionModal({
                     <div className="text-left">
                       <div className="font-medium">Term {term}</div>
                       <div className="text-sm opacity-70">
-                        {term === 7
-                          ? "First Year"
-                          : term === 8
-                            ? "Second Year"
-                            : "Third Year"}
+                        {termDescriptions[term]}
                       </div>
                     </div>
                   </div>

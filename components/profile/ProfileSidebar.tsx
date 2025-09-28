@@ -5,6 +5,13 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  MASTER_PROGRAM_TARGET_CREDITS,
+  MASTER_PROGRAM_TERMS,
+  PIE_CHART_RADIUS_FACTOR,
+  PROFILE_SIDEBAR_PIE_CHART_SIZE,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 import { cn } from "@/lib/utils";
 import type { StudentProfile } from "@/types/profile";
 
@@ -20,11 +27,11 @@ export function ProfileSidebar({
   onToggle,
 }: ProfileSidebarProps) {
   const [currentTermIndex, setCurrentTermIndex] = useState(0);
-  const terms = [7, 8, 9];
+  const terms = MASTER_PROGRAM_TERMS;
 
   // Calculate values only if profile exists
   const currentCredits = profile?.metadata.total_credits ?? 0;
-  const targetCredits = 90;
+  const targetCredits = MASTER_PROGRAM_TARGET_CREDITS;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate advanced credits
@@ -50,9 +57,9 @@ export function ProfileSidebar({
     return { ...segment, startAngle, angle };
   });
 
-  const size = 180;
+  const size = PROFILE_SIDEBAR_PIE_CHART_SIZE;
   const center = size / 2;
-  const radius = size * 0.35;
+  const radius = size * PIE_CHART_RADIUS_FACTOR;
 
   // Function to create SVG path for pie segment
   const createPath = (startAngle: number, angle: number) => {
@@ -69,9 +76,9 @@ export function ProfileSidebar({
     return `M ${center} ${center} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
   };
 
-  const currentTerm = terms[currentTermIndex];
+  const currentTerm = terms[currentTermIndex] ?? terms[0];
   const currentTermCourses =
-    profile?.terms[currentTerm as keyof typeof profile.terms] ?? [];
+    currentTerm !== undefined ? profile?.terms[currentTerm] ?? [] : [];
 
   const nextTerm = () => {
     setCurrentTermIndex((prev) => (prev + 1) % terms.length);
@@ -81,18 +88,7 @@ export function ProfileSidebar({
     setCurrentTermIndex((prev) => (prev - 1 + terms.length) % terms.length);
   };
 
-  const getTermLabel = (term: number) => {
-    switch (term) {
-      case 7:
-        return "Term 7";
-      case 8:
-        return "Term 8";
-      case 9:
-        return "Term 9";
-      default:
-        return `Term ${term}`;
-    }
-  };
+  const getTermLabel = (term: MasterProgramTerm) => `Term ${term}`;
 
   return (
     <>
@@ -332,7 +328,9 @@ export function ProfileSidebar({
                     </div>
                   </div>
                   <div className="space-y-2 text-xs text-white/60">
-                    <p>💡 Tip: You can add up to 90 credits</p>
+                    <p>
+                      💡 Tip: You can add up to {MASTER_PROGRAM_TARGET_CREDITS} credits
+                    </p>
                     <p>📚 Mix advanced and basic level courses</p>
                   </div>
                 </div>

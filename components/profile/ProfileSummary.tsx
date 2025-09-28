@@ -4,6 +4,10 @@ import { AlertTriangle, BookOpen, CheckCircle, Target } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getProfileSummary } from "@/lib/profile-utils";
+import {
+  MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
+  MASTER_PROGRAM_TARGET_CREDITS,
+} from "@/lib/profile-constants";
 import type { StudentProfile } from "@/types/profile";
 
 interface ProfileSummaryProps {
@@ -12,12 +16,13 @@ interface ProfileSummaryProps {
 
 export function ProfileSummary({ profile }: ProfileSummaryProps) {
   const summary = getProfileSummary(profile);
+  const completionRatio =
+    summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS;
 
   const getCompletionColor = () => {
-    const percentage = (summary.totalCredits / 90) * 100;
-    if (percentage >= 100) return "text-green-600";
-    if (percentage >= 75) return "text-blue-600";
-    if (percentage >= 50) return "text-yellow-600";
+    if (completionRatio >= 1) return "text-green-600";
+    if (completionRatio >= 0.75) return "text-blue-600";
+    if (completionRatio >= 0.5) return "text-yellow-600";
     return "text-red-600";
   };
 
@@ -72,7 +77,7 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
               </div>
               <div className="text-center">
                 <div className={`text-xl font-bold ${getCompletionColor()}`}>
-                  {Math.round((summary.totalCredits / 90) * 100)}%
+                  {Math.round(completionRatio * 100)}%
                 </div>
                 <div className="text-xs text-muted-foreground">Complete</div>
               </div>
@@ -81,22 +86,26 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
             {/* Progress Bar */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-muted-foreground">Progress to 90hp</span>
-                <span className="font-medium">{summary.totalCredits}/90hp</span>
+                <span className="text-muted-foreground">
+                  Progress to {MASTER_PROGRAM_TARGET_CREDITS}hp
+                </span>
+                <span className="font-medium">
+                  {summary.totalCredits}/{MASTER_PROGRAM_TARGET_CREDITS}hp
+                </span>
               </div>
               <div className="w-full bg-muted rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    summary.totalCredits >= 90
+                    completionRatio >= 1
                       ? "bg-green-500"
-                      : summary.totalCredits >= 67
+                      : completionRatio >= 0.75
                         ? "bg-blue-500"
-                        : summary.totalCredits >= 45
+                        : completionRatio >= 0.5
                           ? "bg-yellow-500"
                           : "bg-red-500"
                   }`}
                   style={{
-                    width: `${Math.min((summary.totalCredits / 90) * 100, 100)}%`,
+                    width: `${Math.min(completionRatio * 100, 100)}%`,
                   }}
                 />
               </div>
@@ -114,7 +123,8 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
                   Advanced Level Requirement
                 </span>
                 <Badge className="text-xs" variant="outline">
-                  {summary.advancedCredits}/30hp
+                  {summary.advancedCredits}/
+                  {MASTER_PROGRAM_MIN_ADVANCED_CREDITS}hp
                 </Badge>
               </div>
 
@@ -132,7 +142,8 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
                   Total Credits Target
                 </span>
                 <Badge className="text-xs" variant="outline">
-                  {summary.totalCredits}/90hp
+                  {summary.totalCredits}/
+                  {MASTER_PROGRAM_TARGET_CREDITS}hp
                 </Badge>
               </div>
             </div>

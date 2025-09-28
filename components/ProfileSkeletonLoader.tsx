@@ -2,6 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  MASTER_PROGRAM_TERMS,
+  PROFILE_STATS_PIE_CHART_SIZE,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 
 // Profile Stats Card Skeleton
 function ProfileStatsCardSkeleton() {
@@ -18,7 +23,13 @@ function ProfileStatsCardSkeleton() {
             </div>
 
             {/* Pie Chart Skeleton */}
-            <Skeleton className="w-[220px] h-[220px] rounded-full" />
+            <Skeleton
+              className="rounded-full"
+              style={{
+                height: PROFILE_STATS_PIE_CHART_SIZE,
+                width: PROFILE_STATS_PIE_CHART_SIZE,
+              }}
+            />
 
             {/* Legend Skeleton */}
             <div className="flex flex-wrap gap-4 justify-center">
@@ -78,19 +89,8 @@ function ProfileStatsCardSkeleton() {
 }
 
 // Term Card Skeleton
-function TermCardSkeleton({ termNumber }: { termNumber: 7 | 8 | 9 }) {
-  const getTermLabel = (term: number) => {
-    switch (term) {
-      case 7:
-        return "Termin 7";
-      case 8:
-        return "Termin 8";
-      case 9:
-        return "Termin 9";
-      default:
-        return `Termin ${term}`;
-    }
-  };
+function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
+  const getTermLabel = (term: MasterProgramTerm) => `Termin ${term}`;
 
   return (
     <Card className="bg-card border-border h-fit">
@@ -201,9 +201,9 @@ export function ProfileSkeletonLoader() {
 
         {/* Term Cards Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <TermCardSkeleton termNumber={7} />
-          <TermCardSkeleton termNumber={8} />
-          <TermCardSkeleton termNumber={9} />
+          {MASTER_PROGRAM_TERMS.map((term) => (
+            <TermCardSkeleton key={term} termNumber={term} />
+          ))}
         </div>
       </div>
     </div>
