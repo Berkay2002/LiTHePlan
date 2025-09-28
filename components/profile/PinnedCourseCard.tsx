@@ -55,13 +55,12 @@ export function PinnedCourseCard({
                     </button>
                   </TooltipTrigger>
                   <TooltipContent
-                    className="max-w-xs bg-gray-900 text-white border-gray-700"
                     onPointerDownOutside={() =>
                       isMobile && setShowNotesTooltip(false)
                     }
                     side="top"
                   >
-                    <p className="text-xs text-white">{course.notes}</p>
+                    <p>{course.notes}</p>
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -138,9 +137,21 @@ export function PinnedCourseCard({
                   </Badge>
                 ))}
                 {allProgramsAndOrientations.length > 2 && (
-                  <Badge className="text-xs px-2 py-0.5" variant="outline">
-                    +{allProgramsAndOrientations.length - 2} more
-                  </Badge>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge className="text-xs px-2 py-0.5 cursor-help" variant="outline">
+                        +{allProgramsAndOrientations.length - 2} more
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      <div className="space-y-1">
+                        <p className="font-medium">Additional programs:</p>
+                        <div className="text-slate-200 leading-relaxed">
+                          {allProgramsAndOrientations.slice(2).join(", ")}
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
                 )}
               </div>
             )

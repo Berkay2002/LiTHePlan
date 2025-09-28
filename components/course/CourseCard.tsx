@@ -222,13 +222,12 @@ export function CourseCard({ course }: CourseCardProps) {
                   </button>
                 </TooltipTrigger>
                 <TooltipContent
-                  className="max-w-xs bg-gray-900 text-white border-gray-700"
                   onPointerDownOutside={() =>
                     isMobile && setShowNotesTooltip(false)
                   }
                   side="top"
                 >
-                  <p className="text-xs text-white">{course.notes}</p>
+                  <p>{course.notes}</p>
                 </TooltipContent>
               </Tooltip>
             )}
@@ -382,8 +381,8 @@ export function CourseCard({ course }: CourseCardProps) {
                               <span className="truncate text-center block w-full">{item}</span>
                             </Badge>
                           </TooltipTrigger>
-                          <TooltipContent className="bg-gray-900 text-white border-gray-700" side="top">
-                            <p className="text-xs text-white">{item}</p>
+                          <TooltipContent side="top">
+                            <p>{item}</p>
                           </TooltipContent>
                         </Tooltip>
                       ))}
@@ -397,15 +396,11 @@ export function CourseCard({ course }: CourseCardProps) {
                               +{remainingItems.length} more
                             </Badge>
                           </TooltipTrigger>
-                          <TooltipContent className="max-w-xs bg-gray-900 text-white border-gray-700" side="top">
+                          <TooltipContent side="top">
                             <div className="space-y-1">
-                              <p className="text-xs font-medium text-white">Additional programs:</p>
-                              <div className="flex flex-wrap gap-1">
-                                {remainingItems.map((item, index) => (
-                                  <span key={`tooltip-${item}-${index}`} className="text-xs text-gray-300">
-                                    {item}{index < remainingItems.length - 1 ? "," : ""}
-                                  </span>
-                                ))}
+                              <p className="font-medium">Additional programs:</p>
+                              <div className="text-slate-200 leading-relaxed">
+                                {remainingItems.join(", ")}
                               </div>
                             </div>
                           </TooltipContent>

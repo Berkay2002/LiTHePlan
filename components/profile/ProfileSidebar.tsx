@@ -128,7 +128,7 @@ export function ProfileSidebar({
               </Button>
 
               {/* Tooltip on hover */}
-              <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
                 {profile ? "Open Profile" : "Start Building Profile"}
               </div>
             </div>
@@ -154,7 +154,7 @@ export function ProfileSidebar({
                 </Button>
 
                 {/* Tooltip on hover */}
-                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
                   {profile ? "Close Profile" : "Close Sidebar"}
                 </div>
               </div>
