@@ -34,5 +34,6 @@
   },
   "biome.lspBin": "./node_modules/@biomejs/biome/bin/biome",
   "biome.enabled": true,
-  "eslint.enable": false
+  "eslint.enable": false,
+  "chatgpt.openOnStartup": true
 }

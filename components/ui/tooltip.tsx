@@ -62,16 +62,16 @@ function TooltipContent({
           "z-[100] relative",
           className
         )}
+        collisionPadding={8}
         data-slot="tooltip-content"
         sideOffset={sideOffset}
-        collisionPadding={8}
         {...props}
       >
         {children}
         <TooltipPrimitive.Arrow
           className="fill-slate-900 drop-shadow-sm"
-          width={12}
           height={6}
+          width={12}
         />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>

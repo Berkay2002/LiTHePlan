@@ -83,7 +83,6 @@ function HomeContent() {
     return "grid";
   });
 
-
   // Sidebar state - Start open on desktop, closed on mobile/tablet
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -145,13 +144,25 @@ function HomeContent() {
         const searchTerm = filterState.search.toLowerCase().trim();
         const matchesName = course.name.toLowerCase().includes(searchTerm);
         const matchesId = course.id.toLowerCase().includes(searchTerm);
-        const matchesExaminer = course.examinator?.toLowerCase().includes(searchTerm) || false;
-        const matchesDirector = course.studierektor?.toLowerCase().includes(searchTerm) || false;
-        const matchesPrograms = course.programs.some(program =>
+        const matchesExaminer = course.examinator
+          ?.toLowerCase()
+          .includes(searchTerm);
+        const matchesDirector = course.studierektor
+          ?.toLowerCase()
+          .includes(searchTerm);
+        const matchesPrograms = course.programs.some((program) =>
           program.toLowerCase().includes(searchTerm)
         );
 
-        if (!(matchesName || matchesId || matchesExaminer || matchesDirector || matchesPrograms)) {
+        if (
+          !(
+            matchesName ||
+            matchesId ||
+            matchesExaminer ||
+            matchesDirector ||
+            matchesPrograms
+          )
+        ) {
           return false;
         }
       }
@@ -218,15 +229,19 @@ function HomeContent() {
       }
 
       // Examination filter - exclusion filtering (show courses that don't have unselected examination types)
-      if (filterState.examination.length < 5) { // Only filter if not all examination types are selected
+      if (filterState.examination.length < 5) {
+        // Only filter if not all examination types are selected
         const allExaminationTypes = ["TEN", "LAB", "PROJ", "SEM", "UPG"];
         const unselectedExaminationTypes = allExaminationTypes.filter(
-          examType => !filterState.examination.includes(examType)
+          (examType) => !filterState.examination.includes(examType)
         );
 
         const courseExaminations = course.examination;
-        const hasAnyUnselectedExamination = unselectedExaminationTypes.some(examType =>
-          courseExaminations.includes(examType as "TEN" | "LAB" | "PROJ" | "SEM" | "UPG")
+        const hasAnyUnselectedExamination = unselectedExaminationTypes.some(
+          (examType) =>
+            courseExaminations.includes(
+              examType as "TEN" | "LAB" | "PROJ" | "SEM" | "UPG"
+            )
         );
 
         if (hasAnyUnselectedExamination) {
@@ -237,7 +252,7 @@ function HomeContent() {
       // Programs filter - multiple selection, show only courses eligible for selected programs
       if (filterState.programs.length > 0) {
         const coursePrograms = course.programs || [];
-        const hasAnySelectedProgram = filterState.programs.some(program =>
+        const hasAnySelectedProgram = filterState.programs.some((program) =>
           coursePrograms.includes(program)
         );
         if (!hasAnySelectedProgram) {
@@ -249,12 +264,13 @@ function HomeContent() {
       if (filterState.huvudomraden.length > 0) {
         const courseHuvudomraden = course.huvudomrade || "";
         const courseHuvudomradenArray = courseHuvudomraden
-          .split(',')
-          .map(h => h.trim())
-          .filter(h => h !== "");
+          .split(",")
+          .map((h) => h.trim())
+          .filter((h) => h !== "");
 
-        const hasAnySelectedHuvudomrade = filterState.huvudomraden.some(selectedHuvudomrade =>
-          courseHuvudomradenArray.includes(selectedHuvudomrade)
+        const hasAnySelectedHuvudomrade = filterState.huvudomraden.some(
+          (selectedHuvudomrade) =>
+            courseHuvudomradenArray.includes(selectedHuvudomrade)
         );
 
         if (!hasAnySelectedHuvudomrade) {
@@ -267,9 +283,7 @@ function HomeContent() {
   }, [courses, filterState]);
 
   // Pagination logic
-  const totalPages = Math.ceil(
-    filteredCourses.length / COURSES_PER_PAGE
-  );
+  const totalPages = Math.ceil(filteredCourses.length / COURSES_PER_PAGE);
   const paginatedCourses = useMemo(() => {
     const startIndex = (currentPage - 1) * COURSES_PER_PAGE;
     const endIndex = startIndex + COURSES_PER_PAGE;

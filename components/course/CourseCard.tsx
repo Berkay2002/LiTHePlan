@@ -344,7 +344,9 @@ export function CourseCard({ course }: CourseCardProps) {
                   <span className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium min-w-[60px]">
                     Examiner:
                   </span>
-                  <span className="text-xs text-foreground font-medium">{course.examinator}</span>
+                  <span className="text-xs text-foreground font-medium">
+                    {course.examinator}
+                  </span>
                 </div>
               )}
               {course.studierektor && (
@@ -352,7 +354,9 @@ export function CourseCard({ course }: CourseCardProps) {
                   <span className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium min-w-[60px]">
                     Director:
                   </span>
-                  <span className="text-xs text-foreground font-medium">{course.studierektor}</span>
+                  <span className="text-xs text-foreground font-medium">
+                    {course.studierektor}
+                  </span>
                 </div>
               )}
             </div>
@@ -364,8 +368,12 @@ export function CourseCard({ course }: CourseCardProps) {
                 ...(course.orientations || []),
               ];
               const maxDisplayItems = 1;
-              const displayedItems = allProgramsAndOrientations.slice(0, maxDisplayItems);
-              const remainingItems = allProgramsAndOrientations.slice(maxDisplayItems);
+              const displayedItems = allProgramsAndOrientations.slice(
+                0,
+                maxDisplayItems
+              );
+              const remainingItems =
+                allProgramsAndOrientations.slice(maxDisplayItems);
 
               return (
                 allProgramsAndOrientations.length > 0 && (
@@ -378,7 +386,9 @@ export function CourseCard({ course }: CourseCardProps) {
                               className="text-xs px-3 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 hover:bg-picton-blue/20 hover:border-picton-blue/40 transition-all duration-200 w-full block cursor-help"
                               variant="outline"
                             >
-                              <span className="truncate text-center block w-full">{item}</span>
+                              <span className="truncate text-center block w-full">
+                                {item}
+                              </span>
                             </Badge>
                           </TooltipTrigger>
                           <TooltipContent side="top">
@@ -398,7 +408,9 @@ export function CourseCard({ course }: CourseCardProps) {
                           </TooltipTrigger>
                           <TooltipContent side="top">
                             <div className="space-y-1">
-                              <p className="font-medium">Additional programs:</p>
+                              <p className="font-medium">
+                                Additional programs:
+                              </p>
                               <div className="text-slate-200 leading-relaxed">
                                 {remainingItems.join(", ")}
                               </div>

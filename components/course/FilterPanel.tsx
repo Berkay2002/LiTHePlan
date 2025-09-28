@@ -4,6 +4,7 @@ import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Select,
   SelectContent,
@@ -21,8 +22,6 @@ import {
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import type { Course } from "@/types/course";
-import { MultiSelect } from "@/components/ui/multi-select";
-
 
 const examinationOptions = [
   { value: "TEN", label: "TEN" },
@@ -31,7 +30,6 @@ const examinationOptions = [
   { value: "SEM", label: "SEM" },
   { value: "UPG", label: "UPG" },
 ];
-
 
 export interface FilterState {
   level: string[];
@@ -119,7 +117,10 @@ export function CollapsibleFilterSidebar({
         courses
           .flatMap((course) =>
             course.huvudomrade
-              ? course.huvudomrade.split(',').map(h => h.trim()).filter(h => h !== "")
+              ? course.huvudomrade
+                  .split(",")
+                  .map((h) => h.trim())
+                  .filter((h) => h !== "")
               : []
           )
           .filter((huvudomrade) => huvudomrade && huvudomrade.trim() !== "")
@@ -295,17 +296,20 @@ export function CollapsibleFilterSidebar({
                   </TooltipProvider>
                 </div>
                 <MultiSelect
-                  options={filterOptions.programs.map(program => ({ value: program, label: program }))}
+                  className="text-white [&_span.text-muted-foreground]:text-white"
                   defaultValue={filterState.programs || []}
+                  maxCount={0}
                   onValueChange={(values) => {
                     const newFilters = { ...filterState };
                     newFilters.programs = values;
                     onFilterChange(newFilters);
                   }}
+                  options={filterOptions.programs.map((program) => ({
+                    value: program,
+                    label: program,
+                  }))}
                   placeholder="Välj program..."
                   variant="secondary"
-                  maxCount={0}
-                  className="text-white [&_span.text-muted-foreground]:text-white"
                 />
               </div>
 
@@ -317,17 +321,20 @@ export function CollapsibleFilterSidebar({
                   </h3>
                 </div>
                 <MultiSelect
-                  options={filterOptions.huvudomraden.map(huvudomrade => ({ value: huvudomrade, label: huvudomrade }))}
+                  className="text-white [&_span.text-muted-foreground]:text-white"
                   defaultValue={filterState.huvudomraden || []}
+                  maxCount={1}
                   onValueChange={(values) => {
                     const newFilters = { ...filterState };
                     newFilters.huvudomraden = values;
                     onFilterChange(newFilters);
                   }}
+                  options={filterOptions.huvudomraden.map((huvudomrade) => ({
+                    value: huvudomrade,
+                    label: huvudomrade,
+                  }))}
                   placeholder="Välj huvudområden..."
                   variant="secondary"
-                  maxCount={1}
-                  className="text-white [&_span.text-muted-foreground]:text-white"
                 />
               </div>
 
@@ -339,17 +346,25 @@ export function CollapsibleFilterSidebar({
                   </h3>
                 </div>
                 <MultiSelect
-                  options={examinationOptions}
-                  defaultValue={filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]}
+                  className="text-white [&_span.text-muted-foreground]:text-white"
+                  defaultValue={
+                    filterState.examination || [
+                      "TEN",
+                      "LAB",
+                      "PROJ",
+                      "SEM",
+                      "UPG",
+                    ]
+                  }
+                  maxCount={1}
                   onValueChange={(values) => {
                     const newFilters = { ...filterState };
                     newFilters.examination = values;
                     onFilterChange(newFilters);
                   }}
+                  options={examinationOptions}
                   placeholder="Välj examinationsformer..."
                   variant="secondary"
-                  maxCount={1}
-                  className="text-white [&_span.text-muted-foreground]:text-white"
                 />
               </div>
 
@@ -553,7 +568,6 @@ export function CollapsibleFilterSidebar({
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         )}
@@ -644,7 +658,10 @@ export function FilterPanel({
         courses
           .flatMap((course) =>
             course.huvudomrade
-              ? course.huvudomrade.split(',').map(h => h.trim()).filter(h => h !== "")
+              ? course.huvudomrade
+                  .split(",")
+                  .map((h) => h.trim())
+                  .filter((h) => h !== "")
               : []
           )
           .filter((huvudomrade) => huvudomrade && huvudomrade.trim() !== "")
@@ -734,17 +751,20 @@ export function FilterPanel({
             </TooltipProvider>
           </div>
           <MultiSelect
-            options={filterOptions.programs.map(program => ({ value: program, label: program }))}
+            className="text-white [&_span.text-muted-foreground]:text-white"
             defaultValue={filterState.programs || []}
+            maxCount={0}
             onValueChange={(values) => {
               const newFilters = { ...filterState };
               newFilters.programs = values;
               onFilterChange(newFilters);
             }}
+            options={filterOptions.programs.map((program) => ({
+              value: program,
+              label: program,
+            }))}
             placeholder="Välj program..."
             variant="secondary"
-            maxCount={0}
-            className="text-white [&_span.text-muted-foreground]:text-white"
           />
         </div>
 
@@ -756,17 +776,20 @@ export function FilterPanel({
             </h3>
           </div>
           <MultiSelect
-            options={filterOptions.huvudomraden.map(huvudomrade => ({ value: huvudomrade, label: huvudomrade }))}
+            className="text-white [&_span.text-muted-foreground]:text-white"
             defaultValue={filterState.huvudomraden || []}
+            maxCount={1}
             onValueChange={(values) => {
               const newFilters = { ...filterState };
               newFilters.huvudomraden = values;
               onFilterChange(newFilters);
             }}
+            options={filterOptions.huvudomraden.map((huvudomrade) => ({
+              value: huvudomrade,
+              label: huvudomrade,
+            }))}
             placeholder="Välj huvudområden..."
             variant="secondary"
-            maxCount={1}
-            className="text-white [&_span.text-muted-foreground]:text-white"
           />
         </div>
 
@@ -778,17 +801,19 @@ export function FilterPanel({
             </h3>
           </div>
           <MultiSelect
-            options={examinationOptions}
-            defaultValue={filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]}
+            className="text-white [&_span.text-muted-foreground]:text-white"
+            defaultValue={
+              filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]
+            }
+            maxCount={1}
             onValueChange={(values) => {
               const newFilters = { ...filterState };
               newFilters.examination = values;
               onFilterChange(newFilters);
             }}
+            options={examinationOptions}
             placeholder="Välj examinationsformer..."
             variant="secondary"
-            maxCount={1}
-            className="text-white [&_span.text-muted-foreground]:text-white"
           />
         </div>
 
@@ -980,7 +1005,6 @@ export function FilterPanel({
             </div>
           </div>
         </div>
-
       </CardContent>
     </Card>
   );

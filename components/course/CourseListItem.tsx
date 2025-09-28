@@ -210,9 +210,7 @@ export function CourseListItem({
     if (examinationFilters.length === 0) return examinations;
 
     // Return examinations that are included in the filters
-    return examinations.filter(
-      (exam) => examinationFilters.includes(exam)
-    );
+    return examinations.filter((exam) => examinationFilters.includes(exam));
   };
 
   return (
@@ -378,13 +376,13 @@ export function CourseListItem({
 
               {course.examinator && (
                 <span className="text-electric-blue-300 font-medium">
-                  Ex: {course.examinator.split(' ').slice(-1)[0]}
+                  Ex: {course.examinator.split(" ").slice(-1)[0]}
                 </span>
               )}
 
               {course.studierektor && (
                 <span className="text-air-superiority-blue font-medium">
-                  Dir: {course.studierektor.split(' ').slice(-1)[0]}
+                  Dir: {course.studierektor.split(" ").slice(-1)[0]}
                 </span>
               )}
             </div>
@@ -572,7 +570,9 @@ export function CourseListItem({
                           {/* Tooltip */}
                           <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-[100] max-w-md w-max">
                             <div className="space-y-1">
-                              <p className="font-medium text-slate-100">Additional programs:</p>
+                              <p className="font-medium text-slate-100">
+                                Additional programs:
+                              </p>
                               <div className="text-slate-200 leading-relaxed">
                                 {allProgramsAndOrientations.slice(2).join(", ")}
                               </div>

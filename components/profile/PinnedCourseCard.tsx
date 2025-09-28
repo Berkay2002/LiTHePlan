@@ -139,7 +139,10 @@ export function PinnedCourseCard({
                 {allProgramsAndOrientations.length > 2 && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge className="text-xs px-2 py-0.5 cursor-help" variant="outline">
+                      <Badge
+                        className="text-xs px-2 py-0.5 cursor-help"
+                        variant="outline"
+                      >
                         +{allProgramsAndOrientations.length - 2} more
                       </Badge>
                     </TooltipTrigger>
