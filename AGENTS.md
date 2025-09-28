@@ -1,5 +1,7 @@
 # Repository Guidelines
 
+Before you start, review `ULTRACITE.md` for the condensed Ultracite lint and workflow rules you must follow.
+
 ## Project Structure & Module Organization
 LiTHePlan runs on Next.js 15 App Router. Routes and layouts live in `app/` (e.g. `app/login`, `app/profile`). UI modules are grouped under `components/` with domain folders like `components/course/` and `components/auth/`. Shared hooks sit in `hooks/`, cross-cutting helpers in `lib/` and `utils/`, and Supabase SQL plus generated types in `supabase/`. Static assets belong in `public/`. Data maintenance scripts such as `scripts/import-courses.js` and `scripts/fetch-course-stats.js` handle ingestion tasks.
 
@@ -11,7 +13,9 @@ LiTHePlan runs on Next.js 15 App Router. Routes and layouts live in `app/` (e.g.
 - `npm run lint:fix`: apply lint and formatting fixes (alias: `npm run format`); review the diff afterward.
 
 ## Coding Style & Naming Conventions
-TypeScript strict mode is enforced—avoid `any`, prefer typed helpers, and use named exports unless the App Router needs a default export. Default to Server Components and add `"use client"` only for interactive state. Follow the repo preset: two-space indentation, double quotes, trailing commas. Compose Tailwind classes with `cn` from `lib/utils.ts`, and promote shared UI into `components/ui/` or feature folders.
+TypeScript strict mode is enforced-avoid `any`, prefer typed helpers, and use named exports unless the App Router needs a default export. Default to Server Components and add `"use client"` only for interactive state. Follow the repo preset: two-space indentation, double quotes, trailing commas. Compose Tailwind classes with `cn` from `lib/utils.ts`, and promote shared UI into `components/ui/` or feature folders.
+
+If you update UI that renders data-driven cards (e.g. course grids or list items), mirror the change in the associated skeleton/loading component so reload states stay consistent.
 
 ## Testing Guidelines
 Automated suites are not committed yet. Manually cover signup, login, profile planning, and drag-and-drop term cards while running `npm run dev`. Watch for Supabase or runtime warnings and capture the manual checks in your PR. Introduce Vitest and React Testing Library alongside new features that warrant regression coverage, storing tests beside the code they exercise.

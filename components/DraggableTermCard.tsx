@@ -476,7 +476,6 @@ export function DraggableTermCard({
         )}
         {termNumber === 8 && (
           <p className="text-xs text-muted-foreground">
-            Term 8 courses cannot be moved
           </p>
         )}
       </CardHeader>
@@ -487,7 +486,7 @@ export function DraggableTermCard({
           termNumber === 8 ? (
             <div className="flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg border-border">
               <p className="text-sm">No courses selected</p>
-              <p className="text-xs mt-1">Term 8 courses cannot be moved</p>
+              <p className="text-xs mt-1"></p>
             </div>
           ) : (
             <Droppable droppableId={`term-${termNumber}`} type="COURSE">
