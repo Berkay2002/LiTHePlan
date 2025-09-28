@@ -1,16 +1,19 @@
 // components/ProgressCircle.tsx
 
-import { StudentProfile } from "@/types/profile";
+import type { StudentProfile } from "@/types/profile";
 
 interface ProgressCircleProps {
   profile: StudentProfile;
   targetCredits?: number;
 }
 
-export function ProgressCircle({ profile, targetCredits = 90 }: ProgressCircleProps) {
+export function ProgressCircle({
+  profile,
+  targetCredits = 90,
+}: ProgressCircleProps) {
   const currentCredits = profile.metadata.total_credits;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
-  
+
   // Calculate SVG circle properties
   const size = 200;
   const strokeWidth = 12;
@@ -23,37 +26,37 @@ export function ProgressCircle({ profile, targetCredits = 90 }: ProgressCirclePr
     <div className="flex items-center justify-center">
       <div className="relative">
         <svg
-          width={size}
-          height={size}
           className="transform -rotate-90"
+          height={size}
           viewBox={`0 0 ${size} ${size}`}
+          width={size}
         >
           {/* Background circle */}
           <circle
+            className="text-gray-200 dark:text-gray-700"
             cx={size / 2}
             cy={size / 2}
-            r={radius}
             fill="transparent"
+            r={radius}
             stroke="currentColor"
             strokeWidth={strokeWidth}
-            className="text-gray-200 dark:text-gray-700"
           />
-          
+
           {/* Progress circle */}
           <circle
+            className="text-blue-500 transition-all duration-300 ease-in-out"
             cx={size / 2}
             cy={size / 2}
-            r={radius}
             fill="transparent"
+            r={radius}
             stroke="currentColor"
-            strokeWidth={strokeWidth}
-            strokeLinecap="round"
             strokeDasharray={strokeDasharray}
             strokeDashoffset={strokeDashoffset}
-            className="text-blue-500 transition-all duration-300 ease-in-out"
+            strokeLinecap="round"
+            strokeWidth={strokeWidth}
           />
         </svg>
-        
+
         {/* Center text */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">

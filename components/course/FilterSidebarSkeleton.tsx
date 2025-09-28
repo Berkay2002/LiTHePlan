@@ -1,9 +1,9 @@
 // components/course/FilterSidebarSkeleton.tsx
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 interface FilterSidebarSkeletonProps {
@@ -11,7 +11,10 @@ interface FilterSidebarSkeletonProps {
   onToggle: () => void;
 }
 
-export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeletonProps) {
+export function FilterSidebarSkeleton({
+  isOpen,
+  onToggle,
+}: FilterSidebarSkeletonProps) {
   // Use the passed isOpen prop which already handles responsive behavior
   const sidebarOpen = isOpen ?? false;
 
@@ -19,30 +22,31 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
     <>
       {/* Sidebar Overlay for Mobile */}
       {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={onToggle}
         />
       )}
 
       {/* Fixed Extended Sidebar - No animation during loading */}
-      <div className={cn(
-        "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50",
-        "flex flex-col ring-1 ring-air-superiority-blue-300/30",
-        sidebarOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-        "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
-      )}>
-        
+      <div
+        className={cn(
+          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50",
+          "flex flex-col ring-1 ring-air-superiority-blue-300/30",
+          sidebarOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
+          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+        )}
+      >
         {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
         {!sidebarOpen && (
           <div className="hidden lg:flex flex-col items-center justify-center h-full w-12 relative">
             {/* Modern Floating Expand Button */}
             <div className="relative group">
               <Button
-                onClick={onToggle}
-                variant="ghost"
-                size="sm"
                 className="h-10 w-10 p-0 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={onToggle}
+                size="sm"
+                variant="ghost"
               >
                 <ChevronRight className="h-5 w-5 text-white group-hover:text-primary transition-colors duration-200" />
               </Button>
@@ -54,13 +58,16 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
         {sidebarOpen && (
           <div className="flex flex-col h-full relative">
             {/* Modern Floating Collapse Button - Right Edge (Desktop Only) */}
-            <div className="hidden lg:block absolute -right-6 top-1/2 z-50" style={{ transform: 'translateY(-50%)' }}>
+            <div
+              className="hidden lg:block absolute -right-6 top-1/2 z-50"
+              style={{ transform: "translateY(-50%)" }}
+            >
               <div className="relative group">
                 <Button
-                  onClick={onToggle}
-                  variant="ghost"
-                  size="sm"
                   className="h-10 w-10 p-0 bg-air-superiority-blue-400/90 hover:bg-air-superiority-blue-500 backdrop-blur-sm border border-air-superiority-blue-300 hover:border-air-superiority-blue-200 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  onClick={onToggle}
+                  size="sm"
+                  variant="ghost"
                 >
                   <ChevronLeft className="h-5 w-5 text-white group-hover:text-picton-blue transition-colors duration-200" />
                 </Button>
@@ -74,14 +81,14 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                 <div className="flex-shrink-0">
                   <Skeleton className="h-8 w-32" />
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   {/* Close button for mobile */}
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onToggle}
                     className="h-10 w-10 p-0 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 rounded-full border border-white/30 hover:border-white/50"
+                    onClick={onToggle}
+                    size="sm"
+                    variant="ghost"
                   >
                     <X className="h-5 w-5" />
                   </Button>
@@ -91,11 +98,11 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
 
             {/* Scrollable Filter Content - Match real structure exactly */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 pb-20 lg:pb-4 xl:pb-6 space-y-4 lg:space-y-4 xl:space-y-5 filter-panel-scroll">
-              
               {/* Programs Filter - Dropdown Skeleton */}
               <div className="space-y-3">
                 <Skeleton className="h-4 w-16" /> {/* "PROGRAM" label */}
-                <Skeleton className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 rounded" /> {/* Select dropdown */}
+                <Skeleton className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 rounded" />{" "}
+                {/* Select dropdown */}
               </div>
 
               {/* Level and Study Pace - Side by Side */}
@@ -105,7 +112,7 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                   <Skeleton className="h-4 w-12" /> {/* "LEVEL" label */}
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3" key={item}>
                         <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
                         <Skeleton className="h-4 w-16" />
                       </div>
@@ -118,7 +125,7 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                   <Skeleton className="h-4 w-20" /> {/* "STUDY PACE" label */}
                   <div className="grid gap-3">
                     {[1, 2, 3].map((item) => (
-                      <div key={item} className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3" key={item}>
                         <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
                         <Skeleton className="h-4 w-12" />
                       </div>
@@ -134,7 +141,7 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                   <Skeleton className="h-4 w-14" /> {/* "PERIOD" label */}
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3" key={item}>
                         <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
                         <Skeleton className="h-4 w-6" />
                       </div>
@@ -147,7 +154,7 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                   <Skeleton className="h-4 w-10" /> {/* "TERM" label */}
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
-                      <div key={item} className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3" key={item}>
                         <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
                         <Skeleton className="h-4 w-10" />
                       </div>
@@ -163,7 +170,7 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                   <Skeleton className="h-4 w-14" /> {/* "CAMPUS" label */}
                   <div className="grid gap-3">
                     {[1, 2, 3].map((item) => (
-                      <div key={item} className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3" key={item}>
                         <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
                         <Skeleton className="h-4 w-20" />
                       </div>
@@ -176,7 +183,7 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
                   <Skeleton className="h-4 w-12" /> {/* "BLOCK" label */}
                   <div className="grid gap-3">
                     {[1, 2, 3, 4].map((item) => (
-                      <div key={item} className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-3" key={item}>
                         <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
                         <Skeleton className="h-4 w-6" />
                       </div>
@@ -189,14 +196,17 @@ export function FilterSidebarSkeleton({ isOpen, onToggle }: FilterSidebarSkeleto
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-4 w-24" /> {/* "EXAMINATION" label */}
-                  <Skeleton className="h-3 w-32" /> {/* "(Include/Exclude/Ignore)" text */}
+                  <Skeleton className="h-3 w-32" />{" "}
+                  {/* "(Include/Exclude/Ignore)" text */}
                 </div>
                 <div className="grid gap-3">
                   {[1, 2, 3, 4, 5].map((item) => (
-                    <div key={item} className="flex items-center gap-3">
-                      <Skeleton className="h-4 w-12 flex-shrink-0" /> {/* Exam type label */}
+                    <div className="flex items-center gap-3" key={item}>
+                      <Skeleton className="h-4 w-12 flex-shrink-0" />{" "}
+                      {/* Exam type label */}
                       <div className="ml-3">
-                        <Skeleton className="w-28 h-6 rounded" /> {/* Select dropdown */}
+                        <Skeleton className="w-28 h-6 rounded" />{" "}
+                        {/* Select dropdown */}
                       </div>
                     </div>
                   ))}

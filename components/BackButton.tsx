@@ -1,8 +1,8 @@
 // components/BackButton.tsx
 
-import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 interface BackButtonProps {
   href?: string;
@@ -11,20 +11,22 @@ interface BackButtonProps {
   hideTextOnMobile?: boolean;
 }
 
-export function BackButton({ 
-  href = "/", 
-  onClick, 
+export function BackButton({
+  href = "/",
+  onClick,
   text = "Back",
-  hideTextOnMobile = false
+  hideTextOnMobile = false,
 }: BackButtonProps) {
   const buttonContent = (
-    <Button 
-      variant="outline" 
-      size="sm"
-      onClick={onClick}
+    <Button
       className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+      onClick={onClick}
+      size="sm"
+      variant="outline"
     >
-      <ArrowLeft className={`h-4 w-4 ${hideTextOnMobile ? '' : 'mr-2'} ${hideTextOnMobile ? 'sm:mr-2' : ''}`} />
+      <ArrowLeft
+        className={`h-4 w-4 ${hideTextOnMobile ? "" : "mr-2"} ${hideTextOnMobile ? "sm:mr-2" : ""}`}
+      />
       {hideTextOnMobile ? (
         <span className="hidden sm:inline">{text}</span>
       ) : (

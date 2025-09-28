@@ -1,6 +1,6 @@
-import { Course } from "@/types/course";
-import { CourseCard } from "./CourseCard";
 import { Pagination } from "@/components/shared/Pagination";
+import type { Course } from "@/types/course";
+import { CourseCard } from "./CourseCard";
 
 interface CourseGridProps {
   courses: Course[];
@@ -16,8 +16,8 @@ interface CourseGridProps {
   onPageChange?: (page: number) => void;
 }
 
-export function CourseGrid({ 
-  courses, 
+export function CourseGrid({
+  courses,
   isFiltered = false,
   sidebarOpen = false,
   profileSidebarOpen = false,
@@ -25,20 +25,21 @@ export function CourseGrid({
   totalPages,
   totalCourses,
   itemsPerPage,
-  onPageChange
+  onPageChange,
 }: CourseGridProps) {
   if (!courses || courses.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">🔍</div>
         <h3 className="text-xl font-semibold mb-2 text-white">
-          {isFiltered ? "No courses match your filters" : "No courses available"}
+          {isFiltered
+            ? "No courses match your filters"
+            : "No courses available"}
         </h3>
         <p className="text-white/80">
-          {isFiltered 
+          {isFiltered
             ? "Try adjusting your filter criteria to see more results."
-            : "There are currently no courses to display."
-          }
+            : "There are currently no courses to display."}
         </p>
       </div>
     );
@@ -46,7 +47,7 @@ export function CourseGrid({
 
   // Determine grid columns based on sidebar states
   const bothSidebarsOpen = sidebarOpen && profileSidebarOpen;
-  const gridClasses = bothSidebarsOpen 
+  const gridClasses = bothSidebarsOpen
     ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:gap-5 w-full"
     : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full";
 
@@ -55,20 +56,24 @@ export function CourseGrid({
       {/* Course grid */}
       <div className={gridClasses}>
         {courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard course={course} key={course.id} />
         ))}
       </div>
 
       {/* Pagination */}
-      {currentPage && totalPages && totalCourses && itemsPerPage && onPageChange && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={totalCourses}
-          itemsPerPage={itemsPerPage}
-          onPageChange={onPageChange}
-        />
-      )}
+      {currentPage &&
+        totalPages &&
+        totalCourses &&
+        itemsPerPage &&
+        onPageChange && (
+          <Pagination
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            onPageChange={onPageChange}
+            totalItems={totalCourses}
+            totalPages={totalPages}
+          />
+        )}
     </div>
   );
-} 
+}

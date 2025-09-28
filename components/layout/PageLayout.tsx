@@ -1,11 +1,11 @@
 "use client";
 
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 import { DynamicNavbar } from "@/components/shared/DynamicNavbar";
 
 interface MainPageLayoutProps {
   children: ReactNode;
-  navbarMode: 'main';
+  navbarMode: "main";
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onMobileMenuToggle?: () => void;
@@ -14,7 +14,7 @@ interface MainPageLayoutProps {
 
 interface ProfileEditPageLayoutProps {
   children: ReactNode;
-  navbarMode: 'profile-edit';
+  navbarMode: "profile-edit";
   profileId?: string;
   showBlockTimeline?: boolean;
   onToggleBlockTimeline?: () => void;
@@ -23,15 +23,7 @@ interface ProfileEditPageLayoutProps {
 type PageLayoutProps = MainPageLayoutProps | ProfileEditPageLayoutProps;
 
 export function PageLayout(props: PageLayoutProps) {
-  if (props.navbarMode === 'main') {
-    const { navbarMode, children, ...navbarProps } = props;
-    return (
-      <>
-        <DynamicNavbar {...navbarProps} mode={navbarMode} />
-        {children}
-      </>
-    );
-  } else {
+  if (props.navbarMode === "main") {
     const { navbarMode, children, ...navbarProps } = props;
     return (
       <>
@@ -40,4 +32,11 @@ export function PageLayout(props: PageLayoutProps) {
       </>
     );
   }
+  const { navbarMode, children, ...navbarProps } = props;
+  return (
+    <>
+      <DynamicNavbar {...navbarProps} mode={navbarMode} />
+      {children}
+    </>
+  );
 }

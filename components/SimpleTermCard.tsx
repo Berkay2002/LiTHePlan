@@ -1,9 +1,9 @@
 // components/SimpleTermCard.tsx
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Course } from "@/types/course";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLevelColor } from "@/lib/course-utils";
+import type { Course } from "@/types/course";
 
 interface SimpleTermCardProps {
   termNumber: 7 | 8 | 9;
@@ -11,22 +11,34 @@ interface SimpleTermCardProps {
   className?: string;
 }
 
-export function SimpleTermCard({ termNumber, courses, className }: SimpleTermCardProps) {
+export function SimpleTermCard({
+  termNumber,
+  courses,
+  className,
+}: SimpleTermCardProps) {
   const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
-  
+
   const getTermLabel = (term: number) => {
     switch (term) {
-      case 7: return "Termin 7";
-      case 8: return "Termin 8"; 
-      case 9: return "Termin 9";
-      default: return `Termin ${term}`;
+      case 7:
+        return "Termin 7";
+      case 8:
+        return "Termin 8";
+      case 9:
+        return "Termin 9";
+      default:
+        return `Termin ${term}`;
     }
   };
 
   // Group courses by period - 50% courses appear in both periods
   const coursesByPeriod = {
-    1: courses.filter(course => course.period.includes('1') || course.pace === '50%'),
-    2: courses.filter(course => course.period.includes('2') || course.pace === '50%')
+    1: courses.filter(
+      (course) => course.period.includes("1") || course.pace === "50%"
+    ),
+    2: courses.filter(
+      (course) => course.period.includes("2") || course.pace === "50%"
+    ),
   };
 
   const renderCoursesList = (periodCourses: Course[]) => {
@@ -40,8 +52,8 @@ export function SimpleTermCard({ termNumber, courses, className }: SimpleTermCar
 
     return periodCourses.map((course) => (
       <div
-        key={course.id}
         className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+        key={course.id}
       >
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
@@ -53,23 +65,26 @@ export function SimpleTermCard({ termNumber, courses, className }: SimpleTermCar
             </p>
           </div>
         </div>
-        
+
         <div className="flex flex-wrap gap-1 mt-3">
-          <Badge 
-            variant="secondary" 
+          <Badge
             className={`text-xs ${getLevelColor(course.level)}`}
+            variant="secondary"
           >
-            {course.level === 'avancerad nivå' ? 'Advanced' : 'Basic'}
+            {course.level === "avancerad nivå" ? "Advanced" : "Basic"}
           </Badge>
-          
+
           {course.campus && (
-            <Badge variant="outline" className="text-xs">
+            <Badge className="text-xs" variant="outline">
               {course.campus}
             </Badge>
           )}
-          
-          {course.pace === '50%' && (
-            <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-300">
+
+          {course.pace === "50%" && (
+            <Badge
+              className="text-xs bg-blue-50 text-blue-700 border-blue-300"
+              variant="outline"
+            >
               Cross-period
             </Badge>
           )}
@@ -83,12 +98,12 @@ export function SimpleTermCard({ termNumber, courses, className }: SimpleTermCar
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold flex items-center justify-between">
           {getTermLabel(termNumber)}
-          <Badge variant="secondary" className="text-xs">
+          <Badge className="text-xs" variant="secondary">
             {totalCredits} hp
           </Badge>
         </CardTitle>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {courses.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
@@ -99,14 +114,25 @@ export function SimpleTermCard({ termNumber, courses, className }: SimpleTermCar
             {/* Period 1 */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">Period 1</h4>
-                <Badge variant="outline" className="text-xs">
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Period 1
+                </h4>
+                <Badge className="text-xs" variant="outline">
                   {coursesByPeriod[1]
-                    .filter(course => course.period.includes('1') || course.pace === '50%')
+                    .filter(
+                      (course) =>
+                        course.period.includes("1") || course.pace === "50%"
+                    )
                     .reduce((sum, course) => {
                       // For 50% courses, only count half the credits per period
-                      return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
-                    }, 0)} hp
+                      return (
+                        sum +
+                        (course.pace === "50%"
+                          ? course.credits / 2
+                          : course.credits)
+                      );
+                    }, 0)}{" "}
+                  hp
                 </Badge>
               </div>
               <div className="space-y-3">
@@ -117,14 +143,25 @@ export function SimpleTermCard({ termNumber, courses, className }: SimpleTermCar
             {/* Period 2 */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">Period 2</h4>
-                <Badge variant="outline" className="text-xs">
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Period 2
+                </h4>
+                <Badge className="text-xs" variant="outline">
                   {coursesByPeriod[2]
-                    .filter(course => course.period.includes('2') || course.pace === '50%')
+                    .filter(
+                      (course) =>
+                        course.period.includes("2") || course.pace === "50%"
+                    )
                     .reduce((sum, course) => {
                       // For 50% courses, only count half the credits per period
-                      return sum + (course.pace === '50%' ? course.credits / 2 : course.credits);
-                    }, 0)} hp
+                      return (
+                        sum +
+                        (course.pace === "50%"
+                          ? course.credits / 2
+                          : course.credits)
+                      );
+                    }, 0)}{" "}
+                  hp
                 </Badge>
               </div>
               <div className="space-y-3">

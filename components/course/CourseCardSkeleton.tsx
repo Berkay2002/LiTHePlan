@@ -7,76 +7,76 @@ export function CourseCardSkeleton() {
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex justify-between items-start mb-2">
-          <div className="h-4 bg-muted rounded w-16"></div>
+          <div className="h-4 bg-muted rounded w-16" />
           <div className="flex gap-1">
-            <div className="h-5 w-5 bg-muted rounded"></div>
-            <div className="h-5 w-5 bg-muted rounded"></div>
+            <div className="h-5 w-5 bg-muted rounded" />
+            <div className="h-5 w-5 bg-muted rounded" />
           </div>
         </div>
-        <div className="h-5 bg-muted rounded w-3/4 mb-2"></div>
-        <div className="h-4 bg-muted rounded w-1/2"></div>
+        <div className="h-5 bg-muted rounded w-3/4 mb-2" />
+        <div className="h-4 bg-muted rounded w-1/2" />
       </div>
 
       {/* Course Details */}
       <div className="p-4 space-y-3">
         <div className="grid grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="h-3 bg-muted rounded w-8 mx-auto mb-1"></div>
-            <div className="h-6 bg-muted rounded w-6 mx-auto"></div>
+            <div className="h-3 bg-muted rounded w-8 mx-auto mb-1" />
+            <div className="h-6 bg-muted rounded w-6 mx-auto" />
           </div>
           <div className="text-center">
-            <div className="h-3 bg-muted rounded w-12 mx-auto mb-1"></div>
-            <div className="h-6 bg-muted rounded w-8 mx-auto"></div>
+            <div className="h-3 bg-muted rounded w-12 mx-auto mb-1" />
+            <div className="h-6 bg-muted rounded w-8 mx-auto" />
           </div>
           <div className="text-center">
-            <div className="h-3 bg-muted rounded w-10 mx-auto mb-1"></div>
-            <div className="h-6 bg-muted rounded w-6 mx-auto"></div>
+            <div className="h-3 bg-muted rounded w-10 mx-auto mb-1" />
+            <div className="h-6 bg-muted rounded w-6 mx-auto" />
           </div>
           <div className="text-center">
-            <div className="h-3 bg-muted rounded w-8 mx-auto mb-1"></div>
-            <div className="h-6 bg-muted rounded w-6 mx-auto"></div>
+            <div className="h-3 bg-muted rounded w-8 mx-auto mb-1" />
+            <div className="h-6 bg-muted rounded w-6 mx-auto" />
           </div>
         </div>
 
         {/* Campus and Pace */}
         <div className="flex justify-between items-center text-sm">
           <div className="flex items-center gap-1">
-            <div className="h-4 w-4 bg-muted rounded"></div>
-            <div className="h-4 bg-muted rounded w-16"></div>
+            <div className="h-4 w-4 bg-muted rounded" />
+            <div className="h-4 bg-muted rounded w-16" />
           </div>
-          <div className="h-4 bg-muted rounded w-8"></div>
+          <div className="h-4 bg-muted rounded w-8" />
         </div>
 
         {/* Programs */}
         <div className="space-y-1">
-          <div className="h-3 bg-muted rounded w-16"></div>
+          <div className="h-3 bg-muted rounded w-16" />
           <div className="flex flex-wrap gap-1">
-            <div className="h-5 bg-muted rounded w-24"></div>
-            <div className="h-5 bg-muted rounded w-20"></div>
+            <div className="h-5 bg-muted rounded w-24" />
+            <div className="h-5 bg-muted rounded w-20" />
           </div>
         </div>
       </div>
 
       {/* Action Button */}
       <div className="p-4 pt-0">
-        <div className="h-9 bg-muted rounded w-full"></div>
+        <div className="h-9 bg-muted rounded w-full" />
       </div>
     </div>
   );
 }
 
-export function CourseGridSkeleton({ 
+export function CourseGridSkeleton({
   count = 12,
   sidebarOpen = false,
-  profileSidebarOpen = false 
-}: { 
+  profileSidebarOpen = false,
+}: {
   count?: number;
   sidebarOpen?: boolean;
   profileSidebarOpen?: boolean;
 }) {
   // Match CourseGrid layout logic
   const bothSidebarsOpen = sidebarOpen && profileSidebarOpen;
-  const gridClasses = bothSidebarsOpen 
+  const gridClasses = bothSidebarsOpen
     ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:gap-5 w-full"
     : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full";
 

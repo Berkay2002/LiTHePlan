@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface PaginationProps {
   currentPage: number;
@@ -9,12 +9,12 @@ interface PaginationProps {
   itemsPerPage: number;
 }
 
-export function Pagination({ 
-  currentPage, 
-  totalPages, 
-  onPageChange, 
-  totalItems, 
-  itemsPerPage 
+export function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+  totalItems,
+  itemsPerPage,
 }: PaginationProps) {
   // Calculate the range of items being shown
   const startItem = (currentPage - 1) * itemsPerPage + 1;
@@ -76,11 +76,11 @@ export function Pagination({
       <div className="flex items-center gap-2">
         {/* Previous button */}
         <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
           className="h-8 px-3 text-white border-white/30 hover:bg-white/10 hover:text-white disabled:text-white/50 disabled:border-white/20"
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(currentPage - 1)}
+          size="sm"
+          variant="outline"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
           Previous
@@ -91,19 +91,24 @@ export function Pagination({
           {getPageNumbers().map((page, index) => (
             <div key={`page-${page}-${index}`}>
               {page === "..." ? (
-                <Button variant="ghost" size="sm" disabled className="h-8 w-8 p-0 text-white/50">
+                <Button
+                  className="h-8 w-8 p-0 text-white/50"
+                  disabled
+                  size="sm"
+                  variant="ghost"
+                >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               ) : (
                 <Button
-                  variant={currentPage === page ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => onPageChange(page as number)}
                   className={`h-8 w-8 p-0 ${
-                    currentPage === page 
-                      ? 'bg-white text-gray-900 hover:bg-white/90' 
-                      : 'text-white border-white/30 hover:bg-white/10 hover:text-white'
+                    currentPage === page
+                      ? "bg-white text-gray-900 hover:bg-white/90"
+                      : "text-white border-white/30 hover:bg-white/10 hover:text-white"
                   }`}
+                  onClick={() => onPageChange(page as number)}
+                  size="sm"
+                  variant={currentPage === page ? "default" : "outline"}
                 >
                   {page}
                 </Button>
@@ -114,11 +119,11 @@ export function Pagination({
 
         {/* Next button */}
         <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
           className="h-8 px-3 text-white border-white/30 hover:bg-white/10 hover:text-white disabled:text-white/50 disabled:border-white/20"
+          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+          size="sm"
+          variant="outline"
         >
           Next
           <ChevronRight className="h-4 w-4 ml-1" />

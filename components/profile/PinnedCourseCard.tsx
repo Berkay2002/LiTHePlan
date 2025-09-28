@@ -1,14 +1,18 @@
 // components/profile/PinnedCourseCard.tsx
 
-import { useState } from 'react';
-import { Course } from '@/types/course';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { X, ExternalLink, Clock, MapPin, AlertTriangle } from 'lucide-react';
-import { formatBlocks } from '@/lib/course-utils';
+import { AlertTriangle, Clock, ExternalLink, MapPin, X } from "lucide-react";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { formatBlocks } from "@/lib/course-utils";
+import type { Course } from "@/types/course";
 
 interface PinnedCourseCardProps {
   course: Course;
@@ -16,13 +20,16 @@ interface PinnedCourseCardProps {
   readOnly?: boolean;
 }
 
-export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedCourseCardProps) {
+export function PinnedCourseCard({
+  course,
+  onRemove,
+  readOnly = false,
+}: PinnedCourseCardProps) {
   const [showNotesTooltip, setShowNotesTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  
-  const formatPace = (pace: string) => {
-    return pace === '100%' ? 'Full-time' : 'Part-time';
-  };
+
+  const formatPace = (pace: string) =>
+    pace === "100%" ? "Full-time" : "Part-time";
 
   return (
     <Card className="w-full bg-card border-border/60 hover:border-border transition-colors">
@@ -38,17 +45,21 @@ export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedC
                   <TooltipTrigger asChild>
                     <button
                       className="flex items-center gap-1 bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 flex-shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
-                      onClick={() => isMobile && setShowNotesTooltip(!showNotesTooltip)}
                       onBlur={() => isMobile && setShowNotesTooltip(false)}
+                      onClick={() =>
+                        isMobile && setShowNotesTooltip(!showNotesTooltip)
+                      }
                     >
                       <AlertTriangle className="h-3 w-3" />
                       <span className="text-xs font-bold">OBS</span>
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent 
-                    side="top" 
+                  <TooltipContent
                     className="max-w-xs bg-gray-900 text-white border-gray-700"
-                    onPointerDownOutside={() => isMobile && setShowNotesTooltip(false)}
+                    onPointerDownOutside={() =>
+                      isMobile && setShowNotesTooltip(false)
+                    }
+                    side="top"
                   >
                     <p className="text-xs text-white">{course.notes}</p>
                   </TooltipContent>
@@ -59,30 +70,32 @@ export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedC
               {course.id} • {course.credits}hp
             </p>
           </div>
-                     {!readOnly && (
-             <Button
-               variant="ghost"
-               size="sm"
-               onClick={() => onRemove(course.id)}
-               className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-               aria-label="Remove course from profile"
-             >
-               <X className="h-4 w-4" />
-             </Button>
-           )}
+          {!readOnly && (
+            <Button
+              aria-label="Remove course from profile"
+              className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              onClick={() => onRemove(course.id)}
+              size="sm"
+              variant="ghost"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </CardHeader>
-      
+
       <CardContent className="pt-0 space-y-3">
         {/* Course Level Badge */}
         <div className="flex items-center gap-2">
-          <Badge 
-            variant={course.level === 'avancerad nivå' ? 'default' : 'secondary'}
+          <Badge
             className="text-xs"
+            variant={
+              course.level === "avancerad nivå" ? "default" : "secondary"
+            }
           >
-            {course.level === 'avancerad nivå' ? 'Advanced' : 'Basic'}
+            {course.level === "avancerad nivå" ? "Advanced" : "Basic"}
           </Badge>
-          <Badge variant="outline" className="text-xs">
+          <Badge className="text-xs" variant="outline">
             Term {course.term}
           </Badge>
         </div>
@@ -106,30 +119,46 @@ export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedC
           <span>Block {formatBlocks(course.block)}</span>
         </div>
 
-        {/* Programs */}
-        {course.programs.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-                      {course.programs.slice(0, 2).map((program, index) => (
-            <Badge key={`${program}-${index}`} variant="outline" className="text-xs px-2 py-0.5">
-              {program}
-            </Badge>
-          ))}
-            {course.programs.length > 2 && (
-              <Badge variant="outline" className="text-xs px-2 py-0.5">
-                +{course.programs.length - 2} more
-              </Badge>
-            )}
-          </div>
-        )}
+        {/* Programs and Orientations */}
+        {(() => {
+          const allProgramsAndOrientations = [
+            ...course.programs,
+            ...(course.orientations || []),
+          ];
+          return (
+            allProgramsAndOrientations.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {allProgramsAndOrientations.slice(0, 2).map((item, index) => (
+                  <Badge
+                    className="text-xs px-2 py-0.5"
+                    key={`${item}-${index}`}
+                    variant="outline"
+                  >
+                    {item}
+                  </Badge>
+                ))}
+                {allProgramsAndOrientations.length > 2 && (
+                  <Badge className="text-xs px-2 py-0.5" variant="outline">
+                    +{allProgramsAndOrientations.length - 2} more
+                  </Badge>
+                )}
+              </div>
+            )
+          );
+        })()}
 
         {/* Action Button */}
         <Button
-          variant="outline"
-          size="sm"
           className="w-full h-8 text-xs"
           onClick={() => {
-            window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
+            window.open(
+              `https://studieinfo.liu.se/kurs/${course.id}`,
+              "_blank",
+              "noopener,noreferrer"
+            );
           }}
+          size="sm"
+          variant="outline"
         >
           <ExternalLink className="h-3 w-3 mr-1.5" />
           View Course
@@ -137,4 +166,4 @@ export function PinnedCourseCard({ course, onRemove, readOnly = false }: PinnedC
       </CardContent>
     </Card>
   );
-} 
+}

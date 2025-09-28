@@ -1,116 +1,115 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { createClient } from '@/utils/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { createClient } from "@/utils/supabase/client";
 
 export function LoginForm() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isSignUp, setIsSignUp] = useState(false)
-  
-  const router = useRouter()
-  const supabase = createClient()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  const router = useRouter();
+  const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
-      const { error } = isSignUp 
+      const { error } = isSignUp
         ? await supabase.auth.signUp({ email, password })
-        : await supabase.auth.signInWithPassword({ email, password })
+        : await supabase.auth.signInWithPassword({ email, password });
 
       if (error) {
-        setError(error.message)
+        setError(error.message);
       } else {
-        router.push('/') // Redirect to home after successful auth
-        router.refresh()
+        router.push("/"); // Redirect to home after successful auth
+        router.refresh();
       }
     } catch {
-      setError('An unexpected error occurred')
+      setError("An unexpected error occurred");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>{isSignUp ? 'Create Account' : 'Sign In'}</CardTitle>
+        <CardTitle>{isSignUp ? "Create Account" : "Sign In"}</CardTitle>
         <CardDescription>
-          {isSignUp 
-            ? 'Create an account to save and share your profiles' 
-            : 'Sign in to access your saved profiles'
-          }
+          {isSignUp
+            ? "Create an account to save and share your profiles"
+            : "Sign in to access your saved profiles"}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium mb-1" htmlFor="email">
               Email
             </label>
             <Input
+              disabled={loading}
               id="email"
-              type="email"
-              value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={loading}
+              type="email"
+              value={email}
             />
           </div>
-          
+
           <div>
-            <label htmlFor="password" className="block text-sm font-medium mb-1">
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="password"
+            >
               Password
             </label>
             <Input
+              disabled={loading}
               id="password"
-              type="password"
-              value={password}
+              minLength={6}
               onChange={(e) => setPassword(e.target.value)}
               required
-              disabled={loading}
-              minLength={6}
+              type="password"
+              value={password}
             />
           </div>
 
-          {error && (
-            <div className="text-red-600 text-sm">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-600 text-sm">{error}</div>}
 
-          <Button 
-            type="submit" 
-            className="w-full" 
-            disabled={loading}
-          >
-            {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+          <Button className="w-full" disabled={loading} type="submit">
+            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
           </Button>
         </form>
 
         <div className="mt-4 text-center">
           <button
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
             className="text-sm text-blue-600 hover:underline"
             disabled={loading}
+            onClick={() => setIsSignUp(!isSignUp)}
+            type="button"
           >
-            {isSignUp 
-              ? 'Already have an account? Sign in' 
-              : "Don't have an account? Sign up"
-            }
+            {isSignUp
+              ? "Already have an account? Sign in"
+              : "Don't have an account? Sign up"}
           </button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

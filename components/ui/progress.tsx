@@ -10,11 +10,11 @@ interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
 const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
   ({ className, value = 0, ...props }, ref) => (
     <div
-      ref={ref}
       className={cn(
         "relative h-2 w-full overflow-hidden rounded-full bg-secondary",
         className
       )}
+      ref={ref}
       {...props}
     >
       <div

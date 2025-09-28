@@ -1,15 +1,37 @@
+import { ChevronLeft, ChevronRight, Info, X } from "lucide-react";
 import { useState } from "react";
-import { Course } from "@/types/course";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { X, ChevronLeft, ChevronRight, Info } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { cn } from "@/lib/utils";
+import type { Course } from "@/types/course";
+import { MultiSelect } from "@/components/ui/multi-select";
+
+
+const examinationOptions = [
+  { value: "TEN", label: "TEN" },
+  { value: "LAB", label: "LAB" },
+  { value: "PROJ", label: "PROJ" },
+  { value: "SEM", label: "SEM" },
+  { value: "UPG", label: "UPG" },
+];
+
 
 export interface FilterState {
   level: string[];
@@ -18,8 +40,9 @@ export interface FilterState {
   block: number[];
   pace: string[];
   campus: string[];
-  examination: { [key: string]: 'include' | 'exclude' | 'ignore' }; // Per-examination-type controls
-  programs: string; // Changed to single string selection
+  examination: string[]; // Selected examination types
+  programs: string[]; // Multiple string selection for main programs
+  huvudomraden: string[]; // Multiple string selection for huvudområden (replaces orientations)
   search: string; // New search field
 }
 
@@ -35,21 +58,27 @@ export interface CollapsibleFilterSidebarProps extends FilterPanelProps {
   onToggle: () => void;
 }
 
-export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange, isOpen, onToggle }: CollapsibleFilterSidebarProps) {
+export function CollapsibleFilterSidebar({
+  courses,
+  filterState,
+  onFilterChange,
+  isOpen,
+  onToggle,
+}: CollapsibleFilterSidebarProps) {
   const [showProgramTooltip, setShowProgramTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  
+
   // Generate unique filter options from course data
   const filterOptions = {
-    level: Array.from(new Set(courses.map(course => course.level))),
+    level: Array.from(new Set(courses.map((course) => course.level))),
     term: (() => {
       // Extract all unique terms from courses - now they're string arrays
       const allTerms = new Set<string>();
-      courses.forEach(course => {
-        course.term.forEach(term => allTerms.add(term));
+      courses.forEach((course) => {
+        course.term.forEach((term) => allTerms.add(term));
       });
       const uniqueTerms = Array.from(allTerms).sort();
-      
+
       // Combine "7" & "9" into a single option, keep "8" separate
       const termOptions: number[] = [];
       if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
@@ -60,33 +89,65 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
       }
       return termOptions;
     })(),
-    period: Array.from(new Set(courses.flatMap(course => course.period).map(p => parseInt(p)).filter(p => !isNaN(p)))).sort(),
-    block: Array.from(new Set(courses.flatMap(course => course.block).map(b => parseInt(b)).filter(b => !isNaN(b)))).sort(),
-    pace: Array.from(new Set(courses.map(course => course.pace))),
-    campus: Array.from(new Set(courses.map(course => course.campus))),
-    examination: Array.from(new Set(courses.flatMap(course => course.examination))).filter(exam => ['TEN', 'LAB', 'PROJ', 'SEM', 'UPG'].includes(exam)).sort(),
-    programs: Array.from(new Set(courses.flatMap(course => course.programs))).sort(),
+    period: Array.from(
+      new Set(
+        courses
+          .flatMap((course) => course.period)
+          .map((p) => Number.parseInt(p))
+          .filter((p) => !isNaN(p))
+      )
+    ).sort(),
+    block: Array.from(
+      new Set(
+        courses
+          .flatMap((course) => course.block)
+          .map((b) => Number.parseInt(b))
+          .filter((b) => !isNaN(b))
+      )
+    ).sort(),
+    pace: Array.from(new Set(courses.map((course) => course.pace))),
+    campus: Array.from(new Set(courses.map((course) => course.campus))),
+    programs: Array.from(
+      new Set(
+        courses
+          .flatMap((course) => course.programs || [])
+          .filter((program) => program && program.trim() !== "")
+      )
+    ).sort(),
+    huvudomraden: Array.from(
+      new Set(
+        courses
+          .flatMap((course) =>
+            course.huvudomrade
+              ? course.huvudomrade.split(',').map(h => h.trim()).filter(h => h !== "")
+              : []
+          )
+          .filter((huvudomrade) => huvudomrade && huvudomrade.trim() !== "")
+      )
+    ).sort(),
   };
 
-  const handleFilterChange = (filterType: keyof FilterState, value: string | number | null) => {
+  const handleFilterChange = (
+    filterType: keyof FilterState,
+    value: string | number | null
+  ) => {
     const newFilters = { ...filterState };
-    
-    if (filterType === 'programs' || filterType === 'search') {
-      // Programs and search are single string selections
+
+    if (filterType === "search") {
+      // Search is single string selection
       newFilters[filterType] = value as string;
-    } else if (filterType === 'examination') {
-      // Examination is now an object with per-type controls
-      // value should be in format "examType:mode" (e.g., "TEN:exclude")
-      const [examType, mode] = (value as string).split(':');
-      newFilters.examination = {
-        ...newFilters.examination,
-        [examType]: mode as 'include' | 'exclude' | 'ignore'
-      };
-    } else if (filterType === 'level' || filterType === 'pace' || filterType === 'campus') {
+    } else if (
+      filterType === "level" ||
+      filterType === "pace" ||
+      filterType === "campus" ||
+      filterType === "huvudomraden" ||
+      filterType === "examination" ||
+      filterType === "programs"
+    ) {
       // Array-based filters (checkboxes)
       const currentArray = [...(newFilters[filterType] as string[])];
       if (currentArray.includes(value as string)) {
-        newFilters[filterType] = currentArray.filter(item => item !== value);
+        newFilters[filterType] = currentArray.filter((item) => item !== value);
       } else {
         newFilters[filterType] = [...currentArray, value as string];
       }
@@ -94,54 +155,53 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
       // term, period, block are number arrays
       const currentArray = [...(newFilters[filterType] as number[])];
       if (currentArray.includes(value as number)) {
-        newFilters[filterType] = currentArray.filter(item => item !== value);
+        newFilters[filterType] = currentArray.filter((item) => item !== value);
       } else {
         newFilters[filterType] = [...currentArray, value as number];
       }
     }
-    
+
     onFilterChange(newFilters);
   };
 
-
   return (
     <>
-
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden" 
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={onToggle}
         />
       )}
 
       {/* Collapsible Sidebar - Fixed position */}
-      <div className={cn(
-        "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
-        "flex flex-col ring-1 ring-air-superiority-blue-300/30",
-        isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-        "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
-      )}>
+      <div
+        className={cn(
+          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
+          "flex flex-col ring-1 ring-air-superiority-blue-300/30",
+          isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
+          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+        )}
+      >
         {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
         {!isOpen && (
           <div className="hidden lg:flex flex-col items-center justify-center h-full w-12 relative">
             {/* Modern Floating Expand Button */}
             <div className="relative group">
               <Button
-                onClick={onToggle}
-                variant="ghost"
-                size="sm"
                 className="h-10 w-10 p-0 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={onToggle}
+                size="sm"
+                variant="ghost"
               >
                 <ChevronRight className="h-5 w-5 text-white group-hover:text-primary transition-colors duration-200" />
               </Button>
-              
+
               {/* Tooltip on hover */}
               <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                 Open Filters
               </div>
             </div>
-            
           </div>
         )}
 
@@ -149,17 +209,20 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
         {isOpen && (
           <div className="flex flex-col h-full relative">
             {/* Modern Floating Collapse Button - Right Edge (Desktop Only) */}
-            <div className="hidden lg:block absolute -right-6 top-1/2 z-50" style={{ transform: 'translateY(-50%)' }}>
+            <div
+              className="hidden lg:block absolute -right-6 top-1/2 z-50"
+              style={{ transform: "translateY(-50%)" }}
+            >
               <div className="relative group">
                 <Button
-                  onClick={onToggle}
-                  variant="ghost"
-                  size="sm"
                   className="h-10 w-10 p-0 bg-air-superiority-blue-400/90 hover:bg-air-superiority-blue-500 backdrop-blur-sm border border-air-superiority-blue-300 hover:border-air-superiority-blue-200 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  onClick={onToggle}
+                  size="sm"
+                  variant="ghost"
                 >
                   <ChevronLeft className="h-5 w-5 text-white group-hover:text-picton-blue transition-colors duration-200" />
                 </Button>
-                
+
                 {/* Tooltip on hover */}
                 <div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                   Close Filters
@@ -172,20 +235,20 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               <div className="flex items-center justify-between">
                 {/* Logo for mobile */}
                 <div className="flex-shrink-0">
-                  <LiTHePlanLogo 
-                    width={200} 
-                    height={32} 
-                    className="h-8 w-auto" 
+                  <LiTHePlanLogo
+                    className="h-8 w-auto"
+                    height={32}
+                    width={200}
                   />
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   {/* Enhanced Close button for mobile */}
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onToggle}
                     className="h-10 w-10 p-0 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 rounded-full border border-white/30 hover:border-white/50"
+                    onClick={onToggle}
+                    size="sm"
+                    variant="ghost"
                   >
                     <X className="h-5 w-5" />
                   </Button>
@@ -198,44 +261,97 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
               {/* Programs Filter - Dropdown */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Program</h3>
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    Program
+                  </h3>
                   <TooltipProvider>
                     <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                       <TooltipTrigger asChild>
-                        <button 
+                        <button
                           className="flex items-center justify-center p-1 rounded-md hover:bg-white/10 transition-colors duration-200 touch-manipulation"
-                          onClick={() => isMobile && setShowProgramTooltip(!showProgramTooltip)}
-                          onBlur={() => isMobile && setShowProgramTooltip(false)}
+                          onBlur={() =>
+                            isMobile && setShowProgramTooltip(false)
+                          }
+                          onClick={() =>
+                            isMobile &&
+                            setShowProgramTooltip(!showProgramTooltip)
+                          }
                         >
                           <Info className="h-5 w-5 text-white/70 hover:text-white cursor-help transition-colors duration-200" />
                         </button>
                       </TooltipTrigger>
-                      <TooltipContent 
-                        className="max-w-xs bg-gray-900 text-white border-gray-700" 
+                      <TooltipContent
+                        className="max-w-xs bg-gray-900 text-white border-gray-700"
+                        onPointerDownOutside={() =>
+                          isMobile && setShowProgramTooltip(false)
+                        }
                         sideOffset={4}
-                        onPointerDownOutside={() => isMobile && setShowProgramTooltip(false)}
                       >
-                        <p className="text-xs text-white">Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
+                        <p className="text-xs text-white">
+                          Program indicates the main degree program (e.g., Media
+                          Technology and Engineering).
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <Select 
-                  value={filterState.programs || undefined} 
-                  onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
-                >
-                  <SelectTrigger className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 text-sm lg:text-sm xl:text-sm data-[placeholder]:text-white text-white">
-                    <SelectValue placeholder="Select a program..." />
-                  </SelectTrigger>
-                  <SelectContent className="bg-gray-800 border-gray-600">
-                    <SelectItem value="all" className="text-white hover:bg-gray-700 focus:bg-gray-700">All Programs</SelectItem>
-                    {filterOptions.programs.map((program) => (
-                      <SelectItem key={program} value={program} className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        {program}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <MultiSelect
+                  options={filterOptions.programs.map(program => ({ value: program, label: program }))}
+                  defaultValue={filterState.programs || []}
+                  onValueChange={(values) => {
+                    const newFilters = { ...filterState };
+                    newFilters.programs = values;
+                    onFilterChange(newFilters);
+                  }}
+                  placeholder="Välj program..."
+                  variant="secondary"
+                  maxCount={0}
+                  className="text-white [&_span.text-muted-foreground]:text-white"
+                />
+              </div>
+
+              {/* Huvudområden Filter - Multi-Select */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    Huvudområden
+                  </h3>
+                </div>
+                <MultiSelect
+                  options={filterOptions.huvudomraden.map(huvudomrade => ({ value: huvudomrade, label: huvudomrade }))}
+                  defaultValue={filterState.huvudomraden || []}
+                  onValueChange={(values) => {
+                    const newFilters = { ...filterState };
+                    newFilters.huvudomraden = values;
+                    onFilterChange(newFilters);
+                  }}
+                  placeholder="Välj huvudområden..."
+                  variant="secondary"
+                  maxCount={1}
+                  className="text-white [&_span.text-muted-foreground]:text-white"
+                />
+              </div>
+
+              {/* Examination Filter - Multi-Select */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    Examination
+                  </h3>
+                </div>
+                <MultiSelect
+                  options={examinationOptions}
+                  defaultValue={filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]}
+                  onValueChange={(values) => {
+                    const newFilters = { ...filterState };
+                    newFilters.examination = values;
+                    onFilterChange(newFilters);
+                  }}
+                  placeholder="Välj examinationsformer..."
+                  variant="secondary"
+                  maxCount={1}
+                  className="text-white [&_span.text-muted-foreground]:text-white"
+                />
               </div>
 
               {/* Level and Study Pace - Side by Side */}
@@ -243,22 +359,29 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Level Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Level</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                      Level
+                    </h3>
                   </div>
                   <div className="grid gap-3">
                     {filterOptions.level.map((level) => (
-                      <div key={`sidebar-level-${level}`} className="flex items-center space-x-3 group">
+                      <div
+                        className="flex items-center space-x-3 group"
+                        key={`sidebar-level-${level}`}
+                      >
                         <Checkbox
-                          id={`level-${level}`}
                           checked={filterState.level.includes(level)}
-                          onCheckedChange={() => handleFilterChange('level', level)}
                           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          id={`level-${level}`}
+                          onCheckedChange={() =>
+                            handleFilterChange("level", level)
+                          }
                         />
-                        <label 
-                          htmlFor={`level-${level}`} 
-                                                      className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                        <label
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          htmlFor={`level-${level}`}
                         >
-                          {level === 'grundnivå' ? 'Basic' : 'Advanced'}
+                          {level === "grundnivå" ? "Basic" : "Advanced"}
                         </label>
                       </div>
                     ))}
@@ -268,20 +391,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Study Pace Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Study Pace</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                      Study Pace
+                    </h3>
                   </div>
                   <div className="grid gap-3">
                     {filterOptions.pace.map((pace) => (
-                      <div key={`sidebar-pace-${pace}`} className="flex items-center space-x-3 group">
+                      <div
+                        className="flex items-center space-x-3 group"
+                        key={`sidebar-pace-${pace}`}
+                      >
                         <Checkbox
-                          id={`pace-${pace}`}
                           checked={filterState.pace.includes(pace)}
-                          onCheckedChange={() => handleFilterChange('pace', pace)}
                           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          id={`pace-${pace}`}
+                          onCheckedChange={() =>
+                            handleFilterChange("pace", pace)
+                          }
                         />
-                        <label 
-                          htmlFor={`pace-${pace}`} 
+                        <label
                           className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          htmlFor={`pace-${pace}`}
                         >
                           {pace}
                         </label>
@@ -296,20 +426,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Period Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Period</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                      Period
+                    </h3>
                   </div>
                   <div className="grid gap-3">
                     {filterOptions.period.map((period) => (
-                      <div key={`sidebar-period-${period}`} className="flex items-center space-x-3 group">
+                      <div
+                        className="flex items-center space-x-3 group"
+                        key={`sidebar-period-${period}`}
+                      >
                         <Checkbox
-                          id={`period-${period}`}
                           checked={filterState.period.includes(period)}
-                          onCheckedChange={() => handleFilterChange('period', period)}
                           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          id={`period-${period}`}
+                          onCheckedChange={() =>
+                            handleFilterChange("period", period)
+                          }
                         />
-                        <label 
-                          htmlFor={`period-${period}`} 
+                        <label
                           className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          htmlFor={`period-${period}`}
                         >
                           {period}
                         </label>
@@ -321,22 +458,29 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Term Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Term</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                      Term
+                    </h3>
                   </div>
                   <div className="grid gap-3">
                     {filterOptions.term.map((term) => (
-                      <div key={`sidebar-term-${term}`} className="flex items-center space-x-3 group">
+                      <div
+                        className="flex items-center space-x-3 group"
+                        key={`sidebar-term-${term}`}
+                      >
                         <Checkbox
-                          id={`term-${term}`}
                           checked={filterState.term.includes(term)}
-                          onCheckedChange={() => handleFilterChange('term', term)}
                           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          id={`term-${term}`}
+                          onCheckedChange={() =>
+                            handleFilterChange("term", term)
+                          }
                         />
-                        <label 
-                          htmlFor={`term-${term}`} 
+                        <label
                           className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          htmlFor={`term-${term}`}
                         >
-                          {term === 7 ? '7 & 9' : term}
+                          {term === 7 ? "7 & 9" : term}
                         </label>
                       </div>
                     ))}
@@ -349,20 +493,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Campus Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Campus</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                      Campus
+                    </h3>
                   </div>
                   <div className="grid gap-3">
                     {filterOptions.campus.map((campus) => (
-                      <div key={`sidebar-campus-${campus}`} className="flex items-center space-x-3 group">
+                      <div
+                        className="flex items-center space-x-3 group"
+                        key={`sidebar-campus-${campus}`}
+                      >
                         <Checkbox
-                          id={`campus-${campus}`}
                           checked={filterState.campus.includes(campus)}
-                          onCheckedChange={() => handleFilterChange('campus', campus)}
                           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          id={`campus-${campus}`}
+                          onCheckedChange={() =>
+                            handleFilterChange("campus", campus)
+                          }
                         />
-                        <label 
-                          htmlFor={`campus-${campus}`} 
+                        <label
                           className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          htmlFor={`campus-${campus}`}
                         >
                           {campus}
                         </label>
@@ -374,20 +525,27 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 {/* Block Filter - 4x1 horizontal layout */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Block</h3>
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                      Block
+                    </h3>
                   </div>
                   <div className="grid grid-cols-1 gap-3">
                     {filterOptions.block.map((block) => (
-                      <div key={`sidebar-block-${block}`} className="flex items-center space-x-3 group">
+                      <div
+                        className="flex items-center space-x-3 group"
+                        key={`sidebar-block-${block}`}
+                      >
                         <Checkbox
-                          id={`block-${block}`}
                           checked={filterState.block.includes(block)}
-                          onCheckedChange={() => handleFilterChange('block', block)}
                           className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          id={`block-${block}`}
+                          onCheckedChange={() =>
+                            handleFilterChange("block", block)
+                          }
                         />
-                        <label 
-                          htmlFor={`block-${block}`} 
+                        <label
                           className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          htmlFor={`block-${block}`}
                         >
                           {block}
                         </label>
@@ -397,50 +555,6 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
                 </div>
               </div>
 
-              {/* Examination Filter - Tri-state controls */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">Examination</h3>
-                  <div className="text-xs text-white/60">
-                    (Include/Exclude/Ignore)
-                  </div>
-                </div>
-                <div className="grid gap-3">
-                  {filterOptions.examination.map((exam) => {
-                    const currentMode = filterState.examination[exam] || 'ignore';
-                    return (
-                      <div key={`sidebar-exam-${exam}`} className="flex items-center gap-3 group">
-                        <label className="text-sm lg:text-sm xl:text-sm font-medium text-white w-12 flex-shrink-0">
-                          {exam}
-                        </label>
-                        <div className="ml-3">
-                          <Select 
-                            value={currentMode} 
-                            onValueChange={(mode: 'include' | 'exclude' | 'ignore') => 
-                              handleFilterChange('examination', `${exam}:${mode}`)
-                            }
-                          >
-                            <SelectTrigger className={`w-28 h-6 text-xs border-0 ${
-                              currentMode === 'include' 
-                                ? 'bg-green-500/30 text-green-200' 
-                                : currentMode === 'exclude'
-                                ? 'bg-red-500/30 text-red-200'
-                                : 'bg-gray-500/30 text-gray-300'
-                            }`}>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="ignore">Ignore</SelectItem>
-                              <SelectItem value="include">Include</SelectItem>
-                              <SelectItem value="exclude">Exclude</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -450,21 +564,47 @@ export function CollapsibleFilterSidebar({ courses, filterState, onFilterChange,
 }
 
 // Keep the original FilterPanel for backward compatibility (used in mobile Sheet)
-export function FilterPanel({ courses, filterState, onFilterChange }: FilterPanelProps) {
+export function FilterPanel({
+  courses,
+  filterState,
+  onFilterChange,
+}: FilterPanelProps) {
   const [showProgramTooltip, setShowProgramTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
-  
+
+  // All available programs (complete and incomplete)
+  const allPrograms = [
+    "Datateknik",
+    "Design och produktutveckling",
+    "Elektronik och systemdesign",
+    "Energi – miljö – management",
+    "Industriell ekonomi",
+    "Informationsteknologi",
+    "Kemisk biologi",
+    "Maskinteknik",
+    "Medicinsk teknik",
+    "Media Technology and Engineering", // This is the complete one
+    "Mjukvaruteknik",
+    "Samhällsbyggnad och logistik",
+    "Strategisk systemanalys",
+    "Teknisk biologi",
+    "Teknisk fysik och elektroteknik",
+    "Teknisk matematik",
+  ].sort();
+
+  const completePrograms = ["Media Technology and Engineering"]; // Only this one is complete
+
   // Generate unique filter options from course data
   const filterOptions = {
-    level: Array.from(new Set(courses.map(course => course.level))),
+    level: Array.from(new Set(courses.map((course) => course.level))),
     term: (() => {
       // Extract all unique terms from courses - now they're string arrays
       const allTerms = new Set<string>();
-      courses.forEach(course => {
-        course.term.forEach(term => allTerms.add(term));
+      courses.forEach((course) => {
+        course.term.forEach((term) => allTerms.add(term));
       });
       const uniqueTerms = Array.from(allTerms).sort();
-      
+
       // Combine "7" & "9" into a single option, keep "8" separate
       const termOptions: number[] = [];
       if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
@@ -475,33 +615,65 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
       }
       return termOptions;
     })(),
-    period: Array.from(new Set(courses.flatMap(course => course.period).map(p => parseInt(p)).filter(p => !isNaN(p)))).sort(),
-    block: Array.from(new Set(courses.flatMap(course => course.block).map(b => parseInt(b)).filter(b => !isNaN(b)))).sort(),
-    pace: Array.from(new Set(courses.map(course => course.pace))),
-    campus: Array.from(new Set(courses.map(course => course.campus))),
-    examination: Array.from(new Set(courses.flatMap(course => course.examination))).filter(exam => ['TEN', 'LAB', 'PROJ', 'SEM', 'UPG'].includes(exam)).sort(),
-    programs: Array.from(new Set(courses.flatMap(course => course.programs))).sort(),
+    period: Array.from(
+      new Set(
+        courses
+          .flatMap((course) => course.period)
+          .map((p) => Number.parseInt(p))
+          .filter((p) => !isNaN(p))
+      )
+    ).sort(),
+    block: Array.from(
+      new Set(
+        courses
+          .flatMap((course) => course.block)
+          .map((b) => Number.parseInt(b))
+          .filter((b) => !isNaN(b))
+      )
+    ).sort(),
+    pace: Array.from(new Set(courses.map((course) => course.pace))),
+    campus: Array.from(new Set(courses.map((course) => course.campus))),
+    programs: Array.from(
+      new Set(
+        courses
+          .flatMap((course) => course.programs || [])
+          .filter((program) => program && program.trim() !== "")
+      )
+    ).sort(),
+    huvudomraden: Array.from(
+      new Set(
+        courses
+          .flatMap((course) =>
+            course.huvudomrade
+              ? course.huvudomrade.split(',').map(h => h.trim()).filter(h => h !== "")
+              : []
+          )
+          .filter((huvudomrade) => huvudomrade && huvudomrade.trim() !== "")
+      )
+    ).sort(),
   };
 
-  const handleFilterChange = (filterType: keyof FilterState, value: string | number | null) => {
+  const handleFilterChange = (
+    filterType: keyof FilterState,
+    value: string | number | null
+  ) => {
     const newFilters = { ...filterState };
-    
-    if (filterType === 'programs' || filterType === 'search') {
-      // Programs and search are single string selections
+
+    if (filterType === "search") {
+      // Search is single string selection
       newFilters[filterType] = value as string;
-    } else if (filterType === 'examination') {
-      // Examination is now an object with per-type controls
-      // value should be in format "examType:mode" (e.g., "TEN:exclude")
-      const [examType, mode] = (value as string).split(':');
-      newFilters.examination = {
-        ...newFilters.examination,
-        [examType]: mode as 'include' | 'exclude' | 'ignore'
-      };
-    } else if (filterType === 'level' || filterType === 'pace' || filterType === 'campus') {
+    } else if (
+      filterType === "level" ||
+      filterType === "pace" ||
+      filterType === "campus" ||
+      filterType === "huvudomraden" ||
+      filterType === "examination" ||
+      filterType === "programs"
+    ) {
       // Array-based filters (checkboxes)
       const currentArray = [...(newFilters[filterType] as string[])];
       if (currentArray.includes(value as string)) {
-        newFilters[filterType] = currentArray.filter(item => item !== value);
+        newFilters[filterType] = currentArray.filter((item) => item !== value);
       } else {
         newFilters[filterType] = [...currentArray, value as string];
       }
@@ -509,21 +681,22 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
       // term, period, block are number arrays
       const currentArray = [...(newFilters[filterType] as number[])];
       if (currentArray.includes(value as number)) {
-        newFilters[filterType] = currentArray.filter(item => item !== value);
+        newFilters[filterType] = currentArray.filter((item) => item !== value);
       } else {
         newFilters[filterType] = [...currentArray, value as number];
       }
     }
-    
+
     onFilterChange(newFilters);
   };
-
 
   return (
     <Card className="w-full border border-air-superiority-blue-300/40 bg-air-superiority-blue-400 shadow-lg shadow-air-superiority-blue-300/20 ring-1 ring-air-superiority-blue-300/30">
       <CardHeader className="pb-3 bg-air-superiority-blue-300/30 rounded-t-lg border-b border-air-superiority-blue-300/40">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold tracking-tight text-card-foreground">Filters</CardTitle>
+          <CardTitle className="text-lg font-semibold tracking-tight text-card-foreground">
+            Filters
+          </CardTitle>
         </div>
         <Separator className="mt-3 bg-air-superiority-blue-300/40" />
       </CardHeader>
@@ -531,44 +704,94 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
         {/* Programs Filter - Dropdown */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Program</h3>
+            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              Program
+            </h3>
             <TooltipProvider>
               <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                 <TooltipTrigger asChild>
-                  <button 
+                  <button
                     className="flex items-center justify-center p-1 rounded-md hover:bg-white/10 transition-colors duration-200 touch-manipulation"
-                    onClick={() => isMobile && setShowProgramTooltip(!showProgramTooltip)}
                     onBlur={() => isMobile && setShowProgramTooltip(false)}
+                    onClick={() =>
+                      isMobile && setShowProgramTooltip(!showProgramTooltip)
+                    }
                   >
                     <Info className="h-5 w-5 text-white/70 hover:text-white cursor-help transition-colors duration-200" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent 
-                  className="max-w-xs bg-gray-900 text-white border-gray-700" 
+                <TooltipContent
+                  className="max-w-xs bg-gray-900 text-white border-gray-700"
+                  onPointerDownOutside={() =>
+                    isMobile && setShowProgramTooltip(false)
+                  }
                   sideOffset={4}
-                  onPointerDownOutside={() => isMobile && setShowProgramTooltip(false)}
                 >
-                  <p className="text-xs text-white">Program labels indicate which master&apos;s specialization the course gives credits towards. This doesn&apos;t indicate who can take the course – only what it counts towards in the degree.</p>
+                  <p className="text-xs text-white">
+                    Program indicates the main degree program (e.g., Media
+                    Technology and Engineering).
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-          <Select 
-            value={filterState.programs || undefined} 
-            onValueChange={(value) => handleFilterChange('programs', value === "all" ? "" : value)}
-          >
-                      <SelectTrigger className="w-full text-xs data-[placeholder]:text-white text-white">
-            <SelectValue placeholder="Select a program..." />
-          </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-600">
-              <SelectItem value="all" className="text-white hover:bg-gray-700 focus:bg-gray-700">All Programs</SelectItem>
-              {filterOptions.programs.map((program) => (
-                <SelectItem key={program} value={program} className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                  {program}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <MultiSelect
+            options={filterOptions.programs.map(program => ({ value: program, label: program }))}
+            defaultValue={filterState.programs || []}
+            onValueChange={(values) => {
+              const newFilters = { ...filterState };
+              newFilters.programs = values;
+              onFilterChange(newFilters);
+            }}
+            placeholder="Välj program..."
+            variant="secondary"
+            maxCount={0}
+            className="text-white [&_span.text-muted-foreground]:text-white"
+          />
+        </div>
+
+        {/* Huvudområden Filter - Multi-Select */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              Huvudområden
+            </h3>
+          </div>
+          <MultiSelect
+            options={filterOptions.huvudomraden.map(huvudomrade => ({ value: huvudomrade, label: huvudomrade }))}
+            defaultValue={filterState.huvudomraden || []}
+            onValueChange={(values) => {
+              const newFilters = { ...filterState };
+              newFilters.huvudomraden = values;
+              onFilterChange(newFilters);
+            }}
+            placeholder="Välj huvudområden..."
+            variant="secondary"
+            maxCount={1}
+            className="text-white [&_span.text-muted-foreground]:text-white"
+          />
+        </div>
+
+        {/* Examination Filter - Multi-Select */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              Examination
+            </h3>
+          </div>
+          <MultiSelect
+            options={examinationOptions}
+            defaultValue={filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]}
+            onValueChange={(values) => {
+              const newFilters = { ...filterState };
+              newFilters.examination = values;
+              onFilterChange(newFilters);
+            }}
+            placeholder="Välj examinationsformer..."
+            variant="secondary"
+            maxCount={1}
+            className="text-white [&_span.text-muted-foreground]:text-white"
+          />
         </div>
 
         {/* Level and Study Pace - Side by Side */}
@@ -576,22 +799,27 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           {/* Level Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Level</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+                Level
+              </h3>
             </div>
             <div className="grid gap-3">
               {filterOptions.level.map((level) => (
-                <div key={`mobile-level-${level}`} className="flex items-center space-x-3 group">
+                <div
+                  className="flex items-center space-x-3 group"
+                  key={`mobile-level-${level}`}
+                >
                   <Checkbox
-                    id={`level-${level}`}
                     checked={filterState.level.includes(level)}
-                    onCheckedChange={() => handleFilterChange('level', level)}
                     className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    id={`level-${level}`}
+                    onCheckedChange={() => handleFilterChange("level", level)}
                   />
-                  <label 
-                    htmlFor={`level-${level}`} 
+                  <label
                     className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                    htmlFor={`level-${level}`}
                   >
-                    {level === 'grundnivå' ? 'Basic Level' : 'Advanced Level'}
+                    {level === "grundnivå" ? "Basic Level" : "Advanced Level"}
                   </label>
                 </div>
               ))}
@@ -601,20 +829,25 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           {/* Study Pace Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Study Pace</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+                Study Pace
+              </h3>
             </div>
             <div className="grid gap-3">
               {filterOptions.pace.map((pace) => (
-                <div key={`mobile-pace-${pace}`} className="flex items-center space-x-3 group">
+                <div
+                  className="flex items-center space-x-3 group"
+                  key={`mobile-pace-${pace}`}
+                >
                   <Checkbox
-                    id={`pace-${pace}`}
                     checked={filterState.pace.includes(pace)}
-                    onCheckedChange={() => handleFilterChange('pace', pace)}
                     className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    id={`pace-${pace}`}
+                    onCheckedChange={() => handleFilterChange("pace", pace)}
                   />
-                  <label 
-                    htmlFor={`pace-${pace}`} 
+                  <label
                     className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                    htmlFor={`pace-${pace}`}
                   >
                     {pace}
                   </label>
@@ -629,22 +862,27 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           {/* Term Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Term</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+                Term
+              </h3>
             </div>
             <div className="grid gap-3">
               {filterOptions.term.map((term) => (
-                <div key={`mobile-term-${term}`} className="flex items-center space-x-3 group">
+                <div
+                  className="flex items-center space-x-3 group"
+                  key={`mobile-term-${term}`}
+                >
                   <Checkbox
-                    id={`term-${term}`}
                     checked={filterState.term.includes(term)}
-                    onCheckedChange={() => handleFilterChange('term', term)}
                     className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    id={`term-${term}`}
+                    onCheckedChange={() => handleFilterChange("term", term)}
                   />
-                  <label 
-                    htmlFor={`term-${term}`} 
+                  <label
                     className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                    htmlFor={`term-${term}`}
                   >
-                    {term === 7 ? '7 & 9' : term}
+                    {term === 7 ? "7 & 9" : term}
                   </label>
                 </div>
               ))}
@@ -654,20 +892,25 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           {/* Period Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Period</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+                Period
+              </h3>
             </div>
             <div className="grid gap-3">
               {filterOptions.period.map((period) => (
-                <div key={`mobile-period-${period}`} className="flex items-center space-x-3 group">
+                <div
+                  className="flex items-center space-x-3 group"
+                  key={`mobile-period-${period}`}
+                >
                   <Checkbox
-                    id={`period-${period}`}
                     checked={filterState.period.includes(period)}
-                    onCheckedChange={() => handleFilterChange('period', period)}
                     className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    id={`period-${period}`}
+                    onCheckedChange={() => handleFilterChange("period", period)}
                   />
-                  <label 
-                    htmlFor={`period-${period}`} 
+                  <label
                     className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                    htmlFor={`period-${period}`}
                   >
                     {period}
                   </label>
@@ -682,20 +925,25 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           {/* Campus Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Campus</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+                Campus
+              </h3>
             </div>
             <div className="grid gap-3">
               {filterOptions.campus.map((campus) => (
-                <div key={`mobile-campus-${campus}`} className="flex items-center space-x-3 group">
+                <div
+                  className="flex items-center space-x-3 group"
+                  key={`mobile-campus-${campus}`}
+                >
                   <Checkbox
-                    id={`campus-${campus}`}
                     checked={filterState.campus.includes(campus)}
-                    onCheckedChange={() => handleFilterChange('campus', campus)}
                     className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    id={`campus-${campus}`}
+                    onCheckedChange={() => handleFilterChange("campus", campus)}
                   />
-                  <label 
-                    htmlFor={`campus-${campus}`} 
+                  <label
                     className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                    htmlFor={`campus-${campus}`}
                   >
                     {campus}
                   </label>
@@ -707,20 +955,25 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           {/* Block Filter - 4x1 horizontal layout (2x2 on mobile for space) */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Block</h3>
+              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+                Block
+              </h3>
             </div>
             <div className="grid grid-cols-1 gap-3">
               {filterOptions.block.map((block) => (
-                <div key={`mobile-block-${block}`} className="flex items-center space-x-3 group">
+                <div
+                  className="flex items-center space-x-3 group"
+                  key={`mobile-block-${block}`}
+                >
                   <Checkbox
-                    id={`block-${block}`}
                     checked={filterState.block.includes(block)}
-                    onCheckedChange={() => handleFilterChange('block', block)}
                     className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    id={`block-${block}`}
+                    onCheckedChange={() => handleFilterChange("block", block)}
                   />
-                  <label 
-                    htmlFor={`block-${block}`} 
+                  <label
                     className="text-sm font-medium cursor-pointer group-hover:text-primary transition-colors leading-none"
+                    htmlFor={`block-${block}`}
                   >
                     {block}
                   </label>
@@ -730,50 +983,6 @@ export function FilterPanel({ courses, filterState, onFilterChange }: FilterPane
           </div>
         </div>
 
-        {/* Examination Filter - Tri-state controls */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Examination</h3>
-            <div className="text-xs text-white/60">
-              (Include/Exclude/Ignore)
-            </div>
-          </div>
-          <div className="grid gap-3">
-            {filterOptions.examination.map((exam) => {
-              const currentMode = filterState.examination[exam] || 'ignore';
-              return (
-                <div key={`mobile-exam-${exam}`} className="flex items-center gap-3 group">
-                  <label className="text-sm font-medium text-white w-12 flex-shrink-0">
-                    {exam}
-                  </label>
-                  <div className="ml-2">
-                    <Select 
-                      value={currentMode} 
-                      onValueChange={(mode: 'include' | 'exclude' | 'ignore') => 
-                        handleFilterChange('examination', `${exam}:${mode}`)
-                      }
-                    >
-                      <SelectTrigger className={`w-28 h-6 text-xs border-0 ${
-                        currentMode === 'include' 
-                          ? 'bg-green-500/30 text-green-200' 
-                          : currentMode === 'exclude'
-                          ? 'bg-red-500/30 text-red-200'
-                          : 'bg-gray-500/30 text-gray-300'
-                      }`}>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ignore">Ignore</SelectItem>
-                        <SelectItem value="include">Include</SelectItem>
-                        <SelectItem value="exclude">Exclude</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </CardContent>
     </Card>
   );

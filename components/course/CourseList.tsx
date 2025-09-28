@@ -1,7 +1,7 @@
-import { Course } from "@/types/course";
-import { CourseListItem } from "./CourseListItem";
-import { FilterState } from "./FilterPanel";
 import { Pagination } from "@/components/shared/Pagination";
+import type { Course } from "@/types/course";
+import { CourseListItem } from "./CourseListItem";
+import type { FilterState } from "./FilterPanel";
 
 interface CourseListProps {
   courses: Course[];
@@ -15,28 +15,29 @@ interface CourseListProps {
   onPageChange?: (page: number) => void;
 }
 
-export function CourseList({ 
-  courses, 
-  isFiltered = false, 
+export function CourseList({
+  courses,
+  isFiltered = false,
   activeFilters,
   currentPage,
   totalPages,
   totalCourses,
   itemsPerPage,
-  onPageChange
+  onPageChange,
 }: CourseListProps) {
   if (!courses || courses.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">🔍</div>
         <h3 className="text-xl font-semibold mb-2 text-white">
-          {isFiltered ? "No courses match your filters" : "No courses available"}
+          {isFiltered
+            ? "No courses match your filters"
+            : "No courses available"}
         </h3>
         <p className="text-white/80">
-          {isFiltered 
+          {isFiltered
             ? "Try adjusting your filter criteria to see more results."
-            : "There are currently no courses to display."
-          }
+            : "There are currently no courses to display."}
         </p>
       </div>
     );
@@ -47,20 +48,28 @@ export function CourseList({
       {/* Course list */}
       <div className="space-y-3 w-full">
         {courses.map((course) => (
-          <CourseListItem key={course.id} course={course} activeFilters={activeFilters} />
+          <CourseListItem
+            activeFilters={activeFilters}
+            course={course}
+            key={course.id}
+          />
         ))}
       </div>
 
       {/* Pagination */}
-      {currentPage && totalPages && totalCourses && itemsPerPage && onPageChange && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={totalCourses}
-          itemsPerPage={itemsPerPage}
-          onPageChange={onPageChange}
-        />
-      )}
+      {currentPage &&
+        totalPages &&
+        totalCourses &&
+        itemsPerPage &&
+        onPageChange && (
+          <Pagination
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+            onPageChange={onPageChange}
+            totalItems={totalCourses}
+            totalPages={totalPages}
+          />
+        )}
     </div>
   );
 }

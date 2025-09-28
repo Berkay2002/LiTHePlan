@@ -8,7 +8,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  
+
   /* Custom Color Palette */
   --color-battleship-gray: #8b9291;
   --color-battleship-gray-100: #1c1d1d;
@@ -20,7 +20,7 @@
   --color-battleship-gray-700: #babebd;
   --color-battleship-gray-800: #d1d3d3;
   --color-battleship-gray-900: #e8e9e9;
-  
+
   --color-air-superiority-blue: #71a2b6;
   --color-air-superiority-blue-100: #142227;
   --color-air-superiority-blue-200: #28434e;
@@ -31,7 +31,7 @@
   --color-air-superiority-blue-700: #aac8d3;
   --color-air-superiority-blue-800: #c6dae2;
   --color-air-superiority-blue-900: #e3edf0;
-  
+
   --color-picton-blue: #60b2e5;
   --color-picton-blue-100: #092638;
   --color-picton-blue-200: #124c70;
@@ -42,7 +42,7 @@
   --color-picton-blue-700: #a0d1f0;
   --color-picton-blue-800: #c0e0f5;
   --color-picton-blue-900: #dff0fa;
-  
+
   --color-electric-blue: #5cf4ff;
   --color-electric-blue-100: #004145;
   --color-electric-blue-200: #00818b;
@@ -53,19 +53,19 @@
   --color-electric-blue-700: #9df8ff;
   --color-electric-blue-800: #befbff;
   --color-electric-blue-900: #defdff;
-  
+
   /* Custom Red */
-  --color-custom-red: #A3294E;
+  --color-custom-red: #a3294e;
   --color-custom-red-100: #1a0509;
   --color-custom-red-200: #340a12;
   --color-custom-red-300: #4e0f1b;
   --color-custom-red-400: #681424;
-  --color-custom-red-500: #A3294E;
+  --color-custom-red-500: #a3294e;
   --color-custom-red-600: #b54866;
   --color-custom-red-700: #c7677e;
   --color-custom-red-800: #d98696;
   --color-custom-red-900: #eca4ae;
-  
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -117,7 +117,7 @@
   --muted-foreground: #3c6575;
   --accent: #5cf4ff;
   --accent-foreground: #004145;
-  --destructive: #A3294E;
+  --destructive: #a3294e;
   --border: #babebd;
   --input: #defdff;
   --ring: #60b2e5;
@@ -151,7 +151,7 @@
   --muted-foreground: #aac8d3;
   --accent: #5cf4ff;
   --accent-foreground: #004145;
-  --destructive: #A3294E;
+  --destructive: #a3294e;
   --border: #3c6575;
   --input: #092638;
   --ring: #60b2e5;
@@ -177,27 +177,62 @@
   body {
     @apply bg-background text-foreground;
   }
-  
+
   /* Hide scrollbars for filter panel */
   .filter-panel-scroll::-webkit-scrollbar {
     width: 0px;
     background: transparent;
   }
-  
+
   .filter-panel-scroll::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   .filter-panel-scroll::-webkit-scrollbar-thumb {
     background: transparent;
   }
-  
+
   .filter-panel-scroll::-webkit-scrollbar-thumb:hover {
     background: transparent;
   }
-  
+
   /* Firefox scrollbar hiding */
   .filter-panel-scroll {
     scrollbar-width: none;
+  }
+
+  /* Custom scrollbar for orientations */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(
+      60,
+      101,
+      117,
+      0.5
+    ); /* air-superiority-blue-300 with 50% opacity */
+    border-radius: 4px;
+    border: none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(
+      60,
+      101,
+      117,
+      0.7
+    ); /* air-superiority-blue-300 with 70% opacity */
+  }
+
+  /* Firefox custom scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(60, 101, 117, 0.5) transparent;
   }
 }
