@@ -17,7 +17,7 @@ export function ProgressCircle({
   profile,
   targetCredits = MASTER_PROGRAM_TARGET_CREDITS,
 }: ProgressCircleProps) {
-  const currentCredits = profile.metadata.total_credits;
+  const currentCredits = profile.metadata.totalCredits;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate SVG circle properties

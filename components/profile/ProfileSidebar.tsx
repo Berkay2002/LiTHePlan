@@ -30,12 +30,12 @@ export function ProfileSidebar({
   const terms = MASTER_PROGRAM_TERMS;
 
   // Calculate values only if profile exists
-  const currentCredits = profile?.metadata.total_credits ?? 0;
+  const currentCredits = profile?.metadata.totalCredits ?? 0;
   const targetCredits = MASTER_PROGRAM_TARGET_CREDITS;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate advanced credits
-  const advancedCredits = profile?.metadata.advanced_credits ?? 0;
+  const advancedCredits = profile?.metadata.advancedCredits ?? 0;
   const basicCredits = currentCredits - advancedCredits;
 
   // Pie chart segments

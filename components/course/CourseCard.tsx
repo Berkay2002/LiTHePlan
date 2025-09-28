@@ -41,8 +41,8 @@ interface CourseCardProps {
 
 export function CourseCard({ course }: CourseCardProps) {
   const { state, addCourse, removeCourse } = useProfile();
-  const isPinned = state.current_profile
-    ? isCourseInProfile(state.current_profile, course.id)
+  const isPinned = state.currentProfile
+    ? isCourseInProfile(state.currentProfile, course.id)
     : false;
   const [isHovered, setIsHovered] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
@@ -59,8 +59,8 @@ export function CourseCard({ course }: CourseCardProps) {
   const availableTerms = getAvailableTerms(course);
 
   // Check if adding this course would cause conflicts
-  const wouldHaveConflicts = state.current_profile
-    ? findCourseConflicts(course, state.current_profile).length > 0
+  const wouldHaveConflicts = state.currentProfile
+    ? findCourseConflicts(course, state.currentProfile).length > 0
     : false;
 
   // Helper function to check if a field should be hidden
@@ -85,8 +85,8 @@ export function CourseCard({ course }: CourseCardProps) {
     );
 
     // Always check conflicts first, regardless of term count
-    const conflicts = state.current_profile
-      ? findCourseConflicts(course, state.current_profile)
+    const conflicts = state.currentProfile
+      ? findCourseConflicts(course, state.currentProfile)
       : [];
 
     if (conflicts.length > 0) {

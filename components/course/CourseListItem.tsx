@@ -57,8 +57,8 @@ export function CourseListItem({
   },
 }: CourseListItemProps) {
   const { state, addCourse, removeCourse } = useProfile();
-  const isPinned = state.current_profile
-    ? isCourseInProfile(state.current_profile, course.id)
+  const isPinned = state.currentProfile
+    ? isCourseInProfile(state.currentProfile, course.id)
     : false;
   const [isHovered, setIsHovered] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
@@ -74,8 +74,8 @@ export function CourseListItem({
   const availableTerms = getAvailableTerms(course);
 
   // Check if adding this course would cause conflicts
-  const wouldHaveConflicts = state.current_profile
-    ? findCourseConflicts(course, state.current_profile).length > 0
+  const wouldHaveConflicts = state.currentProfile
+    ? findCourseConflicts(course, state.currentProfile).length > 0
     : false;
 
   // Helper function to check if a field should be hidden based on active filters
@@ -101,8 +101,8 @@ export function CourseListItem({
     logger.info("🎯 handleAddCourse clicked for course:", course.id);
 
     // Always check conflicts first, regardless of term count
-    const conflicts = state.current_profile
-      ? findCourseConflicts(course, state.current_profile)
+    const conflicts = state.currentProfile
+      ? findCourseConflicts(course, state.currentProfile)
       : [];
 
     if (conflicts.length > 0) {

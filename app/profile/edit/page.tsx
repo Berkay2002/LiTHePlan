@@ -3,7 +3,7 @@
 "use client";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DraggableTermCard } from "@/components/DraggableTermCard";
 import { EditableTermCard } from "@/components/EditableTermCard";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -13,12 +13,41 @@ import {
   ProfileProvider,
   useProfile,
 } from "@/components/profile/ProfileContext";
-import {
 import { logger } from "@/lib/logger";
+import {
   IMMUTABLE_MASTER_PROGRAM_TERMS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+
+const DESKTOP_BREAKPOINT = 1024;
+const TERM_DROPPABLE_PATTERN = /term-(\d+)(?:-period-\d+)?$/;
+const IMMUTABLE_TERM_SET = new Set<MasterProgramTerm>(
+  IMMUTABLE_MASTER_PROGRAM_TERMS
+);
+
+function parseTermFromDroppableId(id: string): MasterProgramTerm | null {
+  const match = TERM_DROPPABLE_PATTERN.exec(id);
+  if (!match) {
+    return null;
+  }
+
+  const parsed = Number.parseInt(match[1] ?? "", 10);
+  return MASTER_PROGRAM_TERMS.find((term) => term === parsed) ?? null;
+}
+
+function canMoveBetweenTerms(
+  source: MasterProgramTerm,
+  destination: MasterProgramTerm
+): boolean {
+  if (source === destination) {
+    return false;
+  }
+
+  return (
+    !IMMUTABLE_TERM_SET.has(source) && !IMMUTABLE_TERM_SET.has(destination)
+  );
+}
 
 function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
@@ -28,7 +57,7 @@ function ProfileEditPageContent() {
   // Detect if we're on mobile/tablet to disable drag and drop
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // Disable on screens smaller than desktop
+      setIsMobile(window.innerWidth < DESKTOP_BREAKPOINT);
     };
 
     checkIsMobile();
@@ -56,58 +85,27 @@ function ProfileEditPageContent() {
     // Extract course ID from draggableId (format: courseId-termX-periodY)
     const courseId = draggableId.split("-term")[0];
 
-    // Extract term numbers from droppable IDs (now just term-X format)
-    const sourceTermMatch = source.droppableId.match(
-      /term-(\d+)(?:-period-\d+)?$/
-    );
-    const destTermMatch = destination.droppableId.match(
-      /term-(\d+)(?:-period-\d+)?$/
-    );
-
-    if (!(sourceTermMatch && destTermMatch)) {
-      return;
-    }
-
-    const parseTerm = (
-      match: RegExpMatchArray | null
-    ): MasterProgramTerm | null => {
-      if (!match) {
-        return null;
-      }
-
-      const parsed = Number.parseInt(match[1], 10);
-      return (
-        MASTER_PROGRAM_TERMS.find((term) => term === parsed) ?? null
-      );
-    };
-
-    const sourceTerm = parseTerm(sourceTermMatch);
-    const destTerm = parseTerm(destTermMatch);
+    const sourceTerm = parseTermFromDroppableId(source.droppableId);
+    const destTerm = parseTermFromDroppableId(destination.droppableId);
 
     if (!(sourceTerm && destTerm)) {
       return;
     }
 
-    // Only allow moving between terms 7 and 9 (not 8)
-    if (
-      IMMUTABLE_MASTER_PROGRAM_TERMS.includes(sourceTerm) ||
-      IMMUTABLE_MASTER_PROGRAM_TERMS.includes(destTerm)
-    ) {
+    // Only allow moving between terms that are not marked as immutable
+    if (!canMoveBetweenTerms(sourceTerm, destTerm)) {
       return;
     }
 
-    // Only allow moving between different terms
-    if (sourceTerm !== destTerm) {
-      try {
-        await moveCourse(courseId, sourceTerm, destTerm);
-      } catch (error) {
-        logger.error("Failed to move course:", error);
-        // You could show a toast notification here
-      }
+    try {
+      await moveCourse(courseId, sourceTerm, destTerm);
+    } catch (error) {
+      logger.error("Failed to move course:", error);
+      // You could show a toast notification here
     }
   };
 
-  const { current_profile: currentProfile } = state;
+  const { currentProfile } = state;
 
   if (!currentProfile) {
     return (
@@ -141,8 +139,8 @@ function ProfileEditPageContent() {
                       IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
                     return (
                       <EditableTermCard
-                        key={term}
                         courses={currentProfile.terms[term]}
+                        key={term}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
                         onRemoveCourse={removeCourse}
@@ -156,9 +154,9 @@ function ProfileEditPageContent() {
                       IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
                     return (
                       <DraggableTermCard
-                        key={term}
                         courses={currentProfile.terms[term]}
                         isDragDisabled={isImmutable}
+                        key={term}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
                         onRemoveCourse={removeCourse}

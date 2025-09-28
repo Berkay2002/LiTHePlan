@@ -10,6 +10,7 @@ import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { SimpleTermCard } from "@/components/SimpleTermCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { logger } from "@/lib/logger";
+import { normalizeProfileData } from "@/lib/profile-utils";
 import type { StudentProfile } from "@/types/profile";
 
 const NOT_FOUND_STATUS = 404;
@@ -41,19 +42,11 @@ function ProfilePageContent() {
         }
 
         const profileData = await response.json();
-
-        // Convert date strings back to Date objects if needed
-        const loadedProfile: StudentProfile = {
-          ...profileData,
-          // biome-ignore lint/style/useNamingConvention: Persisted schema uses snake_case.
-          created_at: profileData.created_at
-            ? new Date(profileData.created_at)
-            : new Date(),
-          // biome-ignore lint/style/useNamingConvention: Persisted schema uses snake_case.
-          updated_at: profileData.updated_at
-            ? new Date(profileData.updated_at)
-            : new Date(),
-        };
+        const loadedProfile = normalizeProfileData(profileData);
+        if (!loadedProfile) {
+          setError("Profile data is invalid");
+          return;
+        }
 
         setProfile(loadedProfile);
         setDatabaseId(profileId); // Store the database UUID for sharing

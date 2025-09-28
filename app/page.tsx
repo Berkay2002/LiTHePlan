@@ -418,7 +418,7 @@ function HomeContent() {
           <ProfileSidebar
             isOpen={profileSidebarOpen}
             onToggle={toggleProfileSidebar}
-            profile={state.current_profile}
+            profile={state.currentProfile}
           />
 
           {/* Main Content Area */}

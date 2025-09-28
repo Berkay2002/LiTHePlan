@@ -19,6 +19,7 @@ import {
   createEmptyProfile,
   loadProfileFromStorage,
   moveCourseInProfile,
+  normalizeProfileData,
   removeCourseFromProfile,
   saveProfileToStorage,
 } from "@/lib/profile-utils";
@@ -76,23 +77,23 @@ function profileReducer(
     case "LOAD_PROFILE":
       return {
         ...state,
-        current_profile: action.profile,
-        is_editing: false,
-        unsaved_changes: false,
+        currentProfile: action.profile,
+        isEditing: false,
+        unsavedChanges: false,
       };
 
     case "ADD_COURSE": {
-      if (state.current_profile) {
+      if (state.currentProfile) {
         const updatedProfile = addCourseToProfile(
-          state.current_profile,
+          state.currentProfile,
           action.course,
           action.term
         );
         saveProfileToStorage(updatedProfile);
         return {
           ...state,
-          current_profile: updatedProfile,
-          unsaved_changes: true,
+          currentProfile: updatedProfile,
+          unsavedChanges: true,
         };
       }
       const newProfile = createEmptyProfile();
@@ -104,29 +105,29 @@ function profileReducer(
       saveProfileToStorage(updatedProfile);
       return {
         ...state,
-        current_profile: updatedProfile,
-        unsaved_changes: true,
+        currentProfile: updatedProfile,
+        unsavedChanges: true,
       };
     }
 
     case "REMOVE_COURSE": {
-      if (!state.current_profile) return state;
+      if (!state.currentProfile) return state;
       const updatedProfile = removeCourseFromProfile(
-        state.current_profile,
+        state.currentProfile,
         action.courseId
       );
       saveProfileToStorage(updatedProfile);
       return {
         ...state,
-        current_profile: updatedProfile,
-        unsaved_changes: true,
+        currentProfile: updatedProfile,
+        unsavedChanges: true,
       };
     }
 
     case "MOVE_COURSE": {
-      if (!state.current_profile) return state;
+      if (!state.currentProfile) return state;
       const movedProfile = moveCourseInProfile(
-        state.current_profile,
+        state.currentProfile,
         action.courseId,
         action.fromTerm,
         action.toTerm
@@ -134,46 +135,46 @@ function profileReducer(
       saveProfileToStorage(movedProfile);
       return {
         ...state,
-        current_profile: movedProfile,
-        unsaved_changes: true,
+        currentProfile: movedProfile,
+        unsavedChanges: true,
       };
     }
 
     case "CLEAR_TERM": {
-      if (!state.current_profile) return state;
+      if (!state.currentProfile) return state;
       const clearedTermProfile = clearTermInProfile(
-        state.current_profile,
+        state.currentProfile,
         action.term
       );
       saveProfileToStorage(clearedTermProfile);
       return {
         ...state,
-        current_profile: clearedTermProfile,
-        unsaved_changes: true,
+        currentProfile: clearedTermProfile,
+        unsavedChanges: true,
       };
     }
 
     case "CLEAR_PROFILE": {
-      if (!state.current_profile) return state;
-      const emptyProfile = clearProfileUtil(state.current_profile);
+      if (!state.currentProfile) return state;
+      const emptyProfile = clearProfileUtil(state.currentProfile);
       saveProfileToStorage(emptyProfile);
       return {
         ...state,
-        current_profile: emptyProfile,
-        unsaved_changes: true,
+        currentProfile: emptyProfile,
+        unsavedChanges: true,
       };
     }
 
     case "SET_EDITING":
       return {
         ...state,
-        is_editing: action.isEditing,
+        isEditing: action.isEditing,
       };
 
     case "SET_UNSAVED_CHANGES":
       return {
         ...state,
-        unsaved_changes: action.hasChanges,
+        unsavedChanges: action.hasChanges,
       };
 
     default:
@@ -213,9 +214,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     return () => subscription.unsubscribe();
   }, []);
   const [state, dispatch] = useReducer(profileReducer, {
-    current_profile: null,
-    is_editing: false,
-    unsaved_changes: false,
+    currentProfile: null,
+    isEditing: false,
+    unsavedChanges: false,
   });
 
   // Hybrid storage functions
@@ -304,9 +305,12 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         }
 
         if (data && data.length > 0) {
-          const latestProfile = data[0].profile_data; // Get most recent profile
-          logger.info("☁️ Loaded profile from cloud");
-          return latestProfile;
+          const normalized = normalizeProfileData(data[0].profile_data);
+          if (normalized) {
+            logger.info("☁️ Loaded profile from cloud");
+            return normalized;
+          }
+          logger.warn("⚠️ Received malformed profile data from cloud");
         }
       } catch (error) {
         logger.error(
@@ -340,12 +344,18 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     // onProfileUpdate
     (updatedProfile) => {
       logger.info("🔄 Profile updated via Realtime:", updatedProfile);
-      dispatch({ type: "LOAD_PROFILE", profile: updatedProfile.profile_data });
+      const normalized = normalizeProfileData(updatedProfile.profile_data);
+      if (normalized) {
+        dispatch({ type: "LOAD_PROFILE", profile: normalized });
+      }
     },
     // onProfileInsert
     (newProfile) => {
       logger.info("➕ New profile via Realtime:", newProfile);
-      dispatch({ type: "LOAD_PROFILE", profile: newProfile.profile_data });
+      const normalized = normalizeProfileData(newProfile.profile_data);
+      if (normalized) {
+        dispatch({ type: "LOAD_PROFILE", profile: normalized });
+      }
     },
     // onProfileDelete
     (profileId) => {
@@ -357,8 +367,8 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   const addCourse = async (course: ProfileCourse, term: MasterProgramTerm) => {
     let updatedProfile: StudentProfile;
 
-    if (state.current_profile) {
-      updatedProfile = addCourseToProfile(state.current_profile, course, term);
+    if (state.currentProfile) {
+      updatedProfile = addCourseToProfile(state.currentProfile, course, term);
     } else {
       const newProfile = createEmptyProfile();
       updatedProfile = addCourseToProfile(newProfile, course, term);
@@ -369,9 +379,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   };
 
   const removeCourse = async (courseId: string) => {
-    if (!state.current_profile) return;
+    if (!state.currentProfile) return;
     const updatedProfile = removeCourseFromProfile(
-      state.current_profile,
+      state.currentProfile,
       courseId
     );
     await saveProfile(updatedProfile);
@@ -383,9 +393,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
   ) => {
-    if (!state.current_profile) return;
+    if (!state.currentProfile) return;
     const updatedProfile = moveCourseInProfile(
-      state.current_profile,
+      state.currentProfile,
       courseId,
       fromTerm,
       toTerm
@@ -395,15 +405,15 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   };
 
   const clearTerm = async (term: MasterProgramTerm) => {
-    if (!state.current_profile) return;
-    const updatedProfile = clearTermInProfile(state.current_profile, term);
+    if (!state.currentProfile) return;
+    const updatedProfile = clearTermInProfile(state.currentProfile, term);
     await saveProfile(updatedProfile);
     dispatch({ type: "LOAD_PROFILE", profile: updatedProfile });
   };
 
   const clearProfile = async () => {
-    if (!state.current_profile) return;
-    const updatedProfile = clearProfileUtil(state.current_profile);
+    if (!state.currentProfile) return;
+    const updatedProfile = clearProfileUtil(state.currentProfile);
     await saveProfile(updatedProfile);
     dispatch({ type: "LOAD_PROFILE", profile: updatedProfile });
   };
