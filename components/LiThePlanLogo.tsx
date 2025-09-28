@@ -1,24 +1,27 @@
-// components/LiTHePlanLogo.tsx
+// components/LiThePlanLogo.tsx
 
-interface LiTHePlanLogoProps {
+type LiThePlanLogoProps = {
   className?: string;
   width?: number;
   height?: number;
-}
+};
 
-export function LiTHePlanLogo({
+export function LiThePlanLogo({
   className = "",
   width = 320,
   height = 100,
-}: LiTHePlanLogoProps) {
+}: LiThePlanLogoProps) {
   return (
     <svg
+      aria-label="LiTHePlan logo"
       className={className}
       height={height}
+      role="img"
       viewBox="0 0 320 100"
       width={width}
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>LiTHePlan logo</title>
       <style>
         {`
           .bold { font-weight: bold; fill: #FFFFFF; }
