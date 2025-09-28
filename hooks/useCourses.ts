@@ -35,7 +35,13 @@ const coursesCache = new Map<
     pagination: UseCoursesResult["pagination"];
   }
 >();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION_MINUTES = 5;
+const SECONDS_PER_MINUTE = 60;
+const MILLISECONDS_PER_SECOND = 1000;
+const CACHE_DURATION_MS =
+  CACHE_DURATION_MINUTES *
+  SECONDS_PER_MINUTE *
+  MILLISECONDS_PER_SECOND; // 5 minutes
 
 export function useCourses(
   options: {
@@ -65,7 +71,7 @@ export function useCourses(
     // Check cache first
     if (enableCache && coursesCache.has(cacheKey)) {
       const cached = coursesCache.get(cacheKey)!;
-      if (Date.now() - cached.timestamp < CACHE_DURATION) {
+      if (Date.now() - cached.timestamp < CACHE_DURATION_MS) {
         console.log("📦 Using cached courses data");
         setCourses(cached.data);
         setPagination(cached.pagination);
