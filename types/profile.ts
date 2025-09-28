@@ -2,6 +2,23 @@
 
 import type { Course } from "./course";
 
+import {
+  MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
+  MASTER_PROGRAM_TARGET_CREDITS,
+  MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
+
+export type StudentProfileTerms = Record<MasterProgramTerm, Course[]>;
+
+export function createEmptyTerms(): StudentProfileTerms {
+  const terms: Partial<StudentProfileTerms> = {};
+  for (const term of MASTER_PROGRAM_TERMS) {
+    terms[term] = [];
+  }
+  return terms as StudentProfileTerms;
+}
+
 /**
  * Student profile interface representing a user's course selection plan
  */
@@ -19,11 +36,7 @@ export interface StudentProfile {
   updated_at: Date;
 
   /** Courses organized by academic term */
-  terms: {
-    7: Course[];
-    8: Course[];
-    9: Course[];
-  };
+  terms: StudentProfileTerms;
 
   /** Profile metadata and validation info */
   metadata: {
@@ -51,9 +64,9 @@ export interface ProfileState {
  * Pinboard operation types for type safety
  */
 export type PinboardOperation =
-  | { type: "ADD_COURSE"; course: Course; term: 7 | 8 | 9 }
-  | { type: "REMOVE_COURSE"; courseId: string; term: 7 | 8 | 9 }
-  | { type: "CLEAR_TERM"; term: 7 | 8 | 9 }
+  | { type: "ADD_COURSE"; course: Course; term: MasterProgramTerm }
+  | { type: "REMOVE_COURSE"; courseId: string; term: MasterProgramTerm }
+  | { type: "CLEAR_TERM"; term: MasterProgramTerm }
   | { type: "CLEAR_PROFILE" }
   | { type: "LOAD_PROFILE"; profile: StudentProfile }
   | { type: "SAVE_PROFILE" };
@@ -97,16 +110,14 @@ export function isValidStudentProfile(
  * Create a new empty student profile
  */
 export function createEmptyProfile(name = "My Master's Plan"): StudentProfile {
+  const emptyTerms = createEmptyTerms();
+
   return {
     id: crypto.randomUUID(),
     name,
     created_at: new Date(),
     updated_at: new Date(),
-    terms: {
-      7: [],
-      8: [],
-      9: [],
-    },
+    terms: emptyTerms,
     metadata: {
       total_credits: 0,
       advanced_credits: 0,
@@ -129,8 +140,8 @@ export function validateProfile(
   const courseIds = new Set<string>();
 
   // Validate each term
-  [7, 8, 9].forEach((term) => {
-    const termCourses = profile.terms[term as keyof typeof profile.terms];
+  MASTER_PROGRAM_TERMS.forEach((term) => {
+    const termCourses = profile.terms[term];
 
     if (!Array.isArray(termCourses)) {
       errors.push(`Term ${term} courses must be an array`);
@@ -165,16 +176,16 @@ export function validateProfile(
   });
 
   // Check advanced credits requirement (60hp minimum)
-  if (advancedCredits < 60) {
+  if (advancedCredits < MASTER_PROGRAM_MIN_ADVANCED_CREDITS) {
     warnings.push(
-      `Advanced credits (${advancedCredits}hp) is below the recommended 60hp minimum`
+      `Advanced credits (${advancedCredits}hp) is below the recommended ${MASTER_PROGRAM_MIN_ADVANCED_CREDITS}hp minimum`
     );
   }
 
   // Check total credits (90hp target)
-  if (totalCredits !== 90) {
+  if (totalCredits !== MASTER_PROGRAM_TARGET_CREDITS) {
     warnings.push(
-      `Total credits (${totalCredits}hp) doesn't match the 90hp target`
+      `Total credits (${totalCredits}hp) doesn't match the ${MASTER_PROGRAM_TARGET_CREDITS}hp target`
     );
   }
 

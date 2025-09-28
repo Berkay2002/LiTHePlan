@@ -26,6 +26,10 @@ import {
   isMultiTermCourse,
 } from "@/lib/course-utils";
 import { isCourseInProfile } from "@/lib/profile-utils";
+import {
+  MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import { TermSelectionModal } from "./TermSelectionModal";
@@ -42,7 +46,7 @@ export function CourseCard({ course }: CourseCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
   const [showConflictModal, setShowConflictModal] = useState(false);
-  const [, setPendingTerm] = useState<7 | 8 | 9 | null>(null);
+  const [, setPendingTerm] = useState<MasterProgramTerm | null>(null);
   const [conflictingCourses, setConflictingCourses] = useState<
     { conflictingCourse: Course; conflictingCourseId: string }[]
   >([]);
@@ -102,7 +106,7 @@ export function CourseCard({ course }: CourseCardProps) {
       const termToAdd = Array.isArray(course.term)
         ? course.term[0]
         : course.term;
-      const parsedTerm = Number.parseInt(termToAdd);
+      const parsedTerm = Number.parseInt(termToAdd, 10);
       console.log(
         "➕ No conflicts, adding directly - termToAdd:",
         termToAdd,
@@ -110,12 +114,15 @@ export function CourseCard({ course }: CourseCardProps) {
         parsedTerm
       );
 
-      if (!isNaN(parsedTerm) && [7, 8, 9].includes(parsedTerm)) {
+      if (
+        Number.isInteger(parsedTerm) &&
+        MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
+      ) {
         console.log("✅ Adding course with:", {
           course: course.id,
           term: parsedTerm,
         });
-        addCourse(course, parsedTerm as 7 | 8 | 9);
+        addCourse(course, parsedTerm as MasterProgramTerm);
       } else {
         console.error("❌ Invalid term for course:", {
           courseId: course.id,
@@ -129,7 +136,7 @@ export function CourseCard({ course }: CourseCardProps) {
   // Handle term selection from modal (conflicts already checked)
   const handleTermSelected = async (
     selectedCourse: Course,
-    selectedTerm: 7 | 8 | 9
+    selectedTerm: MasterProgramTerm
   ) => {
     console.log(
       "🔄 Term selected:",
@@ -165,7 +172,7 @@ export function CourseCard({ course }: CourseCardProps) {
       const termToAdd = Array.isArray(newCourse.term)
         ? newCourse.term[0]
         : newCourse.term;
-      const parsedTerm = Number.parseInt(termToAdd) as 7 | 8 | 9;
+      const parsedTerm = Number.parseInt(termToAdd, 10) as MasterProgramTerm;
       console.log("➕ Adding new course with default term:", parsedTerm);
       await addCourse(newCourse, parsedTerm);
     }

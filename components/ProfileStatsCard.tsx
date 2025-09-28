@@ -3,6 +3,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import {
+  MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
+  MASTER_PROGRAM_TARGET_CREDITS,
+  MASTER_PROGRAM_TERMS,
+  PIE_CHART_RADIUS_FACTOR,
+  PROFILE_STATS_PIE_CHART_SIZE,
+  PROGRAM_FOCUS_TARGET_CREDITS,
+} from "@/lib/profile-constants";
 import type { StudentProfile } from "@/types/profile";
 
 interface ProfileStatsCardProps {
@@ -15,13 +23,13 @@ export function ProfileStatsCard({
   className,
 }: ProfileStatsCardProps) {
   const currentCredits = profile.metadata.total_credits;
-  const targetCredits = 90;
+  const targetCredits = MASTER_PROGRAM_TARGET_CREDITS;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate advanced credits
   const advancedCredits = profile.metadata.advanced_credits;
   const basicCredits = currentCredits - advancedCredits;
-  const minAdvancedCredits = 60; // User specified 60hp minimum
+  const minAdvancedCredits = MASTER_PROGRAM_MIN_ADVANCED_CREDITS;
   const advancedPercentage = Math.min(
     (advancedCredits / minAdvancedCredits) * 100,
     100
@@ -30,8 +38,8 @@ export function ProfileStatsCard({
   // Calculate program distribution (advanced courses only)
   const programCredits: Record<string, number> = {};
 
-  [7, 8, 9].forEach((term) => {
-    profile.terms[term as keyof typeof profile.terms].forEach((course) => {
+  MASTER_PROGRAM_TERMS.forEach((term) => {
+    profile.terms[term].forEach((course) => {
       // Only count advanced courses for Top Programs
       if (course.level === "avancerad nivå") {
         // Count both programs and orientations
@@ -54,7 +62,10 @@ export function ProfileStatsCard({
     .map(([program, credits]) => ({
       program,
       credits,
-      percentage: Math.min((credits / 30) * 100, 100), // Assuming 30hp target per program
+      percentage: Math.min(
+        (credits / PROGRAM_FOCUS_TARGET_CREDITS) * 100,
+        100
+      ), // Assuming PROGRAM_FOCUS_TARGET_CREDITS hp target per program
     }));
 
   // Pie chart segments
@@ -76,9 +87,9 @@ export function ProfileStatsCard({
     return { ...segment, startAngle, angle };
   });
 
-  const size = 220;
+  const size = PROFILE_STATS_PIE_CHART_SIZE;
   const center = size / 2;
-  const radius = size * 0.35;
+  const radius = size * PIE_CHART_RADIUS_FACTOR;
 
   // Function to create SVG path for pie segment
   const createPath = (startAngle: number, angle: number) => {
@@ -204,7 +215,7 @@ export function ProfileStatsCard({
                             </span>
                           </div>
                           <span className="text-sm font-medium text-card-foreground">
-                            {credits} / 30 hp
+                            {credits} / {PROGRAM_FOCUS_TARGET_CREDITS} hp
                           </span>
                         </div>
                         <Progress className="h-1.5" value={percentage} />

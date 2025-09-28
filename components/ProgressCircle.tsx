@@ -2,6 +2,12 @@
 
 import type { StudentProfile } from "@/types/profile";
 
+import {
+  MASTER_PROGRAM_TARGET_CREDITS,
+  PROGRESS_CIRCLE_SIZE,
+  PROGRESS_CIRCLE_STROKE_WIDTH,
+} from "@/lib/profile-constants";
+
 interface ProgressCircleProps {
   profile: StudentProfile;
   targetCredits?: number;
@@ -9,14 +15,14 @@ interface ProgressCircleProps {
 
 export function ProgressCircle({
   profile,
-  targetCredits = 90,
+  targetCredits = MASTER_PROGRAM_TARGET_CREDITS,
 }: ProgressCircleProps) {
   const currentCredits = profile.metadata.total_credits;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate SVG circle properties
-  const size = 200;
-  const strokeWidth = 12;
+  const size = PROGRESS_CIRCLE_SIZE;
+  const strokeWidth = PROGRESS_CIRCLE_STROKE_WIDTH;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDasharray = circumference;
