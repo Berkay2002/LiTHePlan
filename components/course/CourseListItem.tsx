@@ -376,6 +376,18 @@ export function CourseListItem({
                   {course.level === "grundnivå" ? "G" : "A"}
                 </span>
               )}
+
+              {course.examinator && (
+                <span className="text-electric-blue-300 font-medium">
+                  Ex: {course.examinator.split(' ').slice(-1)[0]}
+                </span>
+              )}
+
+              {course.studierektor && (
+                <span className="text-air-superiority-blue font-medium">
+                  Dir: {course.studierektor.split(' ').slice(-1)[0]}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -483,6 +495,28 @@ export function CourseListItem({
                   </span>
                   <span className="text-battleship-gray font-bold">
                     {course.level === "grundnivå" ? "G" : "A"}
+                  </span>
+                </div>
+              )}
+
+              {course.examinator && (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-battleship-gray-400 font-medium">
+                    Examiner:
+                  </span>
+                  <span className="text-electric-blue-300 font-bold">
+                    {course.examinator}
+                  </span>
+                </div>
+              )}
+
+              {course.studierektor && (
+                <div className="flex items-center gap-1.5">
+                  <span className="text-battleship-gray-400 font-medium">
+                    Director:
+                  </span>
+                  <span className="text-air-superiority-blue font-bold">
+                    {course.studierektor}
                   </span>
                 </div>
               )}

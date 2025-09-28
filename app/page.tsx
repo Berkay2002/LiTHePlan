@@ -33,29 +33,81 @@ function HomeContent() {
   // Access profile context
   const { state } = useProfile();
 
-  // Initialize filter state
-  const [filterState, setFilterState] = useState<FilterState>({
-    level: [],
-    term: [],
-    period: [],
-    block: [],
-    pace: [],
-    campus: [],
-    examination: ["TEN", "LAB", "PROJ", "SEM", "UPG"], // Pre-select all examination types
-    programs: [],
-    huvudomraden: [],
-    search: "",
+  // Initialize filter state with localStorage persistence
+  const [filterState, setFilterState] = useState<FilterState>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("litheplan-filters");
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Ensure examination array has default values if empty
+          if (!parsed.examination || parsed.examination.length === 0) {
+            parsed.examination = ["TEN", "LAB", "PROJ", "SEM", "UPG"];
+          }
+          return parsed;
+        }
+      } catch (error) {
+        console.warn("Failed to load filter preferences:", error);
+      }
+    }
+
+    return {
+      level: [],
+      term: [],
+      period: [],
+      block: [],
+      pace: [],
+      campus: [],
+      examination: ["TEN", "LAB", "PROJ", "SEM", "UPG"], // Pre-select all examination types
+      programs: [],
+      huvudomraden: [],
+      search: "",
+    };
   });
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
 
-  // View mode state
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  // View mode state with localStorage persistence
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("litheplan-view-mode");
+        if (saved && (saved === "grid" || saved === "list")) {
+          return saved as ViewMode;
+        }
+      } catch (error) {
+        console.warn("Failed to load view mode preference:", error);
+      }
+    }
+    return "grid";
+  });
 
 
   // Sidebar state - Start open on desktop, closed on mobile/tablet
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Save filter state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("litheplan-filters", JSON.stringify(filterState));
+      } catch (error) {
+        console.warn("Failed to save filter preferences:", error);
+      }
+    }
+  }, [filterState]);
+
+  // Save view mode to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("litheplan-view-mode", viewMode);
+      } catch (error) {
+        console.warn("Failed to save view mode preference:", error);
+      }
+    }
+  }, [viewMode]);
 
   // Set initial sidebar state based on screen size
   useEffect(() => {
@@ -84,13 +136,22 @@ function HomeContent() {
   // Filter logic function
   const filteredCourses = useMemo(() => {
     return courses.filter((course) => {
-      // Search filter - search in name and course code only
+      // Enhanced search filter - search across multiple fields:
+      // - Course name and ID (original functionality)
+      // - Examiner (examinator field)
+      // - Director (studierektor field)
+      // - Programs array
       if (filterState.search.trim()) {
         const searchTerm = filterState.search.toLowerCase().trim();
         const matchesName = course.name.toLowerCase().includes(searchTerm);
         const matchesId = course.id.toLowerCase().includes(searchTerm);
+        const matchesExaminer = course.examinator?.toLowerCase().includes(searchTerm) || false;
+        const matchesDirector = course.studierektor?.toLowerCase().includes(searchTerm) || false;
+        const matchesPrograms = course.programs.some(program =>
+          program.toLowerCase().includes(searchTerm)
+        );
 
-        if (!(matchesName || matchesId)) {
+        if (!(matchesName || matchesId || matchesExaminer || matchesDirector || matchesPrograms)) {
           return false;
         }
       }

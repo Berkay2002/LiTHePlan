@@ -204,7 +204,7 @@ export function CourseCard({ course }: CourseCardProps) {
         {/* Main Course Header */}
         <div className="mb-5">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground line-clamp-2 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1">
+            <h3 className="text-lg font-semibold text-foreground line-clamp-2 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1 min-h-[3.5rem]">
               {course.name}
             </h3>
             {course.notes && (
@@ -338,19 +338,39 @@ export function CourseCard({ course }: CourseCardProps) {
               </div>
             )}
 
+            {/* Examinator and Studierektor */}
+            <div className="space-y-2">
+              {course.examinator && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium min-w-[60px]">
+                    Examiner:
+                  </span>
+                  <span className="text-xs text-foreground font-medium">{course.examinator}</span>
+                </div>
+              )}
+              {course.studierektor && (
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium min-w-[60px]">
+                    Director:
+                  </span>
+                  <span className="text-xs text-foreground font-medium">{course.studierektor}</span>
+                </div>
+              )}
+            </div>
+
             {/* Programs and Orientations */}
             {(() => {
               const allProgramsAndOrientations = [
                 ...course.programs,
                 ...(course.orientations || []),
               ];
-              const maxDisplayItems = 2;
+              const maxDisplayItems = 1;
               const displayedItems = allProgramsAndOrientations.slice(0, maxDisplayItems);
               const remainingItems = allProgramsAndOrientations.slice(maxDisplayItems);
 
               return (
                 allProgramsAndOrientations.length > 0 && (
-                  <div>
+                  <div className="mt-3 pt-3 border-t border-air-superiority-blue/15">
                     <div className="space-y-1.5">
                       {displayedItems.map((item, index) => (
                         <Tooltip key={`${item}-${index}`}>

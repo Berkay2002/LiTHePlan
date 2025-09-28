@@ -44,6 +44,12 @@ export interface Course {
   /** Huvudområde (main subject area) - comma-separated string from database */
   huvudomrade?: string | null;
 
+  /** Course examiner/instructor */
+  examinator?: string | null;
+
+  /** Study director/academic coordinator */
+  studierektor?: string | null;
+
   /** Optional notes about course restrictions or warnings */
   notes?: string | null;
 }

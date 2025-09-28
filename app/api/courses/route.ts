@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
 
     const search = searchParams.get("search");
     if (search) {
-      query = query.or(`id.ilike.%${search}%,name.ilike.%${search}%`);
+      query = query.or(`id.ilike.%${search}%,name.ilike.%${search}%,examinator.ilike.%${search}%,studierektor.ilike.%${search}%,programs.cs.{${search}}`);
     }
 
     // Apply pagination only if not loading all
