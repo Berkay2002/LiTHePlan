@@ -446,6 +446,79 @@ export function DraggableTermCard({
     );
   };
 
+  const getPeriodCredits = (period: 1 | 2) =>
+    coursesByPeriod[period]
+      .filter(
+        (course) =>
+          (Array.isArray(course.period)
+            ? course.period.includes(String(period))
+            : course.period === String(period)) || course.pace === "50%"
+      )
+      .reduce(
+        (sum, course) =>
+          sum + (course.pace === "50%" ? course.credits / 2 : course.credits),
+        0
+      );
+
+  const renderPeriodSection = (period: 1 | 2) => (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-sm font-medium text-muted-foreground">
+          {`Period ${period}`}
+        </h4>
+        <Badge className="text-xs" variant="outline">
+          {getPeriodCredits(period)} hp
+        </Badge>
+      </div>
+      {showBlockTimeline &&
+        coursesByPeriod[period].length > 0 &&
+        renderPeriodBlockTimeline(coursesByPeriod[period], period)}
+      <div className="space-y-3 min-h-[60px]">
+        {renderPeriodCourses(
+          coursesByPeriod[period],
+          period,
+          termNumber !== 8
+        )}
+      </div>
+    </div>
+  );
+
+  const renderTermContent = () => {
+    const content = (
+      <>
+        {renderPeriodSection(1)}
+        {renderPeriodSection(2)}
+      </>
+    );
+
+    if (termNumber === 8) {
+      return (
+        <div className="space-y-4 flex-1 rounded-lg transition-colors">
+          {content}
+        </div>
+      );
+    }
+
+    return (
+      <Droppable droppableId={`term-${termNumber}`} type="COURSE">
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={`space-y-4 flex-1 rounded-lg transition-colors ${
+              snapshot.isDraggingOver
+                ? "bg-primary/5 border-2 border-dashed border-primary"
+                : ""
+            }`}
+          >
+            {content}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    );
+  };
+
   return (
     <Card
       className={`h-full bg-card border-border shadow-lg flex flex-col ${className}`}
@@ -509,157 +582,8 @@ export function DraggableTermCard({
               )}
             </Droppable>
           )
-        ) : // Only make terms 7 and 9 droppable, term 8 should not be droppable
-        termNumber === 8 ? (
-          <div className="space-y-4">
-            {/* Period 1 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Period 1
-                </h4>
-                <Badge className="text-xs" variant="outline">
-                  {coursesByPeriod[1]
-                    .filter(
-                      (course) =>
-                        (Array.isArray(course.period)
-                          ? course.period.includes("1")
-                          : course.period === "1") || course.pace === "50%"
-                    )
-                    .reduce(
-                      (sum, course) =>
-                        sum +
-                        (course.pace === "50%"
-                          ? course.credits / 2
-                          : course.credits),
-                      0
-                    )}{" "}
-                  hp
-                </Badge>
-              </div>
-              {showBlockTimeline &&
-                coursesByPeriod[1].length > 0 &&
-                renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
-              <div className="space-y-3 min-h-[60px]">
-                {renderPeriodCourses(coursesByPeriod[1], 1, false)}
-              </div>
-            </div>
-
-            {/* Period 2 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Period 2
-                </h4>
-                <Badge className="text-xs" variant="outline">
-                  {coursesByPeriod[2]
-                    .filter(
-                      (course) =>
-                        (Array.isArray(course.period)
-                          ? course.period.includes("2")
-                          : course.period === "2") || course.pace === "50%"
-                    )
-                    .reduce(
-                      (sum, course) =>
-                        sum +
-                        (course.pace === "50%"
-                          ? course.credits / 2
-                          : course.credits),
-                      0
-                    )}{" "}
-                  hp
-                </Badge>
-              </div>
-              {showBlockTimeline &&
-                coursesByPeriod[2].length > 0 &&
-                renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
-              <div className="space-y-3 min-h-[60px]">
-                {renderPeriodCourses(coursesByPeriod[2], 2, false)}
-              </div>
-            </div>
-          </div>
         ) : (
-          <Droppable droppableId={`term-${termNumber}`} type="COURSE">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={`space-y-4 flex-1 rounded-lg transition-colors ${
-                  snapshot.isDraggingOver
-                    ? "bg-primary/5 border-2 border-dashed border-primary"
-                    : ""
-                }`}
-              >
-                {/* Period 1 */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Period 1
-                    </h4>
-                    <Badge className="text-xs" variant="outline">
-                      {coursesByPeriod[1]
-                        .filter(
-                          (course) =>
-                            (Array.isArray(course.period)
-                              ? course.period.includes("1")
-                              : course.period === "1") || course.pace === "50%"
-                        )
-                        .reduce(
-                          (sum, course) =>
-                            sum +
-                            (course.pace === "50%"
-                              ? course.credits / 2
-                              : course.credits),
-                          0
-                        )}{" "}
-                      hp
-                    </Badge>
-                  </div>
-                  {showBlockTimeline &&
-                    coursesByPeriod[1].length > 0 &&
-                    renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
-                  <div className="space-y-3 min-h-[60px]">
-                    {renderPeriodCourses(coursesByPeriod[1], 1)}
-                  </div>
-                </div>
-
-                {/* Period 2 */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Period 2
-                    </h4>
-                    <Badge className="text-xs" variant="outline">
-                      {coursesByPeriod[2]
-                        .filter(
-                          (course) =>
-                            (Array.isArray(course.period)
-                              ? course.period.includes("2")
-                              : course.period === "2") || course.pace === "50%"
-                        )
-                        .reduce(
-                          (sum, course) =>
-                            sum +
-                            (course.pace === "50%"
-                              ? course.credits / 2
-                              : course.credits),
-                          0
-                        )}{" "}
-                      hp
-                    </Badge>
-                  </div>
-                  {showBlockTimeline &&
-                    coursesByPeriod[2].length > 0 &&
-                    renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
-                  <div className="space-y-3 min-h-[60px]">
-                    {renderPeriodCourses(coursesByPeriod[2], 2)}
-                  </div>
-                </div>
-
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+          renderTermContent()
         )}
       </CardContent>
     </Card>
