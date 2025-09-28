@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Info, X } from "lucide-react";
 import { useState } from "react";
-import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
+import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -235,7 +235,7 @@ export function CollapsibleFilterSidebar({
               <div className="flex items-center justify-between">
                 {/* Logo for mobile */}
                 <div className="flex-shrink-0">
-                  <LiTHePlanLogo
+                  <LiThePlanLogo
                     className="h-8 w-auto"
                     height={32}
                     width={200}

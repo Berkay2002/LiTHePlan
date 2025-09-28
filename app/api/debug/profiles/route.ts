@@ -13,21 +13,19 @@ export async function GET() {
       .limit(10);
 
     if (error) {
-      console.error("Debug error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json({
-      total_profiles: data?.length || 0,
-      recent_profiles: data,
-      debug_info: {
+      totalProfiles: data?.length || 0,
+      recentProfiles: data,
+      debugInfo: {
         message:
           "This endpoint shows recent profiles for debugging. Remove in production.",
         timestamp: new Date().toISOString(),
       },
     });
-  } catch (error) {
-    console.error("Debug API error:", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

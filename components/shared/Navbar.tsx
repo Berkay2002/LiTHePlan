@@ -1,6 +1,6 @@
 import { Menu, Search, User, X } from "lucide-react";
 import Link from "next/link";
-import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
+import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -29,7 +29,7 @@ export function Navbar({
           {/* Desktop Logo - Left Column */}
           <div className="flex justify-start">
             <Link className="block" href="/">
-              <LiTHePlanLogo
+              <LiThePlanLogo
                 className="h-10 w-auto transition-opacity hover:opacity-80"
                 height={50}
                 width={300}

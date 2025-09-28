@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/BackButton";
-import { LiTHePlanLogo } from "@/components/LiTHePlanLogo";
+import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
@@ -91,7 +91,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Desktop Logo - Left Column */}
               <div className="flex justify-start">
                 <Link className="block" href="/">
-                  <LiTHePlanLogo
+                  <LiThePlanLogo
                     className="h-10 w-auto transition-opacity hover:opacity-80"
                     height={40}
                     width={240}
@@ -310,7 +310,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Desktop Logo - Left Column */}
               <div className="flex justify-start">
                 <Link className="block" href="/">
-                  <LiTHePlanLogo
+                  <LiThePlanLogo
                     className="h-10 w-auto transition-opacity hover:opacity-80"
                     height={40}
                     width={240}
@@ -394,7 +394,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Left Side - Logo */}
               <div className="flex-shrink-0 min-w-0 overflow-hidden">
                 <Link className="block" href="/">
-                  <LiTHePlanLogo
+                  <LiThePlanLogo
                     className="h-9 w-auto transition-opacity hover:opacity-80"
                     height={36}
                     width={120}
