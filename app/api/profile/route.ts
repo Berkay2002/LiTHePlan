@@ -2,8 +2,6 @@ import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
-  const startTime = Date.now();
-
   try {
     const supabase = await createClient();
 
@@ -30,18 +28,18 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("academic_profiles")
       .insert({
+        /* biome-ignore lint/style/useNamingConvention: Database columns use snake_case. */
         user_id: user.id,
         name: profile.name || "My Course Profile",
+        /* biome-ignore lint/style/useNamingConvention: Database columns use snake_case. */
         profile_data: profile,
+        /* biome-ignore lint/style/useNamingConvention: Database columns use snake_case. */
         is_public: true,
       })
       .select("id")
       .single();
 
-    console.log(`⚡ Profile save API completed in ${Date.now() - startTime}ms`);
-
     if (error) {
-      console.error("Database error:", error);
       return NextResponse.json(
         { error: "Failed to save profile" },
         { status: 500 }
@@ -49,8 +47,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ id: data.id });
-  } catch (error) {
-    console.error("API error:", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
@@ -111,8 +108,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
-  } catch (error) {
-    console.error("API error:", error);
+  } catch (_error) {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

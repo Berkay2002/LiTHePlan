@@ -4,6 +4,7 @@
 import type { User } from "@supabase/supabase-js";
 import { useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { logger } from "@/lib/logger";
 
 export function useRealtimeProfiles(
   user: User | null,
@@ -15,7 +16,7 @@ export function useRealtimeProfiles(
     // Only run on client-side and when user is authenticated
     if (typeof window === "undefined" || !user) return;
 
-    console.log("🔄 Setting up Realtime subscription for user:", user.id);
+    logger.info("🔄 Setting up Realtime subscription for user:", user.id);
 
     const supabase = createClient();
 
@@ -31,7 +32,7 @@ export function useRealtimeProfiles(
           filter: `user_id=eq.${user.id}`, // Only this user's profiles
         },
         (payload) => {
-          console.log("📡 Realtime event received:", payload);
+          logger.info("📡 Realtime event received:", payload);
 
           switch (payload.eventType) {
             case "INSERT":
@@ -47,12 +48,12 @@ export function useRealtimeProfiles(
         }
       )
       .subscribe((status) => {
-        console.log("🔗 Realtime subscription status:", status);
+        logger.info("🔗 Realtime subscription status:", status);
       });
 
     // Cleanup subscription on unmount
     return () => {
-      console.log("🔌 Cleaning up Realtime subscription");
+      logger.info("🔌 Cleaning up Realtime subscription");
       supabase.removeChannel(channel);
     };
   }, [user, onProfileUpdate, onProfileInsert, onProfileDelete]);

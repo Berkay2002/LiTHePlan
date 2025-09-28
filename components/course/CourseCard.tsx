@@ -33,6 +33,7 @@ import {
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import { TermSelectionModal } from "./TermSelectionModal";
+import { logger } from "@/lib/logger";
 
 interface CourseCardProps {
   course: Course;
@@ -75,8 +76,8 @@ export function CourseCard({ course }: CourseCardProps) {
 
   // Handle adding course - always check conflicts first, then handle term selection
   const handleAddCourse = () => {
-    console.log("🎯 handleAddCourse clicked for course:", course.id);
-    console.log(
+    logger.info("🎯 handleAddCourse clicked for course:", course.id);
+    logger.info(
       "🔄 isMultiTerm:",
       isMultiTerm,
       "availableTerms:",
@@ -90,7 +91,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
     if (conflicts.length > 0) {
       // Show conflict modal first
-      console.log("⚠️ Conflicts detected, showing conflict modal first");
+      logger.info("⚠️ Conflicts detected, showing conflict modal first");
       setConflictingCourses(conflicts);
       setPendingTerm(null); // Will be set after conflict resolution
       setShowConflictModal(true);
@@ -99,7 +100,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
     // No conflicts, proceed with term selection or direct add
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log("📋 No conflicts, showing term selection modal");
+      logger.info("📋 No conflicts, showing term selection modal");
       setShowTermModal(true);
     } else {
       // Single term course - add directly
@@ -107,7 +108,7 @@ export function CourseCard({ course }: CourseCardProps) {
         ? course.term[0]
         : course.term;
       const parsedTerm = Number.parseInt(termToAdd, 10);
-      console.log(
+      logger.info(
         "➕ No conflicts, adding directly - termToAdd:",
         termToAdd,
         "parsedTerm:",
@@ -118,13 +119,13 @@ export function CourseCard({ course }: CourseCardProps) {
         Number.isInteger(parsedTerm) &&
         MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
       ) {
-        console.log("✅ Adding course with:", {
+        logger.info("✅ Adding course with:", {
           course: course.id,
           term: parsedTerm,
         });
         addCourse(course, parsedTerm as MasterProgramTerm);
       } else {
-        console.error("❌ Invalid term for course:", {
+        logger.error("❌ Invalid term for course:", {
           courseId: course.id,
           termToAdd,
           parsedTerm,
@@ -138,7 +139,7 @@ export function CourseCard({ course }: CourseCardProps) {
     selectedCourse: Course,
     selectedTerm: MasterProgramTerm
   ) => {
-    console.log(
+    logger.info(
       "🔄 Term selected:",
       selectedTerm,
       "for course:",
@@ -147,24 +148,24 @@ export function CourseCard({ course }: CourseCardProps) {
     setShowTermModal(false);
 
     // Add course directly since conflicts were already checked
-    console.log("✅ Adding course with selected term (conflicts pre-checked)");
+    logger.info("✅ Adding course with selected term (conflicts pre-checked)");
     await addCourse(selectedCourse, selectedTerm);
   };
 
   // Handle conflict resolution - user chooses new course
   const handleChooseNewCourse = async (newCourse: Course) => {
-    console.log("✅ User chose new course:", newCourse.id);
+    logger.info("✅ User chose new course:", newCourse.id);
     setShowConflictModal(false);
 
     // Remove conflicting courses first
     for (const { conflictingCourseId } of conflictingCourses) {
-      console.log("🗑️ Removing conflicting course:", conflictingCourseId);
+      logger.info("🗑️ Removing conflicting course:", conflictingCourseId);
       removeCourse(conflictingCourseId);
     }
 
     // Now handle term selection for the new course
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log(
+      logger.info(
         "📋 Showing term selection for new course after conflict resolution"
       );
       setShowTermModal(true);
@@ -173,7 +174,7 @@ export function CourseCard({ course }: CourseCardProps) {
         ? newCourse.term[0]
         : newCourse.term;
       const parsedTerm = Number.parseInt(termToAdd, 10) as MasterProgramTerm;
-      console.log("➕ Adding new course with default term:", parsedTerm);
+      logger.info("➕ Adding new course with default term:", parsedTerm);
       await addCourse(newCourse, parsedTerm);
     }
 
@@ -184,7 +185,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
   // Handle conflict resolution - user chooses existing course
   const handleChooseExistingCourse = (existingCourse: Course) => {
-    console.log("📚 User chose to keep existing course:", existingCourse.id);
+    logger.info("📚 User chose to keep existing course:", existingCourse.id);
     setShowConflictModal(false);
     setConflictingCourses([]);
     setPendingTerm(null);
@@ -193,7 +194,7 @@ export function CourseCard({ course }: CourseCardProps) {
 
   // Handle conflict resolution - user cancels
   const handleCancelConflictResolution = () => {
-    console.log("❌ User cancelled conflict resolution");
+    logger.info("❌ User cancelled conflict resolution");
     setShowConflictModal(false);
     setConflictingCourses([]);
     setPendingTerm(null);
@@ -447,17 +448,17 @@ export function CourseCard({ course }: CourseCardProps) {
                     : "bg-picton-blue hover:bg-picton-blue-600 text-white"
               }`}
               onClick={() => {
-                console.log("🖱️ Button clicked for course:", course.id, {
+                logger.info("🖱️ Button clicked for course:", course.id, {
                   isPinned,
                   isHovered,
                 });
                 if (isPinned && isHovered) {
-                  console.log("🗑️ Removing course");
+                  logger.info("🗑️ Removing course");
                   removeCourse(course.id);
                 } else if (isPinned) {
-                  console.log("⚠️ No action taken - button click ignored");
+                  logger.info("⚠️ No action taken - button click ignored");
                 } else {
-                  console.log("➕ Adding course via handleAddCourse");
+                  logger.info("➕ Adding course via handleAddCourse");
                   handleAddCourse();
                 }
               }}

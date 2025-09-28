@@ -20,9 +20,10 @@ export function createEmptyTerms(): StudentProfileTerms {
 }
 
 /**
- * Student profile interface representing a user's course selection plan
+ * Student profile type representing a user's course selection plan
  */
-export interface StudentProfile {
+/* biome-ignore lint/style/useNamingConvention: Supabase profile schema uses snake_case fields. */
+export type StudentProfile = {
   /** Unique profile identifier */
   id: string;
 
@@ -30,9 +31,11 @@ export interface StudentProfile {
   name: string;
 
   /** Profile creation timestamp */
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   created_at: Date;
 
   /** Profile last update timestamp */
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   updated_at: Date;
 
   /** Courses organized by academic term */
@@ -40,25 +43,32 @@ export interface StudentProfile {
 
   /** Profile metadata and validation info */
   metadata: {
+    // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
     total_credits: number;
+    // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
     advanced_credits: number;
+    // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
     is_valid: boolean;
   };
-}
+};
 
 /**
  * Profile state interface for managing current profile state
  */
-export interface ProfileState {
+/* biome-ignore lint/style/useNamingConvention: Supabase profile schema uses snake_case fields. */
+export type ProfileState = {
   /** Currently active profile or null if none */
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   current_profile: StudentProfile | null;
 
   /** Whether profile is in editing mode */
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   is_editing: boolean;
 
   /** Whether there are unsaved changes */
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   unsaved_changes: boolean;
-}
+};
 
 /**
  * Pinboard operation types for type safety
@@ -72,15 +82,19 @@ export type PinboardOperation =
   | { type: "SAVE_PROFILE" };
 
 /**
- * Profile validation result interface
+ * Profile validation result type
  */
-export interface ProfileValidationResult {
+/* biome-ignore lint/style/useNamingConvention: Supabase profile schema uses snake_case fields. */
+export type ProfileValidationResult = {
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   is_valid: boolean;
   errors: string[];
   warnings: string[];
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   total_credits: number;
+  // biome-ignore lint/style/useNamingConvention: Supabase schema uses snake_case.
   advanced_credits: number;
-}
+};
 
 /**
  * Type guard to validate if an object conforms to the StudentProfile interface
@@ -140,15 +154,15 @@ export function validateProfile(
   const courseIds = new Set<string>();
 
   // Validate each term
-  MASTER_PROGRAM_TERMS.forEach((term) => {
+  for (const term of MASTER_PROGRAM_TERMS) {
     const termCourses = profile.terms[term];
 
     if (!Array.isArray(termCourses)) {
       errors.push(`Term ${term} courses must be an array`);
-      return;
+      continue;
     }
 
-    termCourses.forEach((course) => {
+    for (const course of termCourses) {
       // Check for duplicate courses
       if (courseIds.has(course.id)) {
         errors.push(`Duplicate course found: ${course.id} (${course.name})`);
@@ -172,8 +186,8 @@ export function validateProfile(
       if (course.level === "avancerad nivå") {
         advancedCredits += course.credits;
       }
-    });
-  });
+    }
+  }
 
   // Check advanced credits requirement (60hp minimum)
   if (advancedCredits < MASTER_PROGRAM_MIN_ADVANCED_CREDITS) {

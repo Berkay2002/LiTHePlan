@@ -20,6 +20,7 @@ import {
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { ProfileSidebarSkeleton } from "@/components/profile/ProfileSidebarSkeleton";
 import { useCourses } from "@/hooks/useCourses";
+import { logger } from "@/lib/logger";
 
 const COURSES_PER_PAGE = 12;
 
@@ -47,7 +48,7 @@ function HomeContent() {
           return parsed;
         }
       } catch (error) {
-        console.warn("Failed to load filter preferences:", error);
+        logger.warn("Failed to load filter preferences:", error);
       }
     }
 
@@ -77,7 +78,7 @@ function HomeContent() {
           return saved as ViewMode;
         }
       } catch (error) {
-        console.warn("Failed to load view mode preference:", error);
+        logger.warn("Failed to load view mode preference:", error);
       }
     }
     return "grid";
@@ -92,7 +93,7 @@ function HomeContent() {
       try {
         localStorage.setItem("litheplan-filters", JSON.stringify(filterState));
       } catch (error) {
-        console.warn("Failed to save filter preferences:", error);
+        logger.warn("Failed to save filter preferences:", error);
       }
     }
   }, [filterState]);
@@ -103,7 +104,7 @@ function HomeContent() {
       try {
         localStorage.setItem("litheplan-view-mode", viewMode);
       } catch (error) {
-        console.warn("Failed to save view mode preference:", error);
+        logger.warn("Failed to save view mode preference:", error);
       }
     }
   }, [viewMode]);

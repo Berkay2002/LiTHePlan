@@ -9,7 +9,10 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { SimpleTermCard } from "@/components/SimpleTermCard";
 import { Card, CardContent } from "@/components/ui/card";
+import { logger } from "@/lib/logger";
 import type { StudentProfile } from "@/types/profile";
+
+const NOT_FOUND_STATUS = 404;
 
 function ProfilePageContent() {
   const params = useParams();
@@ -29,7 +32,7 @@ function ProfilePageContent() {
         const response = await fetch(`/api/profile/${profileId}`);
 
         if (!response.ok) {
-          if (response.status === 404) {
+          if (response.status === NOT_FOUND_STATUS) {
             setError("Profile not found");
           } else {
             setError("Failed to load profile");
@@ -42,9 +45,11 @@ function ProfilePageContent() {
         // Convert date strings back to Date objects if needed
         const loadedProfile: StudentProfile = {
           ...profileData,
+          // biome-ignore lint/style/useNamingConvention: Persisted schema uses snake_case.
           created_at: profileData.created_at
             ? new Date(profileData.created_at)
             : new Date(),
+          // biome-ignore lint/style/useNamingConvention: Persisted schema uses snake_case.
           updated_at: profileData.updated_at
             ? new Date(profileData.updated_at)
             : new Date(),
@@ -54,7 +59,7 @@ function ProfilePageContent() {
         setDatabaseId(profileId); // Store the database UUID for sharing
       } catch (err) {
         setError("Failed to load profile");
-        console.error("Error loading profile:", err);
+        logger.error("Error loading profile:", err);
       } finally {
         setLoading(false);
       }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { Course } from "@/types/course";
+import { logger } from "@/lib/logger";
 
 export interface UseCoursesResult {
   courses: Course[];
@@ -66,7 +67,7 @@ export function useCourses(
     if (enableCache && coursesCache.has(cacheKey)) {
       const cached = coursesCache.get(cacheKey)!;
       if (Date.now() - cached.timestamp < CACHE_DURATION) {
-        console.log("📦 Using cached courses data");
+        logger.info("📦 Using cached courses data");
         setCourses(cached.data);
         setPagination(cached.pagination);
         setLoading(false);
@@ -106,13 +107,13 @@ export function useCourses(
           pagination: data.pagination,
           timestamp: Date.now(),
         });
-        console.log(`💾 Cached ${data.courses.length} courses`);
+        logger.info(`💾 Cached ${data.courses.length} courses`);
       }
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Unknown error occurred";
       setError(errorMessage);
-      console.error("Error fetching courses:", err);
+      logger.error("Error fetching courses:", err);
     } finally {
       setLoading(false);
     }

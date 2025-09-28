@@ -13,6 +13,7 @@ import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import { logger } from "@/lib/logger";
 
 type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
 
@@ -33,7 +34,7 @@ export function saveProfileToStorage(profile: StudentProfile): void {
     };
     localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileData));
   } catch (error) {
-    console.error("Failed to save profile to localStorage:", error);
+    logger.error("Failed to save profile to localStorage:", error);
   }
 }
 
@@ -56,7 +57,7 @@ export function loadProfileFromStorage(): StudentProfile | null {
 
     return profile;
   } catch (error) {
-    console.error("Failed to load profile from localStorage:", error);
+    logger.error("Failed to load profile from localStorage:", error);
     return null;
   }
 }
@@ -68,7 +69,7 @@ export function clearProfileFromStorage(): void {
   try {
     localStorage.removeItem(PROFILE_STORAGE_KEY);
   } catch (error) {
-    console.error("Failed to clear profile from localStorage:", error);
+    logger.error("Failed to clear profile from localStorage:", error);
   }
 }
 

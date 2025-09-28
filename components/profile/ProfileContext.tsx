@@ -25,6 +25,7 @@ import {
 import { type MasterProgramTerm } from "@/lib/profile-constants";
 import type { ProfileState, StudentProfile } from "@/types/profile";
 import { createClient } from "@/utils/supabase/client";
+import { logger } from "@/lib/logger";
 
 type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
 
@@ -222,7 +223,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     if (user) {
       // Save to Supabase when authenticated - use Supabase client directly
       try {
-        console.log("🔐 Attempting to save profile for user:", {
+        logger.info("🔐 Attempting to save profile for user:", {
           userId: user.id,
           userEmail: user.email,
           profileName: profile.name,
@@ -231,7 +232,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
         const supabase = createClient();
 
         // First, check if user already has a profile
-        console.log("🔍 Checking for existing profile...");
+        logger.info("🔍 Checking for existing profile...");
         const { data: existing, error: selectError } = await supabase
           .from("academic_profiles")
           .select("id")
@@ -239,12 +240,12 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
           .single();
 
         if (selectError && selectError.code !== "PGRST116") {
-          console.error("❌ Error checking existing profile:", selectError);
+          logger.error("❌ Error checking existing profile:", selectError);
           throw selectError;
         }
 
         if (existing) {
-          console.log("📝 Updating existing profile:", existing.id);
+          logger.info("📝 Updating existing profile:", existing.id);
           // Update existing profile
           const { error } = await supabase
             .from("academic_profiles")
@@ -255,9 +256,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
             .eq("id", existing.id);
 
           if (error) throw error;
-          console.log("💾 Profile updated in cloud");
+          logger.info("💾 Profile updated in cloud");
         } else {
-          console.log("➕ Creating new profile...");
+          logger.info("➕ Creating new profile...");
           // Create new profile
           const { data: newProfile, error } = await supabase
             .from("academic_profiles")
@@ -271,10 +272,10 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
             .single();
 
           if (error) throw error;
-          console.log("💾 New profile saved to cloud:", newProfile);
+          logger.info("💾 New profile saved to cloud:", newProfile);
         }
       } catch (error) {
-        console.error(
+        logger.error(
           "❌ Failed to save to cloud, falling back to localStorage:",
           error
         );
@@ -298,17 +299,17 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
           .order("created_at", { ascending: false });
 
         if (error) {
-          console.error("❌ Supabase load error:", error);
+          logger.error("❌ Supabase load error:", error);
           throw error;
         }
 
         if (data && data.length > 0) {
           const latestProfile = data[0].profile_data; // Get most recent profile
-          console.log("☁️ Loaded profile from cloud");
+          logger.info("☁️ Loaded profile from cloud");
           return latestProfile;
         }
       } catch (error) {
-        console.error(
+        logger.error(
           "❌ Failed to load from cloud, falling back to localStorage:",
           error
         );
@@ -338,17 +339,17 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     user,
     // onProfileUpdate
     (updatedProfile) => {
-      console.log("🔄 Profile updated via Realtime:", updatedProfile);
+      logger.info("🔄 Profile updated via Realtime:", updatedProfile);
       dispatch({ type: "LOAD_PROFILE", profile: updatedProfile.profile_data });
     },
     // onProfileInsert
     (newProfile) => {
-      console.log("➕ New profile via Realtime:", newProfile);
+      logger.info("➕ New profile via Realtime:", newProfile);
       dispatch({ type: "LOAD_PROFILE", profile: newProfile.profile_data });
     },
     // onProfileDelete
     (profileId) => {
-      console.log("🗑️ Profile deleted via Realtime:", profileId);
+      logger.info("🗑️ Profile deleted via Realtime:", profileId);
       // Could clear the current profile if it matches
     }
   );

@@ -14,6 +14,7 @@ import {
   useProfile,
 } from "@/components/profile/ProfileContext";
 import {
+import { logger } from "@/lib/logger";
   IMMUTABLE_MASTER_PROGRAM_TERMS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
@@ -100,7 +101,7 @@ function ProfileEditPageContent() {
       try {
         await moveCourse(courseId, sourceTerm, destTerm);
       } catch (error) {
-        console.error("Failed to move course:", error);
+        logger.error("Failed to move course:", error);
         // You could show a toast notification here
       }
     }
