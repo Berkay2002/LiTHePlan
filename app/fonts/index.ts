@@ -1,6 +1,6 @@
 import localFont from "next/font/local";
 
-// Self-host Geist fonts so builds do not rely on Google Fonts downloads.
+// Self-host Geist fonts so builds do not rely on Google Fonts downloads (sourced from https://geist.vercel.app/).
 export const geistSans = localFont({
   src: "./GeistVF.woff2",
   variable: "--font-geist-sans",
