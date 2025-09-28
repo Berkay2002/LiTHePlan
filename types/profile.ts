@@ -11,6 +11,14 @@ import {
 
 export type StudentProfileTerms = Record<MasterProgramTerm, Course[]>;
 
+export function createEmptyTerms(): StudentProfileTerms {
+  const terms: Partial<StudentProfileTerms> = {};
+  for (const term of MASTER_PROGRAM_TERMS) {
+    terms[term] = [];
+  }
+  return terms as StudentProfileTerms;
+}
+
 /**
  * Student profile interface representing a user's course selection plan
  */
@@ -102,9 +110,7 @@ export function isValidStudentProfile(
  * Create a new empty student profile
  */
 export function createEmptyProfile(name = "My Master's Plan"): StudentProfile {
-  const emptyTerms = Object.fromEntries(
-    MASTER_PROGRAM_TERMS.map((term) => [term, [] as Course[]])
-  ) as StudentProfileTerms;
+  const emptyTerms = createEmptyTerms();
 
   return {
     id: crypto.randomUUID(),

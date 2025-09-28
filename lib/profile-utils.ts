@@ -2,6 +2,7 @@
 
 import {
   createEmptyProfile,
+  createEmptyTerms,
   type StudentProfile,
   validateProfile,
 } from "@/types/profile";
@@ -262,9 +263,7 @@ export function clearTermInProfile(
  * Clear all courses from the profile
  */
 export function clearProfile(profile: StudentProfile): StudentProfile {
-  const emptyTerms = Object.fromEntries(
-    MASTER_PROGRAM_TERMS.map((term) => [term, []])
-  ) as StudentProfile["terms"];
+  const emptyTerms = createEmptyTerms();
 
   const updatedProfile: StudentProfile = {
     ...profile,
