@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "ultracite check",
     "lint:fix": "ultracite fix",
-    "format": "ultracite format",
+    "format": "ultracite fix",
     "check": "ultracite check"
   },
   "dependencies": {
