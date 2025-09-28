@@ -3,6 +3,7 @@
 
 import type { User } from "@supabase/supabase-js";
 import { Check, Share2, User as UserIcon } from "lucide-react";
+import type { ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { StudentProfile } from "@/types/profile";
@@ -240,7 +241,7 @@ const getShareButtonContent = ({
 }: {
   state: ShareButtonVisualState;
   hideTextOnMobile: boolean;
-}): JSX.Element => {
+}): ReactElement => {
   const iconSpacingClass = `${hideTextOnMobile ? "" : "mr-2"} ${
     hideTextOnMobile ? "sm:mr-2" : ""
   }`;
