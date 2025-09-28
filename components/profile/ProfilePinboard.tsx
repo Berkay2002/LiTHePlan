@@ -115,8 +115,8 @@ export function ProfilePinboard({
             {profile.name}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Created {profile.created_at.toLocaleDateString()} • Last updated{" "}
-            {profile.updated_at.toLocaleDateString()}
+            Created {profile.createdAt.toLocaleDateString()} • Last updated{" "}
+            {profile.updatedAt.toLocaleDateString()}
           </p>
         </div>
         {summary.totalCourses > 0 && !readOnly && (

@@ -9,7 +9,11 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { SimpleTermCard } from "@/components/SimpleTermCard";
 import { Card, CardContent } from "@/components/ui/card";
+import { logger } from "@/lib/logger";
+import { normalizeProfileData } from "@/lib/profile-utils";
 import type { StudentProfile } from "@/types/profile";
+
+const NOT_FOUND_STATUS = 404;
 
 function ProfilePageContent() {
   const params = useParams();
@@ -29,7 +33,7 @@ function ProfilePageContent() {
         const response = await fetch(`/api/profile/${profileId}`);
 
         if (!response.ok) {
-          if (response.status === 404) {
+          if (response.status === NOT_FOUND_STATUS) {
             setError("Profile not found");
           } else {
             setError("Failed to load profile");
@@ -38,23 +42,17 @@ function ProfilePageContent() {
         }
 
         const profileData = await response.json();
-
-        // Convert date strings back to Date objects if needed
-        const loadedProfile: StudentProfile = {
-          ...profileData,
-          created_at: profileData.created_at
-            ? new Date(profileData.created_at)
-            : new Date(),
-          updated_at: profileData.updated_at
-            ? new Date(profileData.updated_at)
-            : new Date(),
-        };
+        const loadedProfile = normalizeProfileData(profileData);
+        if (!loadedProfile) {
+          setError("Profile data is invalid");
+          return;
+        }
 
         setProfile(loadedProfile);
         setDatabaseId(profileId); // Store the database UUID for sharing
       } catch (err) {
         setError("Failed to load profile");
-        console.error("Error loading profile:", err);
+        logger.error("Error loading profile:", err);
       } finally {
         setLoading(false);
       }

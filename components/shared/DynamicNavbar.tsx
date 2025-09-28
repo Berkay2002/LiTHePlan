@@ -345,7 +345,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </Button>
                 )}
                 <ShareButtons
-                  profile={profileState?.current_profile || undefined}
+                  profile={profileState?.currentProfile || undefined}
                   profileId={props.profileId}
                 />
 
@@ -427,7 +427,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 )}
                 <ShareButtons
                   hideTextOnMobile={true}
-                  profile={profileState?.current_profile || undefined}
+                  profile={profileState?.currentProfile || undefined}
                   profileId={props.profileId}
                 />
 

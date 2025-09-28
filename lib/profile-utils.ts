@@ -4,6 +4,7 @@ import {
   createEmptyProfile,
   createEmptyTerms,
   type StudentProfile,
+  type StudentProfileTerms,
   validateProfile,
 } from "@/types/profile";
 
@@ -13,6 +14,7 @@ import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import { logger } from "@/lib/logger";
 
 type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
 
@@ -21,6 +23,60 @@ export { createEmptyProfile };
 
 const PROFILE_STORAGE_KEY = "student_profile";
 
+export function normalizeProfileData(raw: unknown): StudentProfile | null {
+  if (!raw || typeof raw !== "object") {
+    return null;
+  }
+
+  const record = raw as Record<string, unknown>;
+  if (typeof record.id !== "string" || typeof record.name !== "string") {
+    return null;
+  }
+
+  const terms = record.terms as StudentProfileTerms | undefined;
+  if (!terms) {
+    return null;
+  }
+
+  const metadataRecord = (record.metadata as Record<string, unknown>) ?? {};
+  const createdAtValue = record.createdAt ?? record.created_at;
+  const updatedAtValue = record.updatedAt ?? record.updated_at;
+
+  const normalized: StudentProfile = {
+    id: record.id,
+    name: record.name,
+    terms,
+    createdAt: new Date(
+      typeof createdAtValue === "string" ? createdAtValue : Date.now()
+    ),
+    updatedAt: new Date(
+      typeof updatedAtValue === "string" ? updatedAtValue : Date.now()
+    ),
+    metadata: {
+      totalCredits:
+        typeof metadataRecord.totalCredits === "number"
+          ? metadataRecord.totalCredits
+          : typeof metadataRecord.total_credits === "number"
+            ? metadataRecord.total_credits
+            : 0,
+      advancedCredits:
+        typeof metadataRecord.advancedCredits === "number"
+          ? metadataRecord.advancedCredits
+          : typeof metadataRecord.advanced_credits === "number"
+            ? metadataRecord.advanced_credits
+            : 0,
+      isValid:
+        typeof metadataRecord.isValid === "boolean"
+          ? metadataRecord.isValid
+          : typeof metadataRecord.is_valid === "boolean"
+            ? metadataRecord.is_valid
+            : true,
+    },
+  };
+
+  return normalized;
+}
+
 /**
  * Save profile to localStorage
  */
@@ -28,12 +84,12 @@ export function saveProfileToStorage(profile: StudentProfile): void {
   try {
     const profileData = {
       ...profile,
-      created_at: profile.created_at.toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: profile.createdAt.toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileData));
   } catch (error) {
-    console.error("Failed to save profile to localStorage:", error);
+    logger.error("Failed to save profile to localStorage:", error);
   }
 }
 
@@ -48,15 +104,9 @@ export function loadProfileFromStorage(): StudentProfile | null {
     }
 
     const parsed = JSON.parse(profileData);
-    const profile: StudentProfile = {
-      ...parsed,
-      created_at: new Date(parsed.created_at),
-      updated_at: new Date(parsed.updated_at),
-    };
-
-    return profile;
+    return normalizeProfileData(parsed);
   } catch (error) {
-    console.error("Failed to load profile from localStorage:", error);
+    logger.error("Failed to load profile from localStorage:", error);
     return null;
   }
 }
@@ -68,7 +118,7 @@ export function clearProfileFromStorage(): void {
   try {
     localStorage.removeItem(PROFILE_STORAGE_KEY);
   } catch (error) {
-    console.error("Failed to clear profile from localStorage:", error);
+    logger.error("Failed to clear profile from localStorage:", error);
   }
 }
 
@@ -134,7 +184,7 @@ export function addCourseToProfile(
 
   const updatedProfile: StudentProfile = {
     ...profile,
-    updated_at: new Date(),
+    updatedAt: new Date(),
     terms: {
       ...profile.terms,
       [term]: [...profile.terms[term], courseForProfile],
@@ -144,9 +194,9 @@ export function addCourseToProfile(
   // Update metadata
   const validation = validateProfile(updatedProfile);
   updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
+    totalCredits: validation.totalCredits,
+    advancedCredits: validation.advancedCredits,
+    isValid: validation.isValid,
   };
 
   return updatedProfile;
@@ -166,7 +216,7 @@ export function removeCourseFromProfile(
 
   const updatedProfile: StudentProfile = {
     ...profile,
-    updated_at: new Date(),
+    updatedAt: new Date(),
     terms: {
       ...profile.terms,
       [term]: profile.terms[term].filter((course) => course.id !== courseId),
@@ -176,9 +226,9 @@ export function removeCourseFromProfile(
   // Update metadata
   const validation = validateProfile(updatedProfile);
   updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
+    totalCredits: validation.totalCredits,
+    advancedCredits: validation.advancedCredits,
+    isValid: validation.isValid,
   };
 
   return updatedProfile;
@@ -213,7 +263,7 @@ export function moveCourseInProfile(
 
   const updatedProfile: StudentProfile = {
     ...profile,
-    updated_at: new Date(),
+    updatedAt: new Date(),
     terms: {
       ...profile.terms,
       [fromTerm]: profile.terms[fromTerm].filter((c) => c.id !== courseId),
@@ -224,9 +274,9 @@ export function moveCourseInProfile(
   // Update metadata
   const validation = validateProfile(updatedProfile);
   updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
+    totalCredits: validation.totalCredits,
+    advancedCredits: validation.advancedCredits,
+    isValid: validation.isValid,
   };
 
   return updatedProfile;
@@ -241,7 +291,7 @@ export function clearTermInProfile(
 ): StudentProfile {
   const updatedProfile: StudentProfile = {
     ...profile,
-    updated_at: new Date(),
+    updatedAt: new Date(),
     terms: {
       ...profile.terms,
       [term]: [],
@@ -251,9 +301,9 @@ export function clearTermInProfile(
   // Update metadata
   const validation = validateProfile(updatedProfile);
   updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
+    totalCredits: validation.totalCredits,
+    advancedCredits: validation.advancedCredits,
+    isValid: validation.isValid,
   };
 
   return updatedProfile;
@@ -267,14 +317,14 @@ export function clearProfile(profile: StudentProfile): StudentProfile {
 
   const updatedProfile: StudentProfile = {
     ...profile,
-    updated_at: new Date(),
+    updatedAt: new Date(),
     terms: {
       ...emptyTerms,
     },
     metadata: {
-      total_credits: 0,
-      advanced_credits: 0,
-      is_valid: true,
+      totalCredits: 0,
+      advancedCredits: 0,
+      isValid: true,
     },
   };
 
@@ -292,11 +342,11 @@ export function getProfileSummary(profile: StudentProfile) {
       (sum, term) => sum + profile.terms[term].length,
       0
     ),
-    totalCredits: validation.total_credits,
-    advancedCredits: validation.advanced_credits,
-    isComplete: validation.total_credits === MASTER_PROGRAM_TARGET_CREDITS,
+    totalCredits: validation.totalCredits,
+    advancedCredits: validation.advancedCredits,
+    isComplete: validation.totalCredits === MASTER_PROGRAM_TARGET_CREDITS,
     meetsAdvancedRequirement:
-      validation.advanced_credits >= MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
+      validation.advancedCredits >= MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
     errors: validation.errors,
     warnings: validation.warnings,
   };

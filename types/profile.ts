@@ -1,13 +1,12 @@
 // types/profile.ts
 
-import type { Course } from "./course";
-
 import {
   MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
   MASTER_PROGRAM_TARGET_CREDITS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import type { Course } from "./course";
 
 export type StudentProfileTerms = Record<MasterProgramTerm, Course[]>;
 
@@ -20,9 +19,9 @@ export function createEmptyTerms(): StudentProfileTerms {
 }
 
 /**
- * Student profile interface representing a user's course selection plan
+ * Student profile type representing a user's course selection plan
  */
-export interface StudentProfile {
+export type StudentProfile = {
   /** Unique profile identifier */
   id: string;
 
@@ -30,35 +29,35 @@ export interface StudentProfile {
   name: string;
 
   /** Profile creation timestamp */
-  created_at: Date;
+  createdAt: Date;
 
   /** Profile last update timestamp */
-  updated_at: Date;
+  updatedAt: Date;
 
   /** Courses organized by academic term */
   terms: StudentProfileTerms;
 
   /** Profile metadata and validation info */
   metadata: {
-    total_credits: number;
-    advanced_credits: number;
-    is_valid: boolean;
+    totalCredits: number;
+    advancedCredits: number;
+    isValid: boolean;
   };
-}
+};
 
 /**
  * Profile state interface for managing current profile state
  */
-export interface ProfileState {
+export type ProfileState = {
   /** Currently active profile or null if none */
-  current_profile: StudentProfile | null;
+  currentProfile: StudentProfile | null;
 
   /** Whether profile is in editing mode */
-  is_editing: boolean;
+  isEditing: boolean;
 
   /** Whether there are unsaved changes */
-  unsaved_changes: boolean;
-}
+  unsavedChanges: boolean;
+};
 
 /**
  * Pinboard operation types for type safety
@@ -72,15 +71,15 @@ export type PinboardOperation =
   | { type: "SAVE_PROFILE" };
 
 /**
- * Profile validation result interface
+ * Profile validation result type
  */
-export interface ProfileValidationResult {
-  is_valid: boolean;
+export type ProfileValidationResult = {
+  isValid: boolean;
   errors: string[];
   warnings: string[];
-  total_credits: number;
-  advanced_credits: number;
-}
+  totalCredits: number;
+  advancedCredits: number;
+};
 
 /**
  * Type guard to validate if an object conforms to the StudentProfile interface
@@ -97,8 +96,8 @@ export function isValidStudentProfile(
   return (
     typeof profileObj.id === "string" &&
     typeof profileObj.name === "string" &&
-    profileObj.created_at instanceof Date &&
-    profileObj.updated_at instanceof Date &&
+    profileObj.createdAt instanceof Date &&
+    profileObj.updatedAt instanceof Date &&
     typeof profileObj.terms === "object" &&
     profileObj.terms !== null &&
     typeof profileObj.metadata === "object" &&
@@ -115,14 +114,67 @@ export function createEmptyProfile(name = "My Master's Plan"): StudentProfile {
   return {
     id: crypto.randomUUID(),
     name,
-    created_at: new Date(),
-    updated_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
     terms: emptyTerms,
     metadata: {
-      total_credits: 0,
-      advanced_credits: 0,
-      is_valid: true,
+      totalCredits: 0,
+      advancedCredits: 0,
+      isValid: true,
     },
+  };
+}
+
+type TermValidationContext = {
+  courseIds: Set<string>;
+  errors: string[];
+};
+
+type TermValidationResult = {
+  advancedCredits: number;
+  totalCredits: number;
+};
+
+function validateTermCourses(
+  term: MasterProgramTerm,
+  courses: StudentProfileTerms[MasterProgramTerm] | undefined,
+  context: TermValidationContext
+): TermValidationResult {
+  if (!Array.isArray(courses)) {
+    context.errors.push(`Term ${term} courses must be an array`);
+    return { advancedCredits: 0, totalCredits: 0 };
+  }
+
+  let termAdvancedCredits = 0;
+  let termTotalCredits = 0;
+
+  for (const course of courses) {
+    if (context.courseIds.has(course.id)) {
+      context.errors.push(
+        `Duplicate course found: ${course.id} (${course.name})`
+      );
+    } else {
+      context.courseIds.add(course.id);
+    }
+
+    const courseTerms = Array.isArray(course.term)
+      ? course.term
+      : [course.term];
+    if (!courseTerms.includes(term.toString())) {
+      context.errors.push(
+        `Course ${course.id} term (${courseTerms.join(", ")}) doesn't include profile term (${term})`
+      );
+    }
+
+    termTotalCredits += course.credits;
+    if (course.level === "avancerad nivå") {
+      termAdvancedCredits += course.credits;
+    }
+  }
+
+  return {
+    advancedCredits: termAdvancedCredits,
+    totalCredits: termTotalCredits,
   };
 }
 
@@ -135,54 +187,26 @@ export function validateProfile(
   const errors: string[] = [];
   const warnings: string[] = [];
 
+  const courseIds = new Set<string>();
   let totalCredits = 0;
   let advancedCredits = 0;
-  const courseIds = new Set<string>();
 
-  // Validate each term
-  MASTER_PROGRAM_TERMS.forEach((term) => {
-    const termCourses = profile.terms[term];
+  for (const term of MASTER_PROGRAM_TERMS) {
+    const { advancedCredits: termAdvanced, totalCredits: termTotal } =
+      validateTermCourses(term, profile.terms[term], {
+        courseIds,
+        errors,
+      });
+    totalCredits += termTotal;
+    advancedCredits += termAdvanced;
+  }
 
-    if (!Array.isArray(termCourses)) {
-      errors.push(`Term ${term} courses must be an array`);
-      return;
-    }
-
-    termCourses.forEach((course) => {
-      // Check for duplicate courses
-      if (courseIds.has(course.id)) {
-        errors.push(`Duplicate course found: ${course.id} (${course.name})`);
-      } else {
-        courseIds.add(course.id);
-      }
-
-      // Validate course term matches profile term
-      // For multi-term courses, check if the profile term is one of the available terms
-      const courseTerms = Array.isArray(course.term)
-        ? course.term
-        : [course.term];
-      if (!courseTerms.includes(term.toString())) {
-        errors.push(
-          `Course ${course.id} term (${courseTerms.join(", ")}) doesn't include profile term (${term})`
-        );
-      }
-
-      // Calculate credits
-      totalCredits += course.credits;
-      if (course.level === "avancerad nivå") {
-        advancedCredits += course.credits;
-      }
-    });
-  });
-
-  // Check advanced credits requirement (60hp minimum)
   if (advancedCredits < MASTER_PROGRAM_MIN_ADVANCED_CREDITS) {
     warnings.push(
       `Advanced credits (${advancedCredits}hp) is below the recommended ${MASTER_PROGRAM_MIN_ADVANCED_CREDITS}hp minimum`
     );
   }
 
-  // Check total credits (90hp target)
   if (totalCredits !== MASTER_PROGRAM_TARGET_CREDITS) {
     warnings.push(
       `Total credits (${totalCredits}hp) doesn't match the ${MASTER_PROGRAM_TARGET_CREDITS}hp target`
@@ -190,10 +214,10 @@ export function validateProfile(
   }
 
   return {
-    is_valid: errors.length === 0,
+    isValid: errors.length === 0,
     errors,
     warnings,
-    total_credits: totalCredits,
-    advanced_credits: advancedCredits,
+    totalCredits,
+    advancedCredits,
   };
 }

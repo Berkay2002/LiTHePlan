@@ -34,6 +34,7 @@ import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import type { FilterState } from "./FilterPanel";
 import { TermSelectionModal } from "./TermSelectionModal";
+import { logger } from "@/lib/logger";
 
 interface CourseListItemProps {
   course: Course;
@@ -56,8 +57,8 @@ export function CourseListItem({
   },
 }: CourseListItemProps) {
   const { state, addCourse, removeCourse } = useProfile();
-  const isPinned = state.current_profile
-    ? isCourseInProfile(state.current_profile, course.id)
+  const isPinned = state.currentProfile
+    ? isCourseInProfile(state.currentProfile, course.id)
     : false;
   const [isHovered, setIsHovered] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
@@ -73,8 +74,8 @@ export function CourseListItem({
   const availableTerms = getAvailableTerms(course);
 
   // Check if adding this course would cause conflicts
-  const wouldHaveConflicts = state.current_profile
-    ? findCourseConflicts(course, state.current_profile).length > 0
+  const wouldHaveConflicts = state.currentProfile
+    ? findCourseConflicts(course, state.currentProfile).length > 0
     : false;
 
   // Helper function to check if a field should be hidden based on active filters
@@ -97,16 +98,16 @@ export function CourseListItem({
 
   // Handle adding course - always check conflicts first, then handle term selection
   const handleAddCourse = async () => {
-    console.log("🎯 handleAddCourse clicked for course:", course.id);
+    logger.info("🎯 handleAddCourse clicked for course:", course.id);
 
     // Always check conflicts first, regardless of term count
-    const conflicts = state.current_profile
-      ? findCourseConflicts(course, state.current_profile)
+    const conflicts = state.currentProfile
+      ? findCourseConflicts(course, state.currentProfile)
       : [];
 
     if (conflicts.length > 0) {
       // Show conflict modal first
-      console.log("⚠️ Conflicts detected, showing conflict modal first");
+      logger.info("⚠️ Conflicts detected, showing conflict modal first");
       setConflictingCourses(conflicts);
       setShowConflictModal(true);
       return;
@@ -114,7 +115,7 @@ export function CourseListItem({
 
     // No conflicts, proceed with term selection or direct add
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log("📋 No conflicts, showing term selection modal");
+      logger.info("📋 No conflicts, showing term selection modal");
       setShowTermModal(true);
     } else {
       // Single term course - add directly
@@ -122,7 +123,7 @@ export function CourseListItem({
         ? course.term[0]
         : course.term;
       const parsedTerm = Number.parseInt(termToAdd, 10);
-      console.log(
+      logger.info(
         "➕ No conflicts, adding directly - termToAdd:",
         termToAdd,
         "parsedTerm:",
@@ -133,13 +134,13 @@ export function CourseListItem({
         Number.isInteger(parsedTerm) &&
         MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
       ) {
-        console.log("✅ Adding course with:", {
+        logger.info("✅ Adding course with:", {
           course: course.id,
           term: parsedTerm,
         });
         await addCourse(course, parsedTerm as MasterProgramTerm);
       } else {
-        console.error("❌ Invalid term for course:", {
+        logger.error("❌ Invalid term for course:", {
           courseId: course.id,
           termToAdd,
           parsedTerm,
@@ -153,7 +154,7 @@ export function CourseListItem({
     selectedCourse: Course,
     selectedTerm: MasterProgramTerm
   ) => {
-    console.log(
+    logger.info(
       "🔄 Term selected:",
       selectedTerm,
       "for course:",
@@ -162,24 +163,24 @@ export function CourseListItem({
     setShowTermModal(false);
 
     // Add course directly since conflicts were already checked
-    console.log("✅ Adding course with selected term (conflicts pre-checked)");
+    logger.info("✅ Adding course with selected term (conflicts pre-checked)");
     await addCourse(selectedCourse, selectedTerm);
   };
 
   // Handle conflict resolution - user chooses new course
   const handleChooseNewCourse = async (newCourse: Course) => {
-    console.log("✅ User chose new course:", newCourse.id);
+    logger.info("✅ User chose new course:", newCourse.id);
     setShowConflictModal(false);
 
     // Remove conflicting courses first
     for (const { conflictingCourseId } of conflictingCourses) {
-      console.log("🗑️ Removing conflicting course:", conflictingCourseId);
+      logger.info("🗑️ Removing conflicting course:", conflictingCourseId);
       removeCourse(conflictingCourseId);
     }
 
     // Now handle term selection for the new course
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log(
+      logger.info(
         "📋 Showing term selection for new course after conflict resolution"
       );
       setShowTermModal(true);
@@ -188,7 +189,7 @@ export function CourseListItem({
         ? newCourse.term[0]
         : newCourse.term;
       const parsedTerm = Number.parseInt(termToAdd, 10) as MasterProgramTerm;
-      console.log("➕ Adding new course with default term:", parsedTerm);
+      logger.info("➕ Adding new course with default term:", parsedTerm);
       await addCourse(newCourse, parsedTerm);
     }
 
@@ -198,7 +199,7 @@ export function CourseListItem({
 
   // Handle conflict resolution - user chooses existing course
   const handleChooseExistingCourse = (existingCourse: Course) => {
-    console.log("📚 User chose to keep existing course:", existingCourse.id);
+    logger.info("📚 User chose to keep existing course:", existingCourse.id);
     setShowConflictModal(false);
     setConflictingCourses([]);
     // No action needed - existing course stays in profile
@@ -206,7 +207,7 @@ export function CourseListItem({
 
   // Handle conflict resolution - user cancels
   const handleCancelConflictResolution = () => {
-    console.log("❌ User cancelled conflict resolution");
+    logger.info("❌ User cancelled conflict resolution");
     setShowConflictModal(false);
     setConflictingCourses([]);
   };

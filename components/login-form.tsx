@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
+import { logger } from "@/lib/logger";
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   mode?: "login" | "signup";
@@ -97,10 +98,10 @@ export function LoginForm({
       }
 
       if (result.error) {
-        console.error("❌ Auth error:", result.error);
+        logger.error("❌ Auth error:", result.error);
         setError(result.error.message);
       } else {
-        console.log("✅ Auth success:", result.data);
+        logger.info("✅ Auth success:", result.data);
         router.push("/");
       }
     } catch {

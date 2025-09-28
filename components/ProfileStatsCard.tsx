@@ -22,12 +22,12 @@ export function ProfileStatsCard({
   profile,
   className,
 }: ProfileStatsCardProps) {
-  const currentCredits = profile.metadata.total_credits;
+  const currentCredits = profile.metadata.totalCredits;
   const targetCredits = MASTER_PROGRAM_TARGET_CREDITS;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate advanced credits
-  const advancedCredits = profile.metadata.advanced_credits;
+  const advancedCredits = profile.metadata.advancedCredits;
   const basicCredits = currentCredits - advancedCredits;
   const minAdvancedCredits = MASTER_PROGRAM_MIN_ADVANCED_CREDITS;
   const advancedPercentage = Math.min(
