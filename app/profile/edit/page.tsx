@@ -106,7 +106,9 @@ function ProfileEditPageContent() {
     }
   };
 
-  if (!state.current_profile) {
+  const { current_profile: currentProfile } = state;
+
+  if (!currentProfile) {
     return (
       <PageLayout
         navbarMode="profile-edit"
@@ -128,7 +130,7 @@ function ProfileEditPageContent() {
         <div className="min-h-screen bg-background pt-20">
           <div className="container mx-auto px-4 py-8 space-y-8">
             {/* Profile Statistics Card */}
-            <ProfileStatsCard profile={state.current_profile} />
+            <ProfileStatsCard profile={currentProfile} />
 
             {/* Term Cards (Draggable on Desktop) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -139,7 +141,7 @@ function ProfileEditPageContent() {
                     return (
                       <EditableTermCard
                         key={term}
-                        courses={state.current_profile.terms[term]}
+                        courses={currentProfile.terms[term]}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
                         onRemoveCourse={removeCourse}
@@ -154,7 +156,7 @@ function ProfileEditPageContent() {
                     return (
                       <DraggableTermCard
                         key={term}
-                        courses={state.current_profile.terms[term]}
+                        courses={currentProfile.terms[term]}
                         isDragDisabled={isImmutable}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
