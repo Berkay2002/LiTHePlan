@@ -25,6 +25,8 @@ if (!(supabaseUrl && supabaseKey)) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+const CONSOLE_DIVIDER_LENGTH = 50;
+const PERCENTAGE_SCALE = 100;
 
 async function fetchCourseStatistics() {
   console.log("🔍 Fetching course statistics from Supabase...\n");
@@ -148,9 +150,12 @@ function calculateStatistics(courses) {
   return stats;
 }
 
+const formatPercentage = (count, total) =>
+  ((count / total) * PERCENTAGE_SCALE).toFixed(1);
+
 function displayStatistics(stats) {
   console.log("📊 COURSE STATISTICS SUMMARY");
-  console.log("=".repeat(50));
+  console.log("=".repeat(CONSOLE_DIVIDER_LENGTH));
 
   console.log(`\n📚 TOTAL COURSES: ${stats.total}`);
 
@@ -158,7 +163,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byLevel)
     .sort(([, a], [, b]) => b - a)
     .forEach(([level, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${level}: ${count} (${percentage}%)`);
     });
 
@@ -166,7 +171,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byCampus)
     .sort(([, a], [, b]) => b - a)
     .forEach(([campus, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${campus}: ${count} (${percentage}%)`);
     });
 
@@ -174,7 +179,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byCredits)
     .sort(([, a], [, b]) => b - a)
     .forEach(([credits, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${credits}: ${count} (${percentage}%)`);
     });
 
@@ -182,7 +187,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byPace)
     .sort(([, a], [, b]) => b - a)
     .forEach(([pace, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${pace}: ${count} (${percentage}%)`);
     });
 
@@ -190,7 +195,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byTerm)
     .sort(([a], [b]) => a.localeCompare(b))
     .forEach(([term, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${term}: ${count} (${percentage}%)`);
     });
 
@@ -198,7 +203,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byPeriod)
     .sort(([a], [b]) => a.localeCompare(b))
     .forEach(([period, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${period}: ${count} (${percentage}%)`);
     });
 
@@ -206,7 +211,7 @@ function displayStatistics(stats) {
   Object.entries(stats.byBlock)
     .sort(([a], [b]) => a.localeCompare(b))
     .forEach(([block, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${block}: ${count} (${percentage}%)`);
     });
 
@@ -214,17 +219,21 @@ function displayStatistics(stats) {
   Object.entries(stats.byExamination)
     .sort(([, a], [, b]) => b - a)
     .forEach(([exam, count]) => {
-      const percentage = ((count / stats.total) * 100).toFixed(1);
+      const percentage = formatPercentage(count, stats.total);
       console.log(`   ${exam}: ${count} (${percentage}%)`);
     });
 
   console.log("\n📋 NOTES/RESTRICTIONS:");
-  const notesPercentage = ((stats.withNotes / stats.total) * 100).toFixed(1);
+  const notesPercentageValue =
+    (stats.withNotes / stats.total) * PERCENTAGE_SCALE;
+  const notesPercentage = notesPercentageValue.toFixed(1);
   console.log(
     `   Courses with notes: ${stats.withNotes} (${notesPercentage}%)`
   );
   console.log(
-    `   Courses without notes: ${stats.withoutNotes} (${(100 - notesPercentage).toFixed(1)}%)`
+    `   Courses without notes: ${stats.withoutNotes} (${(
+      PERCENTAGE_SCALE - notesPercentageValue
+    ).toFixed(1)}%)`
   );
 
   console.log("\n🎯 PROGRAM COVERAGE:");

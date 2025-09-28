@@ -18,6 +18,7 @@ if (!(supabaseUrl && supabaseKey)) {
 }
 
 const supabase = createClient(supabaseUrl, supabaseKey);
+const RATE_LIMIT_DELAY_MS = 100;
 
 async function importCourses() {
   console.log("Starting course data import...");
@@ -79,7 +80,7 @@ async function importCourses() {
       }
 
       // Small delay to avoid rate limits
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_DELAY_MS));
     }
 
     console.log("\nImport Summary:");

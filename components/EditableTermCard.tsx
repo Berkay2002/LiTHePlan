@@ -9,8 +9,37 @@ import {
   getConflictBorderClass,
 } from "@/lib/conflict-utils";
 import { getLevelColor } from "@/lib/course-utils";
-import { type MasterProgramTerm } from "@/lib/profile-constants";
+import {
+  MASTER_PROGRAM_TERM_EIGHT,
+  MASTER_PROGRAM_TERM_NINE,
+  MASTER_PROGRAM_TERM_SEVEN,
+  type MasterProgramTerm,
+} from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
+
+const BLOCK_NUMBER_FIRST = 1;
+const BLOCK_NUMBER_SECOND = 2;
+const BLOCK_NUMBER_THIRD = 3;
+const BLOCK_NUMBER_FOURTH = 4;
+const BLOCK_NUMBERS = [
+  BLOCK_NUMBER_FIRST,
+  BLOCK_NUMBER_SECOND,
+  BLOCK_NUMBER_THIRD,
+  BLOCK_NUMBER_FOURTH,
+] as const;
+type BlockNumber = (typeof BLOCK_NUMBERS)[number];
+const DEFAULT_BLOCK_BADGE_COLOR =
+  "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+const BLOCK_BADGE_COLORS: Record<BlockNumber, string> = {
+  [BLOCK_NUMBER_FIRST]:
+    "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+  [BLOCK_NUMBER_SECOND]:
+    "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  [BLOCK_NUMBER_THIRD]:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+  [BLOCK_NUMBER_FOURTH]:
+    "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+};
 
 interface EditableTermCardProps {
   termNumber: MasterProgramTerm;
@@ -55,20 +84,8 @@ export function EditableTermCard({
     ),
   };
 
-  const getBlockBadgeColor = (blockNum: number) => {
-    switch (blockNum) {
-      case 1:
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case 2:
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case 3:
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case 4:
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-    }
-  };
+  const getBlockBadgeColor = (blockNum: number) =>
+    BLOCK_BADGE_COLORS[blockNum as BlockNumber] ?? DEFAULT_BLOCK_BADGE_COLOR;
 
   const renderBlockIndicators = (course: Course, currentPeriod: 1 | 2) => {
     const is50Percent = course.pace === "50%";
@@ -112,9 +129,15 @@ export function EditableTermCard({
     currentPeriod: 1 | 2
   ) => {
     // Create a visual timeline showing which blocks are occupied for this specific period
-    const blockOccupancy: {
-      [key: number]: Array<{ course: Course; is50Percent: boolean }>;
-    } = { 1: [], 2: [], 3: [], 4: [] };
+    const blockOccupancy: Record<
+      BlockNumber,
+      Array<{ course: Course; is50Percent: boolean }>
+    > = {
+      [BLOCK_NUMBER_FIRST]: [],
+      [BLOCK_NUMBER_SECOND]: [],
+      [BLOCK_NUMBER_THIRD]: [],
+      [BLOCK_NUMBER_FOURTH]: [],
+    };
 
     periodCourses.forEach((course) => {
       let blocks: number[];
@@ -143,7 +166,7 @@ export function EditableTermCard({
           Period {currentPeriod} Block Timeline:
         </div>
         <div className="grid grid-cols-4 gap-1">
-          {[1, 2, 3, 4].map((blockNum) => {
+          {BLOCK_NUMBERS.map((blockNum) => {
             const courses =
               blockOccupancy[blockNum as keyof typeof blockOccupancy];
             const hasConflict = courses.length > 1;
@@ -286,12 +309,18 @@ export function EditableTermCard({
           </div>
 
           {/* Transfer buttons - right-aligned, only show for terms 7 and 9, and when onMoveCourse is available */}
-          {onMoveCourse && termNumber !== 8 && (
+          {onMoveCourse && termNumber !== MASTER_PROGRAM_TERM_EIGHT && (
             <div className="flex justify-end gap-1 mt-3 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-              {termNumber === 7 && (
+              {termNumber === MASTER_PROGRAM_TERM_SEVEN && (
                 <Button
                   className="h-6 px-2 text-xs"
-                  onClick={() => onMoveCourse(course.id, 7, 9)}
+                  onClick={() =>
+                    onMoveCourse(
+                      course.id,
+                      MASTER_PROGRAM_TERM_SEVEN,
+                      MASTER_PROGRAM_TERM_NINE
+                    )
+                  }
                   size="sm"
                   title="Move to Term 9"
                   variant="outline"
@@ -300,10 +329,16 @@ export function EditableTermCard({
                   Term 9
                 </Button>
               )}
-              {termNumber === 9 && (
+              {termNumber === MASTER_PROGRAM_TERM_NINE && (
                 <Button
                   className="h-6 px-2 text-xs"
-                  onClick={() => onMoveCourse(course.id, 9, 7)}
+                  onClick={() =>
+                    onMoveCourse(
+                      course.id,
+                      MASTER_PROGRAM_TERM_NINE,
+                      MASTER_PROGRAM_TERM_SEVEN
+                    )
+                  }
                   size="sm"
                   title="Move to Term 7"
                   variant="outline"
