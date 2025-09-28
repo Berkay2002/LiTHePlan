@@ -192,11 +192,11 @@ export function moveCourseInProfile(
   }
 
   // For validation, we need to check if the course has an original_term property
-  // or use the course's current term info. Since courses can be offered in multiple terms,
-  // we'll be more permissive and only check if the target term is 7 or 9 (the allowed terms)
-  if (toTerm !== 7 && toTerm !== 9) {
+  // or use the course's current term info. Courses can be offered in any of the
+  // three master's terms (7, 8, or 9), so restrict the move only to that range.
+  if (![7, 8, 9].includes(toTerm)) {
     throw new Error(
-      `Can only move courses to terms 7 or 9. Target term ${toTerm} is not allowed.`
+      `Can only move courses to terms 7, 8 or 9. Target term ${toTerm} is not allowed.`
     );
   }
 
