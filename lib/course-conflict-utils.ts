@@ -1,5 +1,6 @@
 // lib/course-conflict-utils.ts
 
+import { MASTER_PROGRAM_TERMS } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 import type { StudentProfile } from "@/types/profile";
 
@@ -48,7 +49,7 @@ export function findCourseConflicts(
   }[] = [];
 
   // Check each term in the profile
-  ([7, 8, 9] as const).forEach((term) => {
+  MASTER_PROGRAM_TERMS.forEach((term) => {
     const termCourses = currentProfile.terms[term];
     termCourses.forEach((existingCourse) => {
       // Check if new course conflicts with existing course

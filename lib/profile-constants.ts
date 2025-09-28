@@ -1,6 +1,15 @@
-export const MASTER_PROGRAM_TERMS = [7, 8, 9] as const;
+export const MASTER_PROGRAM_TERM_SEVEN = 7;
+export const MASTER_PROGRAM_TERM_EIGHT = 8;
+export const MASTER_PROGRAM_TERM_NINE = 9;
+export const MASTER_PROGRAM_TERMS = [
+  MASTER_PROGRAM_TERM_SEVEN,
+  MASTER_PROGRAM_TERM_EIGHT,
+  MASTER_PROGRAM_TERM_NINE,
+] as const;
 export type MasterProgramTerm = (typeof MASTER_PROGRAM_TERMS)[number];
-export const IMMUTABLE_MASTER_PROGRAM_TERMS: readonly MasterProgramTerm[] = [8];
+export const IMMUTABLE_MASTER_PROGRAM_TERMS: readonly MasterProgramTerm[] = [
+  MASTER_PROGRAM_TERM_EIGHT,
+];
 
 export const MASTER_PROGRAM_TARGET_CREDITS = 90;
 export const MASTER_PROGRAM_MIN_ADVANCED_CREDITS = 60;

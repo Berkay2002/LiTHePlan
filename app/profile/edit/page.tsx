@@ -19,6 +19,8 @@ import {
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
 
+const DESKTOP_BREAKPOINT_PX = 1024;
+
 function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
   const [isMobile, setIsMobile] = useState(false);
@@ -27,7 +29,7 @@ function ProfileEditPageContent() {
   // Detect if we're on mobile/tablet to disable drag and drop
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 1024); // Disable on screens smaller than desktop
+      setIsMobile(window.innerWidth < DESKTOP_BREAKPOINT_PX); // Disable on screens smaller than desktop
     };
 
     checkIsMobile();
