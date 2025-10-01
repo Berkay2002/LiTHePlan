@@ -1,3 +1,5 @@
+'use client'
+
 // app/profile/edit/TermCards.tsx
 
 import { DraggableTermCard } from "@/components/DraggableTermCard";
