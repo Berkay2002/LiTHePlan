@@ -1,3 +1,5 @@
+'use client'
+
 // app/profile/edit/useProfileDragHandler.ts
 
 import { type DropResult } from "@hello-pangea/dnd";
