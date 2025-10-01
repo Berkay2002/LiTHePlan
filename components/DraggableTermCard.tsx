@@ -24,13 +24,13 @@ import type { Course } from "@/types/course";
 interface DraggableTermCardProps {
   termNumber: MasterProgramTerm;
   courses: Course[];
-  onRemoveCourse: (courseId: string) => void;
-  onClearTerm: (term: MasterProgramTerm) => void;
+  onRemoveCourse: (courseId: string) => void | Promise<void>;
+  onClearTerm: (term: MasterProgramTerm) => void | Promise<void>;
   onMoveCourse?: (
     courseId: string,
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
-  ) => void;
+  ) => void | Promise<void>;
   className?: string;
   isDragDisabled?: boolean;
   showBlockTimeline?: boolean;
