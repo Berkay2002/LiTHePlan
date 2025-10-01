@@ -1,3 +1,5 @@
+'use client'
+
 // app/profile/edit/useMobileBreakpoint.ts
 
 import { useEffect, useState } from "react";
