@@ -1,0 +1,13 @@
+{
+	"servers": {
+		"supabase": {
+			"url": "https://mcp.supabase.com/mcp?project_ref=hzshoimagashvzbeuhtx",
+			"type": "http"
+		},
+		"github": {
+			"url": "https://api.githubcopilot.com/mcp/",
+			"type": "http"
+		}
+	},
+	"inputs": []
+}
