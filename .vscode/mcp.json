@@ -1,9 +1,5 @@
 {
 	"servers": {
-		"supabase": {
-			"url": "https://mcp.supabase.com/mcp?project_ref=hzshoimagashvzbeuhtx",
-			"type": "http"
-		},
 		"github": {
 			"url": "https://api.githubcopilot.com/mcp/",
 			"type": "http"
@@ -11,8 +7,11 @@
 		"next-devtools": {
 			"type": "stdio",
 			"command": "npx",
-			"args": ["-y", "next-devtools-mcp@latest"]
-		}
+			"args": [
+				"-y",
+				"next-devtools-mcp@latest"
+			]
+		},
 	},
 	"inputs": []
 }
