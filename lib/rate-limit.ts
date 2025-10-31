@@ -1,13 +1,16 @@
 import { Ratelimit } from "@upstash/ratelimit";
-import Redis from "ioredis";
+import { Redis } from "@upstash/redis";
 
 /**
- * Rate limiting utilities using Redis and Upstash Ratelimit
+ * Rate limiting utilities using Upstash Redis
  * Prevents API abuse with per-IP limits on different endpoint types
  */
 
-// Initialize Redis client from environment variable
-const redis = new Redis(process.env.REDIS_URL as string);
+// Initialize Upstash Redis client from environment variables
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL as string,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+});
 
 // Rate limiters for different endpoint types
 export const coursesLimiter = new Ratelimit({
@@ -44,26 +47,6 @@ export interface RateLimitResult {
   limit: number;
   remaining: number;
   reset: number;
-}
-
-/**
- * Rate limit check for API routes
- * @param identifier - Usually IP address from request
- * @param limiter - Which rate limiter to use
- * @returns Rate limit result with success status and metadata
- */
-export async function rateLimit(
-  identifier: string,
-  limiter: Ratelimit
-): Promise<RateLimitResult> {
-  const result = await limiter.limit(identifier);
-
-  return {
-    success: result.success,
-    limit: result.limit,
-    remaining: result.remaining,
-    reset: result.reset,
-  };
 }
 
 /**

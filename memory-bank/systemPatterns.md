@@ -385,6 +385,273 @@ export function addCourseToProfile(profile, course, term) {
 }
 ```
 
+## API Security Patterns
+
+### Rate Limiting Pattern
+**Purpose**: Prevent API abuse and DoS attacks  
+**Implementation**: Redis-backed sliding window
+
+```typescript
+// lib/rate-limit.ts
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+export const coursesLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(100, "1 m"),
+  analytics: true,
+  prefix: "@ratelimit/courses",
+});
+
+// Usage in API route
+export async function GET(request: NextRequest) {
+  const clientIP = getClientIP(request.headers);
+  const rateLimitResult = await coursesLimiter.limit(clientIP);
+  
+  if (!rateLimitResult.success) {
+    return NextResponse.json(errorResponse("Too many requests", requestId), {
+      status: 429,
+      headers: {
+        "X-RateLimit-Limit": String(rateLimitResult.limit),
+        "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+        "X-RateLimit-Reset": String(rateLimitResult.reset),
+      },
+    });
+  }
+  
+  // Process request...
+}
+```
+
+**Per-Endpoint Limits**:
+- Courses (read-heavy): 100 req/min
+- Profile read: 50 req/min
+- Profile write: 10 req/min
+- Auth: 30 req/min
+
+**Fail-Safe**: If Redis is down, rate limiter fails open (allows request)
+
+### Input Validation Pattern
+**Purpose**: Prevent injection attacks, ensure data integrity  
+**Implementation**: Zod strict schemas
+
+```typescript
+// lib/api-validation.ts
+export const ProfileDataSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1).max(100),
+  terms: z.record(z.enum(["7", "8", "9"]), z.array(CourseSchema)),
+}).strict(); // Rejects unknown fields
+
+// Usage in API route
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const validationResult = ProfileDataSchema.safeParse(body.profile);
+  
+  if (!validationResult.success) {
+    logger.warn("Invalid profile data", {
+      requestId,
+      errors: validationResult.error.errors,
+    });
+    
+    return NextResponse.json(
+      errorResponse("Invalid profile data", requestId),
+      { status: 400 }
+    );
+  }
+  
+  const validatedData = validationResult.data; // Type-safe
+  // Proceed with validated data...
+}
+```
+
+**Strict Mode Benefits**:
+- Blocks `__proto__` injection
+- Prevents `constructor` pollution
+- Rejects extra fields that could override internal logic
+- Type-safe validated data
+
+**Attack Example Prevented**:
+```typescript
+// Malicious payload
+const maliciousPayload = {
+  name: "My Profile",
+  terms: { "7": [...] },
+  __proto__: { isAdmin: true },  // ❌ Rejected by .strict()
+  userId: "admin-id"              // ❌ Rejected (not in schema)
+};
+```
+
+### Error Handling Pattern
+**Purpose**: Consistent error responses, Sentry integration, no debug leaks  
+**Implementation**: Structured logging + standardized responses
+
+```typescript
+// lib/logger.ts + lib/api-response.ts
+export async function GET(request: NextRequest) {
+  const requestId = logger.generateRequestId();
+  
+  try {
+    // Sentry breadcrumbs for flow tracking
+    Sentry.addBreadcrumb({
+      category: "auth",
+      message: "User authenticated",
+      level: "info",
+    });
+    
+    const { data, error } = await supabase.from("profiles").select();
+    
+    if (error) {
+      logger.error("Database error", error, {
+        requestId,
+        userId: user.id,
+      });
+      
+      // Automatically sent to Sentry with context
+      return NextResponse.json(
+        errorResponse("Failed to fetch profiles", requestId),
+        { status: 500 }
+      );
+    }
+    
+    logger.info("Profiles retrieved", {
+      requestId,
+      count: data.length,
+    });
+    
+    return NextResponse.json(successResponse(data, requestId));
+    
+  } catch (error) {
+    logger.error("Unexpected error", error, { requestId });
+    
+    // Sentry.captureException() called automatically
+    return NextResponse.json(
+      errorResponse("Internal server error", requestId),
+      { status: 500 }
+    );
+  }
+}
+```
+
+**Error Response Rules**:
+1. Never expose stack traces in production
+2. Never leak database schema details
+3. Always include `requestId` for support
+4. Use generic messages for security errors
+5. Log full details server-side with Sentry
+
+### Structured Logging Pattern
+**Purpose**: Request tracing, debugging, performance monitoring  
+**Implementation**: Consistent metadata across all logs
+
+```typescript
+// lib/logger.ts
+class Logger {
+  info(message: string, meta: LogMetadata = {}): void {
+    const logData = {
+      level: "info",
+      message,
+      timestamp: new Date().toISOString(),
+      ...meta,
+    };
+    
+    if (process.env.NODE_ENV === "production") {
+      console.log(JSON.stringify(logData)); // Structured JSON
+    } else {
+      console.log(`[INFO] ${message}`, meta); // Human-readable
+    }
+  }
+  
+  error(message: string, error: Error, meta: LogMetadata = {}): void {
+    // Log to console
+    console.error(JSON.stringify({ level: "error", message, ...meta }));
+    
+    // Send to Sentry
+    Sentry.captureException(error, {
+      contexts: { metadata: meta },
+      tags: { requestId: meta.requestId },
+    });
+  }
+}
+```
+
+**Standard Metadata**:
+- `requestId` - UUID for request correlation
+- `userId` - From auth context (if available)
+- `duration` - Request processing time
+- `path` - API route
+- `timestamp` - ISO 8601 format
+
+**Example Log Flow**:
+```
+[INFO] Profile created successfully {
+  requestId: "550e8400-...",
+  userId: "auth-user-id",
+  profileId: "profile-uuid",
+  coursesCount: 12,
+  duration: 145
+}
+```
+
+### Response Standardization Pattern
+**Purpose**: Consistent API contract, easier client consumption  
+**Implementation**: Typed response helpers
+
+```typescript
+// lib/api-response.ts
+export interface ApiSuccessResponse<T> {
+  success: true;
+  data: T;
+  requestId: string;
+  timestamp: string;
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  error: string;
+  requestId: string;
+  timestamp: string;
+}
+
+export function successResponse<T>(data: T, requestId: string): ApiSuccessResponse<T> {
+  return {
+    success: true,
+    data,
+    requestId,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+export function errorResponse(message: string, requestId: string): ApiErrorResponse {
+  return {
+    success: false,
+    error: message,
+    requestId,
+    timestamp: new Date().toISOString(),
+  };
+}
+```
+
+**Client Usage**:
+```typescript
+// Client knows exactly what to expect
+const response = await fetch("/api/profile");
+const json = await response.json();
+
+if (json.success) {
+  // TypeScript knows json.data exists
+  console.log(json.data);
+} else {
+  // TypeScript knows json.error exists
+  console.error(json.error, json.requestId);
+}
+```
+
 ## Key Architectural Decisions
 
 ### Why useReducer over useState?

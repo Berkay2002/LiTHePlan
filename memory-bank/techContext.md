@@ -119,6 +119,10 @@ LiTHePlan/
 │   ├── profile-utils.ts       # Profile CRUD operations
 │   ├── course-conflict-utils.ts  # Conflict detection
 │   ├── course-utils.ts        # Course formatting helpers
+│   ├── api-validation.ts      # Zod schemas for API validation
+│   ├── rate-limit.ts          # Redis rate limiting utilities
+│   ├── logger.ts              # Structured logging with Sentry
+│   ├── api-response.ts        # Standardized API responses
 │   └── utils.ts               # General utilities (cn, etc.)
 │
 ├── types/
@@ -155,14 +159,27 @@ LiTHePlan/
 **File**: `.env.local` (never commit!)
 
 ```bash
+# Supabase
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=eyJxxx...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
+SUPABASE_SECRET_KEY=sb_secret_xxx
+SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
+
+# Sentry Error Tracking
+SENTRY_AUTH_TOKEN=sntrys_xxx
+SENTRY_ORG=berkaycom
+SENTRY_PROJECT=javascript-nextjs
+
+# Upstash Redis (Rate Limiting)
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=AXw-xxx
 ```
 
 **How to Get**:
-1. Create Supabase project
-2. Go to Project Settings → API
-3. Copy URL and anon/public key
+1. **Supabase**: Create project → Project Settings → API → Copy URL and keys
+2. **Sentry**: Run `npx @sentry/wizard@latest -i nextjs` (auto-configured)
+3. **Upstash Redis**: Create account at upstash.com → Create Redis database → Copy REST credentials
 
 ### Installation Steps
 ```powershell
@@ -191,6 +208,169 @@ npm run check      # Alias for lint
 # Database utilities
 node scripts/fetch-course-stats.js  # Generate stats from Supabase
 ```
+
+## Production Infrastructure
+
+### Rate Limiting (Upstash Redis)
+**Service**: Upstash Redis (https://upstash.io)  
+**Free Tier**: 500,000 commands/month, 256MB storage  
+**Implementation**: `lib/rate-limit.ts`
+
+**Rate Limits by Endpoint**:
+- **Courses API** (`/api/courses`): 100 requests/minute per IP
+- **Profile Read** (`/api/profile`, `/api/profile/[id]`): 50 requests/minute per IP
+- **Profile Write** (`/api/profile` POST): 10 requests/minute per IP
+- **Auth Callback** (`/api/auth/callback`): 30 requests/minute per IP
+
+**Algorithm**: Sliding window with Redis sorted sets  
+**Response Headers**: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`  
+**Behavior**: Returns `429 Too Many Requests` when limit exceeded
+
+**Configuration**:
+```typescript
+// lib/rate-limit.ts
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
+
+export const coursesLimiter = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(100, "1 m"),
+  analytics: true,
+  prefix: "@ratelimit/courses",
+});
+```
+
+### Error Tracking (Sentry)
+**Service**: Sentry (https://sentry.io)  
+**Free Tier**: 5,000 errors/month
+**Tracing**: 5M spans/month  
+**Organization**: `berkaycom`  
+**Project**: `javascript-nextjs`  
+**Region**: `de.sentry.io` (Europe)
+
+**Features Enabled**:
+- Error tracking with stack traces
+- Breadcrumbs for request flow
+- User context (ID, email)
+- Request metadata (requestId, duration)
+- Performance monitoring (basic)
+
+**Integration**:
+```typescript
+// lib/logger.ts - Auto-captures errors
+logger.error("Database error", error, {
+  requestId,
+  userId,
+});
+
+// Sentry.captureException() called automatically
+// Includes breadcrumbs from request flow
+```
+
+**Sentry Breadcrumbs Example**:
+1. Auth check → User authenticated
+2. Validation → Profile data validated
+3. Database → Saving to academic_profiles
+4. Error → Constraint violation (if fails)
+
+### Input Validation (Zod)
+**Library**: `zod` (v3+)  
+**Pattern**: Strict schemas prevent injection attacks  
+**Implementation**: `lib/api-validation.ts`
+
+**Validation Schemas**:
+- **CourseFiltersSchema**: Validates query parameters (pagination, filters, search)
+- **ProfileDataSchema**: Validates profile structure (terms, courses, metadata)
+- **UUIDSchema**: Validates all ID parameters
+
+**Strict Mode** (`.strict()`):
+- Rejects unknown fields → prevents prototype pollution
+- Blocks `__proto__`, `constructor` injection
+- Prevents parameter pollution attacks
+
+**Example**:
+```typescript
+// Validates and rejects malicious payloads
+const validationResult = ProfileDataSchema.strict().safeParse(profile);
+if (!validationResult.success) {
+  return errorResponse("Invalid profile data", requestId);
+}
+```
+
+### Structured Logging
+**Implementation**: `lib/logger.ts`  
+**Format**: JSON in production, human-readable in development
+
+**Log Levels**:
+- `logger.info()` - Request start/end, success operations
+- `logger.warn()` - Rate limits, validation failures, auth issues
+- `logger.error()` - Database errors, exceptions (auto-sent to Sentry)
+
+**Metadata Included**:
+- `requestId` - Unique UUID per request
+- `timestamp` - ISO 8601 format
+- `userId` - From auth context (if available)
+- `path` - API route path
+- `duration` - Request processing time (ms)
+
+**Example Log Entry**:
+```json
+{
+  "level": "info",
+  "message": "Profile created successfully",
+  "timestamp": "2025-10-31T12:34:56.789Z",
+  "requestId": "550e8400-e29b-41d4-a716-446655440000",
+  "userId": "auth-user-id",
+  "profileId": "profile-uuid",
+  "coursesCount": 12,
+  "duration": 145
+}
+```
+
+### Response Caching
+**Implementation**: HTTP `Cache-Control` headers  
+**Strategy**: TTL-based (no manual purge endpoints)
+
+**Cache Durations**:
+- **Courses API**: `public, max-age=300, s-maxage=600` (5min client, 10min CDN)
+- **Public Profiles**: `public, max-age=60` (1min)
+- **User Profiles**: `private, max-age=60` (1min, user-specific)
+
+**Rationale**:
+- Courses data changes infrequently (manual updates)
+- Public profiles need freshness for sharing
+- User profiles must not be cached across users
+
+### API Response Format
+**Implementation**: `lib/api-response.ts`  
+**Pattern**: Standardized JSON structure
+
+**Success Response**:
+```json
+{
+  "success": true,
+  "data": { /* response data */ },
+  "requestId": "550e8400-...",
+  "timestamp": "2025-10-31T12:34:56.789Z"
+}
+```
+
+**Error Response**:
+```json
+{
+  "success": false,
+  "error": "Profile not found",
+  "requestId": "550e8400-...",
+  "timestamp": "2025-10-31T12:34:56.789Z"
+}
+```
+
+**Security**: No stack traces or debug info in production responses
 
 ## Database Schema
 
