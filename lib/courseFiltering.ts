@@ -166,6 +166,10 @@ export function filterCourses(
   courses: Course[],
   filterState: FilterState
 ): Course[] {
+  if (!courses || !Array.isArray(courses)) {
+    return [];
+  }
+  
   return courses.filter((course) => {
     if (!matchesSearch(course, filterState.search)) {
       return false;

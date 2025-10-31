@@ -1,152 +1,88 @@
 // app/profile/[id]/page.tsx
 
-"use client";
+import type { Metadata } from "next";
+import { createClient } from "@/utils/supabase/server";
+import ProfilePageClient from "./ProfilePageClient";
 
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { PageLayout } from "@/components/layout/PageLayout";
-import { ProfileStatsCard } from "@/components/ProfileStatsCard";
-import { SimpleTermCard } from "@/components/SimpleTermCard";
-import { Card, CardContent } from "@/components/ui/card";
-import type { StudentProfile } from "@/types/profile";
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  
+  try {
+    const { id: profileId } = await params;
+    const supabase = await createClient();
 
-function ProfilePageContent() {
-  const params = useParams();
-  const profileId = params.id as string; // This is the database UUID (academic_profiles.id)
+    // Fetch profile to generate dynamic metadata
+    const { data: profileData } = await supabase
+      .from("academic_profiles")
+      .select("name, profile_data, is_public")
+      .eq("id", profileId)
+      .single();
 
-  const [profile, setProfile] = useState<StudentProfile | null>(null);
-  const [databaseId, setDatabaseId] = useState<string | null>(null); // Store the database UUID separately
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        setLoading(true);
-
-        // Fetch the shared profile from Supabase API
-        const response = await fetch(`/api/profile/${profileId}`);
-
-        if (!response.ok) {
-          if (response.status === 404) {
-            setError("Profile not found");
-          } else {
-            setError("Failed to load profile");
-          }
-          return;
-        }
-
-        const profileData = await response.json();
-
-        // Convert date strings back to Date objects if needed
-        const loadedProfile: StudentProfile = {
-          ...profileData,
-          created_at: profileData.created_at
-            ? new Date(profileData.created_at)
-            : new Date(),
-          updated_at: profileData.updated_at
-            ? new Date(profileData.updated_at)
-            : new Date(),
-        };
-
-        setProfile(loadedProfile);
-        setDatabaseId(profileId); // Store the database UUID for sharing
-      } catch (err) {
-        setError("Failed to load profile");
-        console.error("Error loading profile:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (profileId) {
-      loadProfile();
+    // If profile not found or not public, return generic metadata with noindex
+    if (!profileData || !profileData.is_public) {
+      return {
+        title: "Profile Not Found",
+        description: "This profile does not exist or is not publicly shared.",
+        robots: {
+          index: false,
+          follow: false,
+        },
+      };
     }
-  }, [profileId]);
 
-  if (loading) {
-    return (
-      <PageLayout navbarMode="profile-edit">
-        <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-4 py-8">
-            <div className="flex items-center justify-center min-h-[400px]">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">Loading profile...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </PageLayout>
-    );
+    // Calculate course statistics for description
+    const profile = profileData.profile_data;
+    const totalCourses =
+      (profile.terms?.[7]?.length || 0) +
+      (profile.terms?.[8]?.length || 0) +
+      (profile.terms?.[9]?.length || 0);
+    const totalCredits = profile.metadata?.total_credits || 0;
+    const advancedCredits = profile.metadata?.advanced_credits || 0;
+
+    const description = `View ${profileData.name}'s master's program plan at Linköping University. ${totalCourses} courses totaling ${totalCredits}hp (${advancedCredits}hp advanced level) across terms 7-9. Created using LiTHePlan, an unofficial student tool.`;
+
+    return {
+      title: `${profileData.name} - LiU Course Profile`,
+      description,
+      openGraph: {
+        title: `${profileData.name} - LiTHePlan Course Profile`,
+        description,
+        type: "website",
+        images: ["/web-app-manifest-512x512.png"],
+        url: `${baseUrl}/profile/${profileId}`,
+      },
+      twitter: {
+        card: "summary",
+        title: `${profileData.name} - LiU Course Profile`,
+        description,
+        images: ["/web-app-manifest-512x512.png"],
+      },
+      alternates: {
+        canonical: `${baseUrl}/profile/${profileId}`,
+      },
+    };
+  } catch (error) {
+    console.error("Error generating profile metadata:", error);
+    
+    return {
+      title: "Profile",
+      description: "View a student's course profile created with LiTHePlan, an unofficial planning tool for Linköping University students",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
-
-  if (error || !profile) {
-    return (
-      <PageLayout navbarMode="profile-edit">
-        <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-4 py-8">
-            <div className="flex items-center justify-center min-h-[400px]">
-              <Card className="w-full max-w-md bg-card border-border shadow-lg">
-                <CardContent className="pt-6 text-center">
-                  <h2 className="text-xl font-semibold text-card-foreground mb-2">
-                    Profile Not Found
-                  </h2>
-                  <p className="text-muted-foreground">
-                    The profile you&apos;re looking for doesn&apos;t exist or
-                    has been removed.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </PageLayout>
-    );
-  }
-
-  return (
-    <PageLayout
-      navbarMode="profile-edit"
-      profileId={databaseId || undefined} // Use the database UUID, not the profile's internal ID
-    >
-      <div className="min-h-screen bg-background pt-20">
-        <div className="container mx-auto px-4 py-8 space-y-8">
-          {/* Shared Profile Header */}
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
-            <div className="flex items-center">
-              <div className="ml-3">
-                <p className="text-blue-800 font-medium">
-                  📖 <strong>Shared Profile</strong> - You&apos;re viewing
-                  someone else&apos;s course profile
-                </p>
-                <p className="text-blue-700 text-sm mt-1">
-                  This is a read-only view. To build your own profile,{" "}
-                  <Link className="underline" href="/profile/edit">
-                    click here
-                  </Link>
-                  .
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Profile Statistics Card */}
-          <ProfileStatsCard profile={profile} />
-
-          {/* Term Cards (Read-only) */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <SimpleTermCard courses={profile.terms[7]} termNumber={7} />
-            <SimpleTermCard courses={profile.terms[8]} termNumber={8} />
-            <SimpleTermCard courses={profile.terms[9]} termNumber={9} />
-          </div>
-        </div>
-      </div>
-    </PageLayout>
-  );
 }
 
-export default function ProfilePage() {
-  return <ProfilePageContent />;
+export default function ProfilePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return <ProfilePageClient params={params} />;
 }

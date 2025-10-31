@@ -6,6 +6,78 @@
 **Focus**: Production-ready with Next.js 16.0.1
 
 ## Recent Changes (Current Session)
+### October 31, 2025 - SEO Foundation Implementation
+1. ✅ **Dynamic Robots Configuration**
+   - Created `app/robots.ts` with Next.js 16 file-based convention
+   - Excludes `/api/*`, `/profile/edit`, `/login`, `/signup` from indexing
+   - Points to dynamic sitemap at `/sitemap.xml`
+2. ✅ **ISR-Enabled Dynamic Sitemap**
+   - Created `app/sitemap.ts` with 1-hour revalidation (ISR)
+   - Fetches public profiles updated in last 30 days using service role client
+   - Includes homepage (priority: 1.0) and profile URLs (priority: 0.6)
+   - Graceful fallback to homepage-only if database query fails
+3. ✅ **Enhanced Root Layout Metadata**
+   - Updated `app/layout.tsx` with title template pattern
+   - Improved description mentioning "339 curated master's courses"
+   - Added keywords array for SEO targeting
+   - Enhanced Open Graph with locale, siteName, and URL
+   - Added canonical URL to root layout
+   - Integrated StructuredData component with JSON-LD schemas
+4. ✅ **Page-Specific Metadata with noindex**
+   - Added metadata exports to `app/login/page.tsx` and `app/signup/page.tsx`
+   - Both marked with `robots: { index: false, follow: false }`
+   - Created `app/profile/edit/layout.tsx` wrapper for Client Component metadata
+   - All auth/edit pages have proper canonical URLs
+5. ✅ **Dynamic Profile Metadata Generation**
+   - Refactored `app/profile/[id]/page.tsx` to Server Component with Client Component split
+   - Implemented `generateMetadata()` function fetching profile from Supabase
+   - Dynamic title/description based on profile name, course count, and credits
+   - Open Graph and Twitter Card tags with profile-specific content
+   - Returns `robots: { index: false }` for private/non-existent profiles
+   - Created `ProfilePageClient.tsx` for client-side interactivity
+6. ✅ **Structured Data Markup**
+   - Created `components/seo/StructuredData.tsx` with JSON-LD
+   - WebSite schema with SearchAction for sitelinks search box
+   - EducationalOrganization schema for Linköping University
+   - Schema.org `@graph` pattern for multiple entities
+7. ✅ **Image Accessibility Audit**
+   - Verified all images have proper alt attributes
+   - Logo component already includes `aria-label`, `role="img"`, and `<title>`
+   - Login form image has descriptive alt text
+   - No missing alt attributes found in critical user-facing images
+
+**SEO Improvements**:
+- Before: No robots.txt, no sitemap, generic metadata, no structured data
+- After: Complete SEO foundation with Next.js 16 best practices
+- Dynamic sitemap with ISR (1h revalidation)
+- Profile-specific metadata for social sharing
+- Schema.org markup for rich results eligibility
+
+**Files Created**:
+- `app/robots.ts` - Dynamic robots configuration
+- `app/sitemap.ts` - ISR-enabled dynamic sitemap
+- `app/profile/edit/layout.tsx` - Metadata wrapper for Client Component
+- `app/profile/[id]/ProfilePageClient.tsx` - Client Component split
+- `components/seo/StructuredData.tsx` - JSON-LD structured data
+
+**Files Modified**:
+- `app/layout.tsx` - Enhanced metadata, title template, structured data integration
+- `app/login/page.tsx` - Added metadata with noindex
+- `app/signup/page.tsx` - Added metadata with noindex
+- `app/profile/[id]/page.tsx` - Refactored to Server Component with generateMetadata
+
+**Build Verification**:
+- ✅ TypeScript compiles cleanly
+- ✅ All routes build successfully
+- ✅ Sitemap generates with 1h revalidation
+- ✅ Robots.txt static generation successful
+- ✅ No build errors or warnings
+
+**Next Steps**: 
+- Monitor Google Search Console for indexing after deployment
+- Track organic search traffic via analytics
+- Phase 2: Individual course detail pages with Course schema markup
+
 ### October 31, 2025 - Supabase Database Hardening
 1. ✅ **Row Level Security (RLS) Implemented**
    - Enabled RLS on `courses` table (public read-only)
@@ -58,6 +130,8 @@
 - ✅ **Row Level Security (RLS)**: Database-level access control enforced
 - ✅ **Performance Indexes**: Optimized array searches and user lookups
 - ✅ **Secure Functions**: All database functions hardened against SQL injection
+- ✅ **SEO Foundation**: Dynamic robots.txt, ISR sitemap, enhanced metadata, structured data
+- ✅ **Profile Metadata**: Dynamic Open Graph tags for social sharing
 
 ## Current Work Focus
 ### Supabase Database Hardening - COMPLETE ✅

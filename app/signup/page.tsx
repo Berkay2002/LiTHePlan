@@ -1,4 +1,17 @@
+import type { Metadata } from "next";
 import { LoginForm } from "@/components/login-form";
+
+export const metadata: Metadata = {
+  title: "Sign Up",
+  description: "Create a LiTHePlan account to save your course profile and access it from any device. Unofficial student project for LiU students.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+  alternates: {
+    canonical: "https://litheplan.tech/signup",
+  },
+};
 
 export default function SignupPage() {
   return (

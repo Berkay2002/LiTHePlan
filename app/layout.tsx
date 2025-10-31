@@ -1,14 +1,33 @@
 import type { Metadata } from "next";
 import { geistSans, geistMono } from "./fonts";
+import StructuredData from "@/components/seo/StructuredData";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech"
   ),
-  title: "LiTHePlan",
+  title: {
+    template: "%s | LiTHePlan",
+    default: "LiTHePlan - Plan Your Master's Courses at Linköping University",
+  },
   description:
-    "Plan your master's program courses at Linköping University - Build unique 90hp academic profiles across different specializations",
+    "Unofficial student-created course planning tool for Linköping University students. Explore 339 curated master's courses, build your 90hp profile, and validate degree requirements. Not affiliated with LiU.",
+  keywords: [
+    "Linköping University",
+    "LiU",
+    "course planner",
+    "master program",
+    "civilingenjör",
+    "course planning",
+    "academic profile",
+    "engineering courses",
+    "Sweden university",
+  ],
+  authors: [{ name: "LiTHePlan Team" }],
+  alternates: {
+    canonical: "https://litheplan.tech",
+  },
   icons: {
     icon: [
       { url: "/icon0.svg", type: "image/svg+xml" },
@@ -20,17 +39,20 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: "LiTHePlan",
+    title: "LiTHePlan - Unofficial Course Planner for Linköping University",
     description:
-      "Plan your master's program courses at Linköping University - Build unique 90hp academic profiles across different specializations",
+      "Unofficial student-created course planning tool for Linköping University students. Explore 339 curated master's courses, build your 90hp profile, and validate degree requirements. Not affiliated with LiU.",
     images: ["/web-app-manifest-512x512.png"],
     type: "website",
+    locale: "en_US",
+    siteName: "LiTHePlan",
+    url: "https://litheplan.tech",
   },
   twitter: {
     card: "summary_large_image",
-    title: "LiTHePlan",
+    title: "LiTHePlan - Unofficial Course Planner for Linköping University",
     description:
-      "Plan your master's program courses at Linköping University - Build unique 90hp academic profiles across different specializations",
+      "Unofficial student-created course planning tool for Linköping University students. Explore 339 curated courses, build your 90hp profile. Not affiliated with LiU.",
     images: ["/web-app-manifest-512x512.png"],
   },
   other: {
@@ -47,6 +69,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <StructuredData />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

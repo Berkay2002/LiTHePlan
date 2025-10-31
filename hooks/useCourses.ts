@@ -106,7 +106,7 @@ export function useCourses(
       setPagination(data.pagination);
 
       // Cache the result
-      if (enableCache) {
+      if (enableCache && data.courses) {
         coursesCache.set(cacheKey, {
           data: data.courses,
           pagination: data.pagination,
