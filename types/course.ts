@@ -39,7 +39,7 @@ export interface Course {
   programs: string[];
 
   /** Orientations (specializations within programs) this course belongs to */
-  orientations: string[];
+  orientations?: string[];
 
   /** Huvudområde (main subject area) - comma-separated string from database */
   huvudomrade?: string | null;
@@ -92,7 +92,8 @@ export function isValidCourse(course: unknown): course is Course {
       courseObj.campus as string
     ) &&
     Array.isArray(courseObj.programs) &&
-    Array.isArray(courseObj.orientations) &&
+    (courseObj.orientations === undefined ||
+      Array.isArray(courseObj.orientations)) &&
     (courseObj.notes === undefined ||
       courseObj.notes === null ||
       typeof courseObj.notes === "string")

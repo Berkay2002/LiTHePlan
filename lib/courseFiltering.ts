@@ -122,7 +122,13 @@ const matchesExamination = (
   course: Course,
   selectedExaminations: FilterState["examination"]
 ) => {
+  // If all examination types are selected, show all courses
   if (selectedExaminations.length === EXAMINATION_TYPES.length) {
+    return true;
+  }
+
+  // If course has no examination data, include it (assume it matches)
+  if (!course.examination || course.examination.length === 0) {
     return true;
   }
 

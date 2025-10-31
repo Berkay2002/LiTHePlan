@@ -29,6 +29,18 @@ export default function StructuredData() {
           "query-input": "required name=search_term_string"
         },
         "disclaimer": "This is an unofficial student project. Course data is manually curated and may not reflect current university offerings. Always verify with official Linköping University sources."
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${baseUrl}/#courselist`,
+        "name": "Linköping University Course Catalog",
+        "description": "339 curated master's level courses for Linköping University civil engineering students",
+        "numberOfItems": 339,
+        "itemListElement": {
+          "@type": "ListItem",
+          "name": "Course Pages",
+          "url": `${baseUrl}/course/`
+        }
       }
     ]
   };

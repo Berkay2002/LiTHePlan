@@ -23,6 +23,10 @@ export const metadata: Metadata = {
     "academic profile",
     "engineering courses",
     "Sweden university",
+    "course details",
+    "course catalog",
+    "course pages",
+    "LiU courses",
   ],
   authors: [{ name: "LiTHePlan Team" }],
   alternates: {

@@ -66,13 +66,16 @@ export function CollapsibleFilterSidebar({
   const [showProgramTooltip, setShowProgramTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  // Ensure courses is always an array
+  const safeCourses = courses || [];
+
   // Generate unique filter options from course data
   const filterOptions = {
-    level: Array.from(new Set(courses.map((course) => course.level))),
+    level: Array.from(new Set(safeCourses.map((course) => course.level))),
     term: (() => {
       // Extract all unique terms from courses - now they're string arrays
       const allTerms = new Set<string>();
-      courses.forEach((course) => {
+      safeCourses.forEach((course) => {
         course.term.forEach((term) => allTerms.add(term));
       });
       const uniqueTerms = Array.from(allTerms).sort();
@@ -89,7 +92,7 @@ export function CollapsibleFilterSidebar({
     })(),
     period: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) => course.period)
           .map((p) => Number.parseInt(p))
           .filter((p) => !isNaN(p))
@@ -97,24 +100,24 @@ export function CollapsibleFilterSidebar({
     ).sort(),
     block: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) => course.block)
           .map((b) => Number.parseInt(b))
           .filter((b) => !isNaN(b))
       )
     ).sort(),
-    pace: Array.from(new Set(courses.map((course) => course.pace))),
-    campus: Array.from(new Set(courses.map((course) => course.campus))),
+    pace: Array.from(new Set(safeCourses.map((course) => course.pace))),
+    campus: Array.from(new Set(safeCourses.map((course) => course.campus))),
     programs: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) => course.programs || [])
           .filter((program) => program && program.trim() !== "")
       )
     ).sort(),
     huvudomraden: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) =>
             course.huvudomrade
               ? course.huvudomrade
@@ -585,6 +588,9 @@ export function FilterPanel({
   const [showProgramTooltip, setShowProgramTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
+  // Ensure courses is always an array
+  const safeCourses = courses || [];
+
   // All available programs (complete and incomplete)
   const allPrograms = [
     "Datateknik",
@@ -609,11 +615,11 @@ export function FilterPanel({
 
   // Generate unique filter options from course data
   const filterOptions = {
-    level: Array.from(new Set(courses.map((course) => course.level))),
+    level: Array.from(new Set(safeCourses.map((course) => course.level))),
     term: (() => {
       // Extract all unique terms from courses - now they're string arrays
       const allTerms = new Set<string>();
-      courses.forEach((course) => {
+      safeCourses.forEach((course) => {
         course.term.forEach((term) => allTerms.add(term));
       });
       const uniqueTerms = Array.from(allTerms).sort();
@@ -630,7 +636,7 @@ export function FilterPanel({
     })(),
     period: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) => course.period)
           .map((p) => Number.parseInt(p))
           .filter((p) => !isNaN(p))
@@ -638,24 +644,24 @@ export function FilterPanel({
     ).sort(),
     block: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) => course.block)
           .map((b) => Number.parseInt(b))
           .filter((b) => !isNaN(b))
       )
     ).sort(),
-    pace: Array.from(new Set(courses.map((course) => course.pace))),
-    campus: Array.from(new Set(courses.map((course) => course.campus))),
+    pace: Array.from(new Set(safeCourses.map((course) => course.pace))),
+    campus: Array.from(new Set(safeCourses.map((course) => course.campus))),
     programs: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) => course.programs || [])
           .filter((program) => program && program.trim() !== "")
       )
     ).sort(),
     huvudomraden: Array.from(
       new Set(
-        courses
+        safeCourses
           .flatMap((course) =>
             course.huvudomrade
               ? course.huvudomrade

@@ -100,7 +100,10 @@ export function useCourses(
         throw new Error(`Failed to fetch courses: ${response.status}`);
       }
 
-      const data: CoursesResponse = await response.json();
+      const json = await response.json();
+      
+      // Handle both old and new API response formats
+      const data: CoursesResponse = json.data || json;
 
       setCourses(data.courses);
       setPagination(data.pagination);

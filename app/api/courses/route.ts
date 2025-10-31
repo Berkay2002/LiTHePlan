@@ -121,12 +121,21 @@ export async function GET(request: NextRequest) {
 
     const { data, error, count } = await query.order("id");
 
+    // Transform data to match frontend types
+    const transformedData = data?.map((course) => ({
+      ...course,
+      // Convert numeric pace (1.0, 0.5) to percentage string (100%, 50%)
+      pace: typeof course.pace === 'number'
+        ? course.pace === 1 || course.pace === 1.0 ? '100%' : '50%'
+        : course.pace,
+    }));
+
     const duration = Date.now() - startTime;
 
     logger.info("Courses API request completed", {
       requestId,
       duration,
-      coursesReturned: data?.length || 0,
+      coursesReturned: transformedData?.length || 0,
       totalCourses: count || 0,
       loadAll,
       filtersApplied: Object.keys(filters).filter(
@@ -155,7 +164,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       successResponse(
         {
-          courses: data,
+          courses: transformedData,
           pagination: {
             page,
             limit,

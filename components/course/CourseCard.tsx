@@ -211,14 +211,14 @@ export function CourseCard({ course }: CourseCardProps) {
         {/* Main Course Header */}
         <div className="mb-5">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground line-clamp-3 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1 min-h-[4.5rem]">
+            <h3 className="text-lg font-semibold text-foreground line-clamp-3 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1 min-h-18">
               {course.name}
             </h3>
             {course.notes && (
               <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                 <TooltipTrigger asChild>
                   <button
-                    className="flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-1 rounded-md border border-amber-200 ml-2 flex-shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                    className="flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-1 rounded-md border border-amber-200 ml-2 shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
                     onBlur={() => isMobile && setShowNotesTooltip(false)}
                     onClick={() =>
                       isMobile && setShowNotesTooltip(!showNotesTooltip)
