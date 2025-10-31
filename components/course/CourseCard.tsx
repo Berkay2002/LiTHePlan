@@ -3,10 +3,12 @@ import {
   Check,
   Clock,
   ExternalLink,
+  Info,
   MapPin,
   Plus,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { Badge } from "@/components/ui/badge";
@@ -240,8 +242,21 @@ export function CourseCard({ course }: CourseCardProps) {
             )}
           </div>
           <div className="flex items-center justify-between">
-            <div className="text-sm text-air-superiority-blue font-mono font-bold">
-              {course.id}
+            <div className="flex items-center gap-2">
+              <div className="text-sm text-air-superiority-blue font-mono font-bold">
+                {course.id}
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
+                }}
+                className="text-air-superiority-blue/60 hover:text-air-superiority-blue transition-colors"
+                title="View on LiU official site"
+              >
+                <ExternalLink className="h-3.5 w-3.5" />
+              </button>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {(() => {
@@ -489,21 +504,16 @@ export function CourseCard({ course }: CourseCardProps) {
                 </>
               )}
             </Button>
-            <Button
-              className="h-10 text-sm font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
-              onClick={() => {
-                window.open(
-                  `https://studieinfo.liu.se/kurs/${course.id}`,
-                  "_blank",
-                  "noopener,noreferrer"
-                );
-              }}
-              size="default"
-              variant="outline"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              View Course
-            </Button>
+            <Link href={`/course/${course.id}`}>
+              <Button
+                className="h-10 text-sm font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
+                size="default"
+                variant="outline"
+              >
+                <Info className="h-4 w-4 mr-2" />
+                Course Details
+              </Button>
+            </Link>
           </div>
         </div>
       </CardContent>
