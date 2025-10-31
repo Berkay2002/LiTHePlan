@@ -32,14 +32,226 @@ See `memory-bank.instructions.md` for complete Memory Bank system documentation.
 2. ✅ Check `activeContext.md` for current focus
 3. ✅ Review `progress.md` for feature status
 4. ✅ Analyze existing code patterns in the codebase
-5. ✅ Fetch latest documentation for frameworks/libraries being used
-6. ✅ Run `npm run lint` to understand current code quality baseline
+5. ✅ **For Next.js questions**: Use Next.js MCP tools (`nextjs_docs`, `nextjs_runtime`) - they are authoritative and project-aware
+6. ✅ **For other libraries**: Use Context7 tools (`resolve_library_id`, `get_library_docs`) as fallback
+7. ✅ Run `npm run lint` to understand current code quality baseline
+
+### MCP Tool Usage (CRITICAL)
+**⚠️ ALWAYS run MCP tools ONE AT A TIME, never in parallel.**
+
+Running multiple MCP tools simultaneously will cause this error:
+```
+Failed to render content: ModelService: Cannot add model because it already exists!
+```
+
+**✅ Correct**: Execute MCP tool calls sequentially, waiting for each to complete before starting the next.
+
+**❌ Wrong**: Invoking multiple MCP tools in the same function call block.
+
+## Next.js MCP Server (next-devtools-mcp)
+
+**CRITICAL: This project uses Next.js 16+ with built-in MCP support via the official `next-devtools-mcp` package.**
+
+### Overview
+
+The Model Context Protocol (MCP) is an open standard that allows AI agents to interact with Next.js applications through a standardized interface. Next.js 16+ includes MCP support that enables agents to access application internals in real-time.
+
+**CRITICAL TOOL PRIORITY**:
+- ✅ **PRIMARY**: Use Next.js MCP tools for ALL Next.js-related tasks (documentation, runtime inspection, browser testing)
+- ✅ **FALLBACK**: Use Context7 tools only for non-Next.js libraries (Supabase, Tailwind, etc.)
+- ✅ **RATIONALE**: Next.js MCP tools are official, project-aware, and provide real-time application state
+
+**Setup**: The project includes `.mcp.json` configuration:
+```json
+{
+  "mcpServers": {
+    "next-devtools": {
+      "command": "npx",
+      "args": ["-y", "next-devtools-mcp@latest"]
+    }
+  }
+}
+```
+
+### Available Tools
+
+The Next.js MCP provides a comprehensive suite of tools - **ALWAYS prefer these over Context7 for Next.js work**:
+
+#### Runtime Inspection Tools (`nextjs_runtime`)
+
+1. **`get_errors`** - Retrieve current build errors, runtime errors, and type errors
+   - **Use when**: Debugging compilation issues, runtime exceptions, or TypeScript errors
+   - **Benefit**: Get real-time error context instead of relying on terminal output
+   - **Example**: "What errors are currently in my application?"
+
+2. **`get_logs`** - Access development log file with browser console logs and server output
+   - **Use when**: Investigating client-side console messages or server-side logs
+   - **Benefit**: Unified view of all application logging
+   - **Example**: "Show me recent console errors from the browser"
+
+3. **`get_page_metadata`** - Query page routes, components, and rendering details
+   - **Use when**: Understanding page structure, component hierarchy, or routing
+   - **Benefit**: Know exactly which components render on each route
+   - **Example**: "What components are used on the /profile/[id] page?"
+
+4. **`get_project_metadata`** - Retrieve project structure, configuration, and dev server URL
+   - **Use when**: Understanding project setup, Next.js config, or available routes
+   - **Benefit**: Get comprehensive project context without reading multiple files
+   - **Example**: "What routes exist in this application?"
+
+5. **`get_server_action_by_id`** - Look up Server Actions by ID to find source file and function
+   - **Use when**: Debugging Server Actions or understanding data mutations
+   - **Benefit**: Trace Server Action calls to their implementation
+   - **Example**: "Where is this Server Action defined?"
+
+#### Documentation Tools (`nextjs_docs`)
+
+6. **`nextjs_docs`** - Search official Next.js documentation and knowledge base
+   - **Use when**: Learning Next.js concepts, APIs, or best practices
+   - **Benefit**: Authoritative, up-to-date documentation from Next.js 16
+   - **Example**: "How do I use Server Components in App Router?"
+   - **CRITICAL**: This is the PRIMARY source for Next.js documentation (not Context7)
+
+#### Browser Testing Tools (`browser_eval`)
+
+7. **`browser_eval`** - Playwright-based browser automation for testing pages
+   - **Use when**: Verifying pages load correctly, testing user interactions, checking console errors
+   - **Benefit**: Tests actual browser rendering, not just HTTP responses
+   - **Example**: "Test if the profile page renders without errors"
+   - **Actions**: navigate, click, type, screenshot, console_messages, evaluate JavaScript
+
+#### Migration & Setup Tools
+
+8. **`upgrade_nextjs_16`** - Automated Next.js 16 upgrade with codemods
+   - **Use when**: Upgrading from Next.js 15 or earlier
+   - **Benefit**: Official migration tool handles breaking changes automatically
+
+9. **`enable_cache_components`** - Cache Components setup and verification
+   - **Use when**: Setting up experimental caching features
+   - **Benefit**: Automated configuration and error fixing
+
+### Development Workflow with MCP
+
+**Standard workflow**:
+1. Start Next.js dev server: `npm run dev`
+2. Agent automatically connects via `next-devtools-mcp`
+3. Open application in browser to generate runtime state
+4. Query agent for insights, diagnostics, or fixes
+
+**Critical workflow integration**:
+- **Before fixing errors**: Use `get_errors` to understand current issues
+- **Before modifying routes**: Use `get_page_metadata` to understand structure
+- **After making changes**: Use `get_errors` to verify no new issues introduced
+- **When debugging**: Use `get_logs` to see browser console output
+
+### Benefits for Agent-Assisted Development
+
+**Context-aware code generation**:
+- ✅ Recommend correct placement for new features based on existing structure
+- ✅ Generate code following project patterns (Server/Client component split)
+- ✅ Understand App Router page/layout hierarchy
+- ✅ Provide accurate implementations matching conventions
+
+**Real-time error detection**:
+- ✅ Identify build errors, runtime errors, and TypeScript errors immediately
+- ✅ Analyze errors with full context (file, line, stack trace)
+- ✅ Detect hydration issues and React errors
+- ✅ Verify fixes resolve errors without manual testing
+
+**Live application state**:
+- ✅ Query current configuration and routes
+- ✅ Understand which pages use which components
+- ✅ Inspect Server Actions and their implementations
+- ✅ Access browser console logs and server output
+
+### Example: Error Detection and Fix
+
+```bash
+User: "What errors are currently in my application?"
+
+Agent workflow:
+1. Calls get_errors via next-devtools-mcp
+2. Retrieves current build/runtime/type errors
+3. Analyzes error context (file, line, type)
+4. Proposes fixes based on error patterns
+5. Implements fix
+6. Calls get_errors again to verify resolution
+```
+
+**Response pattern**:
+```
+⏺ Checking current errors in the application...
+⏺ next-devtools - nextjs_runtime (action: "call_tool", toolName: "get_errors")
+
+⏺ Found hydration error on /about page:
+   - Server rendering: "server"
+   - Client rendering: "client"
+   - Cause: Mismatch in component output
+
+⏺ Implementing fix...
+   [applies fix to component]
+
+⏺ Verifying fix...
+⏺ next-devtools - nextjs_runtime (action: "call_tool", toolName: "get_errors")
+⏺ ✅ No errors detected - hydration issue resolved
+```
+
+### Example: Understanding Project Structure
+
+```bash
+User: "What routes exist in this application?"
+
+Agent workflow:
+1. Calls get_project_metadata via next-devtools-mcp
+2. Retrieves all routes from App Router
+3. Provides route list with render types (Static/Dynamic)
+```
+
+**Response pattern**:
+```
+⏺ Querying project structure...
+⏺ next-devtools - nextjs_runtime (action: "call_tool", toolName: "get_project_metadata")
+
+⏺ Found 10 routes:
+   - / (Static) - Home page with course catalog
+   - /login (Static) - Authentication page
+   - /signup (Static) - Registration page
+   - /profile/[id] (Dynamic) - User profile viewer
+   - /api/courses (Dynamic) - Course filtering API
+   - /api/profile (Dynamic) - Profile CRUD operations
+   ...
+```
+
+### Troubleshooting MCP Connection
+
+**Issue**: "MCP server not connecting"
+- ✅ Verify Next.js 16+ installed: Check `package.json` shows `"next": "16.0.1"`
+- ✅ Verify `.mcp.json` exists in project root
+- ✅ Ensure dev server is running: `npm run dev` should show "Ready in X.Xs"
+- ✅ Restart dev server if it was already running before MCP setup
+- ✅ Check agent has loaded MCP configuration
+
+**Issue**: "Tools not available"
+- ✅ Verify dev server is accessible at `http://localhost:3000`
+- ✅ Check MCP endpoint exists: `http://localhost:3000/_next/mcp`
+- ✅ Ensure `next-devtools-mcp` package is latest version
+
+### How It Works
+
+Next.js 16+ includes a built-in MCP endpoint at `/_next/mcp` that runs within the development server. The `next-devtools-mcp` package:
+
+1. **Discovers** running Next.js instances on different ports
+2. **Connects** to the `/_next/mcp` endpoint
+3. **Forwards** tool calls to the appropriate dev server
+4. **Returns** real-time application state and errors
+
+This architecture decouples the agent interface from internal implementation, enabling seamless operation across different Next.js projects.
 
 ## Project Overview
 
-LiTHePlan is a Next.js 15 course planning application that helps Linköping University civil engineering students discover and plan 90hp master's programs (terms 7-9) by filtering 339 curated courses across 25+ specializations and building custom academic profiles.
+LiTHePlan is a Next.js 16 course planning application that helps Linköping University civil engineering students discover and plan 90hp master's programs (terms 7-9) by filtering 339 curated courses across 25+ specializations and building custom academic profiles.
 
-**Key Technologies**: Next.js 15 (App Router), React 19, TypeScript 5, Tailwind CSS v4, Supabase (PostgreSQL + Auth), shadcn/ui components
+**Key Technologies**: Next.js 16.0.1 (App Router), React 19.2, TypeScript 5, Tailwind CSS v4, Supabase (PostgreSQL + Auth), shadcn/ui components
 
 **Architecture**: Hybrid storage pattern (Supabase for authenticated users, localStorage for guests), server-side course filtering via API routes, global state management with React Context + useReducer.
 
@@ -183,10 +395,13 @@ npm run build         # TypeScript must compile cleanly
 ## Code Style Guidelines
 
 ### Before Writing Code (MANDATORY)
-1. **Fetch Latest Documentation**: Always use Upstash Context7 tools (`resolve_library_id`, `get_library_docs`) to fetch current framework/library documentation before implementing features
-2. **Analyze Existing Patterns**: Study the codebase before adding new code
-3. **Consider Edge Cases**: Think through error scenarios
-4. **Validate Accessibility**: Ensure WCAG compliance
+1. **Fetch Latest Documentation**: 
+   - **For Next.js**: Use `nextjs_docs` tool (official Next.js MCP) - **ALWAYS FIRST CHOICE**
+   - **For other libraries**: Use Context7 tools (`resolve_library_id`, `get_library_docs`) as fallback
+2. **Check Runtime State**: Use `nextjs_runtime` tools to understand current application state
+3. **Analyze Existing Patterns**: Study the codebase before adding new code
+4. **Consider Edge Cases**: Think through error scenarios
+5. **Validate Accessibility**: Ensure WCAG compliance
 
 ### TypeScript Standards
 - **Strict mode enabled**: No `any` types allowed (use `unknown` + type guards)
@@ -454,7 +669,7 @@ export function isValidCourse(course: unknown): course is Course {
 | `app/api/courses/route.ts` | Course filtering API | Adding filters, pagination |
 | `utils/supabase/server.ts` | Server-side Supabase client | Server auth/data access |
 | `utils/supabase/client.ts` | Client-side Supabase client | Client auth/data access |
-| `middleware.ts` | Auth session refresh | Auth token management |
+| `proxy.ts` | Auth session refresh (Next.js 16) | Auth token management |
 
 ## Database Schema
 
@@ -702,7 +917,7 @@ if (typeof window !== 'undefined') {
 
 ### Authentication Patterns
 - **Supabase Auth**: Handles email/password, session management
-- **Middleware**: Auto-refreshes auth tokens (`middleware.ts`)
+- **Proxy**: Auto-refreshes auth tokens (`proxy.ts` - Next.js 16 pattern)
 - **RLS Policies**: Users can only access their own profiles
 - **No API keys in client**: Use `NEXT_PUBLIC_*` for public keys only
 
@@ -738,11 +953,11 @@ npx vercel
 ```
 
 ### Build Configuration
-- **Framework**: Next.js 15
+- **Framework**: Next.js 16.0.1 (upgraded from 15.5.4)
 - **Build Command**: `npm run build`
 - **Output Directory**: `.next`
 - **Install Command**: `npm install`
-- **Node Version**: 18+
+- **Node Version**: 20.9+ (current: 20.19.0)
 
 ### Environment Variables
 Required in `.env.local` (development) and Vercel dashboard (production):
@@ -775,8 +990,8 @@ This project follows strict conventions defined in `.github/instructions/`:
   - Defines the complete Memory Bank system and workflows
   - **MANDATORY**: Read all Memory Bank files before starting any task
 
-- **nextjs.instructions.md**: Next.js 15 App Router best practices
-  - **MANDATORY**: Always fetch latest Next.js documentation using Context7 tools before implementing features
+- **nextjs.instructions.md**: Next.js 16 App Router best practices
+  - **MANDATORY**: Always fetch latest Next.js documentation using Next.js MCP tools before implementing features
   - **MANDATORY**: Use Server Components by default, Client Components only for interactivity
 
 - **typescript-5-es2022.instructions.md**: TypeScript 5 standards
@@ -796,8 +1011,10 @@ This project follows strict conventions defined in `.github/instructions/`:
 Always reference these files for detailed guidance on specific topics.
 
 ### External Dependencies
+- **Next.js 16 Docs**: https://nextjs.org/docs
+- **Next.js MCP Server**: https://github.com/vercel/next-devtools-mcp
+- **Model Context Protocol**: https://modelcontextprotocol.io
 - **Supabase Docs**: https://supabase.com/docs
-- **Next.js 15 Docs**: https://nextjs.org/docs
 - **shadcn/ui Components**: https://ui.shadcn.com/
 - **Tailwind CSS v4**: https://tailwindcss.com/docs
 - **Ultracite Linting**: https://github.com/biomejs/biome

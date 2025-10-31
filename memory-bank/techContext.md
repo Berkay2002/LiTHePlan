@@ -3,23 +3,30 @@
 ## Technology Stack
 
 ### Frontend Framework
-- **Next.js 15**: App Router (not Pages Router)
+- **Next.js 16.0.1**: App Router (not Pages Router)
   - Server Components by default
   - Client Components with `'use client'`
   - Built-in API routes
   - Automatic code splitting
   - Image optimization
+  - **Turbopack**: Default build tool (no `--turbopack` flag needed)
+  - **Async Request APIs**: `cookies()`, `headers()`, `params`, `searchParams` must be awaited
+  - **Proxy File**: `proxy.ts` (replaces `middleware.ts`)
   
-- **React 19**: Latest stable
+- **React 19.2**: Latest stable with new features
   - Hooks (useState, useEffect, useReducer, useContext)
   - No class components
   - Concurrent features enabled
+  - **View Transitions API**: Animate elements during navigation
+  - **useEffectEvent**: Extract non-reactive logic from Effects
+  - **Activity Component**: Background rendering support
 
-- **TypeScript 5**: Strict mode
+- **TypeScript 5**: Strict mode (minimum 5.1.0)
   - All files `.ts` or `.tsx`
   - No `any` type allowed (Ultracite rule)
   - Type imports with `import type`
   - Strict null checks enabled
+  - Use `npx next typegen` for async params type helpers
 
 ### Styling
 - **Tailwind CSS v4**: PostCSS-based (not JIT)
@@ -121,7 +128,9 @@ LiTHePlan/
 ├── utils/supabase/
 │   ├── client.ts              # Browser Supabase client
 │   ├── server.ts              # Server Supabase client (SSR)
-│   └── middleware.ts          # Auth session refresh
+│   └── middleware.ts          # Auth utilities (imported by proxy.ts)
+│
+├── proxy.ts                    # Auth session refresh (Next.js 16)
 │
 ├── scripts/
 │   └── fetch-course-stats.js  # Database stats generator
@@ -137,7 +146,7 @@ LiTHePlan/
 ## Development Setup
 
 ### Prerequisites
-- Node.js 18+ (tested on v20.x)
+- Node.js 20.9+ (minimum required for Next.js 16, tested on v20.19.0)
 - npm 9+ (or yarn/pnpm)
 - Git
 - Supabase account (free tier)

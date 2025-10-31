@@ -5,28 +5,37 @@ applyTo: '**/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css'
 
 # Next.js + Tailwind Development Instructions
 
-Instructions for high-quality Next.js applications with Tailwind CSS styling and TypeScript.
+Instructions for high-quality Next.js 16 applications with Tailwind CSS styling and TypeScript.
 
 ## Project Context
 
-- Latest Next.js (App Router)
-- TypeScript for type safety
-- Tailwind CSS for styling
+- Next.js 16 (App Router with Turbopack)
+- TypeScript 5+ for type safety
+- Tailwind CSS v4 for styling
+- React 19.2 with concurrent features
 
 ## Development Standards
 
 ### Architecture
-- App Router with server and client components
+- App Router with Server and Client Components
 - Group routes by feature/domain
 - Implement proper error boundaries
 - Use React Server Components by default
 - Leverage static optimization where possible
+- Use `proxy.ts` (not `middleware.ts`) for auth/session management
+
+### Async Request APIs
+- **MANDATORY**: Await all dynamic APIs in Next.js 16
+- `cookies()`, `headers()`, `draftMode()` must be awaited
+- `params` and `searchParams` are now Promises
+- Use `npx next typegen` for type-safe async params
 
 ### TypeScript
-- Strict mode enabled
+- Strict mode enabled (TypeScript 5.1+ required)
 - Clear type definitions
 - Proper error handling with type guards
 - Zod for runtime type validation
+- No `any` types - use `unknown` with type guards
 
 ### Styling
 - Tailwind CSS with consistent color palette
