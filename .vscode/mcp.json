@@ -12,6 +12,18 @@
 				"next-devtools-mcp@latest"
 			]
 		},
+		"vercel": {
+			"url": "https://mcp.vercel.com",
+			"type": "http"
+		},
+		"sentry": {
+			"url": "https://mcp.sentry.dev/mcp",
+			"type": "http"
+		},
+		"supabase": {
+			"url": "https://mcp.supabase.com/mcp?project_ref=hzshoimagashvzbeuhtx",
+			"type": "http"
+		}
 	},
 	"inputs": []
 }
