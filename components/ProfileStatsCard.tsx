@@ -114,7 +114,7 @@ export function ProfileStatsCard({
           <div className="flex flex-col items-center justify-center space-y-4">
             {/* Progress text above pie chart */}
             <div className="text-center">
-              <div className="text-xl font-bold text-card-foreground">
+              <div className="text-xl font-bold text-foreground">
                 {currentCredits} / {targetCredits} hp
               </div>
               <div className="text-sm text-muted-foreground">
@@ -148,7 +148,7 @@ export function ProfileStatsCard({
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: segment.color }}
                   />
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm text-foreground">
                     {segment.label} ({segment.value}hp)
                   </span>
                 </div>
@@ -161,7 +161,7 @@ export function ProfileStatsCard({
             {/* Advanced Credits Section */}
             <div className="border border-border rounded-lg p-4 bg-card/50">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-card-foreground">
+                <h3 className="text-sm font-medium text-foreground">
                   Advanced Credits
                 </h3>
                 <Badge
@@ -177,12 +177,12 @@ export function ProfileStatsCard({
 
               <Progress className="h-2 mb-2" value={advancedPercentage} />
 
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Required: {minAdvancedCredits}hp</span>
+              <div className="flex justify-between text-xs">
+                <span className="text-foreground">Required: {minAdvancedCredits}hp</span>
                 {advancedCredits >= minAdvancedCredits ? (
-                  <span className="text-chart-2 font-medium">✓ Complete</span>
+                  <span className="text-green-600 dark:text-green-400 font-medium">✓ Complete</span>
                 ) : (
-                  <span className="text-chart-4 font-medium">
+                  <span className="text-amber-600 dark:text-amber-400 font-medium">
                     {minAdvancedCredits - advancedCredits}hp needed
                   </span>
                 )}
@@ -192,10 +192,10 @@ export function ProfileStatsCard({
             {/* Top Programs Section */}
             <div className="border border-border rounded-lg p-4 bg-card/50">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium text-card-foreground">
+                <h3 className="text-sm font-medium text-foreground">
                   Top Programs
                 </h3>
-                <Badge className="text-xs font-medium text-card-foreground" variant="outline">
+                <Badge className="text-xs font-medium" variant="outline">
                   {Object.keys(programCredits).length} total
                 </Badge>
               </div>
@@ -210,11 +210,11 @@ export function ProfileStatsCard({
                             <span className="text-xs font-medium text-muted-foreground shrink-0 w-4">
                               #{index + 1}
                             </span>
-                            <span className="text-sm font-medium truncate text-card-foreground" title={program}>
+                            <span className="text-sm font-medium truncate text-foreground" title={program}>
                               {program}
                             </span>
                           </div>
-                          <span className="text-sm font-medium text-card-foreground shrink-0">
+                          <span className="text-sm font-medium text-foreground shrink-0">
                             {credits} / {PROGRAM_FOCUS_TARGET_CREDITS} hp
                           </span>
                         </div>

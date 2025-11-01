@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
@@ -13,10 +14,7 @@ import { TopControlsSkeleton } from "@/components/course/ControlsSkeleton";
 import { type ViewMode, ViewToggle } from "@/components/course/ViewToggle";
 import { InfoBanner } from "@/components/InfoBanner";
 import { PageLayout } from "@/components/layout/PageLayout";
-import {
-  ProfileProvider,
-  useProfile,
-} from "@/components/profile/ProfileContext";
+import { useProfile } from "@/components/profile/ProfileContext";
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { ProfileSidebarSkeleton } from "@/components/profile/ProfileSidebarSkeleton";
 import { useCourses } from "@/hooks/useCourses";
@@ -36,6 +34,7 @@ import {
 const COURSES_PER_PAGE = 12;
 
 function HomeContent() {
+  const searchParams = useSearchParams();
   const { courses, loading, error } = useCourses({
     loadAll: true,
     enableCache: true,
@@ -50,6 +49,25 @@ function HomeContent() {
       deserialize: parseFilterState,
     }
   );
+
+  // Apply URL query parameters to filters on mount
+  useEffect(() => {
+    const programsParam = searchParams.get('programs');
+    const levelParam = searchParams.get('level');
+    const huvudomradenParam = searchParams.get('huvudomraden');
+    const campusParam = searchParams.get('campus');
+    
+    if (programsParam || levelParam || huvudomradenParam || campusParam) {
+      // Start with default state, then apply ONLY the URL params
+      const newState = createDefaultFilterState();
+      if (programsParam) newState.programs = [programsParam];
+      if (levelParam) newState.level = [levelParam];
+      if (huvudomradenParam) newState.huvudomraden = [huvudomradenParam];
+      if (campusParam) newState.campus = [campusParam];
+      
+      setFilterState(newState);
+    }
+  }, [searchParams, setFilterState]);
 
   const [viewMode, setViewMode] = usePersistentState<ViewMode>(
     VIEW_MODE_STORAGE_KEY,
@@ -240,9 +258,5 @@ function HomeContent() {
 }
 
 export default function Home() {
-  return (
-    <ProfileProvider>
-      <HomeContent />
-    </ProfileProvider>
-  );
+  return <HomeContent />;
 }

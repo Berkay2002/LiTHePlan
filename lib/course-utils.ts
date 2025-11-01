@@ -107,7 +107,9 @@ export async function fetchRelatedCourses(
       console.error(`Failed to fetch related courses: ${response.statusText}`);
       return [];
     }
-    return await response.json();
+    const result = await response.json();
+    // API returns structured response: {success, data: {courses: [...]}}
+    return result.data?.courses || [];
   } catch (error) {
     console.error('Error fetching related courses:', error);
     return [];

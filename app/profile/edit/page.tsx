@@ -9,10 +9,7 @@ import { EditableTermCard } from "@/components/EditableTermCard";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileSkeletonLoader } from "@/components/ProfileSkeletonLoader";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
-import {
-  ProfileProvider,
-  useProfile,
-} from "@/components/profile/ProfileContext";
+import { useProfile } from "@/components/profile/ProfileContext";
 import {
   IMMUTABLE_MASTER_PROGRAM_TERMS,
   MASTER_PROGRAM_TERMS,
@@ -177,9 +174,5 @@ function ProfileEditPageContent() {
 }
 
 export default function ProfileEditPage() {
-  return (
-    <ProfileProvider>
-      <ProfileEditPageContent />
-    </ProfileProvider>
-  );
+  return <ProfileEditPageContent />;
 }

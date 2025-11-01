@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { geistSans, geistMono } from "./fonts";
+import { CourseCommandSearch } from "@/components/course/CourseCommandSearch";
+import { ProfileProvider } from "@/components/profile/ProfileContext";
 import StructuredData from "@/components/seo/StructuredData";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
@@ -73,7 +75,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <StructuredData />
       </head>
@@ -86,7 +88,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ProfileProvider>
+            {children}
+            <CourseCommandSearch />
+          </ProfileProvider>
         </ThemeProvider>
       </body>
     </html>

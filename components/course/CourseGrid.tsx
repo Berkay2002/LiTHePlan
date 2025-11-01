@@ -45,16 +45,10 @@ export function CourseGrid({
     );
   }
 
-  // Determine grid columns based on sidebar states
-  const bothSidebarsOpen = sidebarOpen && profileSidebarOpen;
-  const gridClasses = bothSidebarsOpen
-    ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:gap-5 w-full"
-    : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full";
-
   return (
     <div className="space-y-6 w-full">
-      {/* Course grid */}
-      <div className={gridClasses}>
+      {/* Course grid - auto-fit based on minimum card width */}
+      <div className="grid gap-4 lg:gap-5 w-full justify-center" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), min(100%, 550px)))' }}>
         {courses.map((course) => (
           <CourseCard course={course} key={course.id} />
         ))}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronUp, Plus, AlertTriangle, BookOpen, GraduationCap, ExternalLink } from "lucide-react";
 import type { Course } from "@/types/course";
-import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
+import { useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "@/components/course/TermSelectionModal";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
@@ -324,7 +324,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                 <h2 className="text-2xl font-bold">Related Courses</h2>
                 {!isLoadingRelated && relatedCourses.length > 0 && (
                   <Link 
-                    href={`/?programs=${encodeURIComponent(course.programs[0] || '')}&level=${encodeURIComponent(course.level)}`}
+                    href={`/?huvudomraden=${encodeURIComponent((course.huvudomrade || '').split(',')[0].trim())}`}
                   >
                     <Button variant="outline" size="sm">
                       <ExternalLink className="h-4 w-4 mr-2" />
@@ -377,9 +377,5 @@ function CoursePageContent({ course }: CoursePageClientProps) {
 }
 
 export default function CoursePageClient(props: CoursePageClientProps) {
-  return (
-    <ProfileProvider>
-      <CoursePageContent {...props} />
-    </ProfileProvider>
-  );
+  return <CoursePageContent {...props} />;
 }
