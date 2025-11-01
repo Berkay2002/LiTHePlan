@@ -2,13 +2,13 @@
 
 type LiThePlanLogoProps = {
   className?: string;
-  width?: number;
+  width?: number | "auto";
   height?: number;
 };
 
 export function LiThePlanLogo({
   className = "",
-  width = 320,
+  width = "auto",
   height = 100,
 }: LiThePlanLogoProps) {
   return (
@@ -17,9 +17,10 @@ export function LiThePlanLogo({
       className={className}
       height={height}
       role="img"
-      viewBox="0 0 320 100"
+      viewBox="0 0 280 85"
       width={width}
       xmlns="http://www.w3.org/2000/svg"
+      style={{ display: 'block' }}
     >
       <title>LiTHePlan logo</title>
       <style>
@@ -31,12 +32,12 @@ export function LiThePlanLogo({
           .dark .regular { fill: oklch(0.98 0.005 225); }
         `}
       </style>
-      <text fontFamily="Segoe UI, sans-serif" fontSize="60" x="20" y="65">
+      <text fontFamily="Segoe UI, sans-serif" fontSize="60" x="0" y="60">
         <tspan className="bold">LiTH</tspan>
         <tspan className="highlight">e</tspan>
         <tspan className="regular">Plan</tspan>
       </text>
-      <line stroke="#17c7d2" strokeWidth="5" x1="20" x2="300" y1="80" y2="80" />
+      <line stroke="#17c7d2" strokeWidth="5" x1="0" x2="220" y1="75" y2="75" />
     </svg>
   );
 }

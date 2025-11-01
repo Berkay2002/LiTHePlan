@@ -897,7 +897,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             </span>
                             <div
                               aria-label={`Remove ${option.label} from selection`}
-                              className="ml-2 h-4 w-4 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50"
+                              className="ml-2 h-4 w-4 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50 flex items-center justify-center"
                               onClick={(event) => {
                                 event.stopPropagation();
                                 toggleOption(value);
@@ -961,7 +961,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between self-center">
                     <div
                       aria-label={`Clear all ${selectedValues.length} selected options`}
                       className="flex items-center justify-center h-4 w-4 mx-2 cursor-pointer text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded-sm"
@@ -1006,11 +1006,11 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
             aria-label="Available options"
             aria-multiselectable="true"
             className={cn(
-              "w-auto p-0",
+              "p-0",
               getPopoverAnimationClass(),
               screenSize === "mobile" && "w-[85vw] max-w-[280px]",
               screenSize === "tablet" && "w-[70vw] max-w-md",
-              screenSize === "desktop" && "min-w-[300px]",
+              screenSize === "desktop" && "w-(--radix-popover-trigger-width)",
               popoverClassName
             )}
             id={listboxId}
@@ -1125,7 +1125,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                             {option.icon && (
                               <option.icon
                                 aria-hidden="true"
-                                className="mr-2 h-4 w-4 text-muted-foreground"
+                                className="mr-2 h-4 w-4 text-popover-foreground"
                               />
                             )}
                             <span>{option.label}</span>
@@ -1168,7 +1168,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           {option.icon && (
                             <option.icon
                               aria-hidden="true"
-                              className="mr-2 h-4 w-4 text-muted-foreground"
+                              className="mr-2 h-4 w-4 text-popover-foreground"
                             />
                           )}
                           <span>{option.label}</span>

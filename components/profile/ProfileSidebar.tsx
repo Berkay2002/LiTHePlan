@@ -205,7 +205,7 @@ export function ProfileSidebar({
                             d={createPath(segment.startAngle, segment.angle)}
                             fill={segment.color}
                             key={`segment-${segment.label}-${index}`}
-                            stroke="hsl(var(--sidebar))"
+                            stroke="hsl(var(--background))"
                             strokeWidth="2"
                           />
                         ))}
@@ -216,18 +216,16 @@ export function ProfileSidebar({
                     <div className="space-y-1">
                       {segmentsWithAngles.map((segment, index) => (
                         <div
-                          className="flex items-center justify-between"
+                          className="flex items-center gap-2"
                           key={`legend-${segment.label}-${index}`}
                         >
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: segment.color }}
-                            />
-                            <span className="text-xs text-sidebar-foreground/80">
-                              {segment.label}
-                            </span>
-                          </div>
+                          <div
+                            className="w-3 h-3 rounded-full shrink-0"
+                            style={{ backgroundColor: segment.color }}
+                          />
+                          <span className="text-xs text-sidebar-foreground flex-1">
+                            {segment.label}
+                          </span>
                           <span className="text-xs text-sidebar-foreground font-medium">
                             {segment.value}hp
                           </span>
@@ -266,9 +264,9 @@ export function ProfileSidebar({
                     </div>
 
                     {/* Current Term Card */}
-                    <Card className="bg-card/80 border-border/50">
+                    <Card className="bg-background border-border">
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center justify-between">
+                        <CardTitle className="text-sm font-medium flex items-center justify-between text-foreground">
                           {getTermLabel(currentTerm)}
                           <Badge className="text-xs" variant="secondary">
                             {currentTermCourses.reduce(
@@ -288,12 +286,12 @@ export function ProfileSidebar({
                           <div className="space-y-2">
                             {currentTermCourses.map((course) => (
                               <div
-                                className="p-2 rounded border bg-background/50 hover:bg-accent/50 transition-colors"
+                                className="p-2 rounded border border-primary/20 bg-primary/10 hover:bg-primary/15 transition-colors"
                                 key={course.id}
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-medium truncate">
+                                    <p className="text-xs font-medium truncate text-foreground">
                                       {course.name}
                                     </p>
                                     <p className="text-xs text-muted-foreground">

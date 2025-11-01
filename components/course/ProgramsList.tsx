@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
   AccordionContent,
@@ -16,19 +17,22 @@ export function ProgramsList({ programs, orientations = [], className = "" }: Pr
   
   if (allItems.length === 0) return null;
 
-  // Use accordion for 12+ items, otherwise show simple list
+  // Use accordion for 12+ items, otherwise show simple grid
   const useAccordion = allItems.length >= 12;
 
   if (!useAccordion) {
     return (
-      <ul className={`grid sm:grid-cols-2 gap-2 ${className}`}>
+      <div className={`flex flex-wrap gap-2 ${className}`}>
         {allItems.map((item, index) => (
-          <li key={`${item}-${index}`} className="text-sm flex items-start gap-2">
-            <span className="text-primary mt-1">•</span>
-            <span>{item}</span>
-          </li>
+          <Badge
+            key={`${item}-${index}`}
+            variant="secondary"
+            className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 px-3 py-1.5 text-sm font-medium"
+          >
+            {item}
+          </Badge>
         ))}
-      </ul>
+      </div>
     );
   }
 
@@ -47,20 +51,23 @@ export function ProgramsList({ programs, orientations = [], className = "" }: Pr
       className={`w-full ${className}`}
       defaultValue="programs-0"
     >
-      {chunks.map((chunk, chunkIndex) => (
+      {chunks.map((chunkIndex) => (
         <AccordionItem key={`chunk-${chunkIndex}`} value={`programs-${chunkIndex}`}>
           <AccordionTrigger>
             {chunkIndex === 0 ? "Programs" : `More Programs`} ({chunk.length})
           </AccordionTrigger>
           <AccordionContent>
-            <ul className="grid sm:grid-cols-2 gap-2 pt-2">
+            <div className="flex flex-wrap gap-2 pt-2">
               {chunk.map((item, index) => (
-                <li key={`${item}-${index}`} className="text-sm flex items-start gap-2">
-                  <span className="text-primary mt-1">•</span>
-                  <span>{item}</span>
-                </li>
+                <Badge
+                  key={`${item}-${index}`}
+                  variant="secondary"
+                  className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 px-3 py-1.5 text-sm font-medium"
+                >
+                  {item}
+                </Badge>
               ))}
-            </ul>
+            </div>
           </AccordionContent>
         </AccordionItem>
       ))}

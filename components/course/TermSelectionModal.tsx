@@ -41,7 +41,7 @@ export function TermSelectionModal({
 
   return (
     <Dialog onOpenChange={onClose} open={isOpen}>
-      <DialogContent className="sm:max-w-md bg-background text-foreground">
+      <DialogContent className="sm:max-w-md bg-background text-foreground border-primary/20">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-foreground">
             Select Term for Course
@@ -50,9 +50,9 @@ export function TermSelectionModal({
 
         <div className="space-y-4">
           {/* Course Info */}
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-2 p-4 rounded-lg bg-primary/5 border border-primary/10">
             <h3 className="font-semibold text-lg text-foreground">{course.name}</h3>
-            <p className="text-sm text-muted-foreground">{course.id}</p>
+            <p className="text-sm text-primary/80 font-medium">{course.id}</p>
           </div>
 
           {/* Term Selection */}
@@ -64,13 +64,13 @@ export function TermSelectionModal({
             <div className="grid gap-2">
               {availableTerms.map((term) => (
                 <Button
-                  className="justify-start h-auto p-4 text-foreground border-border hover:bg-primary hover:text-primary-foreground transition-colors"
+                  className="justify-start h-auto p-4 text-foreground border-primary/30 bg-background hover:bg-primary/10 hover:border-primary/50 hover:shadow-md hover:shadow-primary/20 hover:text-foreground transition-all duration-200"
                   key={term}
                   onClick={() => handleTermSelect(term)}
                   variant="outline"
                 >
                   <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5" />
+                    <Calendar className="h-5 w-5 text-primary" />
                     <div className="text-left">
                       <div className="font-medium">Term {term}</div>
                       <div className="text-sm opacity-70">

@@ -27,7 +27,7 @@ export function ExaminationBadges({ examinations, className = "" }: ExaminationB
         <Badge
           key={`${exam}-${index}`}
           variant="secondary"
-          className="text-xs px-3 py-1 bg-accent/10 text-accent-foreground border border-accent/20 hover:bg-accent/20 hover:border-accent/30 transition-all duration-200"
+          className="text-xs px-3 py-1 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200"
         >
           {EXAMINATION_LABELS[exam] || exam}
         </Badge>

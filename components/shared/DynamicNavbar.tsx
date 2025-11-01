@@ -93,55 +93,17 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
         {props.mode === "main" ? (
           <>
             {/* Desktop Layout */}
-            <div className="hidden lg:grid lg:grid-cols-3 items-center">
-              {/* Desktop Logo - Left Column */}
-              <div className="flex justify-start">
+            <div className="hidden lg:flex lg:items-center lg:justify-between">
+              {/* Left Side - Logo, Course Profile, Authentication */}
+              <div className="flex items-center gap-4">
+                {/* Logo */}
                 <Link className="block" href="/">
                   <LiThePlanLogo
                     className="h-10 w-auto transition-opacity hover:opacity-80"
                     height={40}
-                    width={240}
                   />
                 </Link>
-              </div>
 
-              {/* Center - Search Bar - Middle Column */}
-              <div className="flex justify-center">
-                <InputGroup className="w-full max-w-md border-2 border-sidebar-border focus-within:border-primary bg-background">
-                  <InputGroupInput
-                    className="text-foreground placeholder:text-muted-foreground"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      props.onSearchChange(e.target.value)
-                    }
-                    placeholder="Search courses by name or code..."
-                    type="text"
-                    value={props.searchQuery}
-                  />
-                  <InputGroupAddon>
-                    <Search className="text-muted-foreground" />
-                  </InputGroupAddon>
-                  {props.searchQuery ? (
-                    <InputGroupAddon align="inline-end">
-                      <Button
-                        className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
-                        onClick={handleClearSearch}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </InputGroupAddon>
-                  ) : (
-                    <InputGroupAddon align="inline-end">
-                      <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
-                      <Kbd className="bg-muted text-muted-foreground">K</Kbd>
-                    </InputGroupAddon>
-                  )}
-                </InputGroup>
-              </div>
-
-              {/* Right Side - Profile and Authentication - Right Column */}
-              <div className="flex justify-end">
                 {loading ? (
                   <div className="flex items-center gap-2 text-sidebar-foreground">
                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
@@ -149,21 +111,6 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    {/* User greeting - shown when authenticated on desktop only */}
-                    {user && (
-                      <div className="flex items-center text-sidebar-foreground text-sm mr-2">
-                        <span className="hidden xl:inline font-medium">
-                          Hi,{" "}
-                          {user.email?.split("@")[0] ||
-                            `User ${user.id.slice(0, 8)}`}
-                          !
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Theme toggle */}
-                    <ModeToggle />
-
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
@@ -202,12 +149,51 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           variant="ghost"
                         >
                           <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
-                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium hidden sm:inline">Sign In</span>
+                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">Sign In</span>
                         </Button>
                       </Link>
                     )}
                   </div>
                 )}
+              </div>
+
+              {/* Right Side - Search Bar and Theme Toggle */}
+              <div className="flex items-center gap-4">
+                {/* Search Bar */}
+                <InputGroup className="w-full max-w-md border-2 border-sidebar-border focus-within:border-primary bg-background">
+                  <InputGroupInput
+                    className="text-foreground placeholder:text-muted-foreground"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      props.onSearchChange(e.target.value)
+                    }
+                    placeholder="Search courses by name or code..."
+                    type="text"
+                    value={props.searchQuery}
+                  />
+                  <InputGroupAddon>
+                    <Search className="text-muted-foreground" />
+                  </InputGroupAddon>
+                  {props.searchQuery ? (
+                    <InputGroupAddon align="inline-end">
+                      <Button
+                        className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
+                        onClick={handleClearSearch}
+                        size="sm"
+                        variant="ghost"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </InputGroupAddon>
+                  ) : (
+                    <InputGroupAddon align="inline-end">
+                      <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
+                      <Kbd className="bg-muted text-muted-foreground">K</Kbd>
+                    </InputGroupAddon>
+                  )}
+                </InputGroup>
+
+                {/* Theme toggle */}
+                <ModeToggle />
               </div>
             </div>
 
@@ -344,7 +330,6 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   <LiThePlanLogo
                     className="h-10 w-auto transition-opacity hover:opacity-80"
                     height={40}
-                    width={240}
                   />
                 </Link>
               </div>
@@ -430,7 +415,6 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   <LiThePlanLogo
                     className="h-9 w-auto transition-opacity hover:opacity-80"
                     height={36}
-                    width={120}
                   />
                 </Link>
               </div>

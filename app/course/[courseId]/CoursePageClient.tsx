@@ -188,19 +188,20 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
             {/* Details Tab */}
             <TabsContent value="details" className="space-y-6 mt-6">
               {/* Academic Information */}
-              <Card>
+              <Card className="bg-background border-border">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-foreground">
                     <GraduationCap className="h-5 w-5 text-primary" />
                     Academic Information
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid sm:grid-cols-2 gap-4">
-                  <CourseMetadataRow label="Credits" value={`${course.credits} hp`} />
-                  <CourseMetadataRow label="Level" value={course.level} />
-                  <CourseMetadataRow label="Subject Area (Huvudområde)" value={course.huvudomrade} />
                   <CourseMetadataRow label="Examiner" value={course.examinator} />
+                  <CourseMetadataRow label="Credits" value={`${course.credits} hp`} />
                   <CourseMetadataRow label="Study Director" value={course.studierektor} />
+                  <CourseMetadataRow label="Study Pace" value={typeof course.pace === 'number' ? `${course.pace * 100}%` : course.pace} />
+                  <CourseMetadataRow label="Subject Area (Huvudområde)" value={course.huvudomrade} />
+                  <CourseMetadataRow label="Level" value={course.level} />
                   <div className="sm:col-span-2">
                     <a
                       href={`https://studieinfo.liu.se/kurs/${course.id}`}
@@ -217,9 +218,9 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
 
               {/* Examination */}
               {Array.isArray(course.examination) && course.examination.length > 0 && (
-                <Card>
+                <Card className="bg-background border-border">
                   <CardHeader>
-                    <CardTitle>Examination</CardTitle>
+                    <CardTitle className="text-foreground">Examination</CardTitle>
                     <CardDescription>Assessment methods for this course</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -230,9 +231,9 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
 
               {/* Programs (if < 5, show here instead of separate tab) */}
               {!showProgramsTab && allPrograms.length > 0 && (
-                <Card>
+                <Card className="bg-background border-border">
                   <CardHeader>
-                    <CardTitle>Available in Programs</CardTitle>
+                    <CardTitle className="text-foreground">Available in Programs</CardTitle>
                     <CardDescription>
                       This course is available for students in the following programs
                     </CardDescription>
@@ -248,9 +249,9 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
 
               {/* Notes/Restrictions */}
               {course.notes && (
-                <Card className="border-l-4 border-destructive">
+                <Card className="bg-background border-border border-l-4 border-l-destructive">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-foreground">
                       <AlertTriangle className="h-5 w-5 text-destructive" />
                       Important Notes
                     </CardTitle>
@@ -264,9 +265,9 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
 
             {/* Schedule Tab */}
             <TabsContent value="schedule" className="space-y-6 mt-6">
-              <Card>
+              <Card className="bg-background border-border">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-foreground">
                     <BookOpen className="h-5 w-5 text-primary" />
                     Schedule Information
                   </CardTitle>
@@ -291,9 +292,9 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
             {/* Programs Tab (only if 5+ programs) */}
             {showProgramsTab && (
               <TabsContent value="programs" className="space-y-6 mt-6">
-                <Card>
+                <Card className="bg-background border-border">
                   <CardHeader>
-                    <CardTitle>Available in Programs</CardTitle>
+                    <CardTitle className="text-foreground">Available in Programs</CardTitle>
                     <CardDescription>
                       This course is available for students in {allPrograms.length} programs
                     </CardDescription>
