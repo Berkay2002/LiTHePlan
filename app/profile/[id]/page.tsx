@@ -1,8 +1,10 @@
 // app/profile/[id]/page.tsx
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { createClient } from "@/utils/supabase/server";
 import ProfilePageClient from "./ProfilePageClient";
+import { ProfileDataSkeleton } from "@/components/profile/ProfileDataSkeleton";
 
 export async function generateMetadata({
   params,
@@ -84,5 +86,11 @@ export default function ProfilePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  return <ProfilePageClient params={params} />;
+  // Suspense streaming for dynamic profile data
+  // Profile data fetched inside ProfilePageClient with user-specific content
+  return (
+    <Suspense fallback={<ProfileDataSkeleton />}>
+      <ProfilePageClient params={params} />
+    </Suspense>
+  );
 }

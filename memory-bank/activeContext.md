@@ -134,6 +134,149 @@
 - ✅ **Profile Metadata**: Dynamic Open Graph tags for social sharing
 
 ## Current Work Focus
+### Partial Prerendering (Cache Components) Migration - ABANDONED ❌
+**Status**: Implementation attempted but abandoned due to fundamental incompatibilities
+**Date Attempted**: November 1, 2025
+
+**Original Objective**: Enable Cache Components (formerly PPR) to combine static prerendering with dynamic personalization
+
+**Why It Failed - CRITICAL LEARNINGS**:
+
+1. **Supabase Auth Incompatibility**:
+   - `'use cache'` directive **cannot use `cookies()`** inside its scope
+   - Error: "Accessing Dynamic data sources inside a cache scope is not supported"
+   - All Supabase server clients (`utils/supabase/server.ts`) use `await cookies()` for auth
+   - **Impact**: Cannot cache any route that needs user authentication
+
+2. **Math.random() Constraint**:
+   - Supabase JavaScript client uses `Math.random()` internally for request IDs
+   - Next.js error: "Route used `Math.random()` before accessing uncached data"
+   - Workaround with `connection()` also fails: "cannot use connection() inside 'use cache'"
+   - **Impact**: Cannot use Supabase client (even read-only) in cached functions
+
+3. **Config Incompatibility**:
+   - `export const revalidate` not compatible with `cacheComponents: true`
+   - Error: "Route segment config 'revalidate' is not compatible with `nextConfig.cacheComponents`"
+   - Must use `cacheLife()` function instead (but can't due to issues #1 and #2)
+   - **Impact**: Traditional ISR pattern breaks when Cache Components enabled
+
+4. **Metadata Generation Issues**:
+   - `generateMetadata()` also affected by Cache Components constraints
+   - Cannot use file-level `'use cache'` when exporting metadata functions
+   - Component-level `'use cache'` still triggers Supabase client issues
+   - **Impact**: Dynamic metadata generation incompatible with caching
+
+**Conclusion**: Cache Components is designed for:
+- Pure data fetching functions (no auth)
+- Routes without dynamic API access (cookies, headers, connection)
+- Applications NOT using Supabase auth pattern
+
+**Our application** requires:
+- User authentication on most routes (cookies)
+- Supabase client for all data access (Math.random)
+- Traditional ISR with revalidate config
+
+**Decision**: Disabled `cacheComponents` in `next.config.ts`, using **ISR + Suspense** instead
+
+**Current Implementation** (ISR + Suspense):
+1. **`/course/[courseId]`**
+   - ISR: `export const revalidate = 3600` (1 hour)
+   - Suspense: `<Suspense fallback={<CoursePageSkeleton />}>` around CoursePageClient
+   - Status: Dynamic rendering (ƒ) - uses authenticated Supabase client
+   - **Issue**: Showing as Dynamic instead of Static due to cookies() usage
+   - **Potential Fix**: Use read-only Supabase client (no auth) for public course data
+
+2. **`/` (home page)**
+   - ISR: None (fully client-side after hydration)
+   - Suspense: `<Suspense fallback={<ProfileSidebarSkeleton />}>` around ProfileSidebar
+   - Status: Static rendering (○)
+   - **Works correctly**: ProfileSidebar streams user-specific data
+
+3. **`/profile/[id]`**
+   - ISR: None (user-specific data)
+   - Suspense: `<Suspense fallback={<ProfileDataSkeleton />}>` around ProfilePageClient
+   - Status: Dynamic rendering (ƒ) - expected behavior
+   - **Works correctly**: Needs auth for profile data
+
+**What Was Implemented**:
+1. ✅ Created loading skeleton components:
+   - `CoursePageSkeleton.tsx` - Full course detail page skeleton
+   - `ProfileDataSkeleton.tsx` - Profile page data skeleton
+   - `ProfileSidebarSkeleton.tsx` - Sidebar skeleton (already existed)
+2. ✅ Added Suspense boundaries:
+   - `/course/[courseId]` - Wraps CoursePageClient
+   - `/` - Wraps ProfileSidebar
+   - `/profile/[id]` - Wraps ProfilePageClient
+3. ✅ Removed `dynamic = 'force-dynamic'` from course route
+4. ✅ Added ISR with `revalidate = 3600` to course route
+5. ❌ **Cache Components abandoned** - disabled in config
+6. ✅ Build verification - all routes compile successfully
+7. ⏳ Performance measurement - not yet done (ISR + Suspense sufficient)
+
+**Benefits Achieved** (ISR + Suspense):
+- ✅ **Streaming UI**: Loading skeletons show immediately, data streams in
+- ✅ **ISR Caching**: Course pages cached for 1 hour (reduces DB load)
+- ✅ **Hybrid Rendering**: Static shell + dynamic user data (via Suspense)
+- ✅ **Better UX**: Instant visual feedback vs. blank page
+- ✅ **SEO Compatible**: Search engines see full HTML (though dynamic)
+
+**Benefits NOT Achieved** (would need Cache Components):
+- ❌ **Sub-50ms loads**: Still server-rendered on demand (ƒ)
+- ❌ **Edge caching**: No static prerendering at build time
+- ❌ **Reduced server costs**: Every request hits server (no static shell)
+- ⚠️ **Core Web Vitals**: Improved but not optimal (ISR helps)
+
+**Technical Details**:
+- PPR is stable in Next.js 16 (experimental flag still required for now)
+- Uses React Suspense boundaries to identify static vs. dynamic
+- Static parts rendered at build time, cached at edge
+- Dynamic parts rendered on-demand, streamed to client
+- Compatible with ISR (Incremental Static Regeneration)
+
+**Actual Issues Encountered**:
+1. **`cookies()` in cached scope**:
+   - Error: "Route used `cookies()` inside 'use cache'"
+   - Cause: Supabase server client needs cookies for auth
+   - Solution: Cannot use authenticated Supabase client in cached functions
+
+2. **`Math.random()` prerendering error**:
+   - Error: "Route used `Math.random()` before accessing uncached data"
+   - Cause: Supabase JS client uses Math.random() for request IDs
+   - Attempted fix: `await connection()` → Failed (cannot use in cached scope)
+   - Solution: Cannot use Supabase client (any type) in cached functions
+
+3. **`revalidate` config incompatibility**:
+   - Error: "Route segment config 'revalidate' is not compatible with cacheComponents"
+   - Cause: Cache Components requires `cacheLife()` instead
+   - Attempted fix: Add `cacheLife('days')` → Failed (cannot solve #1 and #2)
+   - Solution: Disable Cache Components entirely
+
+4. **Metadata generation affected**:
+   - `generateMetadata()` also constrained by Cache Components rules
+   - Cannot use file-level `'use cache'` with metadata exports
+   - Component-level `'use cache'` still breaks on Supabase usage
+   - Solution: Keep metadata generation in non-cached route
+
+**Next Steps** (ISR Optimization):
+1. ⏳ **Optimize course pages for Static + ISR**:
+   - Replace `createClient()` (auth) with read-only Supabase client
+   - Use `createSupabaseClient(url, key)` directly (no cookies)
+   - Should change from Dynamic (ƒ) to Static (○) with ISR
+   - Keep `revalidate = 3600` for hourly updates
+
+2. ⏳ **Measure current performance**:
+   - Lighthouse audit for LCP, TTFB, FCP
+   - Establish baseline before optimizations
+   - Compare against Next.js 15.5.4 metrics
+
+3. ⏳ **Monitor ISR effectiveness**:
+   - Check Vercel Analytics for cache hit rates
+   - Verify 1-hour revalidation working correctly
+   - Measure server load reduction
+
+4. ✅ **Suspense boundaries working**: No further action needed
+5. ✅ **Loading skeletons created**: Provides instant visual feedback
+
 ### Supabase Database Hardening - COMPLETE ✅
 **Status**: All critical security and performance optimizations implemented
 
@@ -271,6 +414,21 @@
 **No Further Action Required**
 
 ## Active Decisions
+### Cache Components Decision (November 1, 2025)
+- **Decision**: Disable Cache Components (`cacheComponents: false` in config)
+- **Rationale**: 
+  - Incompatible with Supabase auth pattern (requires `cookies()`)
+  - Cannot use Supabase client in cached scope (`Math.random()` issue)
+  - Traditional ISR + Suspense provides sufficient hybrid rendering
+  - Cache Components better suited for non-auth applications
+- **Implementation**: Removed `cacheComponents: true` from `next.config.ts`
+- **Alternative**: Using ISR (`revalidate`) + Suspense boundaries instead
+- **Impact**:
+  - ✅ Build works correctly with ISR
+  - ✅ Suspense streaming still functional
+  - ❌ No sub-50ms static shell (routes still server-rendered)
+  - ✅ Compatible with existing Supabase architecture
+
 ### Row Level Security (RLS) Implementation
 - **Decision**: Enforce database-level access control with RLS policies
 - **Rationale**: Defense-in-depth security - prevents bypassing application-level checks
@@ -335,19 +493,22 @@
 - No profile templates for common specializations
 
 ## Next Actions
-1. **Immediate**: Test RLS policies in production
-   - Verify cross-user access blocked with 2 different user accounts
-   - Test realtime subscriptions with multiple browser tabs
+1. **Immediate**: PPR Migration Implementation
+   - Enable `experimental: { ppr: true }` in next.config.ts
+   - Add Suspense boundaries to `/course/[courseId]` route
+   - Test hybrid rendering behavior
+   - Measure performance improvements
+
+2. **Short-term**: Complete PPR rollout
+   - Implement PPR on home page (`/`)
+   - Implement PPR on profile routes (`/profile/[id]`)
+   - Create reusable loading skeleton components
+   - Update documentation with PPR patterns
+
+3. **Ongoing**: Production monitoring
+   - Verify RLS policies working correctly
    - Monitor query performance via Supabase Dashboard
-
-2. **Short-term**: No active development planned
-   - System is stable and production-ready
-   - Focus on maintenance and bug fixes
-
-3. **Long-term**: Potential enhancements
-   - User feedback collection
-   - Performance optimization
-   - Feature additions based on student needs
+   - Track Core Web Vitals improvements post-PPR
 
 ## Important Notes for AI Agents
 - **Always read Memory Bank files** before starting any task

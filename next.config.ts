@@ -2,7 +2,8 @@ import {withSentryConfig} from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Cache Components disabled: Incompatible with Supabase auth (cookies()) and Math.random()
+  // Using traditional ISR (revalidate) + Suspense for hybrid rendering instead
 };
 
 export default withSentryConfig(nextConfig, {

@@ -652,6 +652,203 @@ if (json.success) {
 }
 ```
 
+## Cache Components (Next.js 16) - Critical Constraints
+
+### What Are Cache Components?
+**Feature**: Next.js 16 renamed PPR (Partial Prerendering) to Cache Components
+- Allows marking routes/components/functions as cacheable with `'use cache'` directive
+- Uses `cacheLife()` for revalidation timing (replaces `export const revalidate`)
+- Requires `cacheComponents: true` in `next.config.ts`
+- Designed for pure data fetching without dynamic APIs
+
+### Critical Constraints (Why We Can't Use It)
+
+#### 1. No Dynamic APIs Allowed
+```typescript
+// ❌ FORBIDDEN in 'use cache' scope:
+export default async function Page() {
+  'use cache';
+  
+  const cookieStore = await cookies();  // ❌ Error: cookies() not allowed
+  const headersList = await headers();   // ❌ Error: headers() not allowed
+  await connection();                    // ❌ Error: connection() not allowed
+  const params = await searchParams;     // ❌ Error: searchParams not allowed
+}
+```
+
+**Error Message**:
+```
+Error: Route used `cookies()` inside "use cache". Accessing Dynamic data
+sources inside a cache scope is not supported. If you need this data inside
+a cached function use `cookies()` outside of the cached function and pass
+the required dynamic data in as an argument.
+```
+
+**Impact on Our App**:
+- All Supabase server clients use `await cookies()` for auth
+- Cannot cache any route requiring user authentication
+- Cannot use `utils/supabase/server.ts` in cached functions
+
+#### 2. No Math.random() Before Uncached Data
+```typescript
+// ❌ FORBIDDEN: Math.random() before fetch()
+export default async function Page() {
+  'use cache';
+  
+  // Supabase client uses Math.random() internally
+  const supabase = createClient();  // ❌ Error: Math.random() detected
+  const { data } = await supabase.from('courses').select();
+}
+```
+
+**Error Message**:
+```
+Error: Route used `Math.random()` before accessing either uncached data
+(e.g. `fetch()`) or Request data (e.g. `cookies()`, `headers()`,
+`connection()`, and `searchParams`). Accessing random values synchronously
+in a Server Component requires reading one of these data sources first.
+```
+
+**Why This Happens**:
+- Supabase JavaScript client generates request IDs using `Math.random()`
+- Next.js requires accessing dynamic data BEFORE using random values
+- Workaround (`await connection()`) also forbidden in cached scope
+
+**Impact on Our App**:
+- Cannot use Supabase client (even read-only) in cached functions
+- All database queries trigger this error
+- No workaround available while maintaining caching
+
+#### 3. Config Incompatibility with ISR
+```typescript
+// ❌ FORBIDDEN when cacheComponents enabled:
+export const revalidate = 3600;  // Error: not compatible
+
+// ✅ REQUIRED instead:
+export default async function Page() {
+  'use cache';
+  cacheLife('hours');  // But can't use due to constraints #1 and #2
+}
+```
+
+**Error Message**:
+```
+Error: Route segment config "revalidate" is not compatible with
+`nextConfig.cacheComponents`. Please remove it.
+```
+
+**Impact on Our App**:
+- Traditional ISR pattern breaks when Cache Components enabled
+- Must choose: Cache Components OR ISR (cannot have both)
+- Our ISR implementation relies on `revalidate` constant
+
+#### 4. Metadata Generation Issues
+```typescript
+// ❌ FORBIDDEN: File-level 'use cache' with metadata
+'use cache';  // Error: affects generateMetadata too
+
+export async function generateMetadata() {
+  const supabase = createClient();  // ❌ Triggers cookies() error
+}
+
+export default async function Page() {
+  'use cache';  // ❌ Even component-level fails with Supabase
+}
+```
+
+**Constraints**:
+- File-level `'use cache'` requires ALL exports to be async functions
+- Component-level `'use cache'` still triggers Supabase errors
+- `generateMetadata()` needs Supabase client for dynamic metadata
+
+**Impact on Our App**:
+- Cannot cache course pages with dynamic metadata
+- Cannot cache profile pages with user-specific metadata
+- No workaround without removing dynamic metadata
+
+### When Cache Components IS Appropriate
+
+```typescript
+// ✅ WORKS: Pure data fetching, no auth, no Supabase
+export default async function BlogPost() {
+  'use cache';
+  cacheLife('days');
+  
+  // Direct fetch (no Supabase, no cookies)
+  const response = await fetch('https://api.example.com/post');
+  const post = await response.json();
+  
+  return <article>{post.content}</article>;
+}
+```
+
+**Ideal Use Cases**:
+- Public content APIs (no authentication)
+- Static data fetching (no user-specific data)
+- Applications NOT using Supabase auth
+- Routes without `cookies()`, `headers()`, or dynamic params
+
+### Our Solution: ISR + Suspense
+
+```typescript
+// ✅ WORKS: Traditional ISR + Suspense
+export const revalidate = 3600;  // ISR: cache for 1 hour
+
+export default async function CoursePage({ params }) {
+  const { courseId } = await params;
+  const supabase = await createClient();  // ✅ Can use cookies()
+  
+  const { data: course } = await supabase
+    .from('courses')
+    .select('*')
+    .eq('id', courseId)
+    .single();
+  
+  // Suspense for streaming dynamic content
+  return (
+    <Suspense fallback={<CoursePageSkeleton />}>
+      <CoursePageClient course={course} />
+    </Suspense>
+  );
+}
+```
+
+**Benefits We Get**:
+- ✅ ISR caching (1 hour TTL)
+- ✅ Suspense streaming (loading states)
+- ✅ Supabase auth works (cookies allowed)
+- ✅ Dynamic metadata generation
+- ✅ Compatible with existing architecture
+
+**Benefits We DON'T Get** (would need Cache Components):
+- ❌ Sub-50ms static shell (still server-rendered)
+- ❌ Edge caching (no build-time prerendering)
+- ❌ Reduced server costs (every request hits server)
+
+### Decision: Disable Cache Components
+
+**Config Change**:
+```typescript
+// next.config.ts
+const nextConfig: NextConfig = {
+  // cacheComponents: true,  // ❌ Disabled
+  // Using ISR + Suspense instead
+};
+```
+
+**Rationale**:
+1. Supabase auth requires `cookies()` → Incompatible
+2. Supabase client uses `Math.random()` → Incompatible  
+3. ISR uses `revalidate` constant → Incompatible
+4. Dynamic metadata needs Supabase → Incompatible
+5. ISR + Suspense provides sufficient hybrid rendering
+
+**When to Reconsider**:
+- If migrating away from Supabase auth
+- If using public-only data (no auth)
+- If Next.js relaxes Cache Components constraints
+- If Supabase client removes Math.random() dependency
+
 ## Key Architectural Decisions
 
 ### Why useReducer over useState?

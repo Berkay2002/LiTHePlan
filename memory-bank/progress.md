@@ -113,6 +113,27 @@
 
 ## What's Left to Build
 
+### Active Development: PPR Migration (In Progress)
+**Priority**: HIGH - Performance optimization
+**Status**: Planning phase
+
+- [ ] Enable PPR in next.config.ts
+- [ ] Add Suspense boundaries to `/course/[courseId]`
+- [ ] Add Suspense boundaries to `/` (home page)
+- [ ] Add Suspense boundaries to `/profile/[id]`
+- [ ] Create loading skeleton components for dynamic sections
+- [ ] Remove `dynamic = 'force-dynamic'` from hybrid routes
+- [ ] Test hybrid rendering in development
+- [ ] Verify build output shows partial prerendering markers
+- [ ] Measure performance improvements (LCP, TTFB)
+- [ ] Update documentation with PPR patterns
+
+**Expected Impact**:
+- Course detail pages: 50ms initial load (down from 500ms+)
+- Home page: Instant catalog visibility
+- Better SEO and Core Web Vitals scores
+- Lower server costs (static parts cached at edge)
+
 ### Phase 2: Enhancements (Not Started)
 These are documented feature ideas but not currently planned:
 

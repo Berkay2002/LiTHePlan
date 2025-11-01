@@ -40,7 +40,7 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
-  const { state } = useProfile();
+  const { state, addCourse } = useProfile();
   
   const relatedCourses = getRelatedCourses(course, allCourses, 6);
   const conflicts = state.current_profile ? findCourseConflicts(course, state.current_profile) : [];
@@ -68,6 +68,16 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle term selection from modal
+  const handleTermSelected = async (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
+    console.log('🔄 Term selected:', selectedTerm, 'for course:', selectedCourse.id);
+    setIsTermModalOpen(false);
+    
+    // Add course with selected term
+    console.log('✅ Adding course with selected term');
+    await addCourse(selectedCourse, selectedTerm);
   };
 
   // Truncate course name for mobile breadcrumb
@@ -354,7 +364,7 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
         isOpen={isTermModalOpen}
         onClose={() => setIsTermModalOpen(false)}
         availableTerms={course.term.map((t: string) => Number.parseInt(t, 10) as 7 | 8 | 9)}
-        onTermSelected={() => setIsTermModalOpen(false)}
+        onTermSelected={handleTermSelected}
       />
     </PageLayout>
   );

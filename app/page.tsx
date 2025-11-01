@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
@@ -182,11 +182,14 @@ function HomeContent() {
             onToggle={toggleSidebar}
           />
 
-          <ProfileSidebar
-            isOpen={profileSidebarOpen}
-            onToggle={toggleProfileSidebar}
-            profile={state.current_profile}
-          />
+          {/* PPR: Wrap ProfileSidebar in Suspense for dynamic user data */}
+          <Suspense fallback={<ProfileSidebarSkeleton isOpen={profileSidebarOpen} onToggle={toggleProfileSidebar} />}>
+            <ProfileSidebar
+              isOpen={profileSidebarOpen}
+              onToggle={toggleProfileSidebar}
+              profile={state.current_profile}
+            />
+          </Suspense>
 
           <div
             className={`w-full transition-all duration-300 ease-in-out pt-20 ${

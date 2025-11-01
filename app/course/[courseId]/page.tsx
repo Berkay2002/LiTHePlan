@@ -1,12 +1,15 @@
 // app/course/[courseId]/page.tsx
 
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import type { Course } from "@/types/course";
 import CoursePageClient from "./CoursePageClient";
+import { CoursePageSkeleton } from "@/components/course/CoursePageSkeleton";
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
-// Revalidate every hour (ISR)
+// ISR: Revalidate every hour for fresh course data
 export const revalidate = 3600;
 
 // Generate static params for all 339 courses at build time
@@ -42,7 +45,12 @@ export async function generateMetadata({
   
   try {
     const { courseId } = await params;
-    const supabase = await createClient();
+    
+    // Use read-only client for metadata (no cookies needed)
+    const supabase = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+    );
 
     const { data: course } = await supabase
       .from("courses")
@@ -160,10 +168,14 @@ export default async function CoursePage({
     .select("*")
     .order("id");
 
+  // ISR + Suspense: Static course shell prerendered, revalidated every hour
+  // ProfileProvider streams user-specific data with Suspense
   return (
-    <CoursePageClient 
-      course={course as Course} 
-      allCourses={(allCourses as Course[]) || []} 
-    />
+    <Suspense fallback={<CoursePageSkeleton />}>
+      <CoursePageClient 
+        course={course as Course} 
+        allCourses={(allCourses as Course[]) || []} 
+      />
+    </Suspense>
   );
 }
