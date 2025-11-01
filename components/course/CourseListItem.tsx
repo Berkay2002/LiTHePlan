@@ -639,7 +639,7 @@ export function CourseListItem({
               ) : (
                 <>
                   <Plus className="h-3 w-3 mr-1" />
-                  Add
+                  Add to Profile
                 </>
               )}
             </Button>
@@ -657,7 +657,7 @@ export function CourseListItem({
               variant="outline"
             >
               <ExternalLink className="h-3 w-3 mr-1" />
-              View
+              View on LiU
             </Button>
           </div>
         </div>

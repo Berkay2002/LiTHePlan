@@ -214,12 +214,14 @@ function HomeContent() {
           >
             <div className="container mx-auto px-4 py-8">
               <InfoBanner />
-              <div className="w-full max-w-full mb-6 px-1 sm:px-2 lg:px-0">
-                <div className="flex justify-end items-center">
-                  <ViewToggle
-                    onViewModeChange={setViewMode}
-                    viewMode={viewMode}
-                  />
+              <div className="w-full mb-6">
+                <div className="grid gap-4 lg:gap-5 w-full justify-center" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))' }}>
+                  <div className="col-start-1 -col-end-1 flex justify-end">
+                    <ViewToggle
+                      onViewModeChange={setViewMode}
+                      viewMode={viewMode}
+                    />
+                  </div>
                 </div>
               </div>
 

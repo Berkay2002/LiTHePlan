@@ -509,7 +509,7 @@ export function CourseCard({ course }: CourseCardProps) {
                 variant="outline"
               >
                 <Info className="h-4 w-4 mr-2" />
-                Course Details
+                View Details
               </Button>
             </Link>
           </div>
