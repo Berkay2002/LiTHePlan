@@ -54,7 +54,7 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
-  --radius: 0.35rem;
+  --radius: 0.75rem;
   --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
   --tracking-tight: calc(var(--tracking-normal) - 0.025em);
   --tracking-wide: calc(var(--tracking-normal) + 0.025em);
@@ -127,6 +127,7 @@
   --shadow-offset-x: 0px;
   --shadow-offset-y: 4px;
   --letter-spacing: 0em;
+  --radius: 0.75rem;
 }
 
 .dark {
@@ -162,7 +163,7 @@
   --sidebar-border: oklch(0.30 0.02 225);
   --sidebar-ring: oklch(0.72 0.14 225);
   --destructive-foreground: oklch(0.98 0.005 225);
-  --radius: 0.35rem;
+  --radius: 0.75rem;
   --font-sans: Montserrat, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Fira Code, monospace;

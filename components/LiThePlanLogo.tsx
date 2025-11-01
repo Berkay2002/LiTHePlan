@@ -24,9 +24,11 @@ export function LiThePlanLogo({
       <title>LiTHePlan logo</title>
       <style>
         {`
-          .bold { font-weight: bold; fill: #FFFFFF; }
+          .bold { font-weight: bold; fill: oklch(0.20 0.01 200); }
           .highlight { fill: #17c7d2; }
-          .regular { fill: #FFFFFF; }
+          .regular { fill: oklch(0.20 0.01 200); }
+          .dark .bold { fill: oklch(0.98 0.005 225); }
+          .dark .regular { fill: oklch(0.98 0.005 225); }
         `}
       </style>
       <text fontFamily="Segoe UI, sans-serif" fontSize="60" x="20" y="65">

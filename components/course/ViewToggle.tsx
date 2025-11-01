@@ -15,7 +15,7 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
         className={`h-8 sm:h-10 px-1.5 sm:px-3 text-xs sm:text-sm transition-all duration-200 ${
           viewMode === "grid"
             ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-            : "bg-sidebar-foreground/5 text-sidebar-foreground border-sidebar/30 hover:bg-sidebar/10 hover:border-sidebar/50"
+            : "bg-sidebar-foreground/5 text-foreground hover:text-foreground border-sidebar/30 hover:bg-muted hover:border-sidebar/50"
         }`}
         onClick={() => onViewModeChange("grid")}
         size="sm"
@@ -28,7 +28,7 @@ export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {
         className={`h-8 sm:h-10 px-1.5 sm:px-3 text-xs sm:text-sm transition-all duration-200 ${
           viewMode === "list"
             ? "bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-            : "bg-sidebar-foreground/5 text-sidebar-foreground border-sidebar/30 hover:bg-sidebar/10 hover:border-sidebar/50"
+            : "bg-sidebar-foreground/5 text-foreground hover:text-foreground border-sidebar/30 hover:bg-muted hover:border-sidebar/50"
         }`}
         onClick={() => onViewModeChange("list")}
         size="sm"

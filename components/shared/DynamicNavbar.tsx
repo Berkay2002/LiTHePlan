@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/BackButton";
 import { LiThePlanLogo } from "@/components/LiThePlanLogo";
+import { ModeToggle } from "@/components/theme-toggle";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
@@ -160,6 +161,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                       </div>
                     )}
 
+                    {/* Theme toggle */}
+                    <ModeToggle />
+
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
@@ -192,12 +196,13 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                          className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="outline"
+                          variant="ghost"
                         >
-                          <LogIn className="h-4 w-4" />
+                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium hidden sm:inline">Sign In</span>
                         </Button>
                       </Link>
                     )}
@@ -283,6 +288,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
+                    {/* Theme toggle */}
+                    <ModeToggle />
+
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
@@ -311,12 +319,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                          className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="outline"
+                          variant="ghost"
                         >
-                          <LogIn className="h-4 w-4" />
+                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
                         </Button>
                       </Link>
                     )}
@@ -346,6 +354,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
               {/* Right Side - Back, Block Timeline Toggle, Share, Authentication */}
               <div className="flex justify-end items-center gap-2">
+                {/* Theme toggle */}
+                <ModeToggle />
                 <BackButton href="/" text="Back" />
                 {props.onToggleBlockTimeline && (
                   <Button
@@ -427,6 +437,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
               {/* Right Side - Navigation buttons */}
               <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-2">
+                {/* Theme toggle */}
+                <ModeToggle />
                 <BackButton hideTextOnMobile={true} href="/" text="Back" />
                 {props.onToggleBlockTimeline && (
                   <Button
