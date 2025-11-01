@@ -30,15 +30,15 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
   const getBlockBadgeColor = (blockNum: number) => {
     switch (blockNum) {
       case 1:
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+        return "bg-chart-1/10 text-chart-1 dark:bg-chart-1/20 dark:text-chart-1";
       case 2:
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-chart-2/10 text-chart-2 dark:bg-chart-2/20 dark:text-chart-2";
       case 3:
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+        return "bg-chart-3/10 text-chart-3 dark:bg-chart-3/20 dark:text-chart-3";
       case 4:
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
+        return "bg-chart-4/10 text-chart-4 dark:bg-chart-4/20 dark:text-chart-4";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-muted/50 text-muted-foreground dark:bg-muted dark:text-muted-foreground";
     }
   };
 
@@ -60,7 +60,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
         <span className="text-xs text-muted-foreground mr-1">Blocks:</span>
         {blocks.map((blockNum) => (
           <Badge
-            className={`text-xs font-medium ${getBlockBadgeColor(blockNum)} ${is50Percent ? "ring-2 ring-blue-300" : ""}`}
+            className={`text-xs font-medium ${getBlockBadgeColor(blockNum)} ${is50Percent ? "ring-2 ring-primary/30" : ""}`}
             key={blockNum}
             variant="secondary"
           >
@@ -69,7 +69,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
         ))}
         {is50Percent && (
           <Badge
-            className="text-xs ml-1 bg-blue-50 text-blue-700 border-blue-300"
+            className="text-xs ml-1 bg-primary/10 text-primary border-primary/30"
             variant="outline"
           >
             Cross-period
@@ -124,16 +124,16 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
             return (
               <div className="text-center" key={blockNum}>
                 <div
-                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-red-600" : "text-muted-foreground"}`}
+                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-destructive" : "text-muted-foreground"}`}
                 >
                   B{blockNum}
                 </div>
                 <div
                   className={`h-8 rounded border-2 border-dashed flex items-center justify-center text-xs ${
                     courses.length === 0
-                      ? "border-gray-200 bg-gray-50"
+                      ? "border-border bg-muted/30"
                       : hasConflict
-                        ? "border-red-300 bg-red-100 text-red-800"
+                        ? "border-destructive/30 bg-destructive/10 text-destructive"
                         : `border-opacity-50 ${getBlockBadgeColor(blockNum).replace("text-", "border-").replace("bg-", "border-")}`
                   }`}
                 >
@@ -151,7 +151,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
         {Object.values(blockOccupancy).some(
           (courses) => courses.length > 1 && courses.some((c) => !c.is50Percent)
         ) && (
-          <div className="text-xs text-red-600 mt-2 flex items-center">
+          <div className="text-xs text-destructive mt-2 flex items-center">
             <span className="mr-1">⚠️</span>
             Potential scheduling conflicts detected in Period {currentPeriod}
           </div>

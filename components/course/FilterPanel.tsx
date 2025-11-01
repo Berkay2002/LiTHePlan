@@ -181,10 +181,10 @@ export function CollapsibleFilterSidebar({
       {/* Collapsible Sidebar - Fixed position */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
-          "flex flex-col ring-1 ring-air-superiority-blue-300/30",
+          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-r-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50 transition-all duration-300 ease-in-out",
+          "flex flex-col ring-1 ring-sidebar-border/30",
           isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
         )}
       >
         {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
@@ -193,16 +193,16 @@ export function CollapsibleFilterSidebar({
             {/* Modern Floating Expand Button */}
             <div className="relative group">
               <Button
-                className="h-10 w-10 p-0 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="h-10 w-10 p-0 bg-sidebar-accent/50 hover:bg-sidebar-accent backdrop-blur-sm border border-sidebar-border hover:border-sidebar-border/80 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={onToggle}
                 size="sm"
                 variant="ghost"
               >
-                <ChevronRight className="h-5 w-5 text-white group-hover:text-primary transition-colors duration-200" />
+                <ChevronRight className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
               </Button>
 
               {/* Tooltip on hover */}
-              <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
+              <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-100">
                 Open Filters
               </div>
             </div>
@@ -219,23 +219,23 @@ export function CollapsibleFilterSidebar({
             >
               <div className="relative group">
                 <Button
-                  className="h-10 w-10 p-0 bg-air-superiority-blue-400/90 hover:bg-air-superiority-blue-500 backdrop-blur-sm border border-air-superiority-blue-300 hover:border-air-superiority-blue-200 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  className="h-10 w-10 p-0 bg-sidebar-accent/80 hover:bg-sidebar-accent backdrop-blur-sm border border-sidebar-border hover:border-sidebar-border/80 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                   onClick={onToggle}
                   size="sm"
                   variant="ghost"
                 >
-                  <ChevronLeft className="h-5 w-5 text-white group-hover:text-picton-blue transition-colors duration-200" />
+                  <ChevronLeft className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
                 </Button>
 
                 {/* Tooltip on hover */}
-                <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
+                <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-100">
                   Close Filters
                 </div>
               </div>
             </div>
 
             {/* Mobile Header - Only show clear button and close on mobile */}
-            <div className="flex-shrink-0 p-4 border-b border-air-superiority-blue-300/40 bg-air-superiority-blue-300/30 lg:hidden">
+            <div className="flex-shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
               <div className="flex items-center justify-between">
                 {/* Logo for mobile */}
                 <div className="flex-shrink-0">
@@ -249,7 +249,7 @@ export function CollapsibleFilterSidebar({
                 <div className="flex items-center gap-2">
                   {/* Enhanced Close button for mobile */}
                   <Button
-                    className="h-10 w-10 p-0 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 rounded-full border border-white/30 hover:border-white/50"
+                    className="h-10 w-10 p-0 text-sidebar-foreground hover:bg-sidebar-accent hover:scale-110 transition-all duration-200 rounded-full border border-sidebar-border hover:border-sidebar-border/80"
                     onClick={onToggle}
                     size="sm"
                     variant="ghost"
@@ -265,14 +265,14 @@ export function CollapsibleFilterSidebar({
               {/* Programs Filter - Dropdown */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                     Program
                   </h3>
                   <TooltipProvider>
                     <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                       <TooltipTrigger asChild>
                         <button
-                          className="flex items-center justify-center p-1 rounded-md hover:bg-white/10 transition-colors duration-200 touch-manipulation"
+                          className="flex items-center justify-center p-1 rounded-md hover:bg-sidebar-accent transition-colors duration-200 touch-manipulation"
                           onBlur={() =>
                             isMobile && setShowProgramTooltip(false)
                           }
@@ -281,7 +281,7 @@ export function CollapsibleFilterSidebar({
                             setShowProgramTooltip(!showProgramTooltip)
                           }
                         >
-                          <Info className="h-5 w-5 text-white/70 hover:text-white cursor-help transition-colors duration-200" />
+                          <Info className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-help transition-colors duration-200" />
                         </button>
                       </TooltipTrigger>
                       <TooltipContent
@@ -299,7 +299,7 @@ export function CollapsibleFilterSidebar({
                   </TooltipProvider>
                 </div>
                 <MultiSelect
-                  className="text-white [&_span.text-muted-foreground]:text-white"
+                  className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
                   defaultValue={filterState.programs || []}
                   maxCount={0}
                   onValueChange={(values) => {
@@ -319,12 +319,12 @@ export function CollapsibleFilterSidebar({
               {/* Huvudområden Filter - Multi-Select */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                     Huvudområden
                   </h3>
                 </div>
                 <MultiSelect
-                  className="text-white [&_span.text-muted-foreground]:text-white"
+                  className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
                   defaultValue={filterState.huvudomraden || []}
                   maxCount={1}
                   onValueChange={(values) => {
@@ -344,12 +344,12 @@ export function CollapsibleFilterSidebar({
               {/* Examination Filter - Multi-Select */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                  <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                     Examination
                   </h3>
                 </div>
                 <MultiSelect
-                  className="text-white [&_span.text-muted-foreground]:text-white"
+                  className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
                   defaultValue={
                     filterState.examination || [
                       "TEN",
@@ -376,7 +376,7 @@ export function CollapsibleFilterSidebar({
                 {/* Level Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Level
                     </h3>
                   </div>
@@ -395,7 +395,7 @@ export function CollapsibleFilterSidebar({
                           }
                         />
                         <label
-                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-sidebar-foreground group-hover:text-primary transition-colors leading-none"
                           htmlFor={`level-${level}`}
                         >
                           {level === "grundnivå" ? "Basic" : "Advanced"}
@@ -408,7 +408,7 @@ export function CollapsibleFilterSidebar({
                 {/* Study Pace Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Study Pace
                     </h3>
                   </div>
@@ -427,7 +427,7 @@ export function CollapsibleFilterSidebar({
                           }
                         />
                         <label
-                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-sidebar-foreground group-hover:text-primary transition-colors leading-none"
                           htmlFor={`pace-${pace}`}
                         >
                           {pace}
@@ -443,7 +443,7 @@ export function CollapsibleFilterSidebar({
                 {/* Period Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Period
                     </h3>
                   </div>
@@ -462,7 +462,7 @@ export function CollapsibleFilterSidebar({
                           }
                         />
                         <label
-                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-sidebar-foreground group-hover:text-primary transition-colors leading-none"
                           htmlFor={`period-${period}`}
                         >
                           {period}
@@ -475,7 +475,7 @@ export function CollapsibleFilterSidebar({
                 {/* Term Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Term
                     </h3>
                   </div>
@@ -494,7 +494,7 @@ export function CollapsibleFilterSidebar({
                           }
                         />
                         <label
-                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-sidebar-foreground group-hover:text-primary transition-colors leading-none"
                           htmlFor={`term-${term}`}
                         >
                           {term === 7 ? "7 & 9" : term}
@@ -510,7 +510,7 @@ export function CollapsibleFilterSidebar({
                 {/* Campus Filter */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Campus
                     </h3>
                   </div>
@@ -529,7 +529,7 @@ export function CollapsibleFilterSidebar({
                           }
                         />
                         <label
-                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-sidebar-foreground group-hover:text-primary transition-colors leading-none"
                           htmlFor={`campus-${campus}`}
                         >
                           {campus}
@@ -542,7 +542,7 @@ export function CollapsibleFilterSidebar({
                 {/* Block Filter - 4x1 horizontal layout */}
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Block
                     </h3>
                   </div>
@@ -561,7 +561,7 @@ export function CollapsibleFilterSidebar({
                           }
                         />
                         <label
-                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-white group-hover:text-primary transition-colors leading-none"
+                          className="text-sm lg:text-sm xl:text-sm font-medium cursor-pointer text-sidebar-foreground group-hover:text-primary transition-colors leading-none"
                           htmlFor={`block-${block}`}
                         >
                           {block}
@@ -713,33 +713,33 @@ export function FilterPanel({
   };
 
   return (
-    <Card className="w-full border border-air-superiority-blue-300/40 bg-air-superiority-blue-400 shadow-lg shadow-air-superiority-blue-300/20 ring-1 ring-air-superiority-blue-300/30">
-      <CardHeader className="pb-3 bg-air-superiority-blue-300/30 rounded-t-lg border-b border-air-superiority-blue-300/40">
+    <Card className="w-full border border-sidebar-border bg-sidebar shadow-lg shadow-sidebar/20 ring-1 ring-sidebar-border/30">
+      <CardHeader className="pb-3 bg-sidebar-accent/30 rounded-t-lg border-b border-sidebar-border">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold tracking-tight text-card-foreground">
             Filters
           </CardTitle>
         </div>
-        <Separator className="mt-3 bg-air-superiority-blue-300/40" />
+        <Separator className="mt-3 bg-sidebar-border" />
       </CardHeader>
-      <CardContent className="space-y-6 px-6 pb-6 bg-air-superiority-blue-400">
+      <CardContent className="space-y-6 px-6 pb-6 bg-sidebar">
         {/* Programs Filter - Dropdown */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+            <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
               Program
             </h3>
             <TooltipProvider>
               <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                 <TooltipTrigger asChild>
                   <button
-                    className="flex items-center justify-center p-1 rounded-md hover:bg-white/10 transition-colors duration-200 touch-manipulation"
+                    className="flex items-center justify-center p-1 rounded-md hover:bg-sidebar-accent transition-colors duration-200 touch-manipulation"
                     onBlur={() => isMobile && setShowProgramTooltip(false)}
                     onClick={() =>
                       isMobile && setShowProgramTooltip(!showProgramTooltip)
                     }
                   >
-                    <Info className="h-5 w-5 text-white/70 hover:text-white cursor-help transition-colors duration-200" />
+                    <Info className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-help transition-colors duration-200" />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent
@@ -757,7 +757,7 @@ export function FilterPanel({
             </TooltipProvider>
           </div>
           <MultiSelect
-            className="text-white [&_span.text-muted-foreground]:text-white"
+            className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
             defaultValue={filterState.programs || []}
             maxCount={0}
             onValueChange={(values) => {
@@ -777,12 +777,12 @@ export function FilterPanel({
         {/* Huvudområden Filter - Multi-Select */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+            <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
               Huvudområden
             </h3>
           </div>
           <MultiSelect
-            className="text-white [&_span.text-muted-foreground]:text-white"
+            className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
             defaultValue={filterState.huvudomraden || []}
             maxCount={1}
             onValueChange={(values) => {
@@ -802,12 +802,12 @@ export function FilterPanel({
         {/* Examination Filter - Multi-Select */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+            <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
               Examination
             </h3>
           </div>
           <MultiSelect
-            className="text-white [&_span.text-muted-foreground]:text-white"
+            className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
             defaultValue={
               filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]
             }
@@ -828,7 +828,7 @@ export function FilterPanel({
           {/* Level Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
                 Level
               </h3>
             </div>
@@ -858,7 +858,7 @@ export function FilterPanel({
           {/* Study Pace Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
                 Study Pace
               </h3>
             </div>
@@ -891,7 +891,7 @@ export function FilterPanel({
           {/* Term Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
                 Term
               </h3>
             </div>
@@ -921,7 +921,7 @@ export function FilterPanel({
           {/* Period Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
                 Period
               </h3>
             </div>
@@ -954,7 +954,7 @@ export function FilterPanel({
           {/* Campus Filter */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
                 Campus
               </h3>
             </div>
@@ -984,7 +984,7 @@ export function FilterPanel({
           {/* Block Filter - 4x1 horizontal layout (2x2 on mobile for space) */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-xs font-semibold text-white uppercase tracking-wide">
+              <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
                 Block
               </h3>
             </div>

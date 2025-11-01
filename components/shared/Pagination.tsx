@@ -68,7 +68,7 @@ export function Pagination({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
       {/* Results info */}
-      <div className="text-sm text-white font-medium">
+      <div className="text-sm text-foreground font-medium">
         Showing {startItem} to {endItem} of {totalItems} courses
       </div>
 
@@ -76,7 +76,7 @@ export function Pagination({
       <div className="flex items-center gap-2">
         {/* Previous button */}
         <Button
-          className="h-8 px-3 text-white border-white/30 hover:bg-white/10 hover:text-white disabled:text-white/50 disabled:border-white/20"
+          className="h-8 px-3 text-foreground border-border hover:bg-accent hover:text-accent-foreground disabled:text-muted-foreground disabled:border-border/50"
           disabled={currentPage === 1}
           onClick={() => onPageChange(currentPage - 1)}
           size="sm"
@@ -92,7 +92,7 @@ export function Pagination({
             <div key={`page-${page}-${index}`}>
               {page === "..." ? (
                 <Button
-                  className="h-8 w-8 p-0 text-white/50"
+                  className="h-8 w-8 p-0 text-muted-foreground"
                   disabled
                   size="sm"
                   variant="ghost"
@@ -103,8 +103,8 @@ export function Pagination({
                 <Button
                   className={`h-8 w-8 p-0 ${
                     currentPage === page
-                      ? "bg-white text-gray-900 hover:bg-white/90"
-                      : "text-white border-white/30 hover:bg-white/10 hover:text-white"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "text-foreground border-border hover:bg-accent hover:text-accent-foreground"
                   }`}
                   onClick={() => onPageChange(page as number)}
                   size="sm"
@@ -119,7 +119,7 @@ export function Pagination({
 
         {/* Next button */}
         <Button
-          className="h-8 px-3 text-white border-white/30 hover:bg-white/10 hover:text-white disabled:text-white/50 disabled:border-white/20"
+          className="h-8 px-3 text-foreground border-border hover:bg-accent hover:text-accent-foreground disabled:text-muted-foreground disabled:border-border/50"
           disabled={currentPage === totalPages}
           onClick={() => onPageChange(currentPage + 1)}
           size="sm"

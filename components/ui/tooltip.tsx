@@ -44,10 +44,10 @@ function TooltipContent({
     <TooltipPrimitive.Portal>
       <TooltipPrimitive.Content
         className={cn(
-          // Base styling with better contrast and visibility
-          "bg-slate-900 text-slate-50 border border-slate-700/50",
+          // Base styling with better contrast and visibility - using popover theme
+          "bg-popover text-popover-foreground border border-border",
           // Enhanced shadows and backdrop
-          "shadow-xl shadow-slate-900/25 backdrop-blur-sm",
+          "shadow-xl backdrop-blur-sm",
           // Better spacing and typography
           "px-4 py-2.5 rounded-lg text-sm font-medium leading-relaxed",
           // Improved max-width and text handling - wider rectangle
@@ -69,7 +69,7 @@ function TooltipContent({
       >
         {children}
         <TooltipPrimitive.Arrow
-          className="fill-slate-900 drop-shadow-sm"
+          className="fill-popover drop-shadow-sm"
           height={6}
           width={12}
         />

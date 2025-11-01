@@ -41,9 +41,9 @@ export function ProfileSidebar({
   // Pie chart segments
   const remaining = targetCredits - currentCredits;
   const segments = [
-    { label: "Advanced", value: advancedCredits, color: "#3b82f6" },
-    { label: "Basic", value: basicCredits, color: "#10b981" },
-    { label: "Remaining", value: Math.max(0, remaining), color: "#e5e7eb" },
+    { label: "Advanced", value: advancedCredits, color: "var(--color-chart-1)" },
+    { label: "Basic", value: basicCredits, color: "var(--color-chart-2)" },
+    { label: "Remaining", value: Math.max(0, remaining), color: "var(--color-chart-3)" },
   ].filter((segment) => segment.value > 0);
 
   const total = segments.reduce((sum, segment) => sum + segment.value, 0);
@@ -103,10 +103,10 @@ export function ProfileSidebar({
       {/* Profile Sidebar - Fixed position */}
       <div
         className={cn(
-          "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-l-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50 transition-all duration-300 ease-in-out",
-          "flex flex-col ring-1 ring-air-superiority-blue-300/30",
+          "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-l-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50 transition-all duration-300 ease-in-out",
+          "flex flex-col ring-1 ring-sidebar-border/30",
           isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
         )}
       >
         {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
@@ -115,16 +115,16 @@ export function ProfileSidebar({
             {/* Modern Floating Expand Button */}
             <div className="relative group">
               <Button
-                className="h-10 w-10 p-0 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="h-10 w-10 p-0 bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 backdrop-blur-sm border border-sidebar-foreground/20 hover:border-sidebar-foreground/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={onToggle}
                 size="sm"
                 variant="ghost"
               >
-                <ChevronLeft className="h-5 w-5 text-white group-hover:text-primary transition-colors duration-200" />
+                <ChevronLeft className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
               </Button>
 
               {/* Tooltip on hover */}
-              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
+              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
                 {profile ? "Open Profile" : "Start Building Profile"}
               </div>
             </div>
@@ -141,29 +141,29 @@ export function ProfileSidebar({
             >
               <div className="relative group">
                 <Button
-                  className="h-10 w-10 p-0 bg-air-superiority-blue-400/90 hover:bg-air-superiority-blue-500 backdrop-blur-sm border border-air-superiority-blue-300 hover:border-air-superiority-blue-200 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  className="h-10 w-10 p-0 bg-sidebar-accent/80 hover:bg-sidebar-accent backdrop-blur-sm border border-sidebar-border hover:border-sidebar-border/80 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                   onClick={onToggle}
                   size="sm"
                   variant="ghost"
                 >
-                  <ChevronRight className="h-5 w-5 text-white group-hover:text-picton-blue transition-colors duration-200" />
+                  <ChevronRight className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
                 </Button>
 
                 {/* Tooltip on hover */}
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
                   {profile ? "Close Profile" : "Close Sidebar"}
                 </div>
               </div>
             </div>
 
             {/* Mobile Header */}
-            <div className="flex-shrink-0 p-4 border-b border-air-superiority-blue-300/40 bg-air-superiority-blue-300/30 lg:hidden">
+            <div className="flex-shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
               <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-white">
+                <h2 className="text-sm font-semibold text-sidebar-foreground">
                   {profile ? "Profile Overview" : "Your Profile"}
                 </h2>
                 <Button
-                  className="h-10 w-10 p-0 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 rounded-full border border-white/30 hover:border-white/50"
+                  className="h-10 w-10 p-0 text-sidebar-foreground hover:bg-sidebar-foreground/20 hover:scale-110 transition-all duration-200 rounded-full border border-sidebar-foreground/30 hover:border-sidebar-foreground/50"
                   onClick={onToggle}
                   size="sm"
                   variant="ghost"
@@ -179,16 +179,16 @@ export function ProfileSidebar({
                 <>
                   {/* Profile Progress Section */}
                   <div className="space-y-3">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
+                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                       Progress
                     </h3>
 
                     {/* Progress text */}
                     <div className="text-center">
-                      <div className="text-lg font-bold text-white">
+                      <div className="text-lg font-bold text-sidebar-foreground">
                         {currentCredits} / {targetCredits} hp
                       </div>
-                      <div className="text-xs text-white/80">
+                      <div className="text-xs text-sidebar-foreground/80">
                         {Math.round(percentage)}% complete
                       </div>
                     </div>
@@ -205,7 +205,7 @@ export function ProfileSidebar({
                             d={createPath(segment.startAngle, segment.angle)}
                             fill={segment.color}
                             key={`segment-${segment.label}-${index}`}
-                            stroke="white"
+                            stroke="hsl(var(--sidebar))"
                             strokeWidth="2"
                           />
                         ))}
@@ -224,11 +224,11 @@ export function ProfileSidebar({
                               className="w-2 h-2 rounded-full"
                               style={{ backgroundColor: segment.color }}
                             />
-                            <span className="text-xs text-white/80">
+                            <span className="text-xs text-sidebar-foreground/80">
                               {segment.label}
                             </span>
                           </div>
-                          <span className="text-xs text-white font-medium">
+                          <span className="text-xs text-sidebar-foreground font-medium">
                             {segment.value}hp
                           </span>
                         </div>
@@ -239,23 +239,23 @@ export function ProfileSidebar({
                   {/* Term Cards Slider Section */}
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-white uppercase tracking-wide">
-                        Terms
+                      <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
+                        Courses
                       </h3>
                       <div className="flex items-center gap-1">
                         <Button
-                          className="h-6 w-6 p-0 text-white hover:bg-white/20"
+                          className="h-6 w-6 p-0 text-sidebar-foreground hover:bg-sidebar-foreground/20"
                           onClick={prevTerm}
                           size="sm"
                           variant="ghost"
                         >
                           <ChevronLeft className="h-3 w-3" />
                         </Button>
-                        <span className="text-xs text-white/80 min-w-[60px] text-center">
+                        <span className="text-xs text-sidebar-foreground/80 min-w-[60px] text-center">
                           {getTermLabel(currentTerm)}
                         </span>
                         <Button
-                          className="h-6 w-6 p-0 text-white hover:bg-white/20"
+                          className="h-6 w-6 p-0 text-sidebar-foreground hover:bg-sidebar-foreground/20"
                           onClick={nextTerm}
                           size="sm"
                           variant="ghost"
@@ -313,21 +313,21 @@ export function ProfileSidebar({
                 /* Empty State - No Profile */
                 <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
                   <div className="space-y-4">
-                    <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto">
-                      <ChevronRight className="h-8 w-8 text-white/60" />
+                    <div className="w-16 h-16 bg-sidebar-foreground/10 rounded-full flex items-center justify-center mx-auto">
+                      <ChevronRight className="h-8 w-8 text-sidebar-foreground/60" />
                     </div>
                     <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-sidebar-foreground">
                         Start Building Your Profile
                       </h3>
-                      <p className="text-sm text-white/80 max-w-xs">
+                      <p className="text-sm text-sidebar-foreground/80 max-w-xs">
                         Add courses to start seeing your progress and term
                         planning here. Browse the course catalog and click the
                         &ldquo;+&rdquo; button to add courses to your profile.
                       </p>
                     </div>
                   </div>
-                  <div className="space-y-2 text-xs text-white/60">
+                  <div className="space-y-2 text-xs text-sidebar-foreground/60">
                     <p>
                       💡 Tip: You can add up to {MASTER_PROGRAM_TARGET_CREDITS} credits
                     </p>

@@ -31,10 +31,10 @@ export function FilterSidebarSkeleton({
       {/* Fixed Extended Sidebar - No animation during loading */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-r-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50",
-          "flex flex-col ring-1 ring-air-superiority-blue-300/30",
-          sidebarOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-r-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50",
+          "flex flex-col ring-1 ring-sidebar-border/30",
+          isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
+          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
         )}
       >
         {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
@@ -43,12 +43,12 @@ export function FilterSidebarSkeleton({
             {/* Modern Floating Expand Button */}
             <div className="relative group">
               <Button
-                className="h-10 w-10 p-0 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="h-10 w-10 p-0 bg-sidebar-accent/50 hover:bg-sidebar-accent backdrop-blur-sm border border-sidebar-border hover:border-sidebar-border/80 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={onToggle}
                 size="sm"
                 variant="ghost"
               >
-                <ChevronRight className="h-5 w-5 text-white group-hover:text-primary transition-colors duration-200" />
+                <ChevronRight className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
               </Button>
             </div>
           </div>
@@ -64,28 +64,28 @@ export function FilterSidebarSkeleton({
             >
               <div className="relative group">
                 <Button
-                  className="h-10 w-10 p-0 bg-air-superiority-blue-400/90 hover:bg-air-superiority-blue-500 backdrop-blur-sm border border-air-superiority-blue-300 hover:border-air-superiority-blue-200 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  className="h-10 w-10 p-0 bg-sidebar-accent/80 hover:bg-sidebar-accent backdrop-blur-sm border border-sidebar-border hover:border-sidebar-border/80 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                   onClick={onToggle}
                   size="sm"
                   variant="ghost"
                 >
-                  <ChevronLeft className="h-5 w-5 text-white group-hover:text-picton-blue transition-colors duration-200" />
+                  <ChevronLeft className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
                 </Button>
               </div>
             </div>
 
             {/* Mobile Header - Only show on mobile */}
-            <div className="flex-shrink-0 p-4 border-b border-air-superiority-blue-300/40 bg-air-superiority-blue-300/30 lg:hidden">
+            <div className="shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
               <div className="flex items-center justify-between">
                 {/* Logo skeleton for mobile */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <Skeleton className="h-8 w-32" />
                 </div>
 
                 <div className="flex items-center gap-2">
                   {/* Close button for mobile */}
                   <Button
-                    className="h-10 w-10 p-0 text-white hover:bg-white/20 hover:scale-110 transition-all duration-200 rounded-full border border-white/30 hover:border-white/50"
+                    className="h-10 w-10 p-0 text-sidebar-foreground hover:bg-sidebar-accent hover:scale-110 transition-all duration-200 rounded-full border border-sidebar-border hover:border-sidebar-border/80"
                     onClick={onToggle}
                     size="sm"
                     variant="ghost"
@@ -113,7 +113,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-16" />
                       </div>
                     ))}
@@ -126,7 +126,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2, 3].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-12" />
                       </div>
                     ))}
@@ -142,7 +142,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-6" />
                       </div>
                     ))}
@@ -155,7 +155,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-10" />
                       </div>
                     ))}
@@ -171,7 +171,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2, 3].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-20" />
                       </div>
                     ))}
@@ -184,7 +184,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2, 3, 4].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-6" />
                       </div>
                     ))}
@@ -202,7 +202,7 @@ export function FilterSidebarSkeleton({
                 <div className="grid gap-3">
                   {[1, 2, 3, 4, 5].map((item) => (
                     <div className="flex items-center gap-3" key={item}>
-                      <Skeleton className="h-4 w-12 flex-shrink-0" />{" "}
+                      <Skeleton className="h-4 w-12 shrink-0" />{" "}
                       {/* Exam type label */}
                       <div className="ml-3">
                         <Skeleton className="w-28 h-6 rounded" />{" "}

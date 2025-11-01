@@ -60,18 +60,18 @@ export function InfoBanner() {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400 p-4 mb-6 rounded-r-lg shadow-sm">
+    <div className="bg-accent/10 border-l-4 border-accent p-4 mb-6 rounded-r-lg shadow-sm">
       <div className="flex items-start">
         <div className="flex-shrink-0">
-          <Info className="h-5 w-5 text-blue-400" />
+          <Info className="h-5 w-5 text-accent" />
         </div>
         <div className="ml-3 flex-1">
           <div className="text-sm">
-            <p className="text-blue-800 font-medium">
+            <p className="text-accent-foreground font-medium">
               💡 <strong>No account needed!</strong> You can build and save your
               course profile locally without signing up.
             </p>
-            <p className="text-blue-700 mt-1">
+            <p className="text-accent-foreground/90 mt-1">
               Sign up only if you want to save profiles permanently and share
               them across devices.
             </p>
@@ -79,7 +79,7 @@ export function InfoBanner() {
         </div>
         <div className="ml-4 flex-shrink-0">
           <Button
-            className="h-6 w-6 p-0 text-blue-400 hover:text-blue-600 hover:bg-blue-100"
+            className="h-6 w-6 p-0 text-accent hover:text-accent/80 hover:bg-accent/10"
             onClick={handleDismiss}
             size="sm"
             variant="ghost"

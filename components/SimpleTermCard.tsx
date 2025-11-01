@@ -72,7 +72,7 @@ export function SimpleTermCard({
 
           {course.pace === "50%" && (
             <Badge
-              className="text-xs bg-blue-50 text-blue-700 border-blue-300"
+              className="text-xs bg-accent/10 text-accent border-accent/30"
               variant="outline"
             >
               Cross-period

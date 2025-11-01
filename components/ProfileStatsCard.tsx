@@ -68,12 +68,12 @@ export function ProfileStatsCard({
       ), // Assuming PROGRAM_FOCUS_TARGET_CREDITS hp target per program
     }));
 
-  // Pie chart segments
+  // Pie chart segments - using CSS custom properties for theme compatibility
   const remaining = targetCredits - currentCredits;
   const segments = [
-    { label: "Advanced", value: advancedCredits, color: "#3b82f6" },
-    { label: "Basic", value: basicCredits, color: "#10b981" },
-    { label: "Remaining", value: Math.max(0, remaining), color: "#e5e7eb" },
+    { label: "Advanced", value: advancedCredits, color: "var(--color-chart-1)" },
+    { label: "Basic", value: basicCredits, color: "var(--color-chart-2)" },
+    { label: "Remaining", value: Math.max(0, remaining), color: "var(--color-chart-3)" },
   ].filter((segment) => segment.value > 0);
 
   const total = segments.reduce((sum, segment) => sum + segment.value, 0);
@@ -130,7 +130,7 @@ export function ProfileStatsCard({
                     d={createPath(segment.startAngle, segment.angle)}
                     fill={segment.color}
                     key={`segment-${segment.label}-${index}`}
-                    stroke="white"
+                    stroke="hsl(var(--card))"
                     strokeWidth="2"
                   />
                 ))}
@@ -180,9 +180,9 @@ export function ProfileStatsCard({
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>Required: {minAdvancedCredits}hp</span>
                 {advancedCredits >= minAdvancedCredits ? (
-                  <span className="text-green-600 font-medium">✓ Complete</span>
+                  <span className="text-chart-2 font-medium">✓ Complete</span>
                 ) : (
-                  <span className="text-amber-600 font-medium">
+                  <span className="text-chart-4 font-medium">
                     {minAdvancedCredits - advancedCredits}hp needed
                   </span>
                 )}
@@ -205,16 +205,16 @@ export function ProfileStatsCard({
                   top3Programs.map(
                     ({ program, credits, percentage }, index) => (
                       <div className="space-y-2" key={program}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs font-medium text-muted-foreground w-4">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <span className="text-xs font-medium text-muted-foreground shrink-0 w-4">
                               #{index + 1}
                             </span>
-                            <span className="text-sm font-medium truncate text-card-foreground">
+                            <span className="text-sm font-medium truncate text-card-foreground" title={program}>
                               {program}
                             </span>
                           </div>
-                          <span className="text-sm font-medium text-card-foreground">
+                          <span className="text-sm font-medium text-card-foreground shrink-0">
                             {credits} / {PROGRAM_FOCUS_TARGET_CREDITS} hp
                           </span>
                         </div>

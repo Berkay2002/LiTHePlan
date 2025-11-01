@@ -113,9 +113,68 @@
 
 ## What's Left to Build
 
-### Active Development: PPR Migration (In Progress)
-**Priority**: HIGH - Performance optimization
-**Status**: Planning phase
+### Active Development: Color Theme Migration (In Progress)
+**Priority**: HIGH - Design system consistency
+**Status**: ~20% complete
+
+**Objective**: Convert entire application from purple-pink Catppuccin theme to cyan-teal color scheme with full theme awareness.
+
+**Completed**:
+- ✅ Global CSS OKLCH color conversion (app/globals.css)
+- ✅ Primary/accent/neutral color hue shifts
+- ✅ lib/course-utils.ts badge functions
+- ✅ lib/conflict-utils.ts conflict styling
+- ✅ components/TermCard.tsx block badges and conflicts
+- ✅ app/page.tsx error text
+- ✅ components/InfoBanner.tsx - Blue gradient → accent theme
+- ✅ components/course/ViewToggle.tsx - picton-blue → primary theme
+- ✅ components/course/CourseGrid.tsx - White text → foreground
+- ✅ components/course/CourseList.tsx - White text → foreground
+- ✅ components/shared/Pagination.tsx - White/gray → theme tokens
+- ✅ components/course/FilterPanel.tsx - Air-superiority-blue → sidebar (90%)
+- ✅ components/course/TermSelectionModal.tsx - White/gray → foreground
+- ✅ components/course/SortDropdown.tsx - Air-superiority-blue → foreground
+- ✅ components/course/FilterSidebarSkeleton.tsx - Air-superiority-blue → sidebar
+
+**In Progress** (10+ components remaining):
+- [ ] EditableTermCard.tsx - Block badge colors
+- [ ] DraggableTermCard.tsx - Block badge colors
+- [ ] SimpleTermCard.tsx - Cross-period badge colors
+- [ ] InfoBanner.tsx - Blue gradient → accent theme
+- [ ] ConflictResolutionModal.tsx - Amber → chart-4 theme
+- [ ] ProfileStatsCard.tsx - Hex pie chart colors → chart tokens
+- [ ] profile/ProfileSidebar.tsx - Duplicate pie chart hex colors
+- [ ] ProfileSummary.tsx - Status colors (red/green/amber)
+- [ ] CourseCard.tsx - Amber warning badges → chart-4
+- [ ] CourseListItem.tsx - Amber pin badges → chart-4
+- [ ] PinnedCourseCard.tsx - Amber badges → chart-4
+- [ ] TermSelectionModal.tsx - Gray/picton-blue → border/primary
+- [ ] ui/tooltip.tsx - Slate → popover theme
+- [ ] shared/Pagination.tsx - White/gray → sidebar theme
+- [ ] shared/Navbar.tsx - White/picton-blue → sidebar theme
+- [ ] shared/DynamicNavbar.tsx - Custom colors → sidebar theme
+- [ ] LiThePlanLogo.tsx - SVG hex colors → CSS variables
+
+**Technical Debt to Resolve**:
+- [ ] Define or remove undefined custom colors:
+  - `picton-blue` (30+ references)
+  - `air-superiority-blue` (20+ references)
+  - `electric-blue`
+  - `battleship-gray`
+  - `custom-red`
+- [ ] Create semantic color mapping in lib/theme-colors.ts
+- [ ] Update Tailwind config if custom colors kept
+
+**Expected Benefits**:
+- Consistent cyan-teal visual identity
+- Full theme switching support (light/dark)
+- Easier future theme customization
+- Reduced hardcoded color maintenance
+- Better accessibility with semantic tokens
+
+### PPR Migration (Abandoned)
+**Priority**: ~~HIGH~~ N/A
+**Status**: Abandoned due to Supabase auth incompatibility
 
 - [ ] Enable PPR in next.config.ts
 - [ ] Add Suspense boundaries to `/course/[courseId]`
@@ -161,7 +220,10 @@ These are documented feature ideas but not currently planned:
 ## Known Issues
 
 ### High Priority
-None - all critical bugs resolved.
+1. **Incomplete Theme Migration**: ~80% of components still use hardcoded colors
+   - **Impact**: High - theme switching won't work correctly, inconsistent visual design
+   - **Status**: Active work in progress (20+ components identified)
+   - **Solution**: Systematic replacement of all hardcoded Tailwind classes with theme tokens
 
 ### Medium Priority
 1. **Mobile drag-drop quirks**: Some Android browsers have inconsistent touch behavior
@@ -206,6 +268,7 @@ None - all critical bugs resolved.
 - ✅ Next.js 16 compliance verified (99/100 score)
 - ✅ Async request APIs properly implemented
 - ✅ Proxy pattern following Next.js 16 standards
+- ⏳ Theme system migration (20% complete - cyan-teal color scheme)
 
 ## Deployment History
 
@@ -260,9 +323,12 @@ None - all critical bugs resolved.
 ## Next Milestones
 
 ### Immediate (Current Session)
-- [ ] Complete Memory Bank documentation
-- [ ] Create tasks index
-- [ ] Review all documentation for accuracy
+- [x] Complete Memory Bank documentation
+- [x] Comprehensive color audit (200+ instances catalogued)
+- [ ] Complete color theme migration (20+ components remaining)
+- [ ] Test theme switching (light/dark mode)
+- [ ] Define or remove custom color classes
+- [ ] Update activeContext.md with final color system
 
 ### Short-term (Next 1-3 months)
 - Monitor production usage

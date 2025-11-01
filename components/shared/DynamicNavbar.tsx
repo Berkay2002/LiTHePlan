@@ -82,7 +82,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-40 w-full bg-air-superiority-blue-400 border-b-2 border-air-superiority-blue/20">
+    <nav className="fixed top-0 left-0 right-0 z-40 w-full bg-sidebar border-b-2 border-sidebar-border">
       <div className="container mx-auto px-4 py-3">
         {props.mode === "main" ? (
           <>
@@ -102,9 +102,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Center - Search Bar - Middle Column */}
               <div className="flex justify-center">
                 <div className="relative w-full max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-air-superiority-blue-300" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    className="pl-10 pr-10 h-10 w-full bg-white text-air-superiority-blue-300 placeholder:text-air-superiority-blue-400 border-2 border-air-superiority-blue/30 focus:border-picton-blue focus:ring-2 focus:ring-picton-blue/20 transition-all duration-200"
+                    className="pl-10 pr-10 h-10 w-full bg-background text-foreground placeholder:text-muted-foreground border-2 border-sidebar-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       props.onSearchChange(e.target.value)
                     }
@@ -114,7 +114,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   />
                   {props.searchQuery && (
                     <Button
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-electric-blue/10 text-air-superiority-blue-300 hover:text-electric-blue"
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
                       onClick={handleClearSearch}
                       size="sm"
                       variant="ghost"
@@ -128,15 +128,15 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Right Side - Profile and Authentication - Right Column */}
               <div className="flex justify-end">
                 {loading ? (
-                  <div className="flex items-center gap-2 text-white">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-2 text-sidebar-foreground">
+                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
                     <span className="text-sm hidden sm:inline">Loading...</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
                     {/* User greeting - shown when authenticated on desktop only */}
                     {user && (
-                      <div className="flex items-center text-white text-sm mr-2">
+                      <div className="flex items-center text-sidebar-foreground text-sm mr-2">
                         <span className="hidden xl:inline font-medium">
                           Hi,{" "}
                           {user.email?.split("@")[0] ||
@@ -149,13 +149,13 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
-                        className="h-10 px-3 hover:bg-picton-blue/10 transition-all duration-200 border border-white/30 hover:border-picton-blue/50"
+                        className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                         size="sm"
                         title="Build your course profile (no login required)"
                         variant="ghost"
                       >
-                        <UserIcon className="h-4 w-4 text-white hover:text-picton-blue transition-colors duration-200 mr-2" />
-                        <span className="text-white hover:text-picton-blue transition-colors duration-200 text-sm font-medium">
+                        <UserIcon className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                        <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
                           Course Profile
                         </span>
                       </Button>
@@ -164,7 +164,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     {/* Authentication status - conditional */}
                     {user ? (
                       <Button
-                        className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -178,7 +178,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="outline"
@@ -198,7 +198,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               <div className="flex-shrink-0 w-10 flex justify-start">
                 {props.onMobileMenuToggle && (
                   <Button
-                    className="h-10 w-10 p-0 hover:bg-picton-blue/10 transition-all duration-200 relative overflow-hidden border border-white/30"
+                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 relative overflow-hidden border border-sidebar-foreground/30"
                     onClick={props.onMobileMenuToggle}
                     size="sm"
                     variant="ghost"
@@ -210,16 +210,16 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           : "rotate-0 scale-100 opacity-100"
                       }`}
                     >
-                      <Menu className="h-6 w-6 text-white" />
+                      <Menu className="h-6 w-6 text-sidebar-foreground" />
                     </div>
                     <div
                       className={`absolute inset-0 flex items-center justify-center transition-all duration-300 transform ${
                         props.isMobileMenuOpen
                           ? "rotate-0 scale-100 opacity-100"
-                          : "rotate-180 scale-0 opacity-0"
+                          : "-rotate-180 scale-0 opacity-0"
                       }`}
                     >
-                      <X className="h-6 w-6 text-white" />
+                      <X className="h-6 w-6 text-sidebar-foreground" />
                     </div>
                   </Button>
                 )}
@@ -228,9 +228,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Center - Search Bar (Perfectly Centered) */}
               <div className="flex-1 px-2">
                 <div className="relative max-w-xs mx-auto">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-air-superiority-blue-300" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    className="pl-10 pr-10 h-10 w-full bg-white text-air-superiority-blue-300 placeholder:text-air-superiority-blue-400 border border-white/30 focus:border-picton-blue focus:ring-2 focus:ring-picton-blue/20 transition-all duration-200"
+                    className="pl-10 pr-10 h-10 w-full bg-background text-foreground placeholder:text-muted-foreground border border-sidebar-foreground/30 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       props.onSearchChange(e.target.value)
                     }
@@ -240,7 +240,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   />
                   {props.searchQuery && (
                     <Button
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-electric-blue/10 text-air-superiority-blue-300 hover:text-electric-blue"
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
                       onClick={handleClearSearch}
                       size="sm"
                       variant="ghost"
@@ -254,8 +254,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Right Side - Profile and Authentication */}
               <div className="flex-shrink-0 flex justify-end">
                 {loading ? (
-                  <div className="flex items-center gap-2 text-white">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-2 text-sidebar-foreground">
+                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
                     <span className="text-sm">Loading...</span>
                   </div>
                 ) : (
@@ -263,19 +263,19 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
-                        className="h-10 w-10 p-0 hover:bg-picton-blue/10 transition-all duration-200 border border-white/30 hover:border-picton-blue/50"
+                        className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                         size="sm"
                         title="Build your course profile (no login required)"
                         variant="ghost"
                       >
-                        <UserIcon className="h-4 w-4 text-white hover:text-picton-blue transition-colors duration-200" />
+                        <UserIcon className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
                       </Button>
                     </Link>
 
                     {/* Authentication status - conditional */}
                     {user ? (
                       <Button
-                        className="h-10 w-10 p-0 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -288,7 +288,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="outline"
@@ -326,7 +326,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 <BackButton href="/" text="Back" />
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                    className="h-10 px-3 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="outline"
@@ -351,8 +351,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
                 {/* Authentication status - always show on all pages */}
                 {loading ? (
-                  <div className="flex items-center gap-2 text-white">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-2 text-sidebar-foreground">
+                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
                     <span className="text-sm hidden sm:inline">Loading...</span>
                   </div>
                 ) : (
@@ -374,7 +374,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="outline"
@@ -407,7 +407,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 <BackButton hideTextOnMobile={true} href="/" text="Back" />
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                    className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="outline"
@@ -433,15 +433,15 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
                 {/* Authentication status - mobile */}
                 {loading ? (
-                  <div className="flex items-center gap-1 text-white">
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="flex items-center gap-1 text-sidebar-foreground">
+                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
                     {/* Authentication button - mobile */}
                     {user ? (
                       <Button
-                        className="h-10 w-10 p-0 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -454,7 +454,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 w-10 p-0 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                          className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="outline"

@@ -31,12 +31,12 @@ export function CourseGrid({
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-6xl mb-4">🔍</div>
-        <h3 className="text-xl font-semibold mb-2 text-white">
+        <h3 className="text-xl font-semibold mb-2 text-foreground">
           {isFiltered
             ? "No courses match your filters"
             : "No courses available"}
         </h3>
-        <p className="text-white/80">
+        <p className="text-muted-foreground">
           {isFiltered
             ? "Try adjusting your filter criteria to see more results."
             : "There are currently no courses to display."}

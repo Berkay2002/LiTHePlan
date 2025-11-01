@@ -1,11 +1,86 @@
 # Active Context
 
 ## Current Status
-**Date**: October 31, 2025
-**Phase**: Next.js 16 Compliance Verified
-**Focus**: Production-ready with Next.js 16.0.1
+**Date**: November 1, 2025
+**Phase**: Color Theme Migration
+**Focus**: Converting purple-pink Catppuccin theme to cyan-teal with full theme awareness
 
 ## Recent Changes (Current Session)
+### November 1, 2025 - Color Theme Migration to Cyan-Teal
+1. ✅ **Global CSS Theme Conversion**
+   - Converted all OKLCH color values from purple-pink to cyan-teal
+   - Primary (cyan): 297° → 192° (light), 304° → 195° (dark)
+   - Accent (teal): 235° → 178° (light), 210° → 180° (dark)
+   - All neutral colors shifted to cyan-teal tinted grays (195-202° range)
+   - Preserved lightness and chroma values (only hue changed)
+   - Kept destructive (red) and chart-3/4/5 (green/orange) unchanged
+
+2. ⏳ **Component Hardcoded Color Cleanup (In Progress)**
+   - ✅ Updated `lib/course-utils.ts`: getLevelColor() and getCampusColor() now use theme tokens
+   - ✅ Updated `lib/conflict-utils.ts`: Conflict styling uses destructive theme token
+   - ✅ Updated `components/TermCard.tsx`: Block badges and conflict colors use chart tokens
+   - ✅ Updated `app/page.tsx`: Error text uses destructive theme token
+   - ✅ Updated `components/InfoBanner.tsx`: Blue gradient → accent theme
+   - ✅ Updated `components/course/ViewToggle.tsx`: picton-blue/air-superiority-blue → primary/sidebar theme
+   - ✅ Updated `components/course/CourseGrid.tsx`: White text → foreground theme
+   - ✅ Updated `components/course/CourseList.tsx`: White text → foreground theme
+   - ✅ Updated `components/shared/Pagination.tsx`: White/gray → foreground/border theme
+   - ✅ Updated `components/course/FilterPanel.tsx`: Air-superiority-blue → sidebar theme + ALL white text → sidebar-foreground (100% complete!)
+   - ✅ Updated `components/course/TermSelectionModal.tsx`: White/gray/picton-blue → foreground/primary theme
+   - ✅ Updated `components/course/SortDropdown.tsx`: Air-superiority-blue → foreground/background theme
+   - ✅ Updated `components/course/FilterSidebarSkeleton.tsx`: Air-superiority-blue/white → sidebar theme
+   - ⏳ Remaining: 10+ components with amber/hardcoded colors (ProfileStatsCard, ProfileSummary, CourseCard, CourseListItem, etc.)
+
+3. 📋 **Comprehensive Color Audit Completed**
+   - Identified 200+ instances of hardcoded Tailwind color classes
+   - Found 18 hex color values in components
+   - Documented 10+ undefined custom colors (picton-blue, air-superiority-blue, etc.)
+   - Created priority action plan with theme mapping strategy
+
+**Color Migration Strategy**:
+- **Advanced level**: `bg-primary/10 text-primary` (cyan)
+- **Basic level**: `bg-chart-2/10 text-chart-2` (green from chart colors)
+- **Linköping campus**: `bg-accent/10 text-accent` (teal)
+- **Norrköping campus**: `bg-chart-4/10 text-chart-4` (orange from chart colors)
+- **Block badges**: `bg-chart-1/10` through `bg-chart-4/10` (cyan/green/yellow/orange)
+- **Conflicts/Errors**: `text-destructive`, `border-destructive` (red)
+- **Status complete**: `text-chart-2` (green)
+- **Status warning**: `text-chart-4` (orange)
+
+**Files Modified**:
+- `app/globals.css` - Complete OKLCH color conversion to cyan-teal
+- `app/page.tsx` - Error text now uses destructive theme token
+- `lib/course-utils.ts` - Badge functions use theme tokens
+- `lib/conflict-utils.ts` - Conflict styling uses destructive token
+- `components/TermCard.tsx` - Block and conflict colors theme-aware
+- `components/InfoBanner.tsx` - Blue gradient → accent theme
+- `components/course/ViewToggle.tsx` - All colors → primary/sidebar theme
+- `components/course/CourseGrid.tsx` - White text → foreground
+- `components/course/CourseList.tsx` - White text → foreground
+- `components/shared/Pagination.tsx` - All colors → theme tokens
+- `components/course/FilterPanel.tsx` - Air-superiority-blue → sidebar (90%)
+- `components/course/TermSelectionModal.tsx` - All colors → theme tokens
+- `components/course/SortDropdown.tsx` - All colors → theme tokens
+- `components/course/FilterSidebarSkeleton.tsx` - All colors → sidebar theme
+
+**High Priority Remaining Work**:
+1. EditableTermCard.tsx, DraggableTermCard.tsx, SimpleTermCard.tsx - Same patterns as TermCard
+2. InfoBanner.tsx - Replace blue gradient with accent theme
+3. ConflictResolutionModal.tsx - Replace amber with chart-4 theme
+4. ProfileStatsCard.tsx - Replace hex colors with chart theme tokens
+5. ProfileSummary.tsx - Replace status colors with theme tokens
+6. CourseCard.tsx, CourseListItem.tsx - Replace amber warnings with chart-4
+7. ui/tooltip.tsx - Replace slate with popover theme tokens
+8. Navbar components - Map white/custom colors to sidebar theme tokens
+
+**Next Steps**: 
+- Complete remaining 20+ component updates
+- Define or remove custom color classes (picton-blue, air-superiority-blue, etc.)
+- Test theme switching (light/dark mode)
+- Verify all UI elements use theme-aware colors
+- Update Memory Bank with final color system documentation
+
+## Recent Changes (Previous Session)
 ### October 31, 2025 - SEO Foundation Implementation
 1. ✅ **Dynamic Robots Configuration**
    - Created `app/robots.ts` with Next.js 16 file-based convention

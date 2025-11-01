@@ -150,7 +150,7 @@ function HomeContent() {
       >
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-500 mb-4">Error loading courses: {error}</p>
+            <p className="text-destructive mb-4">Error loading courses: {error}</p>
             <button
               className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
               onClick={() => window.location.reload()}

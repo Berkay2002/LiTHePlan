@@ -34,15 +34,15 @@ export function SortDropdown({ sortOption, onSortChange }: SortDropdownProps) {
 
   return (
     <div className="flex items-center gap-1 sm:gap-2">
-      <ArrowUpDown className="h-3 w-3 sm:h-4 sm:w-4 text-air-superiority-blue" />
+      <ArrowUpDown className="h-3 w-3 sm:h-4 sm:w-4 text-foreground" />
       <Select
         onValueChange={(value) => onSortChange(value as SortOption)}
         value={sortOption || ""}
       >
-        <SelectTrigger className="w-24 sm:w-32 md:w-40 h-8 sm:h-10 text-xs sm:text-sm bg-white/80 border-air-superiority-blue/30 text-air-superiority-blue hover:border-air-superiority-blue/50">
+        <SelectTrigger className="w-24 sm:w-32 md:w-40 h-8 sm:h-10 text-xs sm:text-sm bg-background border-border text-foreground hover:border-border/80">
           <SelectValue placeholder="Sort..." />
         </SelectTrigger>
-        <SelectContent className="bg-white border-air-superiority-blue/30">
+        <SelectContent className="bg-background border-border">
           {sortOptions.map((option) => (
             <SelectItem
               className="text-xs sm:text-sm"
@@ -56,7 +56,7 @@ export function SortDropdown({ sortOption, onSortChange }: SortDropdownProps) {
       </Select>
       {sortOption && (
         <Button
-          className="h-8 sm:h-10 px-1.5 sm:px-2 text-xs text-air-superiority-blue hover:bg-air-superiority-blue/10"
+          className="h-8 sm:h-10 px-1.5 sm:px-2 text-xs text-foreground hover:bg-accent"
           onClick={() => onSortChange(null)}
           size="sm"
           variant="ghost"

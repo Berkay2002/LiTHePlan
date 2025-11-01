@@ -82,7 +82,7 @@ export function detectCourseConflicts(
 }
 
 export function getConflictBorderClass(hasConflict: boolean): string {
-  return hasConflict ? "border-red-500 border-2 shadow-red-200 shadow-md" : "";
+  return hasConflict ? "border-destructive border-2 shadow-destructive/20 shadow-md" : "";
 }
 
 export function getAllPeriodConflicts(

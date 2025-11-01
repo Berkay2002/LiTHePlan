@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 // ViewToggle Skeleton
 export function ViewToggleSkeleton() {
   return (
-    <div className="flex items-center gap-0.5 sm:gap-1 bg-air-superiority-blue/10 rounded-lg p-0.5 sm:p-1 border border-air-superiority-blue/20">
+    <div className="flex items-center gap-0.5 sm:gap-1 bg-sidebar/10 rounded-lg p-0.5 sm:p-1 border border-sidebar/20">
       <Skeleton className="h-8 sm:h-10 w-8 sm:w-16 rounded" />
       <Skeleton className="h-8 sm:h-10 w-8 sm:w-16 rounded" />
     </div>

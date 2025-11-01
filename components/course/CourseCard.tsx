@@ -208,19 +208,19 @@ export function CourseCard({ course }: CourseCardProps) {
   };
 
   return (
-    <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-xl border-2 border-air-superiority-blue/20 bg-card hover:border-picton-blue/40 hover:shadow-picton-blue/10">
+    <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-xl border-2 border-primary/20 bg-card hover:border-primary/40 hover:shadow-primary/10">
       <CardContent className="p-5 flex-1 flex flex-col">
         {/* Main Course Header */}
         <div className="mb-5">
           <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground line-clamp-3 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1 min-h-18">
+            <h3 className="text-lg font-semibold text-foreground line-clamp-3 leading-tight group-hover:text-primary transition-colors duration-300 flex-1 min-h-18">
               {course.name}
             </h3>
             {course.notes && (
               <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                 <TooltipTrigger asChild>
                   <button
-                    className="flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-1 rounded-md border border-amber-200 ml-2 shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                    className="flex items-center gap-1 bg-accent/20 text-accent-foreground px-2 py-1 rounded-md border border-accent/30 ml-2 shrink-0 hover:bg-accent/30 transition-colors cursor-pointer"
                     onBlur={() => isMobile && setShowNotesTooltip(false)}
                     onClick={() =>
                       isMobile && setShowNotesTooltip(!showNotesTooltip)
@@ -243,14 +243,14 @@ export function CourseCard({ course }: CourseCardProps) {
           </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="text-sm text-air-superiority-blue font-mono font-bold">
+              <div className="text-sm text-primary font-mono font-bold">
                 {course.id}
               </div>
               <a
                 href={`https://studieinfo.liu.se/kurs/${course.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-air-superiority-blue/60 hover:text-air-superiority-blue transition-colors"
+                className="text-primary/60 hover:text-primary transition-colors"
                 title="View on LiU official site"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -263,7 +263,7 @@ export function CourseCard({ course }: CourseCardProps) {
                 );
                 return visibleExaminations.map((exam, index) => (
                   <Badge
-                    className="text-xs px-3 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20 hover:bg-electric-blue/20 transition-all duration-200"
+                    className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200"
                     key={`${exam}-${index}`}
                     variant="secondary"
                   >
@@ -291,41 +291,41 @@ export function CourseCard({ course }: CourseCardProps) {
           }}
         >
           {!shouldHideField() && (
-            <div className="text-center p-3 bg-picton-blue/10 rounded-lg border border-picton-blue/20 hover:border-picton-blue/30 transition-colors duration-200">
-              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
+            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
                 Term
               </div>
-              <div className="text-sm font-bold text-picton-blue">
+              <div className="text-sm font-bold text-primary">
                 {isMultiTerm ? availableTerms.join(", ") : course.term}
               </div>
             </div>
           )}
           {shouldShowPeriod() && !shouldHideField() && (
-            <div className="text-center p-3 bg-air-superiority-blue/10 rounded-lg border border-air-superiority-blue/20 hover:border-air-superiority-blue/30 transition-colors duration-200">
-              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
+            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
                 Period
               </div>
-              <div className="text-sm font-bold text-air-superiority-blue">
+              <div className="text-sm font-bold text-primary">
                 {course.period}
               </div>
             </div>
           )}
           {!shouldHideField() && (
-            <div className="text-center p-3 bg-electric-blue/10 rounded-lg border border-electric-blue/20 hover:border-electric-blue/30 transition-colors duration-200">
-              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
+            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
                 {Array.isArray(course.block) ? "Blocks" : "Block"}
               </div>
-              <div className="text-sm font-bold text-electric-blue-300">
+              <div className="text-sm font-bold text-primary">
                 {formatBlocks(course.block)}
               </div>
             </div>
           )}
           {!shouldHideField() && (
-            <div className="text-center p-3 bg-battleship-gray/10 rounded-lg border border-battleship-gray/20 hover:border-battleship-gray/30 transition-colors duration-200">
-              <div className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium mb-1">
+            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
+              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
                 Level
               </div>
-              <div className="text-xs font-bold text-battleship-gray">
+              <div className="text-sm font-bold text-primary">
                 {course.level === "grundnivå" ? "G" : "A"}
               </div>
             </div>
@@ -334,22 +334,22 @@ export function CourseCard({ course }: CourseCardProps) {
 
         {/* Secondary Information */}
         <div className="space-y-3 flex-1">
-          <div className="p-4 bg-air-superiority-blue/8 rounded-lg border border-air-superiority-blue/10 space-y-3">
+          <div className="p-4 bg-muted/30 rounded-lg border border-border space-y-3">
             {/* Campus and Pace - only show if not filtered to single values */}
             {!(shouldHideField() && shouldHideField()) && (
               <div className="flex items-center justify-between">
                 {!shouldHideField() && (
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-air-superiority-blue" />
-                    <span className="text-sm font-medium text-air-superiority-blue-300">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <span className="text-sm font-medium text-foreground">
                       {course.campus}
                     </span>
                   </div>
                 )}
                 {!shouldHideField() && (
                   <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-battleship-gray" />
-                    <span className="text-sm font-medium text-battleship-gray-300">
+                    <Clock className="h-5 w-5 text-muted-foreground" />
+                    <span className="text-sm font-medium text-foreground">
                       {formatPace(course.pace)}
                     </span>
                   </div>
@@ -361,7 +361,7 @@ export function CourseCard({ course }: CourseCardProps) {
             <div className="space-y-2">
               {course.examinator && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium min-w-[60px]">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium min-w-[60px]">
                     Examiner:
                   </span>
                   <span className="text-xs text-foreground font-medium">
@@ -371,7 +371,7 @@ export function CourseCard({ course }: CourseCardProps) {
               )}
               {course.studierektor && (
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-battleship-gray-400 uppercase tracking-wide font-medium min-w-[60px]">
+                  <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium min-w-[60px]">
                     Director:
                   </span>
                   <span className="text-xs text-foreground font-medium">
@@ -397,13 +397,13 @@ export function CourseCard({ course }: CourseCardProps) {
 
               return (
                 allProgramsAndOrientations.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-air-superiority-blue/15">
+                  <div className="mt-3 pt-3 border-t border-border">
                     <div className="space-y-1.5">
                       {displayedItems.map((item, index) => (
                         <Tooltip key={`${item}-${index}`}>
                           <TooltipTrigger asChild>
                             <Badge
-                              className="text-xs px-3 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 hover:bg-picton-blue/20 hover:border-picton-blue/40 transition-all duration-200 w-full block cursor-help"
+                              className="text-xs px-3 py-1 bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:border-primary/40 transition-all duration-200 w-full block cursor-help"
                               variant="outline"
                             >
                               <span className="truncate text-center block w-full">
@@ -420,7 +420,7 @@ export function CourseCard({ course }: CourseCardProps) {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Badge
-                              className="text-xs px-3 py-1 bg-battleship-gray/10 text-battleship-gray border-battleship-gray/30 hover:bg-battleship-gray/20 hover:border-battleship-gray/40 transition-all duration-200 cursor-help w-full block"
+                              className="text-xs px-3 py-1 bg-muted text-muted-foreground border-border hover:bg-muted/80 hover:border-border/60 transition-all duration-200 cursor-help w-full block"
                               variant="outline"
                             >
                               +{remainingItems.length} more
@@ -431,7 +431,7 @@ export function CourseCard({ course }: CourseCardProps) {
                               <p className="font-medium">
                                 Additional programs:
                               </p>
-                              <div className="text-slate-200 leading-relaxed">
+                              <div className="text-muted-foreground leading-relaxed">
                                 {remainingItems.join(", ")}
                               </div>
                             </div>
@@ -447,17 +447,17 @@ export function CourseCard({ course }: CourseCardProps) {
         </div>
 
         {/* Action Buttons */}
-        <div className="border-t border-air-superiority-blue/20 pt-4 mt-4">
+        <div className="border-t border-border pt-4 mt-4">
           <div className="grid grid-cols-2 gap-3">
             <Button
               className={`h-10 text-sm font-medium transition-all duration-300 shadow-lg ${
                 isPinned
                   ? isHovered
-                    ? "bg-custom-red hover:bg-custom-red-600 text-white"
-                    : "bg-electric-blue hover:bg-electric-blue-600 text-white"
+                    ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
                   : wouldHaveConflicts
-                    ? "bg-amber-500 hover:bg-amber-600 text-white border-2 border-amber-400"
-                    : "bg-picton-blue hover:bg-picton-blue-600 text-white"
+                    ? "bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-accent/40"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
               }`}
               onClick={() => {
                 console.log("🖱️ Button clicked for course:", course.id, {
@@ -502,9 +502,9 @@ export function CourseCard({ course }: CourseCardProps) {
                 </>
               )}
             </Button>
-            <Link href={`/course/${course.id}`}>
+            <Link href={`/course/${course.id}`} className="w-full">
               <Button
-                className="h-10 text-sm font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
+                className="h-10 text-sm font-medium bg-secondary/20 border-border text-secondary-foreground hover:bg-secondary/30 hover:border-border/60 transition-all duration-300 w-full"
                 size="default"
                 variant="outline"
               >
