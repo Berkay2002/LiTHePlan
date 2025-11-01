@@ -51,7 +51,7 @@ function TooltipContent({
           // Better spacing and typography
           "px-4 py-2.5 rounded-lg text-sm font-medium leading-relaxed",
           // Improved max-width and text handling - wider rectangle
-          "max-w-md w-max text-pretty break-words",
+          "max-w-md w-max text-pretty wrap-break-word",
           // Enhanced animations
           "animate-in fade-in-0 zoom-in-95 duration-200",
           "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-100",

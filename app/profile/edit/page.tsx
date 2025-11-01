@@ -17,11 +17,17 @@ import {
 } from "@/lib/profile-constants";
 
 const DESKTOP_BREAKPOINT_PX = 1024;
+const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
 
 function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
   const [isMobile, setIsMobile] = useState(false);
   const [showBlockTimeline, setShowBlockTimeline] = useState(true);
+  
+  // Track loading state with minimum display time for better UX
+  const [isLoading, setIsLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(true);
+  const [loadingStartTime] = useState(() => Date.now());
 
   // Detect if we're on mobile/tablet to disable drag and drop
   useEffect(() => {
@@ -34,6 +40,21 @@ function ProfileEditPageContent() {
 
     return () => window.removeEventListener("resize", checkIsMobile);
   }, []);
+
+  // Handle minimum loading time for smooth UX
+  useEffect(() => {
+    if (state.current_profile && isLoading) {
+      setIsLoading(false);
+      
+      // Calculate remaining time to show skeleton
+      const elapsed = Date.now() - loadingStartTime;
+      const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
+      
+      setTimeout(() => {
+        setShowLoading(false);
+      }, remaining);
+    }
+  }, [state.current_profile, isLoading, loadingStartTime]);
 
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -107,7 +128,7 @@ function ProfileEditPageContent() {
 
   const { current_profile: currentProfile } = state;
 
-  if (!currentProfile) {
+  if (showLoading || !currentProfile) {
     return (
       <PageLayout
         navbarMode="profile-edit"
