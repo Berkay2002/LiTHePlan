@@ -258,5 +258,30 @@ function HomeContent() {
 }
 
 export default function Home() {
-  return <HomeContent />;
+  return (
+    <Suspense fallback={
+      <PageLayout
+        isMobileMenuOpen={false}
+        navbarMode="main"
+        onMobileMenuToggle={() => {}}
+        onSearchChange={() => {}}
+        searchQuery=""
+      >
+        <div className="min-h-screen bg-background">
+          <div className="flex">
+            <FilterSidebarSkeleton isOpen={false} onToggle={() => {}} />
+            <ProfileSidebarSkeleton isOpen={false} onToggle={() => {}} />
+            <div className="w-full pt-20 lg:ml-12 lg:mr-12">
+              <div className="container mx-auto px-4 py-8 max-w-7xl">
+                <TopControlsSkeleton />
+                <CourseGridSkeleton count={COURSES_PER_PAGE} profileSidebarOpen={false} sidebarOpen={false} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </PageLayout>
+    }>
+      <HomeContent />
+    </Suspense>
+  );
 }
