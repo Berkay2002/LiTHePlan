@@ -27,7 +27,7 @@ import { CourseCardSkeleton } from "@/components/course/CourseCardSkeleton";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { CourseHero } from "@/components/course/CourseHero";
 import { CourseMetadataRow } from "@/components/course/CourseMetadataRow";
-import { ExaminationBadges } from "@/components/course/ExaminationBadges";
+import { TruncatedExaminationBadges } from "@/components/course/TruncatedExaminationBadges";
 import { ProgramsList } from "@/components/course/ProgramsList";
 
 interface CoursePageClientProps {
@@ -229,7 +229,11 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                     <CardDescription>Assessment methods for this course</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ExaminationBadges examinations={course.examination} />
+                    <TruncatedExaminationBadges
+                      examinations={course.examination}
+                      maxVisible={5}
+                      shortMode={false}
+                    />
                   </CardContent>
                 </Card>
               )}

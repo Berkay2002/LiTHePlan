@@ -34,6 +34,7 @@ import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import type { FilterState } from "./FilterPanel";
 import { TermSelectionModal } from "./TermSelectionModal";
+import { TruncatedExaminationBadges } from "./TruncatedExaminationBadges";
 
 interface CourseListItemProps {
   course: Course;
@@ -263,39 +264,12 @@ export function CourseListItem({
               {/* Right side: Examination badges and action buttons */}
               <div className="flex items-center gap-2 shrink-0">
                 {/* Examination badges */}
-                <div className="flex flex-wrap gap-1">
-                  {(() => {
-                    const visibleExaminations = getVisibleExaminations(
-                      course.examination
-                    );
-                    return visibleExaminations
-                      .slice(0, 2)
-                      .map((exam, index) => (
-                        <Badge
-                          className="text-xs px-1.5 py-0.5 bg-secondary/50 text-secondary-foreground border border-secondary/30"
-                          key={`${exam}-${index}`}
-                          variant="secondary"
-                        >
-                          {exam}
-                        </Badge>
-                      ));
-                  })()}
-                  {(() => {
-                    const visibleExaminations = getVisibleExaminations(
-                      course.examination
-                    );
-                    return (
-                      visibleExaminations.length > 2 && (
-                        <Badge
-                          className="text-xs px-1.5 py-0.5 bg-secondary/50 text-secondary-foreground border border-secondary/30"
-                          variant="secondary"
-                        >
-                          +{visibleExaminations.length - 2}
-                        </Badge>
-                      )
-                    );
-                  })()}
-                </div>
+                <TruncatedExaminationBadges
+                  examinations={getVisibleExaminations(course.examination)}
+                  maxVisible={2}
+                  shortMode={true}
+                  className="gap-1"
+                />
 
                 {/* Action Buttons */}
                 <div className="flex gap-1">
@@ -439,22 +413,12 @@ export function CourseListItem({
               </div>
 
               {/* Examination badges */}
-              <div className="flex flex-wrap gap-1 ml-3">
-                {(() => {
-                  const visibleExaminations = getVisibleExaminations(
-                    course.examination
-                  );
-                  return visibleExaminations.map((exam, index) => (
-                    <Badge
-                      className="text-xs px-2 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30"
-                      key={`${exam}-${index}`}
-                      variant="secondary"
-                    >
-                      {exam}
-                    </Badge>
-                  ));
-                })()}
-              </div>
+              <TruncatedExaminationBadges
+                examinations={getVisibleExaminations(course.examination)}
+                maxVisible={3}
+                shortMode={true}
+                className="ml-3 gap-1"
+              />
             </div>
 
             {/* Course Details in horizontal layout */}

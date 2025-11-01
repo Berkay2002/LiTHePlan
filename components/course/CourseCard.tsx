@@ -35,6 +35,7 @@ import {
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import { TermSelectionModal } from "./TermSelectionModal";
+import { TruncatedExaminationBadges } from "./TruncatedExaminationBadges";
 
 interface CourseCardProps {
   course: Course;
@@ -256,22 +257,11 @@ export function CourseCard({ course }: CourseCardProps) {
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             </div>
-            <div className="flex flex-wrap gap-1.5">
-              {(() => {
-                const visibleExaminations = getVisibleExaminations(
-                  course.examination
-                );
-                return visibleExaminations.map((exam, index) => (
-                  <Badge
-                    className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200"
-                    key={`${exam}-${index}`}
-                    variant="secondary"
-                  >
-                    {exam}
-                  </Badge>
-                ));
-              })()}
-            </div>
+            <TruncatedExaminationBadges
+              examinations={getVisibleExaminations(course.examination)}
+              maxVisible={2}
+              shortMode={true}
+            />
           </div>
         </div>
 
