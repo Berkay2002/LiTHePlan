@@ -598,6 +598,214 @@ class Logger {
 }
 ```
 
+## Loading State Patterns
+
+### SSR-Safe localStorage Access Pattern
+**Purpose**: Prevent hydration errors when reading localStorage during SSR  
+**Location**: Used in `app/page.tsx` and skeleton components
+
+**Problem**: Direct localStorage access in Client Components causes hydration mismatches because server renders with undefined but client has actual values.
+
+**Solution**: useState + useEffect pattern for client-only reads
+
+```typescript
+// ❌ WRONG - Causes hydration error
+function Component() {
+  const storedValue = localStorage.getItem('key'); // Server: undefined, Client: "value"
+  return <div className={storedValue ? "open" : "closed"} />; // Mismatch!
+}
+
+// ✅ CORRECT - Consistent initial render
+function Component() {
+  const [storedValue, setStoredValue] = useState(false); // Server: false, Client: false (initial)
+  
+  useEffect(() => {
+    // Only runs on client after mount
+    if (typeof window !== 'undefined') {
+      setStoredValue(localStorage.getItem('key') === 'true');
+    }
+  }, []);
+  
+  return <div className={storedValue ? "open" : "closed"} />; // No mismatch!
+}
+```
+
+**Key Principles**:
+1. Initialize state with default values that match SSR expectations
+2. Read localStorage only in `useEffect` (client-only)
+3. Use `typeof window !== 'undefined'` guard for extra safety
+4. Keep default values simple (false, 'grid', empty strings)
+
+**Real Example from page.tsx**:
+```typescript
+// Skeleton state management (SSR-safe)
+const [storedSkeletonViewMode, setStoredSkeletonViewMode] = useState<ViewMode>('grid');
+const [storedSkeletonSidebarOpen, setStoredSkeletonSidebarOpen] = useState(false);
+const [storedSkeletonProfileSidebarOpen, setStoredSkeletonProfileSidebarOpen] = useState(false);
+
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+    setStoredSkeletonViewMode(parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY)));
+    setStoredSkeletonSidebarOpen(getStoredSidebarState());
+    setStoredSkeletonProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
+  }
+}, []);
+```
+
+### Minimum Loading Time Pattern
+**Purpose**: Improve perceived performance by preventing jarring skeleton flashes  
+**Location**: `app/page.tsx`
+
+**Problem**: On fast connections, skeleton appears and disappears in <100ms, creating jarring UX.
+
+**Solution**: Enforce minimum display time for smoother transitions
+
+```typescript
+const MIN_LOADING_TIME_MS = 400; // Configurable threshold
+
+function HomeContent() {
+  const { loading } = useCourses();
+  const [showLoading, setShowLoading] = useState(loading);
+  const [loadingStartTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!loading && showLoading) {
+      // Calculate remaining time to show skeleton
+      const elapsed = Date.now() - loadingStartTime;
+      const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
+      
+      setTimeout(() => {
+        setShowLoading(false);
+      }, remaining);
+    } else if (loading) {
+      setShowLoading(true);
+    }
+  }, [loading, showLoading, loadingStartTime]);
+
+  if (showLoading) {
+    return <Skeleton />; // Always shows for at least 400ms
+  }
+
+  return <Content />;
+}
+```
+
+**Benefits**:
+- Prevents flash of loading state (< 100ms)
+- Users perceive app as responsive (not instant/janky)
+- Gives users time to register skeleton structure
+- Smooth transition between skeleton and content
+
+**Configuration**:
+- Fast connections: Adds 300-400ms delay (data loads in ~50ms)
+- Slow connections: No delay (data takes >400ms anyway)
+- Sweet spot: 400ms recommended for course catalog pages
+
+### Skeleton Component Accuracy Pattern
+**Purpose**: Prevent layout shift by matching skeleton to actual component structure  
+**Location**: All skeleton components
+
+**Key Principle**: Skeleton Tailwind classes must EXACTLY match loaded component classes
+
+```typescript
+// ❌ WRONG - Layout shift when content loads
+function CourseCardSkeleton() {
+  return <div className="p-4 border rounded">...</div>; // Generic
+}
+
+function CourseCard() {
+  return <div className="p-5 border-2 border-primary/20 rounded-lg">...</div>; // Specific
+}
+// Result: Card shifts when skeleton → content (padding, border width change)
+
+// ✅ CORRECT - Zero layout shift
+function CourseCardSkeleton() {
+  return <div className="p-5 border-2 border-primary/20 rounded-lg">...</div>; // Exact match
+}
+
+function CourseCard() {
+  return <div className="p-5 border-2 border-primary/20 rounded-lg">...</div>; // Same classes
+}
+// Result: Smooth fade-in with no movement
+```
+
+**Checklist for Skeleton Components**:
+1. ✅ Match container classes (padding, margins, borders, shadows)
+2. ✅ Match responsive breakpoints (sm:, md:, lg:, xl:)
+3. ✅ Match grid/flex layouts exactly
+4. ✅ Use Skeleton component for text/image placeholders
+5. ✅ Include same number of child elements
+6. ✅ Match conditional rendering states (open/closed sidebars)
+
+**Example from ProfileSidebarSkeleton**:
+```typescript
+// Matches ProfileSidebar container classes EXACTLY
+<div className={cn(
+  "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)]",
+  "bg-sidebar border-l-2 border-sidebar-border shadow-xl shadow-sidebar/20",
+  "z-50 transition-all duration-300 ease-in-out flex flex-col",
+  "ring-1 ring-sidebar-border/30",
+  isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
+  "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
+)}>
+  {/* Same structure as ProfileSidebar */}
+</div>
+```
+
+### State Persistence Pattern
+**Purpose**: Maintain UI state across page reloads  
+**Location**: `hooks/useResponsiveSidebar.ts`, `hooks/useToggle.ts`
+
+**Implementation**:
+```typescript
+// useToggle with optional persistence
+export function useToggle(initialValue: boolean, storageKey?: string) {
+  const [value, setValue] = useState(() => {
+    if (!storageKey || typeof window === 'undefined') return initialValue;
+    return localStorage.getItem(storageKey) === 'true';
+  });
+
+  const toggle = useCallback(() => {
+    setValue((prev) => {
+      const newValue = !prev;
+      if (storageKey && typeof window !== 'undefined') {
+        localStorage.setItem(storageKey, String(newValue));
+      }
+      return newValue;
+    });
+  }, [storageKey]);
+
+  return { value, toggle };
+}
+
+// Helper for skeleton initial state
+export function getStoredToggleState(
+  storageKey: string,
+  defaultValue: boolean = false
+): boolean {
+  if (typeof window === 'undefined') return defaultValue;
+  return localStorage.getItem(storageKey) === 'true';
+}
+```
+
+**Usage Pattern**:
+```typescript
+// In component
+const { value: sidebarOpen, toggle } = useToggle(false, 'sidebar-open');
+
+// In skeleton (SSR-safe)
+const [skeletonOpen, setSkeletonOpen] = useState(false);
+useEffect(() => {
+  setSkeletonOpen(getStoredToggleState('sidebar-open'));
+}, []);
+```
+
+**Supported Storage Keys**:
+- `"filter-sidebar-open"` - Left filter sidebar state
+- `"profile-sidebar-open"` - Right profile sidebar state
+- `VIEW_MODE_STORAGE_KEY` - Grid/list view preference
+- `FILTER_STORAGE_KEY` - Filter selections (JSON)
+
 ### Response Standardization Pattern
 **Purpose**: Consistent API contract, easier client consumption  
 **Implementation**: Typed response helpers

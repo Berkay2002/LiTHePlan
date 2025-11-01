@@ -235,10 +235,10 @@ export function CollapsibleFilterSidebar({
             </div>
 
             {/* Mobile Header - Only show clear button and close on mobile */}
-            <div className="flex-shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
+            <div className="shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
               <div className="flex items-center justify-between">
                 {/* Logo for mobile */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   <LiThePlanLogo
                     className="h-8 w-auto"
                     height={32}
@@ -388,7 +388,7 @@ export function CollapsibleFilterSidebar({
                       >
                         <Checkbox
                           checked={filterState.level.includes(level)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0"
                           id={`level-${level}`}
                           onCheckedChange={() =>
                             handleFilterChange("level", level)
@@ -420,7 +420,7 @@ export function CollapsibleFilterSidebar({
                       >
                         <Checkbox
                           checked={filterState.pace.includes(pace)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0"
                           id={`pace-${pace}`}
                           onCheckedChange={() =>
                             handleFilterChange("pace", pace)
@@ -455,7 +455,7 @@ export function CollapsibleFilterSidebar({
                       >
                         <Checkbox
                           checked={filterState.period.includes(period)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0"
                           id={`period-${period}`}
                           onCheckedChange={() =>
                             handleFilterChange("period", period)
@@ -487,7 +487,7 @@ export function CollapsibleFilterSidebar({
                       >
                         <Checkbox
                           checked={filterState.term.includes(term)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0"
                           id={`term-${term}`}
                           onCheckedChange={() =>
                             handleFilterChange("term", term)
@@ -522,7 +522,7 @@ export function CollapsibleFilterSidebar({
                       >
                         <Checkbox
                           checked={filterState.campus.includes(campus)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0"
                           id={`campus-${campus}`}
                           onCheckedChange={() =>
                             handleFilterChange("campus", campus)
@@ -554,7 +554,7 @@ export function CollapsibleFilterSidebar({
                       >
                         <Checkbox
                           checked={filterState.block.includes(block)}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 flex-shrink-0"
+                          className="data-[state=checked]:bg-primary data-[state=checked]:border-primary lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0"
                           id={`block-${block}`}
                           onCheckedChange={() =>
                             handleFilterChange("block", block)
@@ -840,7 +840,7 @@ export function FilterPanel({
                 >
                   <Checkbox
                     checked={filterState.level.includes(level)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
                     id={`level-${level}`}
                     onCheckedChange={() => handleFilterChange("level", level)}
                   />
@@ -870,7 +870,7 @@ export function FilterPanel({
                 >
                   <Checkbox
                     checked={filterState.pace.includes(pace)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
                     id={`pace-${pace}`}
                     onCheckedChange={() => handleFilterChange("pace", pace)}
                   />
@@ -903,7 +903,7 @@ export function FilterPanel({
                 >
                   <Checkbox
                     checked={filterState.term.includes(term)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
                     id={`term-${term}`}
                     onCheckedChange={() => handleFilterChange("term", term)}
                   />
@@ -933,7 +933,7 @@ export function FilterPanel({
                 >
                   <Checkbox
                     checked={filterState.period.includes(period)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
                     id={`period-${period}`}
                     onCheckedChange={() => handleFilterChange("period", period)}
                   />
@@ -966,7 +966,7 @@ export function FilterPanel({
                 >
                   <Checkbox
                     checked={filterState.campus.includes(campus)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
                     id={`campus-${campus}`}
                     onCheckedChange={() => handleFilterChange("campus", campus)}
                   />
@@ -996,7 +996,7 @@ export function FilterPanel({
                 >
                   <Checkbox
                     checked={filterState.block.includes(block)}
-                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary flex-shrink-0"
+                    className="data-[state=checked]:bg-primary data-[state=checked]:border-primary shrink-0"
                     id={`block-${block}`}
                     onCheckedChange={() => handleFilterChange("block", block)}
                   />

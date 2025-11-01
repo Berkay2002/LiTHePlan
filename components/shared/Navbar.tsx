@@ -81,7 +81,7 @@ export function Navbar({
         {/* Mobile Layout */}
         <div className="flex lg:hidden items-center">
           {/* Left Side - Hamburger Menu (Fixed Width) */}
-          <div className="flex-shrink-0 w-10 flex justify-start">
+          <div className="shrink-0 w-10 flex justify-start">
             {onMobileMenuToggle && (
               <Button
                 className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 relative overflow-hidden border border-sidebar-foreground/30"
@@ -138,7 +138,7 @@ export function Navbar({
           </div>
 
           {/* Right Side - Profile Button (Fixed Width) */}
-          <div className="flex-shrink-0 w-10 flex justify-end">
+          <div className="shrink-0 w-10 flex justify-end">
             <Link href="/profile/edit">
               <Button
                 className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"

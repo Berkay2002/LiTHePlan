@@ -124,7 +124,7 @@ export function ProfileSidebar({
               </Button>
 
               {/* Tooltip on hover */}
-              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
+              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-100">
                 {profile ? "Open Profile" : "Start Building Profile"}
               </div>
             </div>
@@ -150,14 +150,14 @@ export function ProfileSidebar({
                 </Button>
 
                 {/* Tooltip on hover */}
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-[100]">
+                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-100">
                   {profile ? "Close Profile" : "Close Sidebar"}
                 </div>
               </div>
             </div>
 
             {/* Mobile Header */}
-            <div className="flex-shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
+            <div className="shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-sidebar-foreground">
                   {profile ? "Profile Overview" : "Your Profile"}

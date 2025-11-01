@@ -44,7 +44,7 @@ export function PinnedCourseCard({
                 <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                   <TooltipTrigger asChild>
                     <button
-                      className="flex items-center gap-1 bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 flex-shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                      className="flex items-center gap-1 bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
                       onBlur={() => isMobile && setShowNotesTooltip(false)}
                       onClick={() =>
                         isMobile && setShowNotesTooltip(!showNotesTooltip)

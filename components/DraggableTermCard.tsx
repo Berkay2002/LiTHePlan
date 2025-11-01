@@ -452,7 +452,7 @@ export function DraggableTermCard({
       className={`h-full bg-background border-border shadow-lg flex flex-col ${className}`}
     >
 
-      <CardHeader className="pb-3 flex-shrink-0">
+      <CardHeader className="pb-3 shrink-0">
         <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
           {getTermLabel(termNumber)}
           <div className="flex items-center gap-2">

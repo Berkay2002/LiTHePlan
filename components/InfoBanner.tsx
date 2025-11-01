@@ -62,7 +62,7 @@ export function InfoBanner() {
   return (
     <div className="bg-accent/10 border-l-4 border-accent p-4 mb-6 rounded-r-lg shadow-sm">
       <div className="flex items-start">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Info className="h-5 w-5 text-accent" />
         </div>
         <div className="ml-3 flex-1">
@@ -77,7 +77,7 @@ export function InfoBanner() {
             </p>
           </div>
         </div>
-        <div className="ml-4 flex-shrink-0">
+        <div className="ml-4 shrink-0">
           <Button
             className="h-6 w-6 p-0 text-accent hover:text-accent/80 hover:bg-accent/10"
             onClick={handleDismiss}

@@ -11,6 +11,90 @@
 3. **MUST** follow task template from `memory-bank.instructions.md`
 4. Task files are NOT optional - they preserve context across agent sessions
 
+## Recent Changes (Current Session)
+### November 1, 2025 - Skeleton Loading States & State Persistence Fixes
+1. ✅ **Skeleton Component Accuracy**
+   - Updated all skeleton components to match actual component structure exactly
+   - Fixed CourseCardSkeleton: border-2 border-primary/20, p-5, dual button layout
+   - Created CourseListSkeleton: New component matching CourseListItem structure
+   - Updated ProfileSkeletonLoader: Pie chart wrapper div, correct badge sizes
+   - Updated ProfileSidebarSkeleton: Full progress section, term cards, navigation controls
+   - Updated ControlsSkeleton: Removed sort dropdown, matches actual ViewToggle placement
+
+2. ✅ **State Persistence Across Reloads**
+   - Implemented filter sidebar state persistence via useResponsiveSidebar hook
+   - Implemented profile sidebar state persistence via useToggle hook with storageKey
+   - Added localStorage persistence for manual sidebar toggles
+   - Storage keys: "filter-sidebar-open", "profile-sidebar-open"
+   - Preserved viewport-based auto-open behavior (1024px breakpoint)
+
+3. ✅ **Hydration Error Fixes**
+   - Fixed SSR hydration mismatches from localStorage reads during initial render
+   - Implemented useState + useEffect pattern for client-only localStorage reads
+   - Separated skeleton state variables (storedSkeletonViewMode, storedSkeletonSidebarOpen, storedSkeletonProfileSidebarOpen)
+   - Both HomeContent loading state and HomeContentSkeleton now use consistent SSR-safe patterns
+   - Zero hydration errors - initial render consistent between server and client
+
+4. ✅ **Loading UX Enhancement**
+   - Added MIN_LOADING_TIME_MS = 400ms minimum skeleton display time
+   - Prevents flash of loading state on fast connections
+   - Enhanced user perception of app responsiveness
+   - Smooth transitions between skeleton and loaded content
+
+5. ✅ **Sidebar Animation Consistency**
+   - Added transition-all duration-300 ease-in-out to FilterSidebarSkeleton
+   - All sidebars now have consistent smooth sliding animations
+   - Matches ProfileSidebarSkeleton and actual sidebar components
+
+**Technical Patterns Implemented**:
+```typescript
+// SSR-Safe localStorage reads
+const [storedValue, setStoredValue] = useState(defaultValue);
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+    setStoredValue(readFromLocalStorage());
+  }
+}, []);
+
+// Minimum loading time for UX
+const [showLoading, setShowLoading] = useState(loading);
+const [loadingStartTime] = useState(() => Date.now());
+useEffect(() => {
+  if (!loading && showLoading) {
+    const elapsed = Date.now() - loadingStartTime;
+    const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
+    setTimeout(() => setShowLoading(false), remaining);
+  }
+}, [loading, showLoading, loadingStartTime]);
+```
+
+**Files Created**:
+- `components/course/CourseListSkeleton.tsx` - Skeleton for list view matching CourseListItem
+
+**Files Modified**:
+- `app/page.tsx` - Added skeleton state management, minimum loading time, SSR-safe localStorage reads
+- `components/course/CourseCardSkeleton.tsx` - Updated to match CourseCard exact structure
+- `components/course/CourseListSkeleton.tsx` - Created matching CourseListItem layout
+- `components/course/ControlsSkeleton.tsx` - Simplified to match actual controls (removed sort dropdown)
+- `components/profile/ProfileSkeletonLoader.tsx` - Fixed pie chart wrapper, badge sizes
+- `components/profile/ProfileSidebarSkeleton.tsx` - Complete rebuild with progress section and term cards
+- `components/course/FilterSidebarSkeleton.tsx` - Added smooth transition animation
+- `hooks/useResponsiveSidebar.ts` - Added localStorage persistence with getStoredSidebarState helper
+- `hooks/useToggle.ts` - Added optional storageKey parameter with getStoredToggleState helper
+
+**Build Verification**:
+- ✅ TypeScript compiles cleanly
+- ✅ Zero hydration errors in browser console
+- ✅ All skeletons match actual components
+- ✅ State persistence works across page reloads
+- ✅ Smooth animations on all sidebars
+
+**UX Improvements**:
+- Users see accurate skeleton previews (no layout shift on load)
+- Sidebar states persist across reloads (no unexpected UI changes)
+- Minimum 400ms skeleton display prevents jarring flashes
+- Consistent smooth animations on all interactive elements
+
 ## Recent Changes (Previous Sessions)
 ### November 1, 2025 - Related Courses Algorithm Optimization (COMPLETED)
 1. ✅ **Database Schema Analysis**

@@ -156,7 +156,7 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
                     className="flex items-start gap-2 text-xs"
                     key={`error-${index}-${error.slice(0, 20)}`}
                   >
-                    <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 flex-shrink-0" />
+                    <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 shrink-0" />
                     <span className="text-destructive">{error}</span>
                   </div>
                 ))}
@@ -165,7 +165,7 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
                     className="flex items-start gap-2 text-xs"
                     key={`warning-${index}-${warning.slice(0, 20)}`}
                   >
-                    <AlertTriangle className="h-3 w-3 text-amber-600 mt-0.5 flex-shrink-0" />
+                    <AlertTriangle className="h-3 w-3 text-amber-600 mt-0.5 shrink-0" />
                     <span className="text-amber-600">{warning}</span>
                   </div>
                 ))}

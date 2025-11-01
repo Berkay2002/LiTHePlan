@@ -26,6 +26,7 @@ No pending tasks at this time.
 - [API-001] Production API hardening - Completed November 2025
 - [SEO-001] SEO foundation (robots, sitemap, metadata) - Completed October 31, 2025
 - [PERF-001] Related courses optimization - Completed November 2025
+- [UX-001] Skeleton loading states and state persistence - Completed November 1, 2025
 
 ## Deferred
 - [DESIGN-001] Color theme migration (40% complete) - Deferred until prioritized

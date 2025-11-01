@@ -132,7 +132,7 @@ export function ConflictResolutionModal({
                   {newCourse.notes && (
                     <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-200 rounded-lg p-3">
                       <div className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                        <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                         <p className="text-sm text-amber-800 font-medium">
                           {getConflictReason(newCourse)}
                         </p>
@@ -223,7 +223,7 @@ export function ConflictResolutionModal({
                     {conflictingCourse.notes && (
                       <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-200 rounded-lg p-3">
                         <div className="flex items-start gap-2">
-                          <AlertTriangle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                          <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                           <p className="text-sm text-amber-800 font-medium">
                             {getConflictReason(conflictingCourse)}
                           </p>
