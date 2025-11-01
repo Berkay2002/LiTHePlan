@@ -19,7 +19,7 @@ export function BackButton({
 }: BackButtonProps) {
   const buttonContent = (
     <Button
-      className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+      className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
       onClick={onClick}
       size="sm"
       variant="outline"

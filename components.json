@@ -17,5 +17,9 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "lucide",
+  "registries": {
+    "@hooks": "https://shadcn-hooks.vercel.app/r/{name}.json"
+  }
 }
+

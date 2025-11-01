@@ -152,7 +152,7 @@ function HomeContent() {
           <div className="text-center">
             <p className="text-destructive mb-4">Error loading courses: {error}</p>
             <button
-              className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/10"
               onClick={() => window.location.reload()}
             >
               Retry

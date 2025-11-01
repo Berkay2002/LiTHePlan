@@ -237,10 +237,10 @@ export function DraggableTermCard({
           <div
             ref={provided.innerRef}
             {...provided.draggableProps}
-            className={`p-4 rounded-lg border bg-card transition-colors group ${
+            className={`p-4 rounded-lg border transition-colors group ${
               snapshot.isDragging
                 ? "shadow-lg border-primary/50 bg-primary/5"
-                : "hover:bg-accent/50"
+                : "hover:bg-card/10"
             } ${isDragDisabled || termNumber === 8 ? "opacity-75" : ""} ${conflictBorderClass}`}
           >
             <div className="flex items-start justify-between mb-2">
@@ -256,7 +256,7 @@ export function DraggableTermCard({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm leading-tight">
+                      <h4 className="font-medium text-sm leading-tight text-foreground">
                         {course.name}
                       </h4>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -264,7 +264,7 @@ export function DraggableTermCard({
                       </p>
                     </div>
                     <Button
-                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent!"
                       onClick={() => {
                         window.open(
                           `https://studieinfo.liu.se/kurs/${course.id}`,
@@ -282,7 +282,7 @@ export function DraggableTermCard({
                 </div>
               </div>
               <Button
-                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive ml-2"
+                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent! ml-2"
                 onClick={() => onRemoveCourse(course.id)}
                 size="sm"
                 variant="ghost"
@@ -294,50 +294,50 @@ export function DraggableTermCard({
             {/* Enhanced Block Indicators */}
             {renderBlockIndicators(course, currentPeriod)}
 
-            <div className="flex flex-wrap gap-1 mt-3">
-              <Badge
-                className={`text-xs ${getLevelColor(course.level)}`}
-                variant="secondary"
-              >
-                {course.level === "avancerad nivå" ? "Advanced" : "Basic"}
-              </Badge>
-
-              {course.campus && (
-                <Badge className="text-xs" variant="outline">
-                  {course.campus}
+            <div className="flex items-center justify-between gap-2 mt-3">
+              <div className="flex flex-wrap gap-1">
+                <Badge
+                  className={`text-xs ${getLevelColor(course.level)}`}
+                  variant="secondary"
+                >
+                  {course.level === "avancerad nivå" ? "Advanced" : "Basic"}
                 </Badge>
-              )}
-            </div>
 
-            {/* Transfer buttons - right-aligned, only show for terms 7 and 9, and when onMoveCourse is available */}
-            {onMoveCourse && termNumber !== 8 && (
-              <div className="flex justify-end gap-1 mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                {termNumber === 7 && (
-                  <Button
-                    className="h-6 px-2 text-xs"
-                    onClick={() => onMoveCourse(course.id, 7, 9)}
-                    size="sm"
-                    title="Move to Term 9"
-                    variant="outline"
-                  >
-                    <ArrowRight className="h-3 w-3 mr-1" />
-                    Term 9
-                  </Button>
-                )}
-                {termNumber === 9 && (
-                  <Button
-                    className="h-6 px-2 text-xs"
-                    onClick={() => onMoveCourse(course.id, 9, 7)}
-                    size="sm"
-                    title="Move to Term 7"
-                    variant="outline"
-                  >
-                    <ArrowLeft className="h-3 w-3 mr-1" />
-                    Term 7
-                  </Button>
+                {course.campus && (
+                  <Badge className="text-xs" variant="outline">
+                    {course.campus}
+                  </Badge>
                 )}
               </div>
-            )}
+
+              {/* Transfer buttons - aligned with badges, only show for terms 7 and 9, and when onMoveCourse is available */}
+              {onMoveCourse && termNumber !== 8 && (
+                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {termNumber === 7 && (
+                    <Button
+                      className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
+                      onClick={() => onMoveCourse(course.id, 7, 9)}
+                      size="sm"
+                      title="Move to Term 9"
+                    >
+                      <ArrowRight className="h-3 w-3 mr-1" />
+                      Term 9
+                    </Button>
+                  )}
+                  {termNumber === 9 && (
+                    <Button
+                      className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
+                      onClick={() => onMoveCourse(course.id, 9, 7)}
+                      size="sm"
+                      title="Move to Term 7"
+                    >
+                      <ArrowLeft className="h-3 w-3 mr-1" />
+                      Term 7
+                    </Button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </Draggable>
@@ -357,14 +357,14 @@ export function DraggableTermCard({
 
     return (
       <div
-        className={`p-4 rounded-lg border bg-card transition-colors group hover:bg-accent/50 ${conflictBorderClass}`}
+        className={`p-4 rounded-lg border transition-colors group hover:bg-card/10 ${conflictBorderClass}`}
         key={`${course.id}-term${termNumber}-period${currentPeriod}`}
       >
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm leading-tight">
+                <h4 className="font-medium text-sm leading-tight text-foreground">
                   {course.name}
                 </h4>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -372,7 +372,7 @@ export function DraggableTermCard({
                 </p>
               </div>
               <Button
-                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-primary"
+                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent!"
                 onClick={() => {
                   window.open(
                     `https://studieinfo.liu.se/kurs/${course.id}`,
@@ -389,7 +389,7 @@ export function DraggableTermCard({
             </div>
           </div>
           <Button
-            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive ml-2"
+            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent! ml-2"
             onClick={() => onRemoveCourse(course.id)}
             size="sm"
             variant="ghost"
@@ -448,10 +448,11 @@ export function DraggableTermCard({
 
   return (
     <Card
-      className={`h-full bg-card border-border shadow-lg flex flex-col ${className}`}
+      className={`h-full bg-background border-border shadow-lg flex flex-col ${className}`}
     >
+
       <CardHeader className="pb-3 flex-shrink-0">
-        <CardTitle className="text-lg font-semibold flex items-center justify-between text-card-foreground">
+        <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
           {getTermLabel(termNumber)}
           <div className="flex items-center gap-2">
             <Badge className="text-xs" variant="secondary">

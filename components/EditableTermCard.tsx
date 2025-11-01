@@ -29,16 +29,16 @@ const BLOCK_NUMBERS = [
 ] as const;
 type BlockNumber = (typeof BLOCK_NUMBERS)[number];
 const DEFAULT_BLOCK_BADGE_COLOR =
-  "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+  "bg-muted/50 text-muted-foreground";
 const BLOCK_BADGE_COLORS: Record<BlockNumber, string> = {
   [BLOCK_NUMBER_FIRST]:
-    "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+    "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200",
   [BLOCK_NUMBER_SECOND]:
-    "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+    "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-200",
   [BLOCK_NUMBER_THIRD]:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200",
   [BLOCK_NUMBER_FOURTH]:
-    "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+    "bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-200",
 };
 
 interface EditableTermCardProps {
@@ -114,7 +114,7 @@ export function EditableTermCard({
         ))}
         {is50Percent && (
           <Badge
-            className="text-xs ml-1 bg-blue-50 text-blue-700 border-blue-300"
+            className="text-xs ml-1 bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-700"
             variant="outline"
           >
             Cross-period
@@ -181,9 +181,9 @@ export function EditableTermCard({
                 <div
                   className={`h-8 rounded border-2 border-dashed flex items-center justify-center text-xs ${
                     courses.length === 0
-                      ? "border-gray-200 bg-gray-50"
+                      ? "border-border bg-muted/30"
                       : hasConflict
-                        ? "border-red-300 bg-red-100 text-red-800"
+                        ? "border-red-300 bg-red-100 text-red-800 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300"
                         : `border-opacity-50 ${getBlockBadgeColor(blockNum).replace("text-", "border-").replace("bg-", "border-")}`
                   }`}
                 >
@@ -201,7 +201,7 @@ export function EditableTermCard({
         {Object.entries(blockOccupancy).some(
           ([, courses]) => courses.length > 1
         ) && (
-          <div className="text-xs text-red-600 mt-2 flex items-center">
+          <div className="text-xs text-red-600 dark:text-red-400 mt-2 flex items-center">
             <span className="mr-1">⚠️</span>
             Scheduling conflicts detected in block
             {Object.entries(blockOccupancy)
@@ -249,14 +249,14 @@ export function EditableTermCard({
 
       return (
         <div
-          className={`p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors group ${conflictBorderClass}`}
+          className={`p-4 rounded-lg border hover:bg-muted/20 transition-colors group ${conflictBorderClass}`}
           key={`${course.id}-period-${currentPeriod}`}
         >
           <div className="flex items-start justify-between mb-2">
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-sm leading-tight truncate">
+                  <h4 className="font-medium text-sm leading-tight truncate text-foreground">
                     {course.name}
                   </h4>
                   <p className="text-xs text-muted-foreground mt-1">
@@ -313,7 +313,7 @@ export function EditableTermCard({
             <div className="flex justify-end gap-1 mt-3 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
               {termNumber === MASTER_PROGRAM_TERM_SEVEN && (
                 <Button
-                  className="h-6 px-2 text-xs"
+                  className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
                   onClick={() =>
                     onMoveCourse(
                       course.id,
@@ -323,7 +323,6 @@ export function EditableTermCard({
                   }
                   size="sm"
                   title="Move to Term 9"
-                  variant="outline"
                 >
                   <ArrowRight className="h-3 w-3 mr-1" />
                   Term 9
@@ -331,7 +330,7 @@ export function EditableTermCard({
               )}
               {termNumber === MASTER_PROGRAM_TERM_NINE && (
                 <Button
-                  className="h-6 px-2 text-xs"
+                  className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
                   onClick={() =>
                     onMoveCourse(
                       course.id,
@@ -341,7 +340,6 @@ export function EditableTermCard({
                   }
                   size="sm"
                   title="Move to Term 7"
-                  variant="outline"
                 >
                   <ArrowLeft className="h-3 w-3 mr-1" />
                   Term 7
@@ -355,9 +353,9 @@ export function EditableTermCard({
   };
 
   return (
-    <Card className={`h-full bg-card border-border shadow-lg ${className}`}>
+    <Card className={`h-full bg-background border-border shadow-lg ${className}`}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center justify-between text-card-foreground">
+        <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
           {getTermLabel(termNumber)}
           <div className="flex items-center gap-2">
             <Badge className="text-xs" variant="secondary">

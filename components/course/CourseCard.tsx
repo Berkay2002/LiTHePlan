@@ -208,7 +208,7 @@ export function CourseCard({ course }: CourseCardProps) {
   };
 
   return (
-    <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-xl border-2 border-primary/20 bg-card hover:border-primary/40 hover:shadow-primary/10">
+    <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-xl border-2 border-primary/20 bg-background hover:border-primary/40 hover:shadow-primary/10">
       <CardContent className="p-5 flex-1 flex flex-col">
         {/* Main Course Header */}
         <div className="mb-5">

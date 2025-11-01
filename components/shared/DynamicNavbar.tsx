@@ -17,7 +17,12 @@ import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Kbd } from "@/components/ui/kbd";
 import { createClient } from "@/utils/supabase/client";
 
 interface MainPageNavbarProps {
@@ -101,10 +106,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
               {/* Center - Search Bar - Middle Column */}
               <div className="flex justify-center">
-                <div className="relative w-full max-w-md">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    className="pl-10 pr-10 h-10 w-full bg-background text-foreground placeholder:text-muted-foreground border-2 border-sidebar-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                <InputGroup className="w-full max-w-md border-2 border-sidebar-border focus-within:border-primary bg-background">
+                  <InputGroupInput
+                    className="text-foreground placeholder:text-muted-foreground"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       props.onSearchChange(e.target.value)
                     }
@@ -112,17 +116,27 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     type="text"
                     value={props.searchQuery}
                   />
-                  {props.searchQuery && (
-                    <Button
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
-                      onClick={handleClearSearch}
-                      size="sm"
-                      variant="ghost"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
+                  <InputGroupAddon>
+                    <Search className="text-muted-foreground" />
+                  </InputGroupAddon>
+                  {props.searchQuery ? (
+                    <InputGroupAddon align="inline-end">
+                      <Button
+                        className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
+                        onClick={handleClearSearch}
+                        size="sm"
+                        variant="ghost"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </InputGroupAddon>
+                  ) : (
+                    <InputGroupAddon align="inline-end">
+                      <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
+                      <Kbd className="bg-muted text-muted-foreground">K</Kbd>
+                    </InputGroupAddon>
                   )}
-                </div>
+                </InputGroup>
               </div>
 
               {/* Right Side - Profile and Authentication - Right Column */}
@@ -195,7 +209,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
             {/* Mobile Layout */}
             <div className="flex lg:hidden items-center">
               {/* Left Side - Hamburger Menu (Fixed Width) */}
-              <div className="flex-shrink-0 w-10 flex justify-start">
+              <div className="shrink-0 w-10 flex justify-start">
                 {props.onMobileMenuToggle && (
                   <Button
                     className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 relative overflow-hidden border border-sidebar-foreground/30"
@@ -227,10 +241,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
               {/* Center - Search Bar (Perfectly Centered) */}
               <div className="flex-1 px-2">
-                <div className="relative max-w-xs mx-auto">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    className="pl-10 pr-10 h-10 w-full bg-background text-foreground placeholder:text-muted-foreground border border-sidebar-foreground/30 focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
+                <InputGroup className="max-w-xs mx-auto border border-sidebar-foreground/30 focus-within:border-primary bg-background">
+                  <InputGroupInput
+                    className="text-foreground placeholder:text-muted-foreground"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       props.onSearchChange(e.target.value)
                     }
@@ -238,21 +251,31 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     type="text"
                     value={props.searchQuery}
                   />
-                  {props.searchQuery && (
-                    <Button
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
-                      onClick={handleClearSearch}
-                      size="sm"
-                      variant="ghost"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
+                  <InputGroupAddon>
+                    <Search className="text-muted-foreground" />
+                  </InputGroupAddon>
+                  {props.searchQuery ? (
+                    <InputGroupAddon align="inline-end">
+                      <Button
+                        className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
+                        onClick={handleClearSearch}
+                        size="sm"
+                        variant="ghost"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </InputGroupAddon>
+                  ) : (
+                    <InputGroupAddon align="inline-end">
+                      <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
+                      <Kbd className="bg-muted text-muted-foreground">K</Kbd>
+                    </InputGroupAddon>
                   )}
-                </div>
+                </InputGroup>
               </div>
 
               {/* Right Side - Profile and Authentication */}
-              <div className="flex-shrink-0 flex justify-end">
+              <div className="shrink-0 flex justify-end">
                 {loading ? (
                   <div className="flex items-center gap-2 text-sidebar-foreground">
                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
@@ -326,7 +349,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 <BackButton href="/" text="Back" />
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-3 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                    className="h-10 px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="outline"
@@ -360,7 +383,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     {/* Authentication button */}
                     {user ? (
                       <Button
-                        className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+                        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -374,7 +397,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="outline"
@@ -392,7 +415,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
             {/* Mobile Layout */}
             <div className="flex lg:hidden items-center justify-between min-h-[44px] overflow-hidden">
               {/* Left Side - Logo */}
-              <div className="flex-shrink-0 min-w-0 overflow-hidden">
+              <div className="shrink-0 min-w-0 overflow-hidden">
                 <Link className="block" href="/">
                   <LiThePlanLogo
                     className="h-9 w-auto transition-opacity hover:opacity-80"
@@ -403,11 +426,11 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               </div>
 
               {/* Right Side - Navigation buttons */}
-              <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0 ml-2">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-2">
                 <BackButton hideTextOnMobile={true} href="/" text="Back" />
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                    className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="outline"
@@ -441,7 +464,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     {/* Authentication button - mobile */}
                     {user ? (
                       <Button
-                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -454,7 +477,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
+                          className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="outline"

@@ -107,7 +107,7 @@ export function ProfileStatsCard({
   };
 
   return (
-    <Card className={`${className} bg-card border-border shadow-lg`}>
+    <Card className={`${className} bg-background border-border shadow-lg`}>
       <CardContent className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column: Pie Chart */}
@@ -195,7 +195,7 @@ export function ProfileStatsCard({
                 <h3 className="text-sm font-medium text-card-foreground">
                   Top Programs
                 </h3>
-                <Badge className="text-xs" variant="outline">
+                <Badge className="text-xs font-medium text-card-foreground" variant="outline">
                   {Object.keys(programCredits).length} total
                 </Badge>
               </div>

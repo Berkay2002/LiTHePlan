@@ -343,7 +343,7 @@ export function ShareButtons({
       {/* Only show share button for authenticated users */}
       {user ? (
         <Button
-          className="h-10 px-2 sm:px-3 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+          className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
           disabled={saving}
           onClick={handleShare}
           size="sm"
@@ -355,7 +355,7 @@ export function ShareButtons({
       ) : (
         /* Show sign up prompt for anonymous users */
         <Button
-          className="h-10 px-2 sm:px-3 gap-1 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+          className="h-10 px-2 sm:px-3 gap-1 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
           onClick={() => {
             window.location.href = "/login";
           }}

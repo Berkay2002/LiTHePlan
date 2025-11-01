@@ -3,7 +3,7 @@
 
 export function CourseCardSkeleton() {
   return (
-    <div className="bg-card border border-border rounded-lg shadow-md overflow-hidden animate-pulse">
+    <div className="bg-background border border-border rounded-lg shadow-md overflow-hidden animate-pulse">
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex justify-between items-start mb-2">

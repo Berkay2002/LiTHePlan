@@ -42,12 +42,12 @@ export function SimpleTermCard({
 
     return periodCourses.map((course) => (
       <div
-        className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+        className="p-4 rounded-lg border hover:bg-background/30 transition-colors"
         key={course.id}
       >
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-sm leading-tight truncate">
+            <h4 className="font-medium text-sm leading-tight truncate text-foreground">
               {course.name}
             </h4>
             <p className="text-xs text-muted-foreground mt-1">
@@ -84,9 +84,9 @@ export function SimpleTermCard({
   };
 
   return (
-    <Card className={`h-full ${className}`}>
+    <Card className={`h-full bg-background ${className}`}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold flex items-center justify-between">
+        <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
           {getTermLabel(termNumber)}
           <Badge className="text-xs" variant="secondary">
             {totalCredits} hp

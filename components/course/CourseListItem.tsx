@@ -221,7 +221,7 @@ export function CourseListItem({
   };
 
   return (
-    <Card className="group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-2 border-air-superiority-blue/20 bg-card hover:border-picton-blue/40 hover:shadow-picton-blue/10">
+    <Card className="group transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 border-2 border-primary/20 bg-background hover:border-primary/40 hover:shadow-primary/10">
       <CardContent className="p-3 lg:p-4">
         {/* Mobile Layout */}
         <div className="lg:hidden">
@@ -231,7 +231,7 @@ export function CourseListItem({
             <div className="flex items-start justify-between gap-3">
               {/* Course name - takes available space */}
               <div className="flex-1 min-w-0 flex items-start gap-2">
-                <h3 className="text-sm font-semibold text-foreground group-hover:text-picton-blue transition-colors duration-300 leading-tight flex-1">
+                <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-300 leading-tight flex-1">
                   {course.name}
                 </h3>
                 {course.notes && (
@@ -272,7 +272,7 @@ export function CourseListItem({
                       .slice(0, 2)
                       .map((exam, index) => (
                         <Badge
-                          className="text-xs px-1.5 py-0.5 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20"
+                          className="text-xs px-1.5 py-0.5 bg-secondary/50 text-secondary-foreground border border-secondary/30"
                           key={`${exam}-${index}`}
                           variant="secondary"
                         >
@@ -287,7 +287,7 @@ export function CourseListItem({
                     return (
                       visibleExaminations.length > 2 && (
                         <Badge
-                          className="text-xs px-1.5 py-0.5 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20"
+                          className="text-xs px-1.5 py-0.5 bg-secondary/50 text-secondary-foreground border border-secondary/30"
                           variant="secondary"
                         >
                           +{visibleExaminations.length - 2}
@@ -303,11 +303,11 @@ export function CourseListItem({
                     className={`h-7 px-2 text-xs font-medium transition-all duration-300 shadow-sm ${
                       isPinned
                         ? isHovered
-                          ? "bg-custom-red hover:bg-custom-red-600 text-white"
-                          : "bg-electric-blue hover:bg-electric-blue-600 text-white"
+                          ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                          : "bg-primary hover:bg-primary/90 text-primary-foreground"
                         : wouldHaveConflicts
-                          ? "bg-amber-500 hover:bg-amber-600 text-white border-2 border-amber-400"
-                          : "bg-picton-blue hover:bg-picton-blue-600 text-white"
+                          ? "bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-accent/40"
+                          : "bg-primary hover:bg-primary/90 text-primary-foreground"
                     }`}
                     onClick={() => {
                       if (isPinned && isHovered) {
@@ -334,7 +334,7 @@ export function CourseListItem({
                   </Button>
 
                   <Button
-                    className="h-7 px-2 text-xs font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
+                    className="h-7 px-2 text-xs font-medium bg-secondary/20 border-border text-secondary-foreground hover:bg-secondary/30 hover:border-border/60 transition-all duration-300"
                     onClick={() => {
                       window.open(
                         `https://studieinfo.liu.se/kurs/${course.id}`,
@@ -353,42 +353,42 @@ export function CourseListItem({
 
             {/* Bottom row: Course details */}
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <div className="text-air-superiority-blue font-mono font-bold">
+              <div className="text-primary font-mono font-bold">
                 {course.id}
               </div>
 
               {!shouldHideField("term") && (
-                <span className="text-picton-blue font-medium">
+                <span className="text-primary font-medium">
                   T{isMultiTerm ? availableTerms.join(",") : course.term}
                 </span>
               )}
 
               {shouldShowPeriod() && !shouldHideField("period") && (
-                <span className="text-air-superiority-blue font-medium">
+                <span className="text-primary font-medium">
                   P{course.period}
                 </span>
               )}
 
               {!shouldHideField("block") && (
-                <span className="text-electric-blue-300 font-medium">
+                <span className="text-primary font-medium">
                   B{formatBlocks(course.block)}
                 </span>
               )}
 
               {!shouldHideField("level") && (
-                <span className="text-battleship-gray font-medium">
+                <span className="text-foreground font-medium">
                   {course.level === "grundnivå" ? "G" : "A"}
                 </span>
               )}
 
               {course.examinator && (
-                <span className="text-electric-blue-300 font-medium">
+                <span className="text-foreground font-medium">
                   Ex: {course.examinator.split(" ").slice(-1)[0]}
                 </span>
               )}
 
               {course.studierektor && (
-                <span className="text-air-superiority-blue font-medium">
+                <span className="text-foreground font-medium">
                   Dir: {course.studierektor.split(" ").slice(-1)[0]}
                 </span>
               )}
@@ -404,7 +404,7 @@ export function CourseListItem({
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-start gap-2 mb-2">
-                  <h3 className="text-base font-semibold text-foreground line-clamp-2 leading-tight group-hover:text-picton-blue transition-colors duration-300 flex-1">
+                  <h3 className="text-base font-semibold text-foreground line-clamp-2 leading-tight group-hover:text-primary transition-colors duration-300 flex-1">
                     {course.name}
                   </h3>
                   {course.notes && (
@@ -433,7 +433,7 @@ export function CourseListItem({
                     </Tooltip>
                   )}
                 </div>
-                <div className="text-sm text-air-superiority-blue font-mono font-bold mb-2">
+                <div className="text-sm text-primary font-mono font-bold mb-2">
                   {course.id}
                 </div>
               </div>
@@ -446,7 +446,7 @@ export function CourseListItem({
                   );
                   return visibleExaminations.map((exam, index) => (
                     <Badge
-                      className="text-xs px-2 py-1 bg-electric-blue/10 text-electric-blue-300 border border-electric-blue/20"
+                      className="text-xs px-2 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30"
                       key={`${exam}-${index}`}
                       variant="secondary"
                     >
@@ -461,10 +461,10 @@ export function CourseListItem({
             <div className="flex flex-wrap items-center gap-4 mb-3 text-sm">
               {!shouldHideField("term") && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-battleship-gray-400 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     Term:
                   </span>
-                  <span className="text-picton-blue font-bold">
+                  <span className="text-primary font-bold">
                     {isMultiTerm ? availableTerms.join(", ") : course.term}
                   </span>
                 </div>
@@ -472,10 +472,10 @@ export function CourseListItem({
 
               {shouldShowPeriod() && !shouldHideField("period") && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-battleship-gray-400 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     Period:
                   </span>
-                  <span className="text-air-superiority-blue font-bold">
+                  <span className="text-primary font-bold">
                     {course.period}
                   </span>
                 </div>
@@ -483,10 +483,10 @@ export function CourseListItem({
 
               {!shouldHideField("block") && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-battleship-gray-400 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     {Array.isArray(course.block) ? "Blocks:" : "Block:"}
                   </span>
-                  <span className="text-electric-blue-300 font-bold">
+                  <span className="text-primary font-bold">
                     {formatBlocks(course.block)}
                   </span>
                 </div>
@@ -494,10 +494,10 @@ export function CourseListItem({
 
               {!shouldHideField("level") && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-battleship-gray-400 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     Level:
                   </span>
-                  <span className="text-battleship-gray font-bold">
+                  <span className="text-foreground font-bold">
                     {course.level === "grundnivå" ? "G" : "A"}
                   </span>
                 </div>
@@ -505,10 +505,10 @@ export function CourseListItem({
 
               {course.examinator && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-battleship-gray-400 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     Examiner:
                   </span>
-                  <span className="text-electric-blue-300 font-bold">
+                  <span className="text-foreground font-bold">
                     {course.examinator}
                   </span>
                 </div>
@@ -516,10 +516,10 @@ export function CourseListItem({
 
               {course.studierektor && (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-battleship-gray-400 font-medium">
+                  <span className="text-muted-foreground font-medium">
                     Director:
                   </span>
-                  <span className="text-air-superiority-blue font-bold">
+                  <span className="text-foreground font-bold">
                     {course.studierektor}
                   </span>
                 </div>
@@ -530,8 +530,8 @@ export function CourseListItem({
             <div className="flex flex-wrap items-center gap-4 text-sm">
               {!shouldHideField("campus") && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-air-superiority-blue" />
-                  <span className="text-air-superiority-blue-300 font-medium">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span className="text-foreground font-medium">
                     {course.campus}
                   </span>
                 </div>
@@ -539,8 +539,8 @@ export function CourseListItem({
 
               {!shouldHideField("pace") && (
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-battleship-gray" />
-                  <span className="text-battleship-gray-300 font-medium">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-foreground font-medium">
                     {formatPace(course.pace)}
                   </span>
                 </div>
@@ -559,7 +559,7 @@ export function CourseListItem({
                         .slice(0, 2)
                         .map((item, index) => (
                           <Badge
-                            className="text-xs px-2 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30"
+                            className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30"
                             key={`${item}-${index}`}
                             variant="outline"
                           >
@@ -569,7 +569,7 @@ export function CourseListItem({
                       {allProgramsAndOrientations.length > 2 && (
                         <div className="relative">
                           <Badge
-                            className="text-xs px-2 py-1 bg-picton-blue/10 text-picton-blue border-picton-blue/30 cursor-help hover:bg-picton-blue/20 transition-colors peer"
+                            className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30 cursor-help hover:bg-primary/20 transition-colors peer"
                             variant="outline"
                           >
                             +{allProgramsAndOrientations.length - 2} more
@@ -602,11 +602,11 @@ export function CourseListItem({
               className={`h-8 text-xs font-medium transition-all duration-300 shadow-md ${
                 isPinned
                   ? isHovered
-                    ? "bg-custom-red hover:bg-custom-red-600 text-white"
-                    : "bg-electric-blue hover:bg-electric-blue-600 text-white"
+                    ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
                   : wouldHaveConflicts
-                    ? "bg-amber-500 hover:bg-amber-600 text-white border-2 border-amber-400"
-                    : "bg-picton-blue hover:bg-picton-blue-600 text-white"
+                    ? "bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-accent/40"
+                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
               }`}
               onClick={() => {
                 if (isPinned && isHovered) {
@@ -645,7 +645,7 @@ export function CourseListItem({
             </Button>
 
             <Button
-              className="h-8 text-xs font-medium bg-air-superiority-blue/5 border-air-superiority-blue/30 text-air-superiority-blue hover:bg-air-superiority-blue/10 hover:border-air-superiority-blue/40 transition-all duration-300"
+              className="h-8 text-xs font-medium bg-secondary/20 border-border text-secondary-foreground hover:bg-secondary/30 hover:border-border/60 transition-all duration-300"
               onClick={() => {
                 window.open(
                   `https://studieinfo.liu.se/kurs/${course.id}`,
