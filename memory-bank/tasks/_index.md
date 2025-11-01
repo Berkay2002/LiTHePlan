@@ -29,6 +29,7 @@ No pending tasks at this time.
 - [UX-001] Skeleton loading states and state persistence - Completed November 1, 2025
 - [BUG-001] Profile view page API integration - Completed November 1, 2025
 - [REFACTOR-001] AlertBanner component extraction - Completed November 1, 2025
+- [REFACTOR-002] Unified global command palette - Completed November 1, 2025
 
 ## Deferred
 - [DESIGN-001] Color theme migration (40% complete) - Deferred until prioritized

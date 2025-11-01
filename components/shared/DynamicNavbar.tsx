@@ -15,12 +15,12 @@ import { BackButton } from "@/components/BackButton";
 import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { ModeToggle } from "@/components/theme-toggle";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
-import { ProfileCommandDialog } from "@/components/profile/ProfileCommandDialog";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { createClient } from "@/utils/supabase/client";
+import { useCommandPalette } from "./CommandPaletteContext";
 
 interface MainPageNavbarProps {
   mode: "main";
@@ -42,6 +42,24 @@ type DynamicNavbarProps = MainPageNavbarProps | ProfileEditNavbarProps;
 export function DynamicNavbar(props: DynamicNavbarProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const { registerTimelineToggle, unregisterTimelineToggle } = useCommandPalette();
+
+  // Register timeline toggle for profile edit mode
+  useEffect(() => {
+    if (props.mode === 'profile-edit' && props.onToggleBlockTimeline) {
+      registerTimelineToggle(
+        props.onToggleBlockTimeline,
+        props.showBlockTimeline || false
+      );
+      return () => unregisterTimelineToggle();
+    }
+  }, [
+    props.mode,
+    props.mode === 'profile-edit' ? props.onToggleBlockTimeline : undefined,
+    props.mode === 'profile-edit' ? props.showBlockTimeline : undefined,
+    registerTimelineToggle,
+    unregisterTimelineToggle,
+  ]);
 
   // Handle auth state
   useEffect(() => {
@@ -434,12 +452,6 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 )}
               </div>
             </div>
-
-            {/* Command Dialog Component */}
-            <ProfileCommandDialog
-              onToggleBlockTimeline={props.onToggleBlockTimeline}
-              showBlockTimeline={props.showBlockTimeline}
-            />
           </>
         )}
       </div>

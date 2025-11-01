@@ -147,7 +147,9 @@ function HomeContent() {
   useEffect(() => {
     // Read from localStorage only on client side
     if (typeof window !== 'undefined') {
-      setStoredSkeletonViewMode(parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY)));
+      const storedMode = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+      const parsedMode = storedMode ? parseViewMode(storedMode) : null;
+      setStoredSkeletonViewMode(parsedMode || 'grid');
       setStoredSkeletonSidebarOpen(getStoredSidebarState());
       setStoredSkeletonProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
     }
@@ -311,7 +313,9 @@ function HomeContentSkeleton() {
 
   // Update state after mount (client-side only)
   useEffect(() => {
-    setStoredViewMode(parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY)));
+    const storedMode = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
+    const parsedMode = storedMode ? parseViewMode(storedMode) : null;
+    setStoredViewMode(parsedMode || 'grid');
     setStoredSidebarOpen(getStoredSidebarState());
     setStoredProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
   }, []);

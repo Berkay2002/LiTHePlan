@@ -26,8 +26,8 @@ export function AlertBanner({
     },
     accent: {
       container: "bg-accent/10 border-accent",
-      title: "text-accent-foreground",
-      description: "text-accent-foreground/90",
+      title: "text-foreground",
+      description: "text-muted-foreground",
       iconColor: "text-accent",
     },
   };

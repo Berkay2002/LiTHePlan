@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { geistSans, geistMono } from "./fonts";
-import { CourseCommandSearch } from "@/components/course/CourseCommandSearch";
+import { GlobalCommandPalette } from "@/components/shared/GlobalCommandPalette";
+import { CommandPaletteProvider } from "@/components/shared/CommandPaletteContext";
 import { ProfileProvider } from "@/components/profile/ProfileContext";
 import StructuredData from "@/components/seo/StructuredData";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -88,10 +89,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ProfileProvider>
-            {children}
-            <CourseCommandSearch />
-          </ProfileProvider>
+          <CommandPaletteProvider>
+            <ProfileProvider>
+              {children}
+              <GlobalCommandPalette />
+            </ProfileProvider>
+          </CommandPaletteProvider>
         </ThemeProvider>
       </body>
     </html>
