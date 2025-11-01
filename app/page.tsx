@@ -141,13 +141,11 @@ function HomeContent() {
                 sidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
               } lg:mr-12`}
             >
-              <div className="container mx-auto px-4 py-8 max-w-7xl">
+              <div className="container mx-auto px-4 py-8">
                 <TopControlsSkeleton />
 
                 <CourseGridSkeleton
                   count={COURSES_PER_PAGE}
-                  profileSidebarOpen={false}
-                  sidebarOpen={true}
                 />
               </div>
             </div>
@@ -214,7 +212,7 @@ function HomeContent() {
               sidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
             } ${profileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
           >
-            <div className="container mx-auto px-4 py-8 max-w-7xl">
+            <div className="container mx-auto px-4 py-8">
               <InfoBanner />
               <div className="w-full max-w-full mb-6 px-1 sm:px-2 lg:px-0">
                 <div className="flex justify-end items-center">
@@ -272,9 +270,9 @@ export default function Home() {
             <FilterSidebarSkeleton isOpen={false} onToggle={() => {}} />
             <ProfileSidebarSkeleton isOpen={false} onToggle={() => {}} />
             <div className="w-full pt-20 lg:ml-12 lg:mr-12">
-              <div className="container mx-auto px-4 py-8 max-w-7xl">
+              <div className="container mx-auto px-4 py-8">
                 <TopControlsSkeleton />
-                <CourseGridSkeleton count={COURSES_PER_PAGE} profileSidebarOpen={false} sidebarOpen={false} />
+                <CourseGridSkeleton count={COURSES_PER_PAGE} />
               </div>
             </div>
           </div>

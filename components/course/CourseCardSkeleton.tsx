@@ -67,21 +67,12 @@ export function CourseCardSkeleton() {
 
 export function CourseGridSkeleton({
   count = 12,
-  sidebarOpen = false,
-  profileSidebarOpen = false,
 }: {
   count?: number;
-  sidebarOpen?: boolean;
-  profileSidebarOpen?: boolean;
 }) {
-  // Match CourseGrid layout logic
-  const bothSidebarsOpen = sidebarOpen && profileSidebarOpen;
-  const gridClasses = bothSidebarsOpen
-    ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 lg:gap-5 w-full"
-    : "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5 w-full";
-
+  // Match CourseGrid layout logic - use same auto-fit pattern with 450px max
   return (
-    <div className={gridClasses}>
+    <div className="grid gap-4 lg:gap-5 w-full justify-center" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))' }}>
       {Array.from({ length: count }).map((_, index) => (
         <CourseCardSkeleton key={index} />
       ))}
