@@ -175,17 +175,17 @@ export function EditableTermCard({
             return (
               <div className="text-center" key={blockNum}>
                 <div
-                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-red-600 dark:text-red-400" : "text-white"}`}
+                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-red-600 dark:text-red-400" : "text-foreground"}`}
                 >
                   B{blockNum}
                 </div>
                 <div
                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
                     !isActive
-                      ? "border-primary/10 bg-primary/5 text-white/70 shadow-sm hover:bg-primary/10 hover:border-primary/20"
+                      ? "border-primary/10 bg-primary/5 text-muted-foreground shadow-sm hover:bg-primary/10 hover:border-primary/20"
                       : hasConflict
                         ? "border-red-300 bg-red-100 text-red-800 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300 shadow-md"
-                        : "border-primary/25 bg-primary/15 text-white shadow-md hover:bg-primary/20 hover:border-primary/30 hover:shadow-lg"
+                        : "border-primary/25 bg-primary/15 text-foreground shadow-md hover:bg-primary/20 hover:border-primary/30 hover:shadow-lg"
                   }`}
                 >
                   {courses.length > 0 && (

@@ -16,6 +16,7 @@ import { BackButton } from "@/components/BackButton";
 import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { ModeToggle } from "@/components/theme-toggle";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
+import { ProfileCommandDialog } from "@/components/profile/ProfileCommandDialog";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import {
@@ -323,51 +324,18 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
           <>
             {/* Profile Edit Layout */}
             {/* Desktop Layout */}
-            <div className="hidden lg:grid lg:grid-cols-3 items-center">
-              {/* Desktop Logo - Left Column */}
-              <div className="flex justify-start">
+            <div className="hidden lg:flex lg:items-center lg:justify-between">
+              {/* Left Side - Logo, Back Button, and Sign In */}
+              <div className="flex items-center gap-4">
                 <Link className="block" href="/">
                   <LiThePlanLogo
                     className="h-10 w-auto transition-opacity hover:opacity-80"
                     height={40}
                   />
                 </Link>
-              </div>
+                <BackButton href="/" text="Back to Home" />
 
-              {/* Center - Empty space */}
-              <div />
-
-              {/* Right Side - Back, Block Timeline Toggle, Share, Authentication */}
-              <div className="flex justify-end items-center gap-2">
-                {/* Theme toggle */}
-                <ModeToggle />
-                <BackButton href="/" text="Back" />
-                {props.onToggleBlockTimeline && (
-                  <Button
-                    className="h-10 px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
-                    onClick={props.onToggleBlockTimeline}
-                    size="sm"
-                    variant="outline"
-                  >
-                    {props.showBlockTimeline ? (
-                      <>
-                        <EyeOff className="h-4 w-4 mr-2" />
-                        Hide Timeline
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="h-4 w-4 mr-2" />
-                        Show Timeline
-                      </>
-                    )}
-                  </Button>
-                )}
-                <ShareButtons
-                  profile={profileState?.current_profile || undefined}
-                  profileId={props.profileId}
-                />
-
-                {/* Authentication status - always show on all pages */}
+                {/* Authentication */}
                 {loading ? (
                   <div className="flex items-center gap-2 text-sidebar-foreground">
                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
@@ -375,10 +343,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    {/* Authentication button */}
                     {user ? (
                       <Button
-                        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+                        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -392,25 +359,73 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+                          className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="outline"
+                          variant="ghost"
                         >
-                          <LogIn className="h-4 w-4 mr-2" />
-                          <span className="hidden sm:inline">Sign In</span>
+                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">Sign In</span>
                         </Button>
                       </Link>
                     )}
                   </div>
                 )}
               </div>
+
+              {/* Right Side - Ctrl+K Indicator, Share, Timeline Toggle, Theme Toggle */}
+              <div className="flex items-center gap-4">
+                {/* Ctrl+K Keyboard Shortcut Indicator */}
+                <div className="flex items-center gap-2 h-10 px-3 py-2 rounded-md border border-sidebar-foreground/30 bg-background">
+                  <p className="text-muted-foreground text-sm">
+                    Press{" "}
+                    <Kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
+                      <span className="text-xs">⌘</span>K
+                    </Kbd>
+                  </p>
+                </div>
+
+                {/* Share Button */}
+                <ShareButtons
+                  profile={profileState?.current_profile || undefined}
+                  profileId={props.profileId}
+                />
+
+                {/* Timeline Toggle */}
+                {props.onToggleBlockTimeline && (
+                  <Button
+                    className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
+                    onClick={props.onToggleBlockTimeline}
+                    size="sm"
+                    variant="ghost"
+                  >
+                    {props.showBlockTimeline ? (
+                      <>
+                        <EyeOff className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                        <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                          Hide Timeline
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                        <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                          Show Timeline
+                        </span>
+                      </>
+                    )}
+                  </Button>
+                )}
+
+                {/* Theme Toggle */}
+                <ModeToggle />
+              </div>
             </div>
 
             {/* Mobile Layout */}
-            <div className="flex lg:hidden items-center justify-between min-h-[44px] overflow-hidden">
+            <div className="flex lg:hidden items-center">
               {/* Left Side - Logo */}
-              <div className="shrink-0 min-w-0 overflow-hidden">
+              <div className="shrink-0 w-10 flex justify-start">
                 <Link className="block" href="/">
                   <LiThePlanLogo
                     className="h-9 w-auto transition-opacity hover:opacity-80"
@@ -420,35 +435,25 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               </div>
 
               {/* Right Side - Navigation buttons */}
-              <div className="flex items-center gap-1 sm:gap-2 shrink-0 ml-2">
+              <div className="flex-1 flex justify-end items-center gap-1">
                 {/* Theme toggle */}
                 <ModeToggle />
-                <BackButton hideTextOnMobile={true} href="/" text="Back" />
+
+                {/* Timeline Toggle - Mobile */}
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
-                    variant="outline"
+                    variant="ghost"
                   >
                     {props.showBlockTimeline ? (
-                      <>
-                        <EyeOff className="h-4 w-4 sm:mr-2" />
-                        <span className="hidden sm:inline">Hide Timeline</span>
-                      </>
+                      <EyeOff className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
                     ) : (
-                      <>
-                        <Eye className="h-4 w-4 sm:mr-2" />
-                        <span className="hidden sm:inline">Show Timeline</span>
-                      </>
+                      <Eye className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
                     )}
                   </Button>
                 )}
-                <ShareButtons
-                  hideTextOnMobile={true}
-                  profile={profileState?.current_profile || undefined}
-                  profileId={props.profileId}
-                />
 
                 {/* Authentication status - mobile */}
                 {loading ? (
@@ -457,10 +462,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
-                    {/* Authentication button - mobile */}
                     {user ? (
                       <Button
-                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
                         onClick={async () => {
                           await signOut();
                           window.location.reload();
@@ -473,12 +477,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+                          className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="outline"
+                          variant="ghost"
                         >
-                          <LogIn className="h-4 w-4" />
+                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
                         </Button>
                       </Link>
                     )}
@@ -486,6 +490,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 )}
               </div>
             </div>
+
+            {/* Command Dialog Component */}
+            <ProfileCommandDialog
+              onToggleBlockTimeline={props.onToggleBlockTimeline}
+              showBlockTimeline={props.showBlockTimeline}
+            />
           </>
         )}
       </div>

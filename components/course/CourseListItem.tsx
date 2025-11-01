@@ -597,7 +597,7 @@ export function CourseListItem({
           </div>
 
           {/* Right section - Action Buttons */}
-          <div className="flex flex-col gap-2 ml-4">
+          <div className="flex items-center gap-2 ml-4">
             <Button
               className={`h-8 text-xs font-medium transition-all duration-300 shadow-md ${
                 isPinned
