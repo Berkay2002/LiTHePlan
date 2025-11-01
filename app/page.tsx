@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo, useState, useEffect } from "react";
+import { Suspense, useMemo, useState, useEffect, use } from "react";
 import { useSearchParams } from "next/navigation";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseGrid } from "@/components/course/CourseGrid";
@@ -20,8 +20,8 @@ import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { ProfileSidebarSkeleton } from "@/components/profile/ProfileSidebarSkeleton";
 import { useCourses } from "@/hooks/useCourses";
 import { usePersistentState } from "@/hooks/usePersistentState";
-import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
-import { useToggle } from "@/hooks/useToggle";
+import { useResponsiveSidebar, getStoredSidebarState } from "@/hooks/useResponsiveSidebar";
+import { useToggle, getStoredToggleState } from "@/hooks/useToggle";
 import {
   createDefaultFilterState,
   filterCourses,
@@ -33,6 +33,8 @@ import {
 } from "@/lib/courseFiltering";
 
 const COURSES_PER_PAGE = 12;
+const PROFILE_SIDEBAR_STORAGE_KEY = "profile-sidebar-open";
+const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -42,6 +44,24 @@ function HomeContent() {
   });
 
   const { state } = useProfile();
+  
+  // Track minimum loading time for better UX
+  const [showLoading, setShowLoading] = useState(loading);
+  const [loadingStartTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    if (!loading && showLoading) {
+      // Calculate remaining time to show skeleton
+      const elapsed = Date.now() - loadingStartTime;
+      const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
+      
+      setTimeout(() => {
+        setShowLoading(false);
+      }, remaining);
+    } else if (loading) {
+      setShowLoading(true);
+    }
+  }, [loading, showLoading, loadingStartTime]);
 
   const [filterState, setFilterState] = usePersistentState(
     FILTER_STORAGE_KEY,
@@ -83,7 +103,7 @@ function HomeContent() {
   const {
     value: profileSidebarOpen,
     toggle: toggleProfileSidebar,
-  } = useToggle(false);
+  } = useToggle(false, PROFILE_SIDEBAR_STORAGE_KEY);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -119,11 +139,11 @@ function HomeContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (loading) {
-    // Read viewMode from localStorage to show correct skeleton
-    const storedViewMode = typeof window !== 'undefined' 
-      ? parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY))
-      : 'grid';
+  if (showLoading) {
+    // Read viewMode and profile sidebar state from localStorage to show correct skeleton
+    // Safe to read here since this is inside a client component (HomeContent)
+    const storedViewMode = parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY));
+    const storedProfileSidebarOpen = getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY);
 
     return (
       <PageLayout
@@ -140,12 +160,12 @@ function HomeContent() {
               onToggle={toggleSidebar}
             />
 
-            <ProfileSidebarSkeleton isOpen={false} onToggle={() => {}} />
+            <ProfileSidebarSkeleton isOpen={storedProfileSidebarOpen} onToggle={() => {}} />
 
             <div
               className={`w-full pt-20 ${
                 sidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
-              } lg:mr-12`}
+              } ${storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
             >
               <div className="container mx-auto px-4 py-8">
                 <TopControlsSkeleton />
@@ -266,39 +286,57 @@ function HomeContent() {
 }
 
 export default function Home() {
-  // Read viewMode from localStorage for the Suspense fallback skeleton
-  const storedViewMode = typeof window !== 'undefined'
-    ? parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY))
-    : 'grid';
+  return (
+    <Suspense fallback={<HomeContentSkeleton />}>
+      <HomeContent />
+    </Suspense>
+  );
+}
+
+// Separate skeleton component that uses state to avoid hydration mismatches
+function HomeContentSkeleton() {
+  // Initialize with safe defaults for SSR, then update on mount
+  const [storedViewMode, setStoredViewMode] = useState<ViewMode>('grid');
+  const [storedSidebarOpen, setStoredSidebarOpen] = useState(false);
+  const [storedProfileSidebarOpen, setStoredProfileSidebarOpen] = useState(false);
+
+  // Update state after mount (client-side only)
+  useEffect(() => {
+    setStoredViewMode(parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY)));
+    setStoredSidebarOpen(getStoredSidebarState());
+    setStoredProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
+  }, []);
 
   return (
-    <Suspense fallback={
-      <PageLayout
-        isMobileMenuOpen={false}
-        navbarMode="main"
-        onMobileMenuToggle={() => {}}
-        onSearchChange={() => {}}
-        searchQuery=""
-      >
-        <div className="min-h-screen bg-background">
-          <div className="flex">
-            <FilterSidebarSkeleton isOpen={false} onToggle={() => {}} />
-            <ProfileSidebarSkeleton isOpen={false} onToggle={() => {}} />
-            <div className="w-full pt-20 lg:ml-12 lg:mr-12">
-              <div className="container mx-auto px-4 py-8">
-                <TopControlsSkeleton />
-                {storedViewMode === "grid" ? (
-                  <CourseGridSkeleton count={COURSES_PER_PAGE} />
-                ) : (
-                  <CourseListSkeleton count={COURSES_PER_PAGE} />
-                )}
-              </div>
+    <PageLayout
+      isMobileMenuOpen={storedSidebarOpen}
+      navbarMode="main"
+      onMobileMenuToggle={() => {}}
+      onSearchChange={() => {}}
+      searchQuery=""
+    >
+      <div className="min-h-screen bg-background">
+        <div className="flex">
+          <FilterSidebarSkeleton isOpen={storedSidebarOpen} onToggle={() => {}} />
+          <ProfileSidebarSkeleton isOpen={storedProfileSidebarOpen} onToggle={() => {}} />
+          <div
+            className={`w-full pt-20 ${
+              storedSidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
+            } ${
+              storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"
+            }`}
+          >
+            <div className="container mx-auto px-4 py-8">
+              <TopControlsSkeleton />
+              {storedViewMode === "grid" ? (
+                <CourseGridSkeleton count={COURSES_PER_PAGE} />
+              ) : (
+                <CourseListSkeleton count={COURSES_PER_PAGE} />
+              )}
             </div>
           </div>
         </div>
-      </PageLayout>
-    }>
-      <HomeContent />
-    </Suspense>
+      </div>
+    </PageLayout>
   );
 }
