@@ -246,17 +246,15 @@ export function CourseCard({ course }: CourseCardProps) {
               <div className="text-sm text-air-superiority-blue font-mono font-bold">
                 {course.id}
               </div>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(`https://studieinfo.liu.se/kurs/${course.id}`, '_blank', 'noopener,noreferrer');
-                }}
+              <a
+                href={`https://studieinfo.liu.se/kurs/${course.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-air-superiority-blue/60 hover:text-air-superiority-blue transition-colors"
                 title="View on LiU official site"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
-              </button>
+              </a>
             </div>
             <div className="flex flex-wrap gap-1.5">
               {(() => {

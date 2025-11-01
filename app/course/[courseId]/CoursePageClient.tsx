@@ -1,19 +1,34 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { ChevronLeft, Plus, AlertTriangle, BookOpen, GraduationCap } from "lucide-react";
+import { ChevronLeft, ChevronUp, Plus, AlertTriangle, BookOpen, GraduationCap, ExternalLink } from "lucide-react";
 import type { Course } from "@/types/course";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "@/components/course/TermSelectionModal";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
-import { getRelatedCourses, getLevelColor, getCampusColor, formatBlocks } from "@/lib/course-utils";
+import { getRelatedCourses, formatBlocks } from "@/lib/course-utils";
 import CourseStructuredData from "@/components/seo/CourseStructuredData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { CourseCard } from "@/components/course/CourseCard";
+import { CourseCardSkeleton } from "@/components/course/CourseCardSkeleton";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { CourseHero } from "@/components/course/CourseHero";
+import { CourseMetadataRow } from "@/components/course/CourseMetadataRow";
+import { ExaminationBadges } from "@/components/course/ExaminationBadges";
+import { ProgramsList } from "@/components/course/ProgramsList";
 
 interface CoursePageClientProps {
   course: Course;
@@ -23,6 +38,8 @@ interface CoursePageClientProps {
 function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
   const [isTermModalOpen, setIsTermModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const { state } = useProfile();
   
   const relatedCourses = getRelatedCourses(course, allCourses, 6);
@@ -32,6 +49,35 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
   const isInProfile = state.current_profile ? Object.values(state.current_profile.terms).some((termCourses) =>
     termCourses.some((c) => c.id === course.id)
   ) : false;
+
+  // Scroll to top handler
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Simulate loading for related courses
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoadingRelated(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Truncate course name for mobile breadcrumb
+  const truncatedName = course.name.length > 30 
+    ? `${course.name.substring(0, 30)}...` 
+    : course.name;
+
+  // Determine if we should show Programs tab (5+ programs)
+  const allPrograms = [...course.programs, ...(course.orientations || [])];
+  const showProgramsTab = allPrograms.length >= 5;
 
   return (
     <PageLayout 
@@ -45,233 +91,269 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
       
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 max-w-5xl">
-          {/* Back button */}
-          <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to Course Catalog
-          </Link>
+          {/* Breadcrumb Navigation */}
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/#courses">Courses</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="max-w-[200px] sm:max-w-none truncate">
+                  <span className="hidden sm:inline">{course.name}</span>
+                  <span className="inline sm:hidden">{truncatedName}</span>
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
-          {/* Course Header */}
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">{course.name}</h1>
-                <p className="text-xl text-muted-foreground">{course.id}</p>
-              </div>
-              
-              <Button
-                onClick={() => setIsTermModalOpen(true)}
-                disabled={isInProfile}
-                className="w-full sm:w-auto"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {isInProfile ? "Already in Profile" : "Add to Profile"}
-              </Button>
-            </div>
+          {/* Course Hero with CTA */}
+          <CourseHero course={course}>
+            <Button
+              onClick={() => setIsTermModalOpen(true)}
+              disabled={isInProfile}
+              size="lg"
+              className="w-full sm:w-auto hidden sm:flex shadow-md hover:shadow-lg transition-shadow"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              {isInProfile ? "Already in Profile" : "Add to Profile"}
+            </Button>
+          </CourseHero>
 
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              <Badge variant="outline" className={getLevelColor(course.level)}>
-                {course.level}
-              </Badge>
-              <Badge variant="outline" className={getCampusColor(course.campus)}>
-                {course.campus}
-              </Badge>
-              <Badge variant="outline">
-                {course.credits}hp
-              </Badge>
-              <Badge variant="outline">
-                {course.pace}
-              </Badge>
-              {Array.isArray(course.term) && course.term.map((term) => (
-                <Badge key={term} variant="outline">
-                  Term {term}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Conflict warning */}
-            {conflicts.length > 0 && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-4">
-                <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-yellow-800 dark:text-yellow-200">
-                      Course Conflicts
-                    </p>
-                    <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
-                      This course conflicts with {conflicts.length} course{conflicts.length > 1 ? 's' : ''} in your profile:
-                      {' '}{conflicts.map(c => c.conflictingCourseId).join(', ')}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Mobile Sticky CTA */}
+          <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/95 backdrop-blur border-t border-border sm:hidden shadow-lg">
+            <Button
+              onClick={() => setIsTermModalOpen(true)}
+              disabled={isInProfile}
+              className="w-full shadow-md"
+              size="lg"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              {isInProfile ? "Already in Profile" : "Add to Profile"}
+            </Button>
           </div>
 
-          {/* Course Details Grid */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            {/* Academic Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <GraduationCap className="h-5 w-5" />
-                  Academic Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
+          {/* Conflict Warning */}
+          {conflicts.length > 0 && (
+            <div className="bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Credits</p>
-                  <p className="font-medium">{course.credits} hp</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Level</p>
-                  <p className="font-medium">{course.level}</p>
-                </div>
-                {course.huvudomrade && (
-                  <div>
-                    <p className="text-sm text-muted-foreground">Subject Area (Huvudområde)</p>
-                    <p className="font-medium">{course.huvudomrade}</p>
-                  </div>
-                )}
-                {course.examinator && (
-                  <div>
-                    <p className="text-sm text-muted-foreground">Examiner</p>
-                    <p className="font-medium">{course.examinator}</p>
-                  </div>
-                )}
-                {course.studierektor && (
-                  <div>
-                    <p className="text-sm text-muted-foreground">Study Director</p>
-                    <p className="font-medium">{course.studierektor}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Schedule Information */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5" />
-                  Schedule
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div>
-                  <p className="text-sm text-muted-foreground">Available Terms</p>
-                  <p className="font-medium">
-                    {Array.isArray(course.term) ? course.term.join(', ') : course.term}
+                  <p className="font-semibold text-destructive">
+                    Course Conflicts
+                  </p>
+                  <p className="text-sm text-destructive/90 dark:text-destructive/80 mt-1">
+                    This course conflicts with {conflicts.length} course{conflicts.length > 1 ? 's' : ''} in your profile:
+                    {' '}{conflicts.map(c => c.conflictingCourseId).join(', ')}
                   </p>
                 </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Period</p>
-                  <p className="font-medium">
-                    {Array.isArray(course.period) ? course.period.join(', ') : course.period}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Block</p>
-                  <p className="font-medium">{formatBlocks(course.block)}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Study Pace</p>
-                  <p className="font-medium">{course.pace}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Campus</p>
-                  <p className="font-medium">{course.campus}</p>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+          )}
 
-            {/* Examination */}
-            {Array.isArray(course.examination) && course.examination.length > 0 && (
-              <Card className="md:col-span-2">
-                <CardHeader>
-                  <CardTitle>Examination</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {course.examination.map((exam) => {
-                      const examLabels: Record<string, string> = {
-                        TEN: "Written Exam",
-                        LAB: "Laboratory Work",
-                        PROJ: "Project",
-                        SEM: "Seminar",
-                        UPG: "Assignment"
-                      };
-                      return (
-                        <Badge key={exam} variant="secondary">
-                          {examLabels[exam] || exam}
-                        </Badge>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+          {/* Tabbed Content */}
+          <Tabs defaultValue="details" className="mb-8">
+            <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${showProgramsTab ? 3 : 2}, 1fr)` }}>
+              <TabsTrigger value="details" className="border-l-4 border-transparent data-[state=active]:border-picton-blue">
+                Details
+              </TabsTrigger>
+              <TabsTrigger value="schedule" className="border-l-4 border-transparent data-[state=active]:border-picton-blue">
+                Schedule
+              </TabsTrigger>
+              {showProgramsTab && (
+                <TabsTrigger value="programs" className="border-l-4 border-transparent data-[state=active]:border-picton-blue">
+                  Programs
+                </TabsTrigger>
+              )}
+            </TabsList>
 
-            {/* Programs */}
-            {Array.isArray(course.programs) && course.programs.length > 0 && (
-              <Card className="md:col-span-2">
-                <CardHeader>
-                  <CardTitle>Available in Programs</CardTitle>
-                  <CardDescription>
-                    This course is available for students in the following programs
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="grid sm:grid-cols-2 gap-2">
-                    {course.programs.map((program) => (
-                      <li key={program} className="text-sm flex items-start gap-2">
-                        <span className="text-primary mt-1">•</span>
-                        <span>{program}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Notes/Restrictions */}
-            {course.notes && (
-              <Card className="md:col-span-2">
+            {/* Details Tab */}
+            <TabsContent value="details" className="space-y-6 mt-6">
+              {/* Academic Information */}
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-yellow-600" />
-                    Important Notes
+                    <GraduationCap className="h-5 w-5 text-primary" />
+                    Academic Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-sm whitespace-pre-wrap">{course.notes}</p>
+                <CardContent className="grid sm:grid-cols-2 gap-4">
+                  <CourseMetadataRow label="Credits" value={`${course.credits} hp`} />
+                  <CourseMetadataRow label="Level" value={course.level} />
+                  <CourseMetadataRow label="Subject Area (Huvudområde)" value={course.huvudomrade} />
+                  <CourseMetadataRow label="Examiner" value={course.examinator} />
+                  <CourseMetadataRow label="Study Director" value={course.studierektor} />
+                  <div className="sm:col-span-2">
+                    <a
+                      href={`https://studieinfo.liu.se/kurs/${course.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      View on LiU Official Site
+                    </a>
+                  </div>
                 </CardContent>
               </Card>
+
+              {/* Examination */}
+              {Array.isArray(course.examination) && course.examination.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Examination</CardTitle>
+                    <CardDescription>Assessment methods for this course</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ExaminationBadges examinations={course.examination} />
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Programs (if < 5, show here instead of separate tab) */}
+              {!showProgramsTab && allPrograms.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Available in Programs</CardTitle>
+                    <CardDescription>
+                      This course is available for students in the following programs
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ProgramsList 
+                      programs={course.programs} 
+                      orientations={course.orientations}
+                    />
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Notes/Restrictions */}
+              {course.notes && (
+                <Card className="border-l-4 border-destructive">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <AlertTriangle className="h-5 w-5 text-destructive" />
+                      Important Notes
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm whitespace-pre-wrap text-foreground">{course.notes}</p>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+
+            {/* Schedule Tab */}
+            <TabsContent value="schedule" className="space-y-6 mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                    Schedule Information
+                  </CardTitle>
+                  <CardDescription>When and where this course is offered</CardDescription>
+                </CardHeader>
+                <CardContent className="grid sm:grid-cols-2 gap-4">
+                  <CourseMetadataRow 
+                    label="Available Terms" 
+                    value={Array.isArray(course.term) ? course.term.join(', ') : course.term} 
+                  />
+                  <CourseMetadataRow 
+                    label="Period" 
+                    value={Array.isArray(course.period) ? course.period.join(', ') : course.period} 
+                  />
+                  <CourseMetadataRow label="Block" value={formatBlocks(course.block)} />
+                  <CourseMetadataRow label="Study Pace" value={course.pace} />
+                  <CourseMetadataRow label="Campus" value={course.campus} />
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Programs Tab (only if 5+ programs) */}
+            {showProgramsTab && (
+              <TabsContent value="programs" className="space-y-6 mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Available in Programs</CardTitle>
+                    <CardDescription>
+                      This course is available for students in {allPrograms.length} programs
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ProgramsList 
+                      programs={course.programs} 
+                      orientations={course.orientations}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
             )}
-          </div>
+          </Tabs>
+
+          <Separator className="my-8" />
 
           {/* Related Courses */}
-          {relatedCourses.length > 0 && (
-            <div className="mt-12">
-              <h2 className="text-2xl font-bold mb-6">Related Courses</h2>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {relatedCourses.map((relatedCourse) => (
-                  <Link key={relatedCourse.id} href={`/course/${relatedCourse.id}`}>
-                    <CourseCard course={relatedCourse} />
+          {(isLoadingRelated || relatedCourses.length > 0) && (
+            <div className="mt-12 mb-20 sm:mb-12">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">Related Courses</h2>
+                {!isLoadingRelated && relatedCourses.length > 0 && (
+                  <Link 
+                    href={`/?programs=${encodeURIComponent(course.programs[0] || '')}&level=${encodeURIComponent(course.level)}`}
+                  >
+                    <Button variant="outline" size="sm">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      View All Similar Courses
+                    </Button>
                   </Link>
-                ))}
+                )}
               </div>
+              
+              {isLoadingRelated ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {[...Array(6)].map((_, i) => (
+                    <CourseCardSkeleton key={i} />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0">
+                  {relatedCourses.map((relatedCourse) => (
+                    <CourseCard key={relatedCourse.id} course={relatedCourse} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <Button
+          onClick={scrollToTop}
+          size="icon"
+          className="fixed bottom-20 sm:bottom-8 right-8 z-40 shadow-lg"
+          aria-label="Scroll to top"
+        >
+          <ChevronUp className="h-5 w-5" />
+        </Button>
+      )}
 
       {/* Term Selection Modal */}
       <TermSelectionModal
         course={course}
         isOpen={isTermModalOpen}
         onClose={() => setIsTermModalOpen(false)}
-        availableTerms={course.term.map(t => Number.parseInt(t, 10) as 7 | 8 | 9)}
+        availableTerms={course.term.map((t: string) => Number.parseInt(t, 10) as 7 | 8 | 9)}
         onTermSelected={() => setIsTermModalOpen(false)}
       />
     </PageLayout>

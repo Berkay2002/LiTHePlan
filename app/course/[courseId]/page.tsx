@@ -67,40 +67,58 @@ export async function generateMetadata({
     const programsText = Array.isArray(course.programs) && course.programs.length > 0
       ? `Available in ${course.programs.length} program${course.programs.length > 1 ? 's' : ''}`
       : "";
+    const examinationText = Array.isArray(course.examination) && course.examination.length > 0
+      ? `Examination: ${course.examination.join(", ")}`
+      : "";
     
-    const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. View course details and add to your academic profile using LiTHePlan.`;
+    const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. ${examinationText}. Plan your master's degree with LiTHePlan's interactive course planner.`;
 
-    const title = `${course.name} (${courseId})`;
+    const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
+
+    // Enhanced keywords with all programs and examination types
+    const keywords = [
+      courseId,
+      course.name,
+      "Linköping University",
+      "LiU course",
+      "course planning",
+      "master's program",
+      course.level,
+      course.campus,
+      `${course.credits}hp`,
+      ...(Array.isArray(course.programs) ? course.programs : []),
+      ...(course.huvudomrade ? [course.huvudomrade] : []),
+      ...(Array.isArray(course.examination) ? course.examination : []),
+      ...(Array.isArray(course.term) ? course.term.map((t: string) => `term ${t}`) : []),
+    ];
 
     return {
       title,
       description,
-      keywords: [
-        courseId,
-        course.name,
-        "Linköping University",
-        "LiU course",
-        course.level,
-        course.campus,
-        ...(Array.isArray(course.programs) ? course.programs : []),
-        ...(course.huvudomrade ? [course.huvudomrade] : []),
-      ],
+      keywords,
       openGraph: {
         title: `${title} - LiTHePlan`,
         description,
-        type: "website",
+        type: "article",
         images: ["/web-app-manifest-512x512.png"],
         url: `${baseUrl}/course/${courseId}`,
         siteName: "LiTHePlan",
+        locale: "en_US",
       },
       twitter: {
-        card: "summary",
+        card: "summary_large_image",
         title: `${title} - LiTHePlan`,
         description,
         images: ["/web-app-manifest-512x512.png"],
       },
       alternates: {
         canonical: `${baseUrl}/course/${courseId}`,
+      },
+      other: {
+        "course:code": courseId,
+        "course:credits": course.credits.toString(),
+        "course:level": course.level,
+        "course:campus": course.campus,
       },
     };
   } catch (error) {

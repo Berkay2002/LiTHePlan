@@ -29,7 +29,39 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
   
   const description = `${course.name} is a ${course.credits}hp ${course.level} course at Linköping University. ${termsText}, ${blocksText}. Campus: ${course.campus}. Study pace: ${course.pace}.`;
 
-  const schema = {
+  // Breadcrumb structured data
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": baseUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Courses",
+        "item": `${baseUrl}/#courses`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": course.name,
+        "item": `${baseUrl}/course/${course.id}`
+      }
+    ]
+  };
+
+  // Enhanced course teaches array
+  const teachesArray = [
+    course.huvudomrade || "Engineering",
+    ...(Array.isArray(course.examination) ? course.examination : [])
+  ];
+
+  const courseSchema = {
     "@context": "https://schema.org",
     "@type": "Course",
     "@id": `${baseUrl}/course/${course.id}`,
@@ -56,10 +88,20 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
       "value": course.credits
     },
     "timeRequired": timeRequired,
-    "availableLanguage": "sv", // Courses taught in Swedish
+    "availableLanguage": "sv",
     "inLanguage": "sv",
-    "teaches": course.huvudomrade || "Engineering", // Main subject area
+    "teaches": teachesArray,
     "courseWorkload": course.pace,
+    "offers": {
+      "@type": "Offer",
+      "category": "Educational",
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "price": "0",
+        "priceCurrency": "SEK",
+        "description": "Free tuition for Swedish and EU students"
+      }
+    },
     "hasCourseInstance": Array.isArray(course.term) ? course.term.map(term => ({
       "@type": "CourseInstance",
       "courseMode": course.campus === "Distans" ? "online" : "onsite",
@@ -92,9 +134,15 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
   };
 
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+      />
+    </>
   );
 }
