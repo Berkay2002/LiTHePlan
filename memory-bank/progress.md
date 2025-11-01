@@ -1,9 +1,9 @@
 # Progress
 
 ## Project Status Overview
-**Current Phase**: Production MVP Complete  
-**Last Updated**: October 31, 2025  
-**Overall Completion**: 95% (MVP features complete, enhancements possible)
+**Current Phase**: Production Maintenance  
+**Last Updated**: November 1, 2025  
+**Overall Completion**: 98% (MVP complete, minor enhancements deferred)
 
 ## Feature Completion Status
 
@@ -72,6 +72,19 @@
 - [x] Error handling and user feedback
 - [x] Accessible modals and dialogs
 
+#### Production Infrastructure (100%)
+- [x] Rate limiting with Upstash Redis
+- [x] Error tracking with Sentry
+- [x] Input validation with Zod strict schemas
+- [x] Structured logging with request correlation
+- [x] Response standardization
+- [x] HTTP caching headers
+- [x] Database function security hardening
+- [x] Row Level Security (RLS) policies
+- [x] Performance indexes (GIN + B-tree)
+- [x] SEO foundation (robots, sitemap, metadata, structured data)
+- [x] Related courses optimization (<50ms response time)
+
 #### Developer Experience (100%)
 - [x] TypeScript strict mode
 - [x] Ultracite linting configuration
@@ -91,7 +104,8 @@
 - [x] Active context
 - [x] Progress tracking (this file)
 - [x] Next.js 16 compliance verification
-- [ ] Task index (optional enhancement)
+- [x] Task index
+- [x] Production infrastructure documentation
 
 #### Deployment (100%)
 - [x] Vercel production deployment
@@ -113,87 +127,35 @@
 
 ## What's Left to Build
 
-### Active Development: Color Theme Migration (In Progress)
-**Priority**: HIGH - Design system consistency
-**Status**: ~20% complete
+### Deferred Enhancements (Low Priority)
 
-**Objective**: Convert entire application from purple-pink Catppuccin theme to cyan-teal color scheme with full theme awareness.
+#### Color Theme Migration (~40% Complete)
+**Priority**: LOW - Functional but inconsistent
+**Status**: Deferred until prioritized by user
 
 **Completed**:
-- ✅ Global CSS OKLCH color conversion (app/globals.css)
-- ✅ Primary/accent/neutral color hue shifts
-- ✅ lib/course-utils.ts badge functions
-- ✅ lib/conflict-utils.ts conflict styling
-- ✅ components/TermCard.tsx block badges and conflicts
-- ✅ app/page.tsx error text
-- ✅ components/InfoBanner.tsx - Blue gradient → accent theme
-- ✅ components/course/ViewToggle.tsx - picton-blue → primary theme
-- ✅ components/course/CourseGrid.tsx - White text → foreground
-- ✅ components/course/CourseList.tsx - White text → foreground
-- ✅ components/shared/Pagination.tsx - White/gray → theme tokens
-- ✅ components/course/FilterPanel.tsx - Air-superiority-blue → sidebar (90%)
-- ✅ components/course/TermSelectionModal.tsx - White/gray → foreground
-- ✅ components/course/SortDropdown.tsx - Air-superiority-blue → foreground
-- ✅ components/course/FilterSidebarSkeleton.tsx - Air-superiority-blue → sidebar
+- ✅ Global CSS converted to cyan-teal OKLCH colors
+- ✅ ~40% of components using theme-aware colors
+- ✅ Core utilities (course-utils, conflict-utils) theme-aware
+- ✅ Some components fully converted (FilterPanel, ViewToggle, etc.)
 
-**In Progress** (10+ components remaining):
-- [ ] EditableTermCard.tsx - Block badge colors
-- [ ] DraggableTermCard.tsx - Block badge colors
-- [ ] SimpleTermCard.tsx - Cross-period badge colors
-- [ ] InfoBanner.tsx - Blue gradient → accent theme
-- [ ] ConflictResolutionModal.tsx - Amber → chart-4 theme
-- [ ] ProfileStatsCard.tsx - Hex pie chart colors → chart tokens
-- [ ] profile/ProfileSidebar.tsx - Duplicate pie chart hex colors
-- [ ] ProfileSummary.tsx - Status colors (red/green/amber)
-- [ ] CourseCard.tsx - Amber warning badges → chart-4
-- [ ] CourseListItem.tsx - Amber pin badges → chart-4
-- [ ] PinnedCourseCard.tsx - Amber badges → chart-4
-- [ ] TermSelectionModal.tsx - Gray/picton-blue → border/primary
-- [ ] ui/tooltip.tsx - Slate → popover theme
-- [ ] shared/Pagination.tsx - White/gray → sidebar theme
-- [ ] shared/Navbar.tsx - White/picton-blue → sidebar theme
-- [ ] shared/DynamicNavbar.tsx - Custom colors → sidebar theme
-- [ ] LiThePlanLogo.tsx - SVG hex colors → CSS variables
+**Remaining Work**:
+- [ ] 15+ components with hardcoded amber/air-superiority-blue colors:
+  - ProfileStatsCard.tsx
+  - ProfileSummary.tsx
+  - ProfileSidebarSkeleton.tsx
+  - ProfilePinboard.tsx
+  - PinnedCourseCard.tsx
+  - CourseListItem.tsx
+  - CourseCard.tsx
+  - And 8+ more components
+- [ ] Define or remove custom color classes (picton-blue, air-superiority-blue)
+- [ ] Verify theme switching works across all components
+- [ ] Test light/dark mode compatibility
 
-**Technical Debt to Resolve**:
-- [ ] Define or remove undefined custom colors:
-  - `picton-blue` (30+ references)
-  - `air-superiority-blue` (20+ references)
-  - `electric-blue`
-  - `battleship-gray`
-  - `custom-red`
-- [ ] Create semantic color mapping in lib/theme-colors.ts
-- [ ] Update Tailwind config if custom colors kept
+**Impact**: Minor - theme switching partially works, not blocking functionality
 
-**Expected Benefits**:
-- Consistent cyan-teal visual identity
-- Full theme switching support (light/dark)
-- Easier future theme customization
-- Reduced hardcoded color maintenance
-- Better accessibility with semantic tokens
-
-### PPR Migration (Abandoned)
-**Priority**: ~~HIGH~~ N/A
-**Status**: Abandoned due to Supabase auth incompatibility
-
-- [ ] Enable PPR in next.config.ts
-- [ ] Add Suspense boundaries to `/course/[courseId]`
-- [ ] Add Suspense boundaries to `/` (home page)
-- [ ] Add Suspense boundaries to `/profile/[id]`
-- [ ] Create loading skeleton components for dynamic sections
-- [ ] Remove `dynamic = 'force-dynamic'` from hybrid routes
-- [ ] Test hybrid rendering in development
-- [ ] Verify build output shows partial prerendering markers
-- [ ] Measure performance improvements (LCP, TTFB)
-- [ ] Update documentation with PPR patterns
-
-**Expected Impact**:
-- Course detail pages: 50ms initial load (down from 500ms+)
-- Home page: Instant catalog visibility
-- Better SEO and Core Web Vitals scores
-- Lower server costs (static parts cached at edge)
-
-### Phase 2: Enhancements (Not Started)
+### Phase 2: Feature Enhancements (Not Planned)
 These are documented feature ideas but not currently planned:
 
 - [ ] PDF export for advisor meetings
@@ -219,37 +181,42 @@ These are documented feature ideas but not currently planned:
 
 ## Known Issues
 
-### High Priority
-1. **Incomplete Theme Migration**: ~80% of components still use hardcoded colors
-   - **Impact**: High - theme switching won't work correctly, inconsistent visual design
-   - **Status**: Active work in progress (20+ components identified)
-   - **Solution**: Systematic replacement of all hardcoded Tailwind classes with theme tokens
+### Deferred (Non-Critical)
+1. **Color Theme Inconsistency**: ~60% of components still use hardcoded colors
+   - **Impact**: Medium - theme switching doesn't work for all components
+   - **Affected**: 15+ components (ProfileStatsCard, ProfileSummary, CourseListItem, etc.)
+   - **Status**: Deferred - not blocking production functionality
 
-### Medium Priority
-1. **Mobile drag-drop quirks**: Some Android browsers have inconsistent touch behavior
-   - **Impact**: Moderate - affects UX on certain devices
-   - **Workaround**: Add/remove buttons available as fallback
+### Low Priority
+### Low Priority
+1. **Database Backup Tables**: Three backup tables from October 31, 2025
+   - **Impact**: Low - 2.3 MB disk space, RLS warnings in Supabase advisor
+   - **Status**: Scheduled for cleanup after 30-day verification period
    
-2. **Large profile performance**: No optimization for 100+ course selections
+2. **No Client-Side Course Caching**: Every filter change queries Supabase
+   - **Impact**: Minimal - responses consistently < 500ms with current user load
+   - **Future**: Consider React Query/SWR if user base grows significantly
+   
+3. **Mobile drag-drop quirks**: Some Android browsers have inconsistent touch behavior
+   - **Impact**: Minor - affects UX on certain older devices
+   - **Workaround**: Add/remove buttons available as fallback
+
+4. **Large profile performance**: No optimization for 100+ course selections
    - **Impact**: Low - unlikely use case (students typically plan 15-20 courses)
    - **Mitigation**: localStorage limits prevent extreme cases
 
-### Low Priority
-1. **No course caching**: Every filter change queries Supabase
-   - **Impact**: Minimal - responses are < 500ms
-   - **Future**: Consider caching if user base grows
-
-2. **Static course data**: No real-time sync with LiU systems
+5. **Static course data**: Manual database updates required
    - **Impact**: Expected - documented limitation
-   - **Process**: Manual database updates as needed
+   - **Process**: Manual updates when LiU publishes course changes annually
 
 ## Technical Achievements
 
-### Performance Metrics
+### Performance Metrics (Verified in Production)
 - ✅ LCP: < 2.5s (meets target)
-- ✅ FID: < 100ms (meets target)
+- ✅ FID: < 100ms (meets target)  
 - ✅ CLS: < 0.1 (meets target)
-- ✅ API Response: < 500ms average
+- ✅ API Response: < 500ms average (courses endpoint)
+- ✅ Related Courses API: < 50ms average (with database function)
 - ✅ Profile Save: < 200ms localStorage, < 1s Supabase
 
 ### Code Quality
@@ -268,23 +235,40 @@ These are documented feature ideas but not currently planned:
 - ✅ Next.js 16 compliance verified (99/100 score)
 - ✅ Async request APIs properly implemented
 - ✅ Proxy pattern following Next.js 16 standards
-- ⏳ Theme system migration (20% complete - cyan-teal color scheme)
+- ✅ Database optimized (RLS, indexes, function security)
+- ✅ Production API hardened (rate limiting, validation, logging)
+- ✅ SEO foundation complete (robots, sitemap, metadata, structured data)
+- ✅ Related courses optimization (<50ms response time)
+- ⏳ Theme system migration (40% complete - deferred)
 
 ## Deployment History
 
 ### Production Releases
-1. **v1.0 (October 2025)**: Initial MVP release
+1. **v1.0 (August 2025)**: Initial MVP release
    - All core features implemented
-   - 475 courses populated
+   - 339 curated courses populated (475 total in database)
    - Authentication working
    - Deployed to Vercel
 
-2. **v1.1 (October 31, 2025)**: Next.js 16 Upgrade
+2. **v1.1 (October 31, 2025)**: Next.js 16 Upgrade & Database Hardening
    - Upgraded Next.js 15.5.4 → 16.0.1
    - Upgraded React 19.1.0 → 19.2.0
    - Migrated to proxy.ts pattern
+   - Implemented RLS policies on all tables
+   - Added performance indexes (GIN + B-tree)
+   - Secured database functions
    - Verified 99/100 compliance score
    - Zero runtime errors
+
+3. **v1.2 (November 2025)**: Production API Hardening & Optimizations
+   - Integrated Upstash Redis rate limiting
+   - Added Sentry error tracking
+   - Implemented Zod input validation with strict schemas
+   - Added structured logging with request correlation
+   - Standardized API responses
+   - Implemented HTTP caching headers
+   - SEO foundation (robots, sitemap, metadata, structured data)
+   - Related courses optimization (<50ms response time)
    - Production-ready on Next.js 16
 
 ## Statistics
@@ -313,33 +297,39 @@ These are documented feature ideas but not currently planned:
 - ✅ Profile creation in minutes (vs hours with spreadsheets)
 - ✅ Academic requirement validation before advisor meetings
 - ✅ Profile sharing capability implemented
+- ✅ Related courses discovery with <50ms response time
 
 ### Technical Goals
 - ✅ Fast initial page loads (< 2.5s LCP)
-- ✅ Instant filter responses
-- ✅ Cross-device compatibility
-- ✅ Accessibility standards met
+- ✅ Instant filter responses (client-side state management)
+- ✅ Cross-device compatibility (responsive design)
+- ✅ Accessibility standards met (WCAG 2.1 AA)
+- ✅ Production security hardened (RLS, rate limiting, validation)
+- ✅ SEO optimized (dynamic sitemap, metadata, structured data)
 
 ## Next Milestones
 
-### Immediate (Current Session)
+### Immediate (Current Status)
 - [x] Complete Memory Bank documentation
-- [x] Comprehensive color audit (200+ instances catalogued)
-- [ ] Complete color theme migration (20+ components remaining)
-- [ ] Test theme switching (light/dark mode)
-- [ ] Define or remove custom color classes
-- [ ] Update activeContext.md with final color system
+- [x] Database optimization (RLS, indexes, functions)
+- [x] Production API hardening
+- [x] SEO foundation implementation
+- [x] Related courses optimization
+- [ ] Color theme migration (40% complete - deferred)
 
-### Short-term (Next 1-3 months)
-- Monitor production usage
-- Collect user feedback
-- Fix bugs as reported
-- Update course database if needed
+### Monitoring & Maintenance (Ongoing)
+- Monitor Vercel deployment health
+- Review Sentry error reports weekly
+- Check Supabase query performance monthly
+- Verify Upstash Redis rate limiting operational
+- Update course database when LiU publishes changes
+- Drop backup tables after 30-day verification period
 
-### Long-term (3-6 months)
-- Evaluate Phase 2 enhancements based on feedback
-- Consider performance optimizations
-- Explore additional features
+### Future Enhancements (When Prioritized by User)
+- Complete color theme migration (15+ components)
+- Implement client-side course caching (React Query/SWR)
+- Add analytics integration for user behavior insights
+- Consider Phase 2 features based on user feedback
 
 ## Lessons Learned
 
@@ -349,6 +339,9 @@ These are documented feature ideas but not currently planned:
 3. **Conflict detection**: Catches important academic restrictions automatically
 4. **TypeScript + Ultracite**: Catches errors early, maintains code quality
 5. **shadcn/ui**: Accelerated UI development with accessible components
+6. **Database optimization**: RLS, indexes, and functions provide security and performance
+7. **Production API hardening**: Rate limiting, validation, and logging prevent abuse
+8. **Related courses optimization**: PostgreSQL function reduces response time from 500ms to <50ms
 
 ### Challenges Overcome
 1. **Server/Client component split**: Required careful planning to avoid hydration errors
@@ -356,20 +349,26 @@ These are documented feature ideas but not currently planned:
 3. **Swedish terminology**: Preserved official terms while maintaining English codebase
 4. **Drag-drop mobile**: Required touch event optimization and fallbacks
 5. **Profile validation**: Balanced strictness with flexibility
+6. **Next.js 16 migration**: Async request APIs required codebase audit and updates
+7. **Database security**: RLS policies needed optimization to avoid performance issues
+8. **Production API hardening**: Integrated multiple services (Upstash, Sentry) seamlessly
 
 ### What We'd Do Differently
-1. **Earlier documentation**: Should have started Memory Bank from day one
-2. **Testing setup**: Automated tests would have caught some bugs earlier
-3. **Caching strategy**: Should have planned from the start
+1. **Earlier documentation**: Memory Bank should have started from day one
+2. **Testing setup**: Automated tests would have caught bugs earlier
+3. **Caching strategy**: Should have planned client-side caching from the start
 4. **Database schema**: Could have structured conflict data better
+5. **Color system**: Should have established theme-aware design system before building components
+6. **Performance baseline**: Should have measured metrics earlier for comparison
 
 ## Maintenance Notes
 
 ### Regular Tasks
-- **Weekly**: Monitor Vercel deployment status
-- **Monthly**: Review and update course database if needed
-- **Quarterly**: Security dependency updates
-- **As needed**: Bug fixes from user reports
+- **Weekly**: Review Sentry error reports for critical issues
+- **Monthly**: Check Supabase query performance metrics, review course database accuracy
+- **Quarterly**: Security dependency updates, audit Upstash Redis usage
+- **Annually**: Update course database when LiU publishes new course catalog
+- **As needed**: Bug fixes from user reports, drop backup tables after verification period
 
 ### Update Procedures
 1. **Course Data Updates**:

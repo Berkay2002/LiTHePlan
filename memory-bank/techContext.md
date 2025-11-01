@@ -246,12 +246,12 @@ export const coursesLimiter = new Ratelimit({
 ```
 
 ### Error Tracking (Sentry)
-**Service**: Sentry (https://sentry.io)  
-**Free Tier**: 5,000 errors/month
-**Tracing**: 5M spans/month  
+**Sentry**: Error tracking service (https://sentry.io)  
+**Free Tier**: 5,000 errors/month, 5M spans/month  
 **Organization**: `berkaycom`  
 **Project**: `javascript-nextjs`  
-**Region**: `de.sentry.io` (Europe)
+**Region**: `de.sentry.io` (Europe - Germany)
+**DSN**: `https://58d2112c06a633cb7923c8ab82488d6b@o4508233068052480.ingest.de.sentry.io/4508233068445776`
 
 **Features Enabled**:
 - Error tracking with stack traces

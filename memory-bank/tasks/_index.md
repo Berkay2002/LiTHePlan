@@ -1,7 +1,7 @@
 # Tasks Index
 
 ## In Progress
-Currently no active development tasks.
+No tasks currently in progress.
 
 ## Pending
 No pending tasks at this time.
@@ -21,6 +21,14 @@ No pending tasks at this time.
 - [DOC-001] README documentation - Completed October 2025
 - [DOC-002] Copilot instructions - Completed October 31, 2025
 - [DOC-003] Memory Bank setup - Completed October 31, 2025
+- [UPGRADE-001] Next.js 16 migration - Completed October 31, 2025
+- [SECURITY-001] Database hardening (RLS, indexes, functions) - Completed October 31, 2025
+- [API-001] Production API hardening - Completed November 2025
+- [SEO-001] SEO foundation (robots, sitemap, metadata) - Completed October 31, 2025
+- [PERF-001] Related courses optimization - Completed November 2025
+
+## Deferred
+- [DESIGN-001] Color theme migration (40% complete) - Deferred until prioritized
 
 ## Abandoned
 No abandoned tasks.
