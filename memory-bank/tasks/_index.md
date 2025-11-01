@@ -27,6 +27,8 @@ No pending tasks at this time.
 - [SEO-001] SEO foundation (robots, sitemap, metadata) - Completed October 31, 2025
 - [PERF-001] Related courses optimization - Completed November 2025
 - [UX-001] Skeleton loading states and state persistence - Completed November 1, 2025
+- [BUG-001] Profile view page API integration - Completed November 1, 2025
+- [REFACTOR-001] AlertBanner component extraction - Completed November 1, 2025
 
 ## Deferred
 - [DESIGN-001] Color theme migration (40% complete) - Deferred until prioritized
@@ -48,6 +50,7 @@ No abandoned tasks.
 - `SETUP-XXX`: Setup and configuration tasks
 - `FEAT-XXX`: Feature implementation
 - `BUG-XXX`: Bug fixes
+- `REFACTOR-XXX`: Code refactoring and improvements
 - `DOC-XXX`: Documentation tasks
 - `DEPLOY-XXX`: Deployment and infrastructure
 - `TEST-XXX`: Testing tasks

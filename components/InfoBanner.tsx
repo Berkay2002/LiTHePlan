@@ -1,9 +1,8 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
-import { Info, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { GuestModeBanner } from "@/components/shared/AlertBanner";
 import { createClient } from "@/utils/supabase/client";
 
 export function InfoBanner() {
@@ -59,35 +58,5 @@ export function InfoBanner() {
 
   if (!isVisible) return null;
 
-  return (
-    <div className="bg-accent/10 border-l-4 border-accent p-4 mb-6 rounded-r-lg shadow-sm">
-      <div className="flex items-start">
-        <div className="shrink-0">
-          <Info className="h-5 w-5 text-accent" />
-        </div>
-        <div className="ml-3 flex-1">
-          <div className="text-sm">
-            <p className="text-accent-foreground font-medium">
-              💡 <strong>No account needed!</strong> You can build and save your
-              course profile locally without signing up.
-            </p>
-            <p className="text-accent-foreground/90 mt-1">
-              Sign up only if you want to save profiles permanently and share
-              them across devices.
-            </p>
-          </div>
-        </div>
-        <div className="ml-4 shrink-0">
-          <Button
-            className="h-6 w-6 p-0 text-accent hover:text-accent/80 hover:bg-accent/10"
-            onClick={handleDismiss}
-            size="sm"
-            variant="ghost"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+  return <GuestModeBanner onDismiss={handleDismiss} className="mb-6" />;
 }

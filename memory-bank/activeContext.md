@@ -12,6 +12,38 @@
 4. Task files are NOT optional - they preserve context across agent sessions
 
 ## Recent Changes (Current Session)
+### November 1, 2025 - Profile View Page Fixes & AlertBanner Component (COMPLETED)
+**Work**: Fixed profile view page API integration and created reusable AlertBanner component
+
+1. ✅ **Profile View Page (`app/profile/[id]/ProfilePageClient.tsx`) Fixes**
+   - Fixed API response handling: Extracted `data` from wrapped response `{ success: true, data: ... }`
+   - Added null safety: `terms` defaults to `{ 7: [], 8: [], 9: [] }` if missing
+   - Added optional chaining in render: `profile.terms?.[7] || []`
+   - Fixed early return bug: Added `setLoading(false)` before error returns
+   - Implemented minimum loading time pattern (400ms) matching profile edit page
+   - Result: Profile view page now loads correctly with smooth skeleton transitions
+
+2. ✅ **AlertBanner Component Creation (`components/shared/AlertBanner.tsx`)**
+   - Created base `AlertBanner` component with theme-aware variants:
+     - `info` variant: Uses `primary` theme tokens (cyan-teal)
+     - `accent` variant: Uses `accent` theme tokens (teal)
+   - Created `SharedProfileBanner` pre-configured component for profile view pages
+   - Created `GuestModeBanner` pre-configured component with dismiss functionality
+   - Replaced hardcoded Tailwind colors:
+     - Before: `bg-blue-50`, `border-blue-400`, `text-blue-800`, `text-blue-700`
+     - After: Theme tokens `bg-primary/10`, `border-primary`, `text-primary`
+
+3. ✅ **Component Refactoring**
+   - `app/profile/[id]/ProfilePageClient.tsx`: Now uses `<SharedProfileBanner />`
+   - `components/InfoBanner.tsx`: Now uses `<GuestModeBanner onDismiss={handleDismiss} />`
+   - Benefits: Reusable, theme-aware, consistent design, single source of truth
+
+4. ✅ **Verification**
+   - Next.js runtime: No errors detected in 4 browser sessions
+   - TypeScript compilation: ✅ All files compile cleanly
+   - Playwright testing: Pages load correctly
+   - Server logs: API returns profile data successfully (200 status)
+
 ### November 1, 2025 - Skeleton Loading States & State Persistence (Extended to Profile Edit)
 **Additional Work**: Applied skeleton loading improvements to profile edit page
 
@@ -96,10 +128,17 @@ useEffect(() => {
 }, [loading, showLoading, loadingStartTime]);
 ```
 
-**Files Created**:
+**Files Created (Profile View & AlertBanner Session)**:
+- `components/shared/AlertBanner.tsx` - Reusable theme-aware alert banner component
+
+**Files Modified (Profile View & AlertBanner Session)**:
+- `app/profile/[id]/ProfilePageClient.tsx` - Fixed API integration, added minimum loading time, uses SharedProfileBanner
+- `components/InfoBanner.tsx` - Refactored to use GuestModeBanner component
+
+**Files Created (Skeleton Session)**:
 - `components/course/CourseListSkeleton.tsx` - Skeleton for list view matching CourseListItem
 
-**Files Modified**:
+**Files Modified (Skeleton Session)**:
 - `app/page.tsx` - Added skeleton state management, minimum loading time, SSR-safe localStorage reads
 - `app/profile/edit/page.tsx` - Added minimum loading time pattern (400ms), loading state tracking
 - `components/course/CourseCardSkeleton.tsx` - Updated to match CourseCard exact structure

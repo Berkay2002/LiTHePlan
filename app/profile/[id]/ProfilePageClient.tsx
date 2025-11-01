@@ -1,12 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { SimpleTermCard } from "@/components/SimpleTermCard";
+import { SharedProfileBanner } from "@/components/shared/AlertBanner";
 import { Card, CardContent } from "@/components/ui/card";
 import type { StudentProfile } from "@/types/profile";
+
+const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
 
 export default function ProfilePageClient({
   params,
@@ -17,6 +19,8 @@ export default function ProfilePageClient({
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [databaseId, setDatabaseId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showLoading, setShowLoading] = useState(true);
+  const [loadingStartTime] = useState(() => Date.now());
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -39,14 +43,24 @@ export default function ProfilePageClient({
           } else {
             setError("Failed to load profile");
           }
+          setLoading(false);
           return;
         }
 
-        const profileData = await response.json();
+        const responseData = await response.json();
+        
+        // Extract profile data from API response wrapper
+        const profileData = responseData.data || responseData;
 
-        // Convert date strings back to Date objects if needed
+        // Ensure terms property exists with proper structure
         const loadedProfile: StudentProfile = {
           ...profileData,
+          terms: profileData.terms || { 7: [], 8: [], 9: [] },
+          metadata: profileData.metadata || {
+            total_credits: 0,
+            advanced_credits: 0,
+            is_valid: false,
+          },
           created_at: profileData.created_at
             ? new Date(profileData.created_at)
             : new Date(),
@@ -70,7 +84,20 @@ export default function ProfilePageClient({
     }
   }, [profileId]);
 
-  if (loading) {
+  // Handle minimum loading time for smooth UX
+  useEffect(() => {
+    if (!loading && showLoading) {
+      // Calculate remaining time to show skeleton
+      const elapsed = Date.now() - loadingStartTime;
+      const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
+      
+      setTimeout(() => {
+        setShowLoading(false);
+      }, remaining);
+    }
+  }, [loading, showLoading, loadingStartTime]);
+
+  if (showLoading) {
     return (
       <PageLayout navbarMode="profile-edit">
         <div className="min-h-screen bg-background">
@@ -119,32 +146,16 @@ export default function ProfilePageClient({
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 space-y-8">
           {/* Shared Profile Header */}
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
-            <div className="flex items-center">
-              <div className="ml-3">
-                <p className="text-blue-800 font-medium">
-                  📖 <strong>Shared Profile</strong> - You&apos;re viewing
-                  someone else&apos;s course profile
-                </p>
-                <p className="text-blue-700 text-sm mt-1">
-                  This is a read-only view. To build your own profile,{" "}
-                  <Link className="underline" href="/profile/edit">
-                    click here
-                  </Link>
-                  .
-                </p>
-              </div>
-            </div>
-          </div>
+          <SharedProfileBanner />
 
           {/* Profile Statistics Card */}
           <ProfileStatsCard profile={profile} />
 
           {/* Term Cards (Read-only) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <SimpleTermCard courses={profile.terms[7]} termNumber={7} />
-            <SimpleTermCard courses={profile.terms[8]} termNumber={8} />
-            <SimpleTermCard courses={profile.terms[9]} termNumber={9} />
+            <SimpleTermCard courses={profile.terms?.[7] || []} termNumber={7} />
+            <SimpleTermCard courses={profile.terms?.[8] || []} termNumber={8} />
+            <SimpleTermCard courses={profile.terms?.[9] || []} termNumber={9} />
           </div>
         </div>
       </div>
