@@ -139,38 +139,47 @@ function HomeContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (showLoading) {
-    // Read viewMode and profile sidebar state from localStorage to show correct skeleton
-    // Safe to read here since this is inside a client component (HomeContent)
-    const storedViewMode = parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY));
-    const storedProfileSidebarOpen = getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY);
+  // Track stored values for skeleton display (client-side only)
+  const [storedSkeletonViewMode, setStoredSkeletonViewMode] = useState<ViewMode>('grid');
+  const [storedSkeletonSidebarOpen, setStoredSkeletonSidebarOpen] = useState(false);
+  const [storedSkeletonProfileSidebarOpen, setStoredSkeletonProfileSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    // Read from localStorage only on client side
+    if (typeof window !== 'undefined') {
+      setStoredSkeletonViewMode(parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY)));
+      setStoredSkeletonSidebarOpen(getStoredSidebarState());
+      setStoredSkeletonProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
+    }
+  }, []);
+
+  if (showLoading) {
     return (
       <PageLayout
-        isMobileMenuOpen={sidebarOpen}
+        isMobileMenuOpen={storedSkeletonSidebarOpen}
         navbarMode="main"
-        onMobileMenuToggle={toggleSidebar}
+        onMobileMenuToggle={() => {}}
         onSearchChange={handleSearchChange}
         searchQuery={filterState.search}
       >
         <div className="min-h-screen bg-background">
           <div className="flex">
             <FilterSidebarSkeleton
-              isOpen={sidebarOpen}
-              onToggle={toggleSidebar}
+              isOpen={storedSkeletonSidebarOpen}
+              onToggle={() => {}}
             />
 
-            <ProfileSidebarSkeleton isOpen={storedProfileSidebarOpen} onToggle={() => {}} />
+            <ProfileSidebarSkeleton isOpen={storedSkeletonProfileSidebarOpen} onToggle={() => {}} />
 
             <div
               className={`w-full pt-20 ${
-                sidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
-              } ${storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
+                storedSkeletonSidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
+              } ${storedSkeletonProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
             >
               <div className="container mx-auto px-4 py-8">
                 <TopControlsSkeleton />
 
-                {storedViewMode === "grid" ? (
+                {storedSkeletonViewMode === "grid" ? (
                   <CourseGridSkeleton count={COURSES_PER_PAGE} />
                 ) : (
                   <CourseListSkeleton count={COURSES_PER_PAGE} />

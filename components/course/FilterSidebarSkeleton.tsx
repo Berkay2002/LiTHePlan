@@ -28,10 +28,10 @@ export function FilterSidebarSkeleton({
         />
       )}
 
-      {/* Fixed Extended Sidebar - No animation during loading */}
+      {/* Collapsible Sidebar - Fixed position */}
       <div
         className={cn(
-          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-r-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50",
+          "fixed top-0 left-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-r-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50 transition-all duration-300 ease-in-out",
           "flex flex-col ring-1 ring-sidebar-border/30",
           isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
           "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
