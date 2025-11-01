@@ -5,6 +5,12 @@
 **Phase**: Production Maintenance
 **Focus**: All MVP features complete, monitoring production stability
 
+**⚠️ CRITICAL FOR AI AGENTS**: When working on ANY task (feature, bug fix, enhancement):
+1. **MUST** create individual task file in `memory-bank/tasks/TASKID-description.md`
+2. **MUST** update `tasks/_index.md` with task entry
+3. **MUST** follow task template from `memory-bank.instructions.md`
+4. Task files are NOT optional - they preserve context across agent sessions
+
 ## Recent Changes (Previous Sessions)
 ### November 1, 2025 - Related Courses Algorithm Optimization (COMPLETED)
 1. ✅ **Database Schema Analysis**

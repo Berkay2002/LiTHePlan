@@ -35,6 +35,7 @@ See `memory-bank.instructions.md` for complete Memory Bank system documentation.
 5. ✅ **For Next.js questions**: Use Next.js MCP tools (`nextjs_docs`, `nextjs_runtime`) - they are authoritative and project-aware
 6. ✅ **For other libraries**: Use Context7 tools (`resolve_library_id`, `get_library_docs`) as fallback
 7. ✅ Run `npm run lint` to understand current code quality baseline
+8. ✅ **If starting a task**: Create task file in `memory-bank/tasks/` (see Task Management section below)
 
 ### MCP Tool Usage (CRITICAL)
 **⚠️ ALWAYS run MCP tools ONE AT A TIME, never in parallel.**
@@ -814,6 +815,138 @@ const Navbar = dynamic(() => import('./Navbar'), { ssr: false });
 'use client';
 export default function ClientNavbar() { /* ... */ }
 ```
+
+## Task Management (MANDATORY)
+
+### When to Create a Task File
+**Create a task file for ANY substantive work**:
+- ✅ Adding a new feature
+- ✅ Fixing a bug
+- ✅ Implementing an enhancement
+- ✅ Refactoring significant code
+- ✅ Performance optimization
+- ✅ Security improvements
+
+**Do NOT create task files for**:
+- ❌ Trivial typo fixes
+- ❌ Simple documentation updates
+- ❌ Formatting-only changes
+
+### Task File Creation Workflow
+
+**Step 1: Generate Task ID**
+```
+Pattern: [TYPE-XXX]
+Types: FEAT, BUG, PERF, SECURITY, DOC, REFACTOR, TEST
+Example: FEAT-008, BUG-001, PERF-002
+```
+
+**Step 2: Create Task File**
+```powershell
+# File: memory-bank/tasks/FEAT-008-add-course-export.md
+```
+
+**Step 3: Use This Template**
+```markdown
+# [FEAT-008] - Add Course Export to PDF
+
+**Status:** In Progress  
+**Added:** November 1, 2025  
+**Updated:** November 1, 2025
+
+## Original Request
+User requested ability to export course profile to PDF for advisor meetings.
+Requirements:
+- Include all selected courses across terms 7, 8, 9
+- Show credit totals and validation status
+- Professional formatting for printing
+
+## Thought Process
+- Considered browser print() but lacks control over formatting
+- Evaluated jsPDF library - good for programmatic PDF generation
+- Need to match ProfileSummary layout but optimized for print
+- Should include conflict warnings and validation messages
+
+## Implementation Plan
+1. Install jsPDF and dependencies
+2. Create ExportPDFButton component
+3. Design PDF layout matching ProfileSummary
+4. Add export functionality to ProfileSidebar
+5. Test PDF output across browsers
+6. Update documentation
+
+## Progress Tracking
+
+**Overall Status:** In Progress - 30%
+
+### Subtasks
+| ID | Description | Status | Updated | Notes |
+|----|-------------|--------|---------|-------|
+| 1.1 | Research PDF libraries | Complete | Nov 1 | Chose jsPDF |
+| 1.2 | Install dependencies | Complete | Nov 1 | Added jsPDF 2.5.1 |
+| 1.3 | Create ExportPDFButton component | In Progress | Nov 1 | Working on layout |
+| 1.4 | Implement PDF generation logic | Not Started | - | - |
+| 1.5 | Add to ProfileSidebar | Not Started | - | - |
+| 1.6 | Test cross-browser | Not Started | - | - |
+
+## Progress Log
+### November 1, 2025
+- Researched PDF generation options
+- Decided on jsPDF for flexibility and bundle size
+- Installed jsPDF and @types/jspdf
+- Started creating ExportPDFButton component
+- Encountered issue with font loading - investigating custom fonts
+```
+
+**Step 4: Update _index.md**
+```markdown
+## In Progress
+- [FEAT-008] Add course export to PDF - Working on PDF generation logic
+```
+
+**Step 5: Update Progress Regularly**
+- Add entries to Progress Log with each work session
+- Update subtask statuses as work progresses
+- Move to "Completed" in _index.md when done
+
+### Example: Completing a Task
+
+When finishing FEAT-008:
+
+1. **Update task file**:
+```markdown
+**Status:** Completed  
+**Updated:** November 5, 2025
+
+**Overall Status:** Completed - 100%
+
+### Progress Log
+### November 5, 2025
+- Completed cross-browser testing
+- Fixed Safari font rendering issue
+- Merged PR #42
+- Task completed successfully
+```
+
+2. **Update _index.md**:
+```markdown
+## Completed
+- [FEAT-008] Add course export to PDF - Completed November 5, 2025
+```
+
+3. **Update activeContext.md**:
+Add to Recent Changes section documenting what was accomplished.
+
+### Task File Benefits
+
+**Why this matters**:
+1. **Cross-session continuity**: New agents can pick up exactly where previous agent left off
+2. **Decision history**: Preserves WHY choices were made, not just WHAT was done
+3. **Debugging context**: When issues arise, full context is available
+4. **Progress transparency**: User can see detailed progress at any time
+5. **Learning**: Future agents learn from past approaches and mistakes
+
+**Remember**: Task files are your memory across sessions. Without them, each agent starts from zero context.
 
 ## Pull Request Guidelines
 
