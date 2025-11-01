@@ -6,7 +6,6 @@ import {
   EyeOff,
   LogIn,
   Menu,
-  Search,
   User as UserIcon,
   X,
 } from "lucide-react";
@@ -17,13 +16,9 @@ import { LiThePlanLogo } from "@/components/LiThePlanLogo";
 import { ModeToggle } from "@/components/theme-toggle";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
 import { ProfileCommandDialog } from "@/components/profile/ProfileCommandDialog";
+import { SearchBar } from "@/components/shared/SearchBar";
 import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { Kbd } from "@/components/ui/kbd";
 import { createClient } from "@/utils/supabase/client";
 
@@ -161,37 +156,11 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Right Side - Search Bar and Theme Toggle */}
               <div className="flex items-center gap-4">
                 {/* Search Bar */}
-                <InputGroup className="w-full max-w-md border-2 border-sidebar-border focus-within:border-primary bg-background">
-                  <InputGroupInput
-                    className="text-foreground placeholder:text-muted-foreground"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      props.onSearchChange(e.target.value)
-                    }
-                    placeholder="Search courses by name or code..."
-                    type="text"
-                    value={props.searchQuery}
-                  />
-                  <InputGroupAddon>
-                    <Search className="text-muted-foreground" />
-                  </InputGroupAddon>
-                  <InputGroupAddon align="inline-end" suppressHydrationWarning>
-                    {props.searchQuery ? (
-                      <Button
-                        className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
-                        onClick={handleClearSearch}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    ) : (
-                      <>
-                        <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
-                        <Kbd className="bg-muted text-muted-foreground">K</Kbd>
-                      </>
-                    )}
-                  </InputGroupAddon>
-                </InputGroup>
+                <SearchBar
+                  value={props.searchQuery}
+                  onChange={props.onSearchChange}
+                  placeholder="Search courses by name or code..."
+                />
 
                 {/* Theme toggle */}
                 <ModeToggle />
@@ -233,37 +202,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
               {/* Center - Search Bar (Perfectly Centered) */}
               <div className="flex-1 px-2">
-                <InputGroup className="max-w-xs mx-auto border border-sidebar-foreground/30 focus-within:border-primary bg-background">
-                  <InputGroupInput
-                    className="text-foreground placeholder:text-muted-foreground"
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      props.onSearchChange(e.target.value)
-                    }
-                    placeholder="Search..."
-                    type="text"
-                    value={props.searchQuery}
-                  />
-                  <InputGroupAddon>
-                    <Search className="text-muted-foreground" />
-                  </InputGroupAddon>
-                  {props.searchQuery ? (
-                    <InputGroupAddon align="inline-end">
-                      <Button
-                        className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
-                        onClick={handleClearSearch}
-                        size="sm"
-                        variant="ghost"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </InputGroupAddon>
-                  ) : (
-                    <InputGroupAddon align="inline-end">
-                      <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
-                      <Kbd className="bg-muted text-muted-foreground">K</Kbd>
-                    </InputGroupAddon>
-                  )}
-                </InputGroup>
+                <SearchBar
+                  value={props.searchQuery}
+                  onChange={props.onSearchChange}
+                  placeholder="Search..."
+                  className="max-w-xs mx-auto border border-sidebar-foreground/30"
+                />
               </div>
 
               {/* Right Side - Profile and Authentication */}
