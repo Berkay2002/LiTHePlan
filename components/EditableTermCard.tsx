@@ -170,21 +170,22 @@ export function EditableTermCard({
             const courses =
               blockOccupancy[blockNum as keyof typeof blockOccupancy];
             const hasConflict = courses.length > 1;
+            const isActive = courses.length > 0;
 
             return (
               <div className="text-center" key={blockNum}>
                 <div
-                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-red-600" : "text-muted-foreground"}`}
+                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-red-600 dark:text-red-400" : "text-white"}`}
                 >
                   B{blockNum}
                 </div>
                 <div
-                  className={`h-8 rounded border-2 border-dashed flex items-center justify-center text-xs ${
-                    courses.length === 0
-                      ? "border-border bg-muted/30"
+                  className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
+                    !isActive
+                      ? "border-primary/10 bg-primary/5 text-white/70 shadow-sm hover:bg-primary/10 hover:border-primary/20"
                       : hasConflict
-                        ? "border-red-300 bg-red-100 text-red-800 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300"
-                        : `border-opacity-50 ${getBlockBadgeColor(blockNum).replace("text-", "border-").replace("bg-", "border-")}`
+                        ? "border-red-300 bg-red-100 text-red-800 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300 shadow-md"
+                        : "border-primary/25 bg-primary/15 text-white shadow-md hover:bg-primary/20 hover:border-primary/30 hover:shadow-lg"
                   }`}
                 >
                   {courses.length > 0 && (
