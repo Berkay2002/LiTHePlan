@@ -28,10 +28,10 @@ export function ProfileSidebarSkeleton({
       {/* Profile Sidebar - Default closed state */}
       <div
         className={cn(
-          "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-air-superiority-blue-400 border-l-2 border-air-superiority-blue-300/40 shadow-xl shadow-air-superiority-blue-200/20 z-50",
-          "flex flex-col ring-1 ring-air-superiority-blue-300/30",
-          isOpen ? "w-80 xl:w-96" : "w-0 lg:w-12",
-          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-air-superiority-blue-300/30"
+          "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-l-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50 transition-all duration-300 ease-in-out",
+          "flex flex-col ring-1 ring-sidebar-border/30",
+          isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
+          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
         )}
       >
         {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
@@ -40,12 +40,12 @@ export function ProfileSidebarSkeleton({
             {/* Modern Floating Expand Button */}
             <div className="relative group">
               <Button
-                className="h-10 w-10 p-0 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 hover:border-white/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="h-10 w-10 p-0 bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 backdrop-blur-sm border border-sidebar-foreground/20 hover:border-sidebar-foreground/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={onToggle}
                 size="sm"
                 variant="ghost"
               >
-                <ChevronLeft className="h-5 w-5 text-white group-hover:text-primary transition-colors duration-200" />
+                <ChevronLeft className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
               </Button>
             </div>
           </div>

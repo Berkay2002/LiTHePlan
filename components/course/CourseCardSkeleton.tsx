@@ -3,9 +3,9 @@
 
 export function CourseCardSkeleton() {
   return (
-    <div className="bg-background border border-border rounded-lg shadow-md overflow-hidden animate-pulse">
+    <div className="bg-background border-2 border-primary/20 rounded-lg shadow-md overflow-hidden animate-pulse">
       {/* Header */}
-      <div className="p-4 border-b border-border">
+      <div className="p-5 border-b border-border">
         <div className="flex justify-between items-start mb-2">
           <div className="h-4 bg-muted rounded w-16" />
           <div className="flex gap-1">
@@ -18,7 +18,7 @@ export function CourseCardSkeleton() {
       </div>
 
       {/* Course Details */}
-      <div className="p-4 space-y-3">
+      <div className="p-5 space-y-3">
         <div className="grid grid-cols-4 gap-4">
           <div className="text-center">
             <div className="h-3 bg-muted rounded w-8 mx-auto mb-1" />
@@ -58,8 +58,11 @@ export function CourseCardSkeleton() {
       </div>
 
       {/* Action Button */}
-      <div className="p-4 pt-0">
-        <div className="h-9 bg-muted rounded w-full" />
+      <div className="border-t border-border pt-4 mt-4 px-5 pb-5">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="h-10 bg-muted rounded" />
+          <div className="h-10 bg-muted rounded" />
+        </div>
       </div>
     </div>
   );

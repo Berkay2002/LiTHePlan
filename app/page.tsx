@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
+import { CourseListSkeleton } from "@/components/course/CourseListSkeleton";
 import {
   CollapsibleFilterSidebar,
   type FilterState,
@@ -119,6 +120,11 @@ function HomeContent() {
   };
 
   if (loading) {
+    // Read viewMode from localStorage to show correct skeleton
+    const storedViewMode = typeof window !== 'undefined' 
+      ? parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY))
+      : 'grid';
+
     return (
       <PageLayout
         isMobileMenuOpen={sidebarOpen}
@@ -144,9 +150,11 @@ function HomeContent() {
               <div className="container mx-auto px-4 py-8">
                 <TopControlsSkeleton />
 
-                <CourseGridSkeleton
-                  count={COURSES_PER_PAGE}
-                />
+                {storedViewMode === "grid" ? (
+                  <CourseGridSkeleton count={COURSES_PER_PAGE} />
+                ) : (
+                  <CourseListSkeleton count={COURSES_PER_PAGE} />
+                )}
               </div>
             </div>
           </div>
@@ -258,6 +266,11 @@ function HomeContent() {
 }
 
 export default function Home() {
+  // Read viewMode from localStorage for the Suspense fallback skeleton
+  const storedViewMode = typeof window !== 'undefined'
+    ? parseViewMode(localStorage.getItem(VIEW_MODE_STORAGE_KEY))
+    : 'grid';
+
   return (
     <Suspense fallback={
       <PageLayout
@@ -274,7 +287,11 @@ export default function Home() {
             <div className="w-full pt-20 lg:ml-12 lg:mr-12">
               <div className="container mx-auto px-4 py-8">
                 <TopControlsSkeleton />
-                <CourseGridSkeleton count={COURSES_PER_PAGE} />
+                {storedViewMode === "grid" ? (
+                  <CourseGridSkeleton count={COURSES_PER_PAGE} />
+                ) : (
+                  <CourseListSkeleton count={COURSES_PER_PAGE} />
+                )}
               </div>
             </div>
           </div>

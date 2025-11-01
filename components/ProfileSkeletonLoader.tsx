@@ -17,26 +17,28 @@ function ProfileStatsCardSkeleton() {
           {/* Left Column: Pie Chart Skeleton */}
           <div className="flex flex-col items-center justify-center space-y-4">
             {/* Progress text skeleton */}
-            <div className="text-center space-y-2">
-              <Skeleton className="h-6 w-24 mx-auto" />
-              <Skeleton className="h-4 w-20 mx-auto" />
+            <div className="text-center">
+              <Skeleton className="h-6 w-32 mx-auto mb-1" />
+              <Skeleton className="h-4 w-24 mx-auto" />
             </div>
 
             {/* Pie Chart Skeleton */}
-            <Skeleton
-              className="rounded-full"
-              style={{
-                height: PROFILE_STATS_PIE_CHART_SIZE,
-                width: PROFILE_STATS_PIE_CHART_SIZE,
-              }}
-            />
+            <div>
+              <Skeleton
+                className="rounded-full"
+                style={{
+                  height: PROFILE_STATS_PIE_CHART_SIZE,
+                  width: PROFILE_STATS_PIE_CHART_SIZE,
+                }}
+              />
+            </div>
 
             {/* Legend Skeleton */}
             <div className="flex flex-wrap gap-4 justify-center">
               {[1, 2, 3].map((i) => (
                 <div className="flex items-center gap-2" key={i}>
                   <Skeleton className="w-3 h-3 rounded-full" />
-                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="h-4 w-24" />
                 </div>
               ))}
             </div>
@@ -47,15 +49,15 @@ function ProfileStatsCardSkeleton() {
             {/* Advanced Credits Section Skeleton */}
             <div className="border border-border rounded-lg p-4 bg-card/50">
               <div className="flex items-center justify-between mb-3">
-                <Skeleton className="h-4 w-28" />
-                <Skeleton className="h-6 w-16 rounded-full" />
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-5 w-20 rounded" />
               </div>
 
               <Skeleton className="h-2 w-full mb-2" />
 
               <div className="flex justify-between">
+                <Skeleton className="h-3 w-24" />
                 <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-3 w-16" />
               </div>
             </div>
 
@@ -63,7 +65,7 @@ function ProfileStatsCardSkeleton() {
             <div className="border border-border rounded-lg p-4 bg-card/50">
               <div className="flex items-center justify-between mb-3">
                 <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-6 w-12 rounded-full" />
+                <Skeleton className="h-5 w-16 rounded" />
               </div>
 
               <div className="space-y-3">
