@@ -134,14 +134,14 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
+      <Card className="overflow-hidden p-0 bg-popover border-border">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8 min-h-[600px]" onSubmit={handleSubmit}>
+          <form className="p-6 md:p-8 min-h-[600px] bg-popover" onSubmit={handleSubmit}>
             <div className="flex flex-col h-full">
               {/* Main Form Content */}
               <div className="flex flex-col gap-6 flex-1">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">
+                  <h1 className="text-2xl font-bold text-popover-foreground">
                     {isSignup ? "Create Account" : "Welcome back"}
                   </h1>
                 </div>
@@ -155,9 +155,9 @@ export function LoginForm({
                 <div className="space-y-4">
                   {isSignup && (
                     <div className="grid gap-3">
-                      <Label htmlFor="username">Username</Label>
+                      <Label htmlFor="username" className="text-popover-foreground">Username</Label>
                       <Input
-                        className="bg-input border-border focus:ring-ring"
+                        className="bg-background border-border focus:ring-ring placeholder:text-popover-foreground/60"
                         disabled={loading}
                         id="username"
                         onChange={(e) => setUsername(e.target.value)}
@@ -169,11 +169,11 @@ export function LoginForm({
                     </div>
                   )}
                   <div className="grid gap-3">
-                    <Label htmlFor="emailOrUsername">
+                    <Label htmlFor="emailOrUsername" className="text-popover-foreground">
                       {isSignup ? "Email" : "Email or Username"}
                     </Label>
                     <Input
-                      className="bg-input border-border focus:ring-ring"
+                      className="bg-background border-border focus:ring-ring placeholder:text-popover-foreground/60"
                       disabled={loading}
                       id="emailOrUsername"
                       onChange={(e) => setEmailOrUsername(e.target.value)}
@@ -189,10 +189,10 @@ export function LoginForm({
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center h-5">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password" className="text-popover-foreground">Password</Label>
                       {!isSignup && (
                         <a
-                          className="ml-auto text-sm underline-offset-2 hover:underline"
+                          className="ml-auto text-sm text-primary hover:text-primary/80 underline-offset-2 hover:underline transition-colors"
                           href="#"
                         >
                           Forgot your password?
@@ -200,7 +200,7 @@ export function LoginForm({
                       )}
                     </div>
                     <Input
-                      className="bg-input border-border focus:ring-ring"
+                      className="bg-background border-border focus:ring-ring placeholder:text-popover-foreground/60"
                       disabled={loading}
                       id="password"
                       onChange={(e) => setPassword(e.target.value)}
@@ -216,7 +216,7 @@ export function LoginForm({
                   </div>
                 </div>
 
-                <Button className="w-full" disabled={loading} type="submit">
+                <Button className="w-full bg-primary/10 text-popover-foreground border border-primary/20 hover:bg-primary/15 hover:border-primary/30 shadow-md hover:shadow-lg transition-all duration-200" disabled={loading} type="submit">
                   {loading
                     ? "Loading..."
                     : isSignup
@@ -224,19 +224,19 @@ export function LoginForm({
                       : "Sign In"}
                 </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                  <span className="bg-card text-muted-foreground relative z-10 px-2">
+                  <span className="bg-popover text-popover-foreground relative z-10 px-2">
                     Or continue with
                   </span>
                 </div>
                 <Button
-                  className="w-full bg-card hover:bg-secondary border-border"
+                  className="w-full bg-primary/10 text-popover-foreground hover:text-popover-foreground border border-primary/20 hover:bg-primary/15 hover:border-primary/30 shadow-md hover:shadow-lg transition-all duration-200"
                   disabled={loading}
                   onClick={handleGoogleLogin}
                   type="button"
                   variant="outline"
                 >
                   <svg
-                    className="w-4 h-4 mr-2"
+                    className="w-4 h-4 mr-2 text-popover-foreground"
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
@@ -250,18 +250,18 @@ export function LoginForm({
               </div>
 
               {/* Footer Links */}
-              <div className="text-center text-sm mt-6">
+              <div className="text-center text-sm mt-6 text-popover-foreground">
                 {isSignup ? (
                   <>
                     Already have an account?{" "}
-                    <a className="underline underline-offset-4" href="/login">
+                    <a className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors" href="/login">
                       Sign in
                     </a>
                   </>
                 ) : (
                   <>
                     Don&apos;t have an account?{" "}
-                    <a className="underline underline-offset-4" href="/signup">
+                    <a className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors" href="/signup">
                       Sign up
                     </a>
                   </>
@@ -269,22 +269,35 @@ export function LoginForm({
               </div>
             </div>
           </form>
-          <div className="bg-secondary/30 relative hidden md:block">
+          <div className="bg-secondary relative hidden md:block">
             <div className="absolute inset-0 flex items-center justify-center p-8">
               <Image
                 alt="Profile Builder Logo"
-                className="dark:brightness-[0.9] opacity-90"
+                className="dark:hidden opacity-90"
                 height={240}
                 src="/LiTHePlan-transparent.png"
+                width={240}
+              />
+              <Image
+                alt="Profile Builder Logo"
+                className="hidden dark:block opacity-90"
+                height={240}
+                src="/LiTHePlan-white-transparent.png"
                 width={240}
               />
             </div>
           </div>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+      <div className="text-center text-xs text-balance text-popover-foreground">
+        By clicking continue, you agree to our{" "}
+        <a href="#" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+          Terms of Service
+        </a>{" "}
+        and{" "}
+        <a href="#" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+          Privacy Policy
+        </a>.
       </div>
     </div>
   );

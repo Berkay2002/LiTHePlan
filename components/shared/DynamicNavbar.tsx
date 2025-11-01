@@ -173,8 +173,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   <InputGroupAddon>
                     <Search className="text-muted-foreground" />
                   </InputGroupAddon>
-                  {props.searchQuery ? (
-                    <InputGroupAddon align="inline-end">
+                  <InputGroupAddon align="inline-end" suppressHydrationWarning>
+                    {props.searchQuery ? (
                       <Button
                         className="h-6 w-6 p-0 hover:bg-accent/10 text-muted-foreground hover:text-accent"
                         onClick={handleClearSearch}
@@ -183,13 +183,13 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                       >
                         <X className="h-3 w-3" />
                       </Button>
-                    </InputGroupAddon>
-                  ) : (
-                    <InputGroupAddon align="inline-end">
-                      <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
-                      <Kbd className="bg-muted text-muted-foreground">K</Kbd>
-                    </InputGroupAddon>
-                  )}
+                    ) : (
+                      <>
+                        <Kbd className="bg-muted text-muted-foreground">⌘</Kbd>
+                        <Kbd className="bg-muted text-muted-foreground">K</Kbd>
+                      </>
+                    )}
+                  </InputGroupAddon>
                 </InputGroup>
 
                 {/* Theme toggle */}
