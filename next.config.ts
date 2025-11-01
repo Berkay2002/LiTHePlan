@@ -36,5 +36,9 @@ export default withSentryConfig(nextConfig, {
   // See the following for more information:
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true
+  automaticVercelMonitors: true,
+
+  // Disable source map upload during build to prevent CLI binary errors
+  // Source maps can be uploaded separately via CI/CD if needed
+  disableSourcemapUpload: true
 });
