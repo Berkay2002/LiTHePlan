@@ -94,8 +94,30 @@ export function formatBlocks(blocks: string[]): string {
 }
 
 /**
- * Get related courses based on program overlap
- * Returns up to 6 courses that share programs with the given course
+ * Fetch related courses from API (database-optimized)
+ * Uses huvudomrade, program overlap, level, and campus for intelligent recommendations
+ */
+export async function fetchRelatedCourses(
+  courseId: string,
+  limit = 6
+): Promise<Course[]> {
+  try {
+    const response = await fetch(`/api/courses/${courseId}/related?limit=${limit}`);
+    if (!response.ok) {
+      console.error(`Failed to fetch related courses: ${response.statusText}`);
+      return [];
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching related courses:', error);
+    return [];
+  }
+}
+
+/**
+ * Get related courses based on program overlap (DEPRECATED - use fetchRelatedCourses)
+ * Kept for backward compatibility only
+ * @deprecated Use fetchRelatedCourses() instead for database-optimized recommendations
  */
 export function getRelatedCourses(
   course: Course,

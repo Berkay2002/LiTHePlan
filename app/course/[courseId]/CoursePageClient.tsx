@@ -7,7 +7,7 @@ import type { Course } from "@/types/course";
 import { ProfileProvider, useProfile } from "@/components/profile/ProfileContext";
 import { TermSelectionModal } from "@/components/course/TermSelectionModal";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
-import { getRelatedCourses, formatBlocks } from "@/lib/course-utils";
+import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
 import CourseStructuredData from "@/components/seo/CourseStructuredData";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,23 +32,34 @@ import { ProgramsList } from "@/components/course/ProgramsList";
 
 interface CoursePageClientProps {
   course: Course;
-  allCourses: Course[];
 }
 
-function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
+function CoursePageContent({ course }: CoursePageClientProps) {
   const [isTermModalOpen, setIsTermModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
+  const [relatedCourses, setRelatedCourses] = useState<Course[]>([]);
   const { state, addCourse } = useProfile();
   
-  const relatedCourses = getRelatedCourses(course, allCourses, 6);
   const conflicts = state.current_profile ? findCourseConflicts(course, state.current_profile) : [];
   
   // Check if course is already in profile
   const isInProfile = state.current_profile ? Object.values(state.current_profile.terms).some((termCourses) =>
     termCourses.some((c) => c.id === course.id)
   ) : false;
+
+  // Fetch related courses from API
+  useEffect(() => {
+    const loadRelatedCourses = async () => {
+      setIsLoadingRelated(true);
+      const courses = await fetchRelatedCourses(course.id);
+      setRelatedCourses(courses);
+      setIsLoadingRelated(false);
+    };
+
+    loadRelatedCourses();
+  }, [course.id]);
 
   // Scroll to top handler
   useEffect(() => {
@@ -58,12 +69,6 @@ function CoursePageContent({ course, allCourses }: CoursePageClientProps) {
     
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Simulate loading for related courses
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoadingRelated(false), 500);
-    return () => clearTimeout(timer);
   }, []);
 
   const scrollToTop = () => {

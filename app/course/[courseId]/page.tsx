@@ -162,19 +162,13 @@ export default async function CoursePage({
     notFound();
   }
 
-  // Fetch all courses for related courses calculation
-  const { data: allCourses } = await supabase
-    .from("courses")
-    .select("*")
-    .order("id");
-
   // ISR + Suspense: Static course shell prerendered, revalidated every hour
   // ProfileProvider streams user-specific data with Suspense
+  // Related courses fetched client-side via API (/api/courses/[courseId]/related)
   return (
     <Suspense fallback={<CoursePageSkeleton />}>
       <CoursePageClient 
-        course={course as Course} 
-        allCourses={(allCourses as Course[]) || []} 
+        course={course as Course}
       />
     </Suspense>
   );

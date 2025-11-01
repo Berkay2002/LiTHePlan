@@ -51,7 +51,7 @@ export function ProgramsList({ programs, orientations = [], className = "" }: Pr
       className={`w-full ${className}`}
       defaultValue="programs-0"
     >
-      {chunks.map((chunkIndex) => (
+      {chunks.map((chunk, chunkIndex) => (
         <AccordionItem key={`chunk-${chunkIndex}`} value={`programs-${chunkIndex}`}>
           <AccordionTrigger>
             {chunkIndex === 0 ? "Programs" : `More Programs`} ({chunk.length})
