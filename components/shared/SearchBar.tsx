@@ -2,7 +2,6 @@
 
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Kbd } from "@/components/ui/kbd";
 
 interface SearchBarProps {
@@ -32,8 +31,8 @@ export function SearchBar({
       </div>
 
       {/* Input Field */}
-      <Input
-        className="flex-1 border-0 bg-transparent shadow-none focus-visible:ring-0 text-foreground placeholder:text-muted-foreground h-9 px-2"
+      <input
+        className="flex-1 h-9 px-2 bg-transparent border-0 outline-none focus:outline-none focus:ring-0 text-foreground placeholder:text-muted-foreground text-sm"
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           onChange(e.target.value)
         }
