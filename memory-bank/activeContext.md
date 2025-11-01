@@ -12,6 +12,34 @@
 4. Task files are NOT optional - they preserve context across agent sessions
 
 ## Recent Changes (Current Session)
+### November 1, 2025 - Skeleton Loading States & State Persistence (Extended to Profile Edit)
+**Additional Work**: Applied skeleton loading improvements to profile edit page
+
+1. ✅ **Profile Edit Page Minimum Loading Time**
+   - Added MIN_LOADING_TIME_MS = 400ms constant
+   - Implemented loading state tracking: isLoading, showLoading, loadingStartTime
+   - Added useEffect to calculate elapsed time and enforce minimum skeleton display
+   - Updated loading condition: showLoading || !currentProfile
+   - Pattern identical to main page but simpler (no sidebar state persistence needed)
+
+2. ✅ **ProfileSkeletonLoader Component Accuracy**
+   - ProfileStatsCardSkeleton updates:
+     - Changed bg-card → bg-background on main card
+     - Changed badge widths: w-20 → w-24 (advanced credits), w-16 → w-20 (top programs)
+     - Added gap-2 to top programs flex container for exact match
+   - TermCardSkeleton updates:
+     - Changed bg-card → bg-background, added shadow-lg
+     - Changed trash icon: h-8 w-8 → h-6 w-6 to match DraggableTermCard
+     - Replaced nested Card components with direct div.p-4.rounded-lg.border
+     - Changed spacing: space-y-2 → space-y-3, mb-2 → mb-3
+     - Added hover:bg-card/10 to match interactive course cards
+     - Removed bottom action buttons skeleton (doesn't exist in actual component)
+
+3. ✅ **Build Verification**
+   - TypeScript compilation: ✅ Profile edit page and skeleton components pass
+   - Pre-existing error in app/page.tsx (parseViewMode null handling - unrelated)
+   - All skeleton improvements successful
+
 ### November 1, 2025 - Skeleton Loading States & State Persistence Fixes
 1. ✅ **Skeleton Component Accuracy**
    - Updated all skeleton components to match actual component structure exactly
@@ -73,10 +101,11 @@ useEffect(() => {
 
 **Files Modified**:
 - `app/page.tsx` - Added skeleton state management, minimum loading time, SSR-safe localStorage reads
+- `app/profile/edit/page.tsx` - Added minimum loading time pattern (400ms), loading state tracking
 - `components/course/CourseCardSkeleton.tsx` - Updated to match CourseCard exact structure
 - `components/course/CourseListSkeleton.tsx` - Created matching CourseListItem layout
 - `components/course/ControlsSkeleton.tsx` - Simplified to match actual controls (removed sort dropdown)
-- `components/profile/ProfileSkeletonLoader.tsx` - Fixed pie chart wrapper, badge sizes
+- `components/profile/ProfileSkeletonLoader.tsx` - Fixed pie chart wrapper, badge sizes, term card structure matching DraggableTermCard
 - `components/profile/ProfileSidebarSkeleton.tsx` - Complete rebuild with progress section and term cards
 - `components/course/FilterSidebarSkeleton.tsx` - Added smooth transition animation
 - `hooks/useResponsiveSidebar.ts` - Added localStorage persistence with getStoredSidebarState helper
@@ -91,9 +120,10 @@ useEffect(() => {
 
 **UX Improvements**:
 - Users see accurate skeleton previews (no layout shift on load)
-- Sidebar states persist across reloads (no unexpected UI changes)
-- Minimum 400ms skeleton display prevents jarring flashes
+- Sidebar states persist across reloads on main page (no unexpected UI changes)
+- Minimum 400ms skeleton display prevents jarring flashes (main page + profile edit)
 - Consistent smooth animations on all interactive elements
+- Profile edit page has same professional loading experience as main page
 
 ## Recent Changes (Previous Sessions)
 ### November 1, 2025 - Related Courses Algorithm Optimization (COMPLETED)

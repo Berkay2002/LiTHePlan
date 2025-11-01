@@ -55,7 +55,9 @@ Strategy:
 8. ✅ Add minimum loading time logic (400ms threshold)
 9. ✅ Add smooth transition animation to FilterSidebarSkeleton
 10. ✅ Test all scenarios (reload with sidebars open/closed, grid/list views)
-11. ✅ Update Memory Bank documentation
+11. ✅ Apply same patterns to profile edit page (app/profile/edit/page.tsx)
+12. ✅ Update ProfileSkeletonLoader to match actual component structure
+13. ✅ Update Memory Bank documentation
 
 ## Progress Tracking
 
@@ -75,11 +77,28 @@ Strategy:
 | 1.9 | Add minimum loading time | Complete | Nov 1 | 400ms threshold with elapsed time calculation |
 | 1.10 | Add FilterSidebarSkeleton animation | Complete | Nov 1 | Added transition-all duration-300 ease-in-out |
 | 1.11 | Test all reload scenarios | Complete | Nov 1 | Zero layout shift, no hydration errors |
-| 1.12 | Update Memory Bank | Complete | Nov 1 | activeContext, systemPatterns, progress updated |
+| 1.12 | Apply to profile edit page | Complete | Nov 1 | Added minimum loading time, updated skeletons |
+| 1.13 | Update ProfileSkeletonLoader | Complete | Nov 1 | Match DraggableTermCard exact structure |
+| 1.14 | Update Memory Bank | Complete | Nov 1 | activeContext, systemPatterns, progress updated |
 
 ## Progress Log
 
-### November 1, 2025
+### November 1, 2025 - Session 2
+**Profile Edit Page Implementation**
+- Applied minimum loading time pattern to app/profile/edit/page.tsx
+- Added loading state tracking: isLoading, showLoading, loadingStartTime
+- Implemented 400ms minimum skeleton display time for smooth UX
+- Updated loading condition: showLoading || !currentProfile (was just !currentProfile)
+- Updated ProfileSkeletonLoader to match actual components:
+  - ProfileStatsCardSkeleton: bg-card → bg-background, w-20 → w-24, w-16 → w-20
+  - TermCardSkeleton: bg-card → bg-background, added shadow-lg, h-8 w-8 → h-6 w-6
+  - Replaced nested Card components with div.p-4.rounded-lg.border structure
+  - Changed space-y-2 → space-y-3, mb-2 → mb-3, added hover:bg-card/10
+- Verified TypeScript compilation successful
+- No SSR-safe localStorage reads needed (profile edit page doesn't persist UI state)
+- Pattern simpler than main page (only profile data loading, no sidebar/view states)
+
+### November 1, 2025 - Session 1
 **Initial Analysis and Component Fixes**
 - Audited all 7 skeleton components against actual components
 - Fixed CourseCardSkeleton: Changed border → border-2, border-border → border-primary/20, p-4 → p-5, added dual button grid layout
@@ -195,7 +214,7 @@ Strategy:
 ### Components Updated
 - `components/course/CourseCardSkeleton.tsx` - Border, padding, dual buttons
 - `components/course/ControlsSkeleton.tsx` - Removed sort dropdown, matched grid layout
-- `components/profile/ProfileSkeletonLoader.tsx` - Pie chart wrapper, badge sizes
+- `components/profile/ProfileSkeletonLoader.tsx` - Pie chart wrapper, badge sizes, term card structure matching DraggableTermCard
 - `components/profile/ProfileSidebarSkeleton.tsx` - Complete rebuild with progress + term cards
 - `components/course/FilterSidebarSkeleton.tsx` - Added smooth transition animation
 
@@ -205,6 +224,7 @@ Strategy:
 
 ### Pages Updated
 - `app/page.tsx` - SSR-safe skeleton state, minimum loading time, both sidebar persistence
+- `app/profile/edit/page.tsx` - Minimum loading time pattern, loading state tracking
 
 ### Documentation
 - `memory-bank/activeContext.md` - Added session summary
