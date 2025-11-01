@@ -6,12 +6,14 @@ import {
   ArrowRight,
   ExternalLink,
   GripVertical,
+  Info,
   Trash2,
   X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   type ConflictInfo,
   getAllPeriodConflicts,
@@ -67,18 +69,8 @@ export function DraggableTermCard({
   };
 
   const getBlockBadgeColor = (blockNum: number) => {
-    switch (blockNum) {
-      case 1:
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case 2:
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case 3:
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case 4:
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-    }
+    // Use muted colors for all blocks - no color overload
+    return "bg-muted text-muted-foreground";
   };
 
   const renderBlockIndicators = (course: Course, currentPeriod: 1 | 2) => {
@@ -99,7 +91,7 @@ export function DraggableTermCard({
         <span className="text-xs text-muted-foreground mr-1">Blocks:</span>
         {blocks.map((blockNum) => (
           <Badge
-            className={`text-xs font-medium ${getBlockBadgeColor(blockNum)} ${is50Percent ? "ring-2 ring-blue-300" : ""}`}
+            className={`text-xs font-medium ${getBlockBadgeColor(blockNum)}`}
             key={blockNum}
             variant="secondary"
           >
@@ -108,7 +100,7 @@ export function DraggableTermCard({
         ))}
         {is50Percent && (
           <Badge
-            className="text-xs ml-1 bg-blue-50 text-blue-700 border-blue-300"
+            className="text-xs ml-1 bg-accent/10 text-accent border-accent/30"
             variant="outline"
           >
             Cross-period
@@ -150,8 +142,18 @@ export function DraggableTermCard({
 
     return (
       <div className="mb-3 p-3 bg-muted/30 rounded-lg">
-        <div className="text-xs text-muted-foreground mb-2 font-medium">
-          Period {currentPeriod} Block Timeline:
+        <div className="flex items-center justify-between mb-2">
+          <div className="text-xs text-muted-foreground font-medium">
+            Period {currentPeriod} Block Timeline:
+          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Shows course distribution across 4 study blocks. Number indicates courses per block. Red = scheduling conflict.</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
         <div className="grid grid-cols-4 gap-1">
           {[1, 2, 3, 4].map((blockNum) => {
@@ -163,23 +165,22 @@ export function DraggableTermCard({
             return (
               <div className="text-center" key={blockNum}>
                 <div
-                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-red-600 dark:text-red-400" : "text-white"}`}
+                  className={`text-xs font-medium mb-1 ${hasConflict ? "text-destructive" : "text-foreground"}`}
                 >
                   B{blockNum}
                 </div>
                 <div
                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
                     !isActive
-                      ? "border-primary/10 bg-primary/5 text-white/70 shadow-sm hover:bg-primary/10 hover:border-primary/20"
+                      ? "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
                       : hasConflict
-                        ? "border-red-300 bg-red-100 text-red-800 dark:border-red-700 dark:bg-red-950/30 dark:text-red-300 shadow-md"
-                        : "border-primary/25 bg-primary/15 text-white shadow-md hover:bg-primary/20 hover:border-primary/30 hover:shadow-lg"
+                        ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
+                        : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
                   }`}
                 >
                   {courses.length > 0 && (
                     <div className="flex flex-col items-center">
                       <div className="font-medium">{courses.length}</div>
-                      {hasConflict && <div className="text-xs">⚠️</div>}
                     </div>
                   )}
                 </div>
@@ -190,7 +191,7 @@ export function DraggableTermCard({
         {Object.entries(blockOccupancy).some(
           ([, courses]) => courses.length > 1
         ) && (
-          <div className="text-xs text-red-600 mt-2 flex items-center">
+          <div className="text-xs text-destructive mt-2 flex items-center">
             <span className="mr-1">⚠️</span>
             Scheduling conflicts detected in block
             {Object.entries(blockOccupancy)
@@ -257,9 +258,16 @@ export function DraggableTermCard({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm leading-tight text-foreground">
-                        {course.name}
-                      </h4>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default">
+                            {course.name}
+                          </h4>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{course.name}</p>
+                        </TooltipContent>
+                      </Tooltip>
                       <p className="text-xs text-muted-foreground mt-1">
                         {course.id} • {course.credits} hp
                       </p>
@@ -365,9 +373,16 @@ export function DraggableTermCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <h4 className="font-medium text-sm leading-tight text-foreground">
-                  {course.name}
-                </h4>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default">
+                      {course.name}
+                    </h4>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{course.name}</p>
+                  </TooltipContent>
+                </Tooltip>
                 <p className="text-xs text-muted-foreground mt-1">
                   {course.id} • {course.credits} hp
                 </p>
