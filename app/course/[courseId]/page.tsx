@@ -84,10 +84,11 @@ export async function generateMetadata({
     const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
 
     // Enhanced keywords as comma-separated string for optimal SEO
+    // Supports exact match queries like "Molecular Environmental Toxicology NBIC60"
     const keywordsArray = [
       courseId,
       course.name,
-      `${course.name} ${courseId}`, // Combined for exact match searches
+      `${course.name} ${courseId}`, // Combined course name + code for queries like "Advanced Programming TSEA26"
       "Linköping University",
       "Linköpings universitet",
       "LiU",

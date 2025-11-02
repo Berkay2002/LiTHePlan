@@ -36,11 +36,14 @@ export default function StructuredData() {
         "name": "Linköping University Course Catalog",
         "description": "339 curated master's level courses for Linköping University civil engineering students",
         "numberOfItems": 339,
-        "itemListElement": {
-          "@type": "ListItem",
-          "name": "Course Pages",
-          "url": `${baseUrl}/course/`
-        }
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Course Pages",
+            "url": `${baseUrl}/course/`
+          }
+        ]
       }
     ]
   };

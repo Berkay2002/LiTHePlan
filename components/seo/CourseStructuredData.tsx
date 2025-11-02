@@ -6,6 +6,49 @@ interface CourseStructuredDataProps {
   course: Course;
 }
 
+/**
+ * Helper function to get campus display name for schema markup
+ */
+function getCampusDisplayName(campus: string): string {
+  switch (campus) {
+    case "Linköping":
+      return "Linköping Campus";
+    case "Norrköping":
+      return "Norrköping Campus";
+    case "Distans":
+      return "Distance Learning";
+    default:
+      return campus;
+  }
+}
+
+/**
+ * Helper function to get address locality for campus
+ * Returns undefined for distance learning
+ */
+function getAddressLocality(campus: string): string | undefined {
+  switch (campus) {
+    case "Linköping":
+      return "Linköping";
+    case "Norrköping":
+      return "Norrköping";
+    case "Distans":
+      return undefined;
+    default:
+      return undefined;
+  }
+}
+
+/**
+ * Helper function to safely join array fields or return string as-is
+ */
+function safeJoin(field: string[] | string | undefined, separator = ", "): string {
+  if (Array.isArray(field)) {
+    return field.join(separator);
+  }
+  return field || "";
+}
+
 export default function CourseStructuredData({ course }: CourseStructuredDataProps) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://litheplan.tech';
 
@@ -20,13 +63,10 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
     ? "P1M" // 1 month full-time
     : "P2M"; // 2 months half-time
 
-  // Build comprehensive description
-  const termsText = Array.isArray(course.term)
-    ? `Available in term ${course.term.join(", ")}`
-    : `Available in term ${course.term}`;
-  const blocksText = Array.isArray(course.block)
-    ? `block ${course.block.join(", ")}`
-    : `block ${course.block}`;
+  // Build comprehensive description with defensive array handling
+  const termsText = `Available in term ${safeJoin(course.term)}`;
+  const periodsText = safeJoin(course.period);
+  const blocksText = `block ${safeJoin(course.block)}`;
 
   const description = `${course.name} (${course.id}) is a ${course.credits}hp ${course.level} course at Linköping University. ${termsText}, ${blocksText}. Campus: ${course.campus}. Study pace: ${course.pace}.`;
 
@@ -46,6 +86,9 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
   const assessmentMethods = Array.isArray(course.examination)
     ? course.examination.map(exam => examinationMapping[exam] || exam)
     : [];
+
+  // Defensive check for programs array
+  const programsArray = Array.isArray(course.programs) ? course.programs : [];
 
   // Breadcrumb structured data
   const breadcrumbSchema = {
@@ -90,8 +133,7 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "SE",
-        "addressLocality": course.campus === "Linköping" ? "Linköping" :
-                           course.campus === "Norrköping" ? "Norrköping" : undefined
+        "addressLocality": getAddressLocality(course.campus)
       }
     },
     "educationalCredentialAwarded": `${course.credits} Swedish university credits (hp)`,
@@ -125,47 +167,26 @@ export default function CourseStructuredData({ course }: CourseStructuredDataPro
         "description": "Free tuition for Swedish and EU students"
       }
     },
-    "hasCourseInstance": Array.isArray(course.term) ? course.term.map(term => ({
+    "hasCourseInstance": (Array.isArray(course.term) ? course.term : [course.term]).map(term => ({
       "@type": "CourseInstance",
       "courseMode": course.campus === "Distans" ? "online" : "onsite",
       "location": course.campus !== "Distans" ? {
         "@type": "Place",
-        "name": course.campus === "Linköping" ? "Linköping Campus" :
-                course.campus === "Norrköping" ? "Norrköping Campus" :
-                "Distance Learning",
+        "name": getCampusDisplayName(course.campus),
         "address": {
           "@type": "PostalAddress",
           "addressCountry": "SE",
-          "addressLocality": course.campus === "Linköping" ? "Linköping" : "Norrköping"
+          "addressLocality": getAddressLocality(course.campus)
         }
       } : undefined,
       "courseSchedule": {
         "@type": "Schedule",
         "repeatCount": 1,
-        "description": `Term ${term}, Period ${course.period.join(", ")}, Block ${course.block.join(", ")}`
+        "description": `Term ${term}, Period ${periodsText}, Block ${safeJoin(course.block)}`
       }
-    })) : [{
-      "@type": "CourseInstance",
-      "courseMode": course.campus === "Distans" ? "online" : "onsite",
-      "location": course.campus !== "Distans" ? {
-        "@type": "Place",
-        "name": course.campus === "Linköping" ? "Linköping Campus" :
-                course.campus === "Norrköping" ? "Norrköping Campus" :
-                "Distance Learning",
-        "address": {
-          "@type": "PostalAddress",
-          "addressCountry": "SE",
-          "addressLocality": course.campus === "Linköping" ? "Linköping" : "Norrköping"
-        }
-      } : undefined,
-      "courseSchedule": {
-        "@type": "Schedule",
-        "repeatCount": 1,
-        "description": `Term ${course.term}, Period ${course.period}, Block ${course.block}`
-      }
-    }],
-    ...(course.programs.length > 0 && {
-      "isPartOf": course.programs.map(program => ({
+    })),
+    ...(programsArray.length > 0 && {
+      "isPartOf": programsArray.map(program => ({
         "@type": "EducationalOccupationalProgram",
         "name": program,
         "provider": {
