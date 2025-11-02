@@ -36,7 +36,7 @@ export function CourseFAQSchema({ course }: CourseFAQSchemaProps) {
 
   // Build course overview answer
   const levelText = course.level === "avancerad nivå" ? "advanced level" : "basic level";
-  const courseOverview = `${course.name} (${course.id}) is a ${course.credits} Swedish university credits (hp) ${levelText} course offered at Linköping University. The course covers ${course.huvudomrade || 'engineering topics'} and is assessed through ${examinationMethods}.`;
+  const courseOverview = `${course.name} (${course.id}) is a ${course.credits}hp ${levelText} course offered at Linköping University. The course covers ${course.huvudomrade || 'engineering topics'} and is assessed through ${examinationMethods}.`;
 
   const faqSchema = {
     "@context": "https://schema.org",

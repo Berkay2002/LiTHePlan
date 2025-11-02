@@ -14,18 +14,17 @@ interface CourseOverviewProps {
  */
 export function CourseOverview({ course }: CourseOverviewProps) {
   // Extract prerequisite information from notes if available
-  const prerequisiteMatch = course.notes?.match(/(?:prerequisite|förutsättning|require)[s]?:?\s*([^.]+)/i);
+  const prerequisiteMatch = course.notes?.match(/(?:prerequisite|förutsättning|required?(?:ments)?)[s]?:?\s*([^.]+)/i);
   const prerequisiteText = prerequisiteMatch 
     ? `Prerequisites: ${prerequisiteMatch[1].trim()}.`
     : "No specific prerequisites stated.";
 
   // Build program context
-  const programCount = Array.isArray(course.programs) ? course.programs.length : 0;
-  const topPrograms = Array.isArray(course.programs) 
-    ? course.programs.slice(0, 3).join(", ")
-    : "";
+  const programCount = course.programs.length;
+  const topProgramsArray = course.programs.slice(0, 3);
+  const topPrograms = topProgramsArray.join(", ");
   const programText = programCount > 0
-    ? `This course is part of ${programCount} program${programCount > 1 ? 's' : ''} including ${topPrograms}${programCount > 3 ? ', and others' : ''}.`
+    ? `This course is part of ${programCount} program${programCount > 1 ? 's' : ''} including ${topPrograms}${programCount > topProgramsArray.length ? ', and others' : ''}.`
     : "";
 
   // Format examination methods for readability
@@ -37,17 +36,13 @@ export function CourseOverview({ course }: CourseOverviewProps) {
     'UPG': 'assignments'
   };
 
-  const examinationMethods = Array.isArray(course.examination)
-    ? course.examination.map(exam => examinationMapping[exam] || exam.toLowerCase()).join(", ")
-    : "various assessment methods";
+  const examinationMethods = course.examination
+    .map(exam => examinationMapping[exam] || exam.toLowerCase())
+    .join(", ") || "various assessment methods";
 
   // Format term and block information
-  const termsText = Array.isArray(course.term) 
-    ? `term ${course.term.join(", ")}`
-    : `term ${course.term}`;
-  const blocksText = Array.isArray(course.block)
-    ? `block ${course.block.join(", ")}`
-    : `block ${course.block}`;
+  const termsText = `term ${course.term.join(", ")}`;
+  const blocksText = `block ${course.block.join(", ")}`;
 
   // Build subject area context
   const subjectText = course.huvudomrade
@@ -65,7 +60,7 @@ export function CourseOverview({ course }: CourseOverviewProps) {
     : "This basic-level course provides foundational knowledge for undergraduate studies.";
 
   // Build orientation context if available
-  const orientationText = Array.isArray(course.orientations) && course.orientations.length > 0
+  const orientationText = course.orientations && course.orientations.length > 0
     ? `Students in ${course.orientations.slice(0, 2).join(" and ")} specializations will find this course particularly relevant.`
     : "";
 
