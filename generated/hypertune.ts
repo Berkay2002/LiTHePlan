@@ -24,7 +24,8 @@ export type FlagDefinition = {
   }>;
 };
 
-export const vercelFlagDefinitions: Record<string, FlagDefinition> = Object.freeze({});
+export const vercelFlagDefinitions: Record<string, FlagDefinition> =
+  Object.freeze({});
 
 export type CreateSourceOptions = {
   token: string;
@@ -44,13 +45,16 @@ export type HypertuneRoot = {
 
 export type HypertuneSource = {
   initIfNeeded: () => Promise<void>;
-  root: (
-    options: { args: { context: Context } }
-  ) => HypertuneRoot & Record<string, (options: { fallback: unknown }) => unknown>;
+  root: (options: {
+    args: { context: Context };
+  }) => HypertuneRoot &
+    Record<string, (options: { fallback: unknown }) => unknown>;
   setRemoteLoggingMode: (mode: "off" | "normal") => void;
 };
 
-export function createSource({ initDataProvider }: CreateSourceOptions): HypertuneSource {
+export function createSource({
+  initDataProvider,
+}: CreateSourceOptions): HypertuneSource {
   const pendingInit = initDataProvider?.getInitData ?? null;
 
   return {
@@ -84,15 +88,19 @@ export function createSource({ initDataProvider }: CreateSourceOptions): Hypertu
         },
       };
 
-      return new Proxy(base as HypertuneRoot & Record<string, (options: { fallback: unknown }) => unknown>, {
-        get(target, prop) {
-          if (typeof prop === "string" && !(prop in target)) {
-            return ({ fallback }: { fallback: unknown }) => fallback;
-          }
+      return new Proxy(
+        base as HypertuneRoot &
+          Record<string, (options: { fallback: unknown }) => unknown>,
+        {
+          get(target, prop) {
+            if (typeof prop === "string" && !(prop in target)) {
+              return ({ fallback }: { fallback: unknown }) => fallback;
+            }
 
-          return target[prop as keyof typeof target];
-        },
-      });
+            return target[prop as keyof typeof target];
+          },
+        }
+      );
     },
   };
 }

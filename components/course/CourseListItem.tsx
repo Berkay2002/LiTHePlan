@@ -25,11 +25,11 @@ import {
   getAvailableTerms,
   isMultiTermCourse,
 } from "@/lib/course-utils";
-import { isCourseInProfile } from "@/lib/profile-utils";
 import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import { isCourseInProfile } from "@/lib/profile-utils";
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import type { FilterState } from "./FilterPanel";
@@ -265,10 +265,10 @@ export function CourseListItem({
               <div className="flex items-center gap-2 shrink-0">
                 {/* Examination badges */}
                 <TruncatedExaminationBadges
+                  className="gap-1"
                   examinations={getVisibleExaminations(course.examination)}
                   maxVisible={2}
                   shortMode={true}
-                  className="gap-1"
                 />
 
                 {/* Action Buttons */}
@@ -414,10 +414,10 @@ export function CourseListItem({
 
               {/* Examination badges */}
               <TruncatedExaminationBadges
+                className="ml-3 gap-1"
                 examinations={getVisibleExaminations(course.examination)}
                 maxVisible={3}
                 shortMode={true}
-                className="ml-3 gap-1"
               />
             </div>
 

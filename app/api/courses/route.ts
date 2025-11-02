@@ -1,10 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { CourseFiltersSchema } from "@/lib/api-validation";
-import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
-import { logger } from "@/lib/logger";
-import { successResponse, errorResponse } from "@/lib/api-response";
 import * as Sentry from "@sentry/nextjs";
+import { type NextRequest, NextResponse } from "next/server";
+import { errorResponse, successResponse } from "@/lib/api-response";
+import { CourseFiltersSchema } from "@/lib/api-validation";
+import { logger } from "@/lib/logger";
+import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
@@ -74,7 +74,17 @@ export async function GET(request: NextRequest) {
     let query = supabase.from("courses").select("*", { count: "exact" });
 
     // Apply filters
-    const { level, term, period, block, pace, campus, programs, orientations, search } = filters;
+    const {
+      level,
+      term,
+      period,
+      block,
+      pace,
+      campus,
+      programs,
+      orientations,
+      search,
+    } = filters;
 
     if (level.length > 0) {
       query = query.in("level", level);
@@ -125,9 +135,12 @@ export async function GET(request: NextRequest) {
     const transformedData = data?.map((course) => ({
       ...course,
       // Convert numeric pace (1.0, 0.5) to percentage string (100%, 50%)
-      pace: typeof course.pace === 'number'
-        ? course.pace === 1 || course.pace === 1.0 ? '100%' : '50%'
-        : course.pace,
+      pace:
+        typeof course.pace === "number"
+          ? course.pace === 1 || course.pace === 1.0
+            ? "100%"
+            : "50%"
+          : course.pace,
     }));
 
     const duration = Date.now() - startTime;

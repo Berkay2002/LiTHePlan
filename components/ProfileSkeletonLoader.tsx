@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   MASTER_PROGRAM_TERMS,
-  PROFILE_STATS_PIE_CHART_SIZE,
   type MasterProgramTerm,
+  PROFILE_STATS_PIE_CHART_SIZE,
 } from "@/lib/profile-constants";
 
 // Profile Stats Card Skeleton
@@ -118,7 +118,10 @@ function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
 
           <div className="space-y-3">
             {[1, 2].map((i) => (
-              <div className="p-4 rounded-lg border border-border hover:bg-card/10" key={`p1-${i}`}>
+              <div
+                className="p-4 rounded-lg border border-border hover:bg-card/10"
+                key={`p1-${i}`}
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
@@ -158,7 +161,10 @@ function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
 
           <div className="space-y-3">
             {[1, 2].map((i) => (
-              <div className="p-4 rounded-lg border border-border hover:bg-card/10" key={`p2-${i}`}>
+              <div
+                className="p-4 rounded-lg border border-border hover:bg-card/10"
+                key={`p2-${i}`}
+              >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">

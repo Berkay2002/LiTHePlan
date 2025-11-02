@@ -27,9 +27,9 @@ export const PIE_CHART_RADIUS_FACTOR = 0.35;
  * Used for SEO-friendly text generation
  */
 export const EXAMINATION_MAPPING: Record<string, string> = {
-  'TEN': 'written examination',
-  'LAB': 'laboratory work',
-  'PROJ': 'project work',
-  'SEM': 'seminars',
-  'UPG': 'assignments'
+  TEN: "written examination",
+  LAB: "laboratory work",
+  PROJ: "project work",
+  SEM: "seminars",
+  UPG: "assignments",
 };

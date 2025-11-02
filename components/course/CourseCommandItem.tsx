@@ -1,24 +1,27 @@
-'use client';
+"use client";
 
-import { AlertTriangle, Check, Plus } from 'lucide-react';
-import { useState } from 'react';
-import { useProfile } from '@/components/profile/ProfileContext';
-import { Badge } from '@/components/ui/badge';
-import { CommandItem } from '@/components/ui/command';
-import { findCourseConflicts } from '@/lib/course-conflict-utils';
-import { isCourseInProfile } from '@/lib/profile-utils';
+import { AlertTriangle, Check, Plus } from "lucide-react";
+import { useState } from "react";
+import { useProfile } from "@/components/profile/ProfileContext";
+import { Badge } from "@/components/ui/badge";
+import { CommandItem } from "@/components/ui/command";
+import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
-} from '@/lib/profile-constants';
-import type { Course } from '@/types/course';
+} from "@/lib/profile-constants";
+import { isCourseInProfile } from "@/lib/profile-utils";
+import type { Course } from "@/types/course";
 
 interface CourseCommandItemProps {
   course: Course;
   onSelect?: () => void;
 }
 
-export function CourseCommandItem({ course, onSelect }: CourseCommandItemProps) {
+export function CourseCommandItem({
+  course,
+  onSelect,
+}: CourseCommandItemProps) {
   const { state, addCourse } = useProfile();
   const [isAdding, setIsAdding] = useState(false);
 
@@ -57,7 +60,7 @@ export function CourseCommandItem({ course, onSelect }: CourseCommandItemProps) 
         onSelect?.();
       }
     } catch (error) {
-      console.error('Failed to add course:', error);
+      console.error("Failed to add course:", error);
     } finally {
       setIsAdding(false);
     }
@@ -65,9 +68,9 @@ export function CourseCommandItem({ course, onSelect }: CourseCommandItemProps) 
 
   return (
     <CommandItem
-      value={`${course.id} ${course.name}`}
-      onSelect={onSelect}
       className="flex items-center justify-between gap-3 py-2.5 px-3 cursor-pointer border-b border-border/30 last:border-0 hover:bg-muted/70 transition-colors duration-200"
+      onSelect={onSelect}
+      value={`${course.id} ${course.name}`}
     >
       {/* Course Info */}
       <div className="flex-1 min-w-0">
@@ -89,15 +92,18 @@ export function CourseCommandItem({ course, onSelect }: CourseCommandItemProps) 
             Added
           </Badge>
         ) : wouldHaveConflicts ? (
-          <Badge variant="destructive" className="px-2.5 py-1 border border-destructive/40">
+          <Badge
+            className="px-2.5 py-1 border border-destructive/40"
+            variant="destructive"
+          >
             <AlertTriangle className="h-3.5 w-3.5 mr-1" />
             Conflict
           </Badge>
         ) : (
           <button
-            onClick={handleAddCourse}
-            disabled={isAdding}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-all duration-200 shadow-md hover:shadow-lg ring-1 ring-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isAdding}
+            onClick={handleAddCourse}
             type="button"
           >
             <Plus className="h-4 w-4 text-primary-foreground stroke-[2.5]" />

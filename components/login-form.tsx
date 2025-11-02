@@ -136,7 +136,10 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0 bg-popover border-border">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8 min-h-[600px] bg-popover" onSubmit={handleSubmit}>
+          <form
+            className="p-6 md:p-8 min-h-[600px] bg-popover"
+            onSubmit={handleSubmit}
+          >
             <div className="flex flex-col h-full">
               {/* Main Form Content */}
               <div className="flex flex-col gap-6 flex-1">
@@ -155,7 +158,12 @@ export function LoginForm({
                 <div className="space-y-4">
                   {isSignup && (
                     <div className="grid gap-3">
-                      <Label htmlFor="username" className="text-popover-foreground">Username</Label>
+                      <Label
+                        className="text-popover-foreground"
+                        htmlFor="username"
+                      >
+                        Username
+                      </Label>
                       <Input
                         className="bg-background border-border focus:ring-ring placeholder:text-popover-foreground/60"
                         disabled={loading}
@@ -169,7 +177,10 @@ export function LoginForm({
                     </div>
                   )}
                   <div className="grid gap-3">
-                    <Label htmlFor="emailOrUsername" className="text-popover-foreground">
+                    <Label
+                      className="text-popover-foreground"
+                      htmlFor="emailOrUsername"
+                    >
                       {isSignup ? "Email" : "Email or Username"}
                     </Label>
                     <Input
@@ -189,7 +200,12 @@ export function LoginForm({
                   </div>
                   <div className="grid gap-3">
                     <div className="flex items-center h-5">
-                      <Label htmlFor="password" className="text-popover-foreground">Password</Label>
+                      <Label
+                        className="text-popover-foreground"
+                        htmlFor="password"
+                      >
+                        Password
+                      </Label>
                       {!isSignup && (
                         <a
                           className="ml-auto text-sm text-primary hover:text-primary/80 underline-offset-2 hover:underline transition-colors"
@@ -216,7 +232,11 @@ export function LoginForm({
                   </div>
                 </div>
 
-                <Button className="w-full bg-primary/10 text-popover-foreground border border-primary/20 hover:bg-primary/15 hover:border-primary/30 shadow-md hover:shadow-lg transition-all duration-200" disabled={loading} type="submit">
+                <Button
+                  className="w-full bg-primary/10 text-popover-foreground border border-primary/20 hover:bg-primary/15 hover:border-primary/30 shadow-md hover:shadow-lg transition-all duration-200"
+                  disabled={loading}
+                  type="submit"
+                >
                   {loading
                     ? "Loading..."
                     : isSignup
@@ -254,14 +274,20 @@ export function LoginForm({
                 {isSignup ? (
                   <>
                     Already have an account?{" "}
-                    <a className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors" href="/login">
+                    <a
+                      className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+                      href="/login"
+                    >
                       Sign in
                     </a>
                   </>
                 ) : (
                   <>
                     Don&apos;t have an account?{" "}
-                    <a className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors" href="/signup">
+                    <a
+                      className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+                      href="/signup"
+                    >
                       Sign up
                     </a>
                   </>
@@ -291,13 +317,20 @@ export function LoginForm({
       </Card>
       <div className="text-center text-xs text-balance text-popover-foreground">
         By clicking continue, you agree to our{" "}
-        <a href="#" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+        <a
+          className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+          href="#"
+        >
           Terms of Service
         </a>{" "}
         and{" "}
-        <a href="#" className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors">
+        <a
+          className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+          href="#"
+        >
           Privacy Policy
-        </a>.
+        </a>
+        .
       </div>
     </div>
   );

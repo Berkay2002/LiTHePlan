@@ -1,21 +1,27 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from "react";
+import {
+  AlertTriangle,
+  BookOpen,
+  ChevronUp,
+  ExternalLink,
+  GraduationCap,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
-import { ChevronLeft, ChevronUp, Plus, AlertTriangle, BookOpen, GraduationCap, ExternalLink } from "lucide-react";
-import type { Course } from "@/types/course";
-import { useProfile } from "@/components/profile/ProfileContext";
-import { TermSelectionModal } from "@/components/course/TermSelectionModal";
-import { findCourseConflicts } from "@/lib/course-conflict-utils";
-import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
-import CourseStructuredData from "@/components/seo/CourseStructuredData";
-import { CourseFAQSchema } from "@/components/seo/CourseFAQSchema";
+import { useEffect, useState } from "react";
+import { CourseCard } from "@/components/course/CourseCard";
+import { CourseCardSkeleton } from "@/components/course/CourseCardSkeleton";
+import { CourseHero } from "@/components/course/CourseHero";
+import { CourseMetadataRow } from "@/components/course/CourseMetadataRow";
 import { CourseOverview } from "@/components/course/CourseOverview";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
+import { ProgramsList } from "@/components/course/ProgramsList";
+import { TermSelectionModal } from "@/components/course/TermSelectionModal";
+import { TruncatedExaminationBadges } from "@/components/course/TruncatedExaminationBadges";
+import { PageLayout } from "@/components/layout/PageLayout";
+import { useProfile } from "@/components/profile/ProfileContext";
+import { CourseFAQSchema } from "@/components/seo/CourseFAQSchema";
+import CourseStructuredData from "@/components/seo/CourseStructuredData";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,13 +30,19 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { CourseCard } from "@/components/course/CourseCard";
-import { CourseCardSkeleton } from "@/components/course/CourseCardSkeleton";
-import { PageLayout } from "@/components/layout/PageLayout";
-import { CourseHero } from "@/components/course/CourseHero";
-import { CourseMetadataRow } from "@/components/course/CourseMetadataRow";
-import { TruncatedExaminationBadges } from "@/components/course/TruncatedExaminationBadges";
-import { ProgramsList } from "@/components/course/ProgramsList";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { findCourseConflicts } from "@/lib/course-conflict-utils";
+import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
+import type { Course } from "@/types/course";
 
 interface CoursePageClientProps {
   course: Course;
@@ -43,13 +55,17 @@ function CoursePageContent({ course }: CoursePageClientProps) {
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const [relatedCourses, setRelatedCourses] = useState<Course[]>([]);
   const { state, addCourse } = useProfile();
-  
-  const conflicts = state.current_profile ? findCourseConflicts(course, state.current_profile) : [];
-  
+
+  const conflicts = state.current_profile
+    ? findCourseConflicts(course, state.current_profile)
+    : [];
+
   // Check if course is already in profile
-  const isInProfile = state.current_profile ? Object.values(state.current_profile.terms).some((termCourses) =>
-    termCourses.some((c) => c.id === course.id)
-  ) : false;
+  const isInProfile = state.current_profile
+    ? Object.values(state.current_profile.terms).some((termCourses) =>
+        termCourses.some((c) => c.id === course.id)
+      )
+    : false;
 
   // Fetch related courses from API
   useEffect(() => {
@@ -68,45 +84,54 @@ function CoursePageContent({ course }: CoursePageClientProps) {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Handle term selection from modal
-  const handleTermSelected = async (selectedCourse: Course, selectedTerm: 7 | 8 | 9) => {
-    console.log('🔄 Term selected:', selectedTerm, 'for course:', selectedCourse.id);
+  const handleTermSelected = async (
+    selectedCourse: Course,
+    selectedTerm: 7 | 8 | 9
+  ) => {
+    console.log(
+      "🔄 Term selected:",
+      selectedTerm,
+      "for course:",
+      selectedCourse.id
+    );
     setIsTermModalOpen(false);
-    
+
     // Add course with selected term
-    console.log('✅ Adding course with selected term');
+    console.log("✅ Adding course with selected term");
     await addCourse(selectedCourse, selectedTerm);
   };
 
   // Truncate course name for mobile breadcrumb
-  const truncatedName = course.name.length > 30 
-    ? `${course.name.substring(0, 30)}...` 
-    : course.name;
+  const truncatedName =
+    course.name.length > 30
+      ? `${course.name.substring(0, 30)}...`
+      : course.name;
 
   // Determine if we should show Programs tab (5+ programs)
   const allPrograms = [...course.programs, ...(course.orientations || [])];
   const showProgramsTab = allPrograms.length >= 5;
 
   return (
-    <PageLayout 
-      navbarMode="main" 
-      isMobileMenuOpen={false} 
+    <PageLayout
+      isMobileMenuOpen={false}
+      navbarMode="main"
       onMobileMenuToggle={() => {}}
-      searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
+      searchQuery={searchQuery}
     >
       <CourseStructuredData course={course} />
       <CourseFAQSchema course={course} />
-      
+
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 max-w-5xl">
           {/* Breadcrumb Navigation */}
@@ -136,10 +161,10 @@ function CoursePageContent({ course }: CoursePageClientProps) {
           {/* Course Hero with CTA */}
           <CourseHero course={course}>
             <Button
-              onClick={() => setIsTermModalOpen(true)}
-              disabled={isInProfile}
-              size="lg"
               className="w-full sm:w-auto hidden sm:flex shadow-md hover:shadow-lg transition-shadow"
+              disabled={isInProfile}
+              onClick={() => setIsTermModalOpen(true)}
+              size="lg"
             >
               <Plus className="h-5 w-5 mr-2" />
               {isInProfile ? "Already in Profile" : "Add to Profile"}
@@ -149,9 +174,9 @@ function CoursePageContent({ course }: CoursePageClientProps) {
           {/* Mobile Sticky CTA */}
           <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/95 backdrop-blur border-t border-border sm:hidden shadow-lg">
             <Button
-              onClick={() => setIsTermModalOpen(true)}
-              disabled={isInProfile}
               className="w-full shadow-md"
+              disabled={isInProfile}
+              onClick={() => setIsTermModalOpen(true)}
               size="lg"
             >
               <Plus className="h-5 w-5 mr-2" />
@@ -169,8 +194,9 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                     Course Conflicts
                   </p>
                   <p className="text-sm text-destructive/90 dark:text-destructive/80 mt-1">
-                    This course conflicts with {conflicts.length} course{conflicts.length > 1 ? 's' : ''} in your profile:
-                    {' '}{conflicts.map(c => c.conflictingCourseId).join(', ')}
+                    This course conflicts with {conflicts.length} course
+                    {conflicts.length > 1 ? "s" : ""} in your profile:{" "}
+                    {conflicts.map((c) => c.conflictingCourseId).join(", ")}
                   </p>
                 </div>
               </div>
@@ -178,23 +204,37 @@ function CoursePageContent({ course }: CoursePageClientProps) {
           )}
 
           {/* Tabbed Content */}
-          <Tabs defaultValue="details" className="mb-8">
-            <TabsList className="grid w-full" style={{ gridTemplateColumns: `repeat(${showProgramsTab ? 3 : 2}, 1fr)` }}>
-              <TabsTrigger value="details" className="border-l-4 border-transparent data-[state=active]:border-picton-blue">
+          <Tabs className="mb-8" defaultValue="details">
+            <TabsList
+              className="grid w-full"
+              style={{
+                gridTemplateColumns: `repeat(${showProgramsTab ? 3 : 2}, 1fr)`,
+              }}
+            >
+              <TabsTrigger
+                className="border-l-4 border-transparent data-[state=active]:border-picton-blue"
+                value="details"
+              >
                 Details
               </TabsTrigger>
-              <TabsTrigger value="schedule" className="border-l-4 border-transparent data-[state=active]:border-picton-blue">
+              <TabsTrigger
+                className="border-l-4 border-transparent data-[state=active]:border-picton-blue"
+                value="schedule"
+              >
                 Schedule
               </TabsTrigger>
               {showProgramsTab && (
-                <TabsTrigger value="programs" className="border-l-4 border-transparent data-[state=active]:border-picton-blue">
+                <TabsTrigger
+                  className="border-l-4 border-transparent data-[state=active]:border-picton-blue"
+                  value="programs"
+                >
                   Programs
                 </TabsTrigger>
               )}
             </TabsList>
 
             {/* Details Tab */}
-            <TabsContent value="details" className="space-y-6 mt-6">
+            <TabsContent className="space-y-6 mt-6" value="details">
               {/* Course Overview - SEO-optimized rich text content */}
               <CourseOverview course={course} />
 
@@ -207,18 +247,37 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid sm:grid-cols-2 gap-4">
-                  <CourseMetadataRow label="Examiner" value={course.examinator} />
-                  <CourseMetadataRow label="Credits" value={`${course.credits} hp`} />
-                  <CourseMetadataRow label="Study Director" value={course.studierektor} />
-                  <CourseMetadataRow label="Study Pace" value={typeof course.pace === 'number' ? `${course.pace * 100}%` : course.pace} />
-                  <CourseMetadataRow label="Subject Area (Huvudområde)" value={course.huvudomrade} />
+                  <CourseMetadataRow
+                    label="Examiner"
+                    value={course.examinator}
+                  />
+                  <CourseMetadataRow
+                    label="Credits"
+                    value={`${course.credits} hp`}
+                  />
+                  <CourseMetadataRow
+                    label="Study Director"
+                    value={course.studierektor}
+                  />
+                  <CourseMetadataRow
+                    label="Study Pace"
+                    value={
+                      typeof course.pace === "number"
+                        ? `${course.pace * 100}%`
+                        : course.pace
+                    }
+                  />
+                  <CourseMetadataRow
+                    label="Subject Area (Huvudområde)"
+                    value={course.huvudomrade}
+                  />
                   <CourseMetadataRow label="Level" value={course.level} />
                   <div className="sm:col-span-2">
                     <a
-                      href={`https://studieinfo.liu.se/kurs/${course.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
+                      href={`https://studieinfo.liu.se/kurs/${course.id}`}
+                      rel="noopener noreferrer"
+                      target="_blank"
                     >
                       <ExternalLink className="h-4 w-4" />
                       View on LiU Official Site
@@ -228,35 +287,43 @@ function CoursePageContent({ course }: CoursePageClientProps) {
               </Card>
 
               {/* Examination */}
-              {Array.isArray(course.examination) && course.examination.length > 0 && (
-                <Card className="bg-background border-border">
-                  <CardHeader>
-                    <CardTitle className="text-foreground">Examination</CardTitle>
-                    <CardDescription>Assessment methods for this course</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <TruncatedExaminationBadges
-                      examinations={course.examination}
-                      maxVisible={5}
-                      shortMode={false}
-                    />
-                  </CardContent>
-                </Card>
-              )}
+              {Array.isArray(course.examination) &&
+                course.examination.length > 0 && (
+                  <Card className="bg-background border-border">
+                    <CardHeader>
+                      <CardTitle className="text-foreground">
+                        Examination
+                      </CardTitle>
+                      <CardDescription>
+                        Assessment methods for this course
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <TruncatedExaminationBadges
+                        examinations={course.examination}
+                        maxVisible={5}
+                        shortMode={false}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
 
               {/* Programs (if < 5, show here instead of separate tab) */}
               {!showProgramsTab && allPrograms.length > 0 && (
                 <Card className="bg-background border-border">
                   <CardHeader>
-                    <CardTitle className="text-foreground">Available in Programs</CardTitle>
+                    <CardTitle className="text-foreground">
+                      Available in Programs
+                    </CardTitle>
                     <CardDescription>
-                      This course is available for students in the following programs
+                      This course is available for students in the following
+                      programs
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ProgramsList 
-                      programs={course.programs} 
+                    <ProgramsList
                       orientations={course.orientations}
+                      programs={course.programs}
                     />
                   </CardContent>
                 </Card>
@@ -272,32 +339,47 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm whitespace-pre-wrap text-foreground">{course.notes}</p>
+                    <p className="text-sm whitespace-pre-wrap text-foreground">
+                      {course.notes}
+                    </p>
                   </CardContent>
                 </Card>
               )}
             </TabsContent>
 
             {/* Schedule Tab */}
-            <TabsContent value="schedule" className="space-y-6 mt-6">
+            <TabsContent className="space-y-6 mt-6" value="schedule">
               <Card className="bg-background border-border">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <BookOpen className="h-5 w-5 text-primary" />
                     Schedule Information
                   </CardTitle>
-                  <CardDescription>When and where this course is offered</CardDescription>
+                  <CardDescription>
+                    When and where this course is offered
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="grid sm:grid-cols-2 gap-4">
-                  <CourseMetadataRow 
-                    label="Available Terms" 
-                    value={Array.isArray(course.term) ? course.term.join(', ') : course.term} 
+                  <CourseMetadataRow
+                    label="Available Terms"
+                    value={
+                      Array.isArray(course.term)
+                        ? course.term.join(", ")
+                        : course.term
+                    }
                   />
-                  <CourseMetadataRow 
-                    label="Period" 
-                    value={Array.isArray(course.period) ? course.period.join(', ') : course.period} 
+                  <CourseMetadataRow
+                    label="Period"
+                    value={
+                      Array.isArray(course.period)
+                        ? course.period.join(", ")
+                        : course.period
+                    }
                   />
-                  <CourseMetadataRow label="Block" value={formatBlocks(course.block)} />
+                  <CourseMetadataRow
+                    label="Block"
+                    value={formatBlocks(course.block)}
+                  />
                   <CourseMetadataRow label="Study Pace" value={course.pace} />
                   <CourseMetadataRow label="Campus" value={course.campus} />
                 </CardContent>
@@ -306,18 +388,21 @@ function CoursePageContent({ course }: CoursePageClientProps) {
 
             {/* Programs Tab (only if 5+ programs) */}
             {showProgramsTab && (
-              <TabsContent value="programs" className="space-y-6 mt-6">
+              <TabsContent className="space-y-6 mt-6" value="programs">
                 <Card className="bg-background border-border">
                   <CardHeader>
-                    <CardTitle className="text-foreground">Available in Programs</CardTitle>
+                    <CardTitle className="text-foreground">
+                      Available in Programs
+                    </CardTitle>
                     <CardDescription>
-                      This course is available for students in {allPrograms.length} programs
+                      This course is available for students in{" "}
+                      {allPrograms.length} programs
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ProgramsList 
-                      programs={course.programs} 
+                    <ProgramsList
                       orientations={course.orientations}
+                      programs={course.programs}
                     />
                   </CardContent>
                 </Card>
@@ -333,17 +418,17 @@ function CoursePageContent({ course }: CoursePageClientProps) {
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold">Related Courses</h2>
                 {!isLoadingRelated && relatedCourses.length > 0 && (
-                  <Link 
-                    href={`/?huvudomraden=${encodeURIComponent((course.huvudomrade || '').split(',')[0].trim())}`}
+                  <Link
+                    href={`/?huvudomraden=${encodeURIComponent((course.huvudomrade || "").split(",")[0].trim())}`}
                   >
-                    <Button variant="outline" size="sm">
+                    <Button size="sm" variant="outline">
                       <ExternalLink className="h-4 w-4 mr-2" />
                       View All Similar Courses
                     </Button>
                   </Link>
                 )}
               </div>
-              
+
               {isLoadingRelated ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[...Array(6)].map((_, i) => (
@@ -353,7 +438,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0">
                   {relatedCourses.map((relatedCourse) => (
-                    <CourseCard key={relatedCourse.id} course={relatedCourse} />
+                    <CourseCard course={relatedCourse} key={relatedCourse.id} />
                   ))}
                 </div>
               )}
@@ -365,10 +450,10 @@ function CoursePageContent({ course }: CoursePageClientProps) {
       {/* Scroll to Top Button */}
       {showScrollTop && (
         <Button
+          aria-label="Scroll to top"
+          className="fixed bottom-20 sm:bottom-8 right-8 z-40 shadow-lg"
           onClick={scrollToTop}
           size="icon"
-          className="fixed bottom-20 sm:bottom-8 right-8 z-40 shadow-lg"
-          aria-label="Scroll to top"
         >
           <ChevronUp className="h-5 w-5" />
         </Button>
@@ -376,10 +461,12 @@ function CoursePageContent({ course }: CoursePageClientProps) {
 
       {/* Term Selection Modal */}
       <TermSelectionModal
+        availableTerms={course.term.map(
+          (t: string) => Number.parseInt(t, 10) as 7 | 8 | 9
+        )}
         course={course}
         isOpen={isTermModalOpen}
         onClose={() => setIsTermModalOpen(false)}
-        availableTerms={course.term.map((t: string) => Number.parseInt(t, 10) as 7 | 8 | 9)}
         onTermSelected={handleTermSelected}
       />
     </PageLayout>

@@ -1,13 +1,12 @@
 // types/profile.ts
 
-import type { Course } from "./course";
-
 import {
   MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
   MASTER_PROGRAM_TARGET_CREDITS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import type { Course } from "./course";
 
 export type StudentProfileTerms = Record<MasterProgramTerm, Course[]>;
 

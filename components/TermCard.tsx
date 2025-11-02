@@ -3,7 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLevelColor } from "@/lib/course-utils";
-import { type MasterProgramTerm } from "@/lib/profile-constants";
+import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface TermCardProps {

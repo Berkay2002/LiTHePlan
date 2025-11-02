@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { type MasterProgramTerm } from "@/lib/profile-constants";
+import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface TermSelectionModalProps {
@@ -51,7 +51,9 @@ export function TermSelectionModal({
         <div className="space-y-4">
           {/* Course Info */}
           <div className="text-center space-y-2 p-4 rounded-lg bg-primary/5 border border-primary/10">
-            <h3 className="font-semibold text-lg text-foreground">{course.name}</h3>
+            <h3 className="font-semibold text-lg text-foreground">
+              {course.name}
+            </h3>
             <p className="text-sm text-primary/80 font-medium">{course.id}</p>
           </div>
 

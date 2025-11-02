@@ -2,7 +2,7 @@
 // Regenerate with `npx hypertune` once flags exist in Hypertune.
 
 export async function getVercelOverride() {
-  return undefined;
+  return;
 }
 
 export type VercelFlagValuesProps = {

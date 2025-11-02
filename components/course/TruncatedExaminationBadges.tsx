@@ -1,7 +1,11 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface TruncatedExaminationBadgesProps {
   examinations: string[];
@@ -46,9 +50,9 @@ export function TruncatedExaminationBadges({
     <div className={`flex flex-wrap gap-1.5 ${className}`}>
       {visibleExams.map((exam, index) => (
         <Badge
+          className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200"
           key={`${exam}-${index}`}
           variant="secondary"
-          className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200"
         >
           {getDisplayLabel(exam)}
         </Badge>
@@ -57,20 +61,22 @@ export function TruncatedExaminationBadges({
         <Tooltip>
           <TooltipTrigger asChild>
             <Badge
-              variant="secondary"
               className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200 cursor-help"
+              variant="secondary"
             >
               +{hiddenExams.length} more
             </Badge>
           </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-xs">
+          <TooltipContent className="max-w-xs" side="top">
             <div className="flex flex-col gap-1">
-              <p className="font-semibold text-xs mb-1">Additional Examinations:</p>
+              <p className="font-semibold text-xs mb-1">
+                Additional Examinations:
+              </p>
               <div className="flex flex-wrap gap-1">
                 {hiddenExams.map((exam, index) => (
                   <span
-                    key={`hidden-${exam}-${index}`}
                     className="text-xs px-2 py-0.5 rounded bg-secondary/20 border border-secondary/30"
+                    key={`hidden-${exam}-${index}`}
                   >
                     {getDisplayLabel(exam)}
                   </span>

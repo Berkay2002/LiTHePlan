@@ -1,13 +1,17 @@
 # Tasks Index
 
 ## In Progress
+
 - [SEO-003] Comprehensive course page SEO enhancement - Phase 1 & 2 complete (60%), Phase 3 deferred
 - [FEAT-008] Hypertune Flags SDK integration - Server scaffolding complete, awaiting first flags for generation
+- [MAINT-001] Ultracite integration stabilization - Addressing lint violations and configuration scope
 
 ## Pending
+
 No pending tasks at this time.
 
 ## Completed
+
 - [SETUP-001] Initial project setup - Completed October 2025
 - [SETUP-002] Supabase integration - Completed October 2025
 - [SETUP-003] Course database population - Completed October 2025
@@ -35,9 +39,11 @@ No pending tasks at this time.
 - [DOC-004] Complete community standards files - Completed November 2, 2025
 
 ## Deferred
+
 - [DESIGN-001] Color theme migration (40% complete) - Deferred until prioritized
 
 ## Abandoned
+
 No abandoned tasks.
 
 ---
@@ -45,12 +51,14 @@ No abandoned tasks.
 ## Task Management Notes
 
 ### How to Use This Index
+
 1. **Create new task**: Add entry in "Pending" section with new ID
 2. **Start task**: Move to "In Progress" when beginning work
 3. **Complete task**: Move to "Completed" with completion date
 4. **Abandon task**: Move to "Abandoned" with reason
 
 ### Task ID Format
+
 - `SETUP-XXX`: Setup and configuration tasks
 - `FEAT-XXX`: Feature implementation
 - `BUG-XXX`: Bug fixes
@@ -61,6 +69,7 @@ No abandoned tasks.
 - `PERF-XXX`: Performance optimization
 
 ### Task Commands
+
 - **add task**: Create new task file with unique ID
 - **update task [ID]**: Update existing task progress
 - **show tasks [filter]**: Display filtered task list
@@ -68,7 +77,9 @@ No abandoned tasks.
   - Example: `show tasks active`
 
 ### Task File Location
+
 Individual task files stored in `memory-bank/tasks/TASKID-description.md`
 
 ### Current Status
+
 All MVP features completed. System is in maintenance mode with no active development tasks. Future tasks will be created based on user feedback or enhancement requests.

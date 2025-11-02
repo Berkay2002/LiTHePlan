@@ -3,7 +3,8 @@ import { LoginForm } from "@/components/login-form";
 
 export const metadata: Metadata = {
   title: "Login",
-  description: "Sign in to LiTHePlan to save and sync your course profile across devices. Unofficial student project for LiU students.",
+  description:
+    "Sign in to LiTHePlan to save and sync your course profile across devices. Unofficial student project for LiU students.",
   robots: {
     index: false,
     follow: false,

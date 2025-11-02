@@ -2,7 +2,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
-import React, {
+import {
   createContext,
   type ReactNode,
   useCallback,
@@ -12,6 +12,7 @@ import React, {
   useState,
 } from "react";
 import { useRealtimeProfiles } from "@/hooks/useRealtimeProfiles";
+import type { MasterProgramTerm } from "@/lib/profile-constants";
 import {
   addCourseToProfile,
   clearProfile as clearProfileUtil,
@@ -22,7 +23,6 @@ import {
   removeCourseFromProfile,
   saveProfileToStorage,
 } from "@/lib/profile-utils";
-import { type MasterProgramTerm } from "@/lib/profile-constants";
 import type { ProfileState, StudentProfile } from "@/types/profile";
 import { createClient } from "@/utils/supabase/client";
 
@@ -49,10 +49,7 @@ type ProfileAction =
 
 interface ProfileContextType {
   state: ProfileState;
-  addCourse: (
-    course: ProfileCourse,
-    term: MasterProgramTerm
-  ) => Promise<void>;
+  addCourse: (course: ProfileCourse, term: MasterProgramTerm) => Promise<void>;
   removeCourse: (courseId: string) => Promise<void>;
   moveCourse: (
     courseId: string,

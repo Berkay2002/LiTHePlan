@@ -1,13 +1,13 @@
 // app/course/[courseId]/page.tsx
 
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { createClient } from "@/utils/supabase/server";
-import type { Course } from "@/types/course";
-import CoursePageClient from "./CoursePageClient";
+import { Suspense } from "react";
 import { CoursePageSkeleton } from "@/components/course/CoursePageSkeleton";
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import type { Course } from "@/types/course";
+import { createClient } from "@/utils/supabase/server";
+import CoursePageClient from "./CoursePageClient";
 
 // ISR: Revalidate every hour for fresh course data
 export const revalidate = 3600;
@@ -17,22 +17,26 @@ export async function generateStaticParams() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.warn('Supabase credentials not found for generateStaticParams');
+  if (!(supabaseUrl && supabaseServiceKey)) {
+    console.warn("Supabase credentials not found for generateStaticParams");
     return [];
   }
 
-  const { createClient: createServiceClient } = await import('@supabase/supabase-js');
+  const { createClient: createServiceClient } = await import(
+    "@supabase/supabase-js"
+  );
   const supabase = createServiceClient(supabaseUrl, supabaseServiceKey);
 
   const { data: courses } = await supabase
-    .from('courses')
-    .select('id')
-    .order('id');
+    .from("courses")
+    .select("id")
+    .order("id");
 
-  return courses?.map((course) => ({
-    courseId: course.id,
-  })) || [];
+  return (
+    courses?.map((course) => ({
+      courseId: course.id,
+    })) || []
+  );
 }
 
 // Generate dynamic metadata for each course page
@@ -70,15 +74,20 @@ export async function generateMetadata({
     }
 
     // Build comprehensive description with examiner for better CTR
-    const levelText = course.level === "avancerad nivå" ? "Advanced level" : "Basic level";
+    const levelText =
+      course.level === "avancerad nivå" ? "Advanced level" : "Basic level";
     const termsText = `Term ${course.term.join(", ")}`;
-    const programsText = course.programs.length > 0
-      ? `Available in ${course.programs.length} program${course.programs.length > 1 ? 's' : ''}`
+    const programsText =
+      course.programs.length > 0
+        ? `Available in ${course.programs.length} program${course.programs.length > 1 ? "s" : ""}`
+        : "";
+    const examinationText =
+      course.examination.length > 0
+        ? `Examination: ${course.examination.join(", ")}`
+        : "";
+    const examinerText = course.examinator
+      ? `Taught by ${course.examinator}`
       : "";
-    const examinationText = course.examination.length > 0
-      ? `Examination: ${course.examination.join(", ")}`
-      : "";
-    const examinerText = course.examinator ? `Taught by ${course.examinator}` : "";
 
     // Build description from non-empty fragments to avoid double periods
     const descriptionFragments = [
@@ -88,9 +97,9 @@ export async function generateMetadata({
       `Campus: ${course.campus}`,
       examinationText,
       examinerText,
-      "Plan your degree with LiTHePlan."
+      "Plan your degree with LiTHePlan.",
     ].filter(Boolean);
-    const description = descriptionFragments.join(' ');
+    const description = descriptionFragments.join(" ");
 
     const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
 
@@ -113,7 +122,9 @@ export async function generateMetadata({
       ...(course.huvudomrade ? [course.huvudomrade] : []),
       ...course.examination,
       ...course.term.map((t: string) => `term ${t}`),
-      ...(course.examinator ? [course.examinator, `${course.examinator} courses`] : []), // Support examiner-based searches
+      ...(course.examinator
+        ? [course.examinator, `${course.examinator} courses`]
+        : []), // Support examiner-based searches
     ];
 
     // Convert to comma-separated string
@@ -147,7 +158,8 @@ export async function generateMetadata({
 
     return {
       title: "Course Details",
-      description: "View course details at Linköping University using LiTHePlan, an unofficial student planning tool",
+      description:
+        "View course details at Linköping University using LiTHePlan, an unofficial student planning tool",
       robots: {
         index: false,
         follow: false,
@@ -180,9 +192,7 @@ export default async function CoursePage({
   // Related courses fetched client-side via API (/api/courses/[courseId]/related)
   return (
     <Suspense fallback={<CoursePageSkeleton />}>
-      <CoursePageClient
-        course={course as Course}
-      />
+      <CoursePageClient course={course as Course} />
     </Suspense>
   );
 }

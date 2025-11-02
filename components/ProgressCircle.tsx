@@ -1,12 +1,11 @@
 // components/ProgressCircle.tsx
 
-import type { StudentProfile } from "@/types/profile";
-
 import {
   MASTER_PROGRAM_TARGET_CREDITS,
   PROGRESS_CIRCLE_SIZE,
   PROGRESS_CIRCLE_STROKE_WIDTH,
 } from "@/lib/profile-constants";
+import type { StudentProfile } from "@/types/profile";
 
 interface ProgressCircleProps {
   profile: StudentProfile;

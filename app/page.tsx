@@ -1,7 +1,8 @@
 "use client";
 
-import { Suspense, useMemo, useState, useEffect, use } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { TopControlsSkeleton } from "@/components/course/ControlsSkeleton";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
@@ -11,7 +12,6 @@ import {
   type FilterState,
 } from "@/components/course/FilterPanel";
 import { FilterSidebarSkeleton } from "@/components/course/FilterSidebarSkeleton";
-import { TopControlsSkeleton } from "@/components/course/ControlsSkeleton";
 import { type ViewMode, ViewToggle } from "@/components/course/ViewToggle";
 import { InfoBanner } from "@/components/InfoBanner";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -20,12 +20,15 @@ import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { ProfileSidebarSkeleton } from "@/components/profile/ProfileSidebarSkeleton";
 import { useCourses } from "@/hooks/useCourses";
 import { usePersistentState } from "@/hooks/usePersistentState";
-import { useResponsiveSidebar, getStoredSidebarState } from "@/hooks/useResponsiveSidebar";
-import { useToggle, getStoredToggleState } from "@/hooks/useToggle";
+import {
+  getStoredSidebarState,
+  useResponsiveSidebar,
+} from "@/hooks/useResponsiveSidebar";
+import { getStoredToggleState, useToggle } from "@/hooks/useToggle";
 import {
   createDefaultFilterState,
-  filterCourses,
   FILTER_STORAGE_KEY,
+  filterCourses,
   hasActiveFilters,
   parseFilterState,
   parseViewMode,
@@ -44,7 +47,7 @@ function HomeContent() {
   });
 
   const { state } = useProfile();
-  
+
   // Track minimum loading time for better UX
   const [showLoading, setShowLoading] = useState(loading);
   const [loadingStartTime] = useState(() => Date.now());
@@ -54,7 +57,7 @@ function HomeContent() {
       // Calculate remaining time to show skeleton
       const elapsed = Date.now() - loadingStartTime;
       const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
-      
+
       setTimeout(() => {
         setShowLoading(false);
       }, remaining);
@@ -73,11 +76,11 @@ function HomeContent() {
 
   // Apply URL query parameters to filters on mount
   useEffect(() => {
-    const programsParam = searchParams.get('programs');
-    const levelParam = searchParams.get('level');
-    const huvudomradenParam = searchParams.get('huvudomraden');
-    const campusParam = searchParams.get('campus');
-    
+    const programsParam = searchParams.get("programs");
+    const levelParam = searchParams.get("level");
+    const huvudomradenParam = searchParams.get("huvudomraden");
+    const campusParam = searchParams.get("campus");
+
     if (programsParam || levelParam || huvudomradenParam || campusParam) {
       // Start with default state, then apply ONLY the URL params
       const newState = createDefaultFilterState();
@@ -85,7 +88,7 @@ function HomeContent() {
       if (levelParam) newState.level = [levelParam];
       if (huvudomradenParam) newState.huvudomraden = [huvudomradenParam];
       if (campusParam) newState.campus = [campusParam];
-      
+
       setFilterState(newState);
     }
   }, [searchParams, setFilterState]);
@@ -100,10 +103,10 @@ function HomeContent() {
   );
 
   const { isOpen: sidebarOpen, toggle: toggleSidebar } = useResponsiveSidebar();
-  const {
-    value: profileSidebarOpen,
-    toggle: toggleProfileSidebar,
-  } = useToggle(false, PROFILE_SIDEBAR_STORAGE_KEY);
+  const { value: profileSidebarOpen, toggle: toggleProfileSidebar } = useToggle(
+    false,
+    PROFILE_SIDEBAR_STORAGE_KEY
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -140,18 +143,25 @@ function HomeContent() {
   };
 
   // Track stored values for skeleton display (client-side only)
-  const [storedSkeletonViewMode, setStoredSkeletonViewMode] = useState<ViewMode>('grid');
-  const [storedSkeletonSidebarOpen, setStoredSkeletonSidebarOpen] = useState(false);
-  const [storedSkeletonProfileSidebarOpen, setStoredSkeletonProfileSidebarOpen] = useState(false);
+  const [storedSkeletonViewMode, setStoredSkeletonViewMode] =
+    useState<ViewMode>("grid");
+  const [storedSkeletonSidebarOpen, setStoredSkeletonSidebarOpen] =
+    useState(false);
+  const [
+    storedSkeletonProfileSidebarOpen,
+    setStoredSkeletonProfileSidebarOpen,
+  ] = useState(false);
 
   useEffect(() => {
     // Read from localStorage only on client side
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const storedMode = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
       const parsedMode = storedMode ? parseViewMode(storedMode) : null;
-      setStoredSkeletonViewMode(parsedMode || 'grid');
+      setStoredSkeletonViewMode(parsedMode || "grid");
       setStoredSkeletonSidebarOpen(getStoredSidebarState());
-      setStoredSkeletonProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
+      setStoredSkeletonProfileSidebarOpen(
+        getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY)
+      );
     }
   }, []);
 
@@ -171,7 +181,10 @@ function HomeContent() {
               onToggle={() => {}}
             />
 
-            <ProfileSidebarSkeleton isOpen={storedSkeletonProfileSidebarOpen} onToggle={() => {}} />
+            <ProfileSidebarSkeleton
+              isOpen={storedSkeletonProfileSidebarOpen}
+              onToggle={() => {}}
+            />
 
             <div
               className={`w-full pt-20 ${
@@ -205,7 +218,9 @@ function HomeContent() {
       >
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
-            <p className="text-destructive mb-4">Error loading courses: {error}</p>
+            <p className="text-destructive mb-4">
+              Error loading courses: {error}
+            </p>
             <button
               className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/10"
               onClick={() => window.location.reload()}
@@ -238,7 +253,14 @@ function HomeContent() {
           />
 
           {/* PPR: Wrap ProfileSidebar in Suspense for dynamic user data */}
-          <Suspense fallback={<ProfileSidebarSkeleton isOpen={profileSidebarOpen} onToggle={toggleProfileSidebar} />}>
+          <Suspense
+            fallback={
+              <ProfileSidebarSkeleton
+                isOpen={profileSidebarOpen}
+                onToggle={toggleProfileSidebar}
+              />
+            }
+          >
             <ProfileSidebar
               isOpen={profileSidebarOpen}
               onToggle={toggleProfileSidebar}
@@ -254,7 +276,13 @@ function HomeContent() {
             <div className="container mx-auto px-4 py-8">
               <InfoBanner />
               <div className="w-full mb-6">
-                <div className="grid gap-4 lg:gap-5 w-full justify-center" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))' }}>
+                <div
+                  className="grid gap-4 lg:gap-5 w-full justify-center"
+                  style={{
+                    gridTemplateColumns:
+                      "repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))",
+                  }}
+                >
                   <div className="col-start-1 -col-end-1 flex justify-end">
                     <ViewToggle
                       onViewModeChange={setViewMode}
@@ -307,17 +335,20 @@ export default function Home() {
 // Separate skeleton component that uses state to avoid hydration mismatches
 function HomeContentSkeleton() {
   // Initialize with safe defaults for SSR, then update on mount
-  const [storedViewMode, setStoredViewMode] = useState<ViewMode>('grid');
+  const [storedViewMode, setStoredViewMode] = useState<ViewMode>("grid");
   const [storedSidebarOpen, setStoredSidebarOpen] = useState(false);
-  const [storedProfileSidebarOpen, setStoredProfileSidebarOpen] = useState(false);
+  const [storedProfileSidebarOpen, setStoredProfileSidebarOpen] =
+    useState(false);
 
   // Update state after mount (client-side only)
   useEffect(() => {
     const storedMode = localStorage.getItem(VIEW_MODE_STORAGE_KEY);
     const parsedMode = storedMode ? parseViewMode(storedMode) : null;
-    setStoredViewMode(parsedMode || 'grid');
+    setStoredViewMode(parsedMode || "grid");
     setStoredSidebarOpen(getStoredSidebarState());
-    setStoredProfileSidebarOpen(getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY));
+    setStoredProfileSidebarOpen(
+      getStoredToggleState(PROFILE_SIDEBAR_STORAGE_KEY)
+    );
   }, []);
 
   return (
@@ -330,14 +361,18 @@ function HomeContentSkeleton() {
     >
       <div className="min-h-screen bg-background">
         <div className="flex">
-          <FilterSidebarSkeleton isOpen={storedSidebarOpen} onToggle={() => {}} />
-          <ProfileSidebarSkeleton isOpen={storedProfileSidebarOpen} onToggle={() => {}} />
+          <FilterSidebarSkeleton
+            isOpen={storedSidebarOpen}
+            onToggle={() => {}}
+          />
+          <ProfileSidebarSkeleton
+            isOpen={storedProfileSidebarOpen}
+            onToggle={() => {}}
+          />
           <div
             className={`w-full pt-20 ${
               storedSidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
-            } ${
-              storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"
-            }`}
+            } ${storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
           >
             <div className="container mx-auto px-4 py-8">
               <TopControlsSkeleton />

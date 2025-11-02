@@ -3,11 +3,11 @@
 import { AlertTriangle, BookOpen, CheckCircle, Target } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getProfileSummary } from "@/lib/profile-utils";
 import {
   MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
   MASTER_PROGRAM_TARGET_CREDITS,
 } from "@/lib/profile-constants";
+import { getProfileSummary } from "@/lib/profile-utils";
 import type { StudentProfile } from "@/types/profile";
 
 interface ProfileSummaryProps {
@@ -16,8 +16,7 @@ interface ProfileSummaryProps {
 
 export function ProfileSummary({ profile }: ProfileSummaryProps) {
   const summary = getProfileSummary(profile);
-  const completionRatio =
-    summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS;
+  const completionRatio = summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS;
 
   const getCompletionColor = () => {
     if (completionRatio >= 1) return "text-green-600";
@@ -142,8 +141,7 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
                   Total Credits Target
                 </span>
                 <Badge className="text-xs" variant="outline">
-                  {summary.totalCredits}/
-                  {MASTER_PROGRAM_TARGET_CREDITS}hp
+                  {summary.totalCredits}/{MASTER_PROGRAM_TARGET_CREDITS}hp
                 </Badge>
               </div>
             </div>

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
 import {
   createContext,
+  type ReactNode,
+  useCallback,
   useContext,
   useState,
-  useCallback,
-  type ReactNode,
-} from 'react';
+} from "react";
 
 interface CommandPaletteContextValue {
   registerTimelineToggle: (handler: () => void, visible: boolean) => void;
@@ -58,7 +58,7 @@ export function useCommandPalette() {
   const context = useContext(CommandPaletteContext);
   if (context === undefined) {
     throw new Error(
-      'useCommandPalette must be used within a CommandPaletteProvider'
+      "useCommandPalette must be used within a CommandPaletteProvider"
     );
   }
   return context;

@@ -1,22 +1,15 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
-import {
-  Eye,
-  EyeOff,
-  LogIn,
-  Menu,
-  User as UserIcon,
-  X,
-} from "lucide-react";
+import { Eye, EyeOff, LogIn, Menu, User as UserIcon, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BackButton } from "@/components/BackButton";
 import { LiThePlanLogo } from "@/components/LiThePlanLogo";
-import { ModeToggle } from "@/components/theme-toggle";
 import { useProfileSafe } from "@/components/profile/ProfileContext";
-import { SearchBar } from "@/components/shared/SearchBar";
 import { ShareButtons } from "@/components/ShareButtons";
+import { SearchBar } from "@/components/shared/SearchBar";
+import { ModeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 import { createClient } from "@/utils/supabase/client";
@@ -42,21 +35,22 @@ type DynamicNavbarProps = MainPageNavbarProps | ProfileEditNavbarProps;
 export function DynamicNavbar(props: DynamicNavbarProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const { registerTimelineToggle, unregisterTimelineToggle } = useCommandPalette();
+  const { registerTimelineToggle, unregisterTimelineToggle } =
+    useCommandPalette();
 
   // Register timeline toggle for profile edit mode
   useEffect(() => {
-    if (props.mode === 'profile-edit' && props.onToggleBlockTimeline) {
+    if (props.mode === "profile-edit" && props.onToggleBlockTimeline) {
       registerTimelineToggle(
         props.onToggleBlockTimeline,
-        props.showBlockTimeline || false
+        props.showBlockTimeline
       );
       return () => unregisterTimelineToggle();
     }
   }, [
     props.mode,
-    props.mode === 'profile-edit' ? props.onToggleBlockTimeline : undefined,
-    props.mode === 'profile-edit' ? props.showBlockTimeline : undefined,
+    props.mode === "profile-edit" ? props.onToggleBlockTimeline : undefined,
+    props.mode === "profile-edit" ? props.showBlockTimeline : undefined,
     registerTimelineToggle,
     unregisterTimelineToggle,
   ]);
@@ -163,7 +157,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           variant="ghost"
                         >
                           <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
-                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">Sign In</span>
+                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                            Sign In
+                          </span>
                         </Button>
                       </Link>
                     )}
@@ -175,9 +171,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               <div className="flex items-center gap-4">
                 {/* Search Bar */}
                 <SearchBar
-                  value={props.searchQuery}
                   onChange={props.onSearchChange}
                   placeholder="Search courses by name or code..."
+                  value={props.searchQuery}
                 />
 
                 {/* Theme toggle */}
@@ -221,10 +217,10 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               {/* Center - Search Bar (Perfectly Centered) */}
               <div className="flex-1 px-2">
                 <SearchBar
-                  value={props.searchQuery}
+                  className="max-w-xs mx-auto border border-sidebar-foreground/30"
                   onChange={props.onSearchChange}
                   placeholder="Search..."
-                  className="max-w-xs mx-auto border border-sidebar-foreground/30"
+                  value={props.searchQuery}
                 />
               </div>
 
@@ -327,7 +323,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                           variant="ghost"
                         >
                           <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
-                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">Sign In</span>
+                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                            Sign In
+                          </span>
                         </Button>
                       </Link>
                     )}

@@ -13,14 +13,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   type ConflictInfo,
   getAllPeriodConflicts,
   getConflictBorderClass,
 } from "@/lib/conflict-utils";
 import { getLevelColor } from "@/lib/course-utils";
-import { type MasterProgramTerm } from "@/lib/profile-constants";
+import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface DraggableTermCardProps {
@@ -151,7 +155,10 @@ export function DraggableTermCard({
               <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Shows course distribution across 4 study blocks. Number indicates courses per block. Red = scheduling conflict.</p>
+              <p>
+                Shows course distribution across 4 study blocks. Number
+                indicates courses per block. Red = scheduling conflict.
+              </p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -171,11 +178,11 @@ export function DraggableTermCard({
                 </div>
                 <div
                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
-                    !isActive
-                      ? "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
-                      : hasConflict
+                    isActive
+                      ? hasConflict
                         ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
                         : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
+                      : "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
                   }`}
                 >
                   {courses.length > 0 && (
@@ -466,7 +473,6 @@ export function DraggableTermCard({
     <Card
       className={`h-full bg-background border-border shadow-lg flex flex-col ${className}`}
     >
-
       <CardHeader className="pb-3 shrink-0">
         <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
           {getTermLabel(termNumber)}
@@ -491,10 +497,7 @@ export function DraggableTermCard({
             Desktop only: Drag courses between terms
           </p>
         )}
-        {termNumber === 8 && (
-          <p className="text-xs text-muted-foreground">
-          </p>
-        )}
+        {termNumber === 8 && <p className="text-xs text-muted-foreground"></p>}
       </CardHeader>
 
       <CardContent className="space-y-4 flex-1 flex flex-col">
@@ -503,7 +506,7 @@ export function DraggableTermCard({
           termNumber === 8 ? (
             <div className="flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg border-border">
               <p className="text-sm">No courses selected</p>
-              <p className="text-xs mt-1"></p>
+              <p className="text-xs mt-1" />
             </div>
           ) : (
             <Droppable droppableId={`term-${termNumber}`} type="COURSE">

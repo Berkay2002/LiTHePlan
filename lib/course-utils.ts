@@ -102,7 +102,9 @@ export async function fetchRelatedCourses(
   limit = 6
 ): Promise<Course[]> {
   try {
-    const response = await fetch(`/api/courses/${courseId}/related?limit=${limit}`);
+    const response = await fetch(
+      `/api/courses/${courseId}/related?limit=${limit}`
+    );
     if (!response.ok) {
       console.error(`Failed to fetch related courses: ${response.statusText}`);
       return [];
@@ -111,7 +113,7 @@ export async function fetchRelatedCourses(
     // API returns structured response: {success, data: {courses: [...]}}
     return result.data?.courses || [];
   } catch (error) {
-    console.error('Error fetching related courses:', error);
+    console.error("Error fetching related courses:", error);
     return [];
   }
 }
@@ -131,21 +133,21 @@ export function getRelatedCourses(
   }
 
   const currentPrograms = new Set(course.programs || []);
-  
+
   // Calculate overlap score for each course
   const coursesWithScores = allCourses
     .filter((c) => c.id !== course.id) // Exclude current course
     .map((c) => {
       const coursePrograms = new Set(c.programs || []);
-      
+
       // Calculate intersection size (program overlap)
       const overlap = [...currentPrograms].filter((p) =>
         coursePrograms.has(p)
       ).length;
-      
+
       // Bonus points for same level
       const levelBonus = c.level === course.level ? 1 : 0;
-      
+
       return {
         course: c,
         score: overlap * 10 + levelBonus, // Program overlap weighted higher
@@ -153,6 +155,6 @@ export function getRelatedCourses(
     })
     .filter((item) => item.score > 0) // Only keep courses with some overlap
     .sort((a, b) => b.score - a.score); // Sort by score descending
-  
+
   return coursesWithScores.slice(0, limit).map((item) => item.course);
 }

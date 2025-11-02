@@ -17,10 +17,10 @@ export function LiThePlanLogo({
       className={className}
       height={height}
       role="img"
+      style={{ display: "block" }}
       viewBox="0 0 280 85"
       width={width}
       xmlns="http://www.w3.org/2000/svg"
-      style={{ display: 'block' }}
     >
       <title>LiTHePlan logo</title>
       <style>

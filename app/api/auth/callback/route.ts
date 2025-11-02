@@ -1,8 +1,8 @@
+import { addBreadcrumb, captureException } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { authLimiter, getClientIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
-import * as Sentry from "@sentry/nextjs";
+import { authLimiter, getClientIP } from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET(request: NextRequest) {
   const requestId = logger.generateRequestId();
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get("next") ?? "/";
 
   if (code) {
-    Sentry.addBreadcrumb({
+    addBreadcrumb({
       category: "auth",
       message: "Starting code exchange for session",
       level: "info",
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
       errorCode: error.code,
     });
 
-    Sentry.captureException(error, {
+    captureException(error, {
       tags: { flow: "auth-callback" },
       contexts: {
         request: { requestId },

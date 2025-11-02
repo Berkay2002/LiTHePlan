@@ -1,14 +1,14 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { ProfileDataSchema, UUIDSchema } from "@/lib/api-validation";
-import {
-  profileWriteLimiter,
-  profileReadLimiter,
-  getClientIP,
-} from "@/lib/rate-limit";
-import { logger } from "@/lib/logger";
-import { successResponse, errorResponse } from "@/lib/api-response";
 import * as Sentry from "@sentry/nextjs";
+import { type NextRequest, NextResponse } from "next/server";
+import { errorResponse, successResponse } from "@/lib/api-response";
+import { ProfileDataSchema, UUIDSchema } from "@/lib/api-validation";
+import { logger } from "@/lib/logger";
+import {
+  getClientIP,
+  profileReadLimiter,
+  profileWriteLimiter,
+} from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();

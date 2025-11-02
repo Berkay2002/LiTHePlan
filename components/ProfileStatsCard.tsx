@@ -62,18 +62,23 @@ export function ProfileStatsCard({
     .map(([program, credits]) => ({
       program,
       credits,
-      percentage: Math.min(
-        (credits / PROGRAM_FOCUS_TARGET_CREDITS) * 100,
-        100
-      ), // Assuming PROGRAM_FOCUS_TARGET_CREDITS hp target per program
+      percentage: Math.min((credits / PROGRAM_FOCUS_TARGET_CREDITS) * 100, 100), // Assuming PROGRAM_FOCUS_TARGET_CREDITS hp target per program
     }));
 
   // Pie chart segments - using CSS custom properties for theme compatibility
   const remaining = targetCredits - currentCredits;
   const segments = [
-    { label: "Advanced", value: advancedCredits, color: "var(--color-chart-1)" },
+    {
+      label: "Advanced",
+      value: advancedCredits,
+      color: "var(--color-chart-1)",
+    },
     { label: "Basic", value: basicCredits, color: "var(--color-chart-2)" },
-    { label: "Remaining", value: Math.max(0, remaining), color: "var(--color-chart-3)" },
+    {
+      label: "Remaining",
+      value: Math.max(0, remaining),
+      color: "var(--color-chart-3)",
+    },
   ].filter((segment) => segment.value > 0);
 
   const total = segments.reduce((sum, segment) => sum + segment.value, 0);
@@ -178,9 +183,13 @@ export function ProfileStatsCard({
               <Progress className="h-2 mb-2" value={advancedPercentage} />
 
               <div className="flex justify-between text-xs">
-                <span className="text-foreground">Required: {minAdvancedCredits}hp</span>
+                <span className="text-foreground">
+                  Required: {minAdvancedCredits}hp
+                </span>
                 {advancedCredits >= minAdvancedCredits ? (
-                  <span className="text-green-600 dark:text-green-400 font-medium">✓ Complete</span>
+                  <span className="text-green-600 dark:text-green-400 font-medium">
+                    ✓ Complete
+                  </span>
                 ) : (
                   <span className="text-amber-600 dark:text-amber-400 font-medium">
                     {minAdvancedCredits - advancedCredits}hp needed
@@ -210,7 +219,10 @@ export function ProfileStatsCard({
                             <span className="text-xs font-medium text-muted-foreground shrink-0 w-4">
                               #{index + 1}
                             </span>
-                            <span className="text-sm font-medium truncate text-foreground" title={program}>
+                            <span
+                              className="text-sm font-medium truncate text-foreground"
+                              title={program}
+                            >
                               {program}
                             </span>
                           </div>

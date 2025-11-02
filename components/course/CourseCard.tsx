@@ -27,11 +27,11 @@ import {
   getAvailableTerms,
   isMultiTermCourse,
 } from "@/lib/course-utils";
-import { isCourseInProfile } from "@/lib/profile-utils";
 import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import { isCourseInProfile } from "@/lib/profile-utils";
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import { TermSelectionModal } from "./TermSelectionModal";
@@ -248,10 +248,10 @@ export function CourseCard({ course }: CourseCardProps) {
                 {course.id}
               </div>
               <a
-                href={`https://studieinfo.liu.se/kurs/${course.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="text-primary/60 hover:text-primary transition-colors"
+                href={`https://studieinfo.liu.se/kurs/${course.id}`}
+                rel="noopener noreferrer"
+                target="_blank"
                 title="View on LiU official site"
               >
                 <ExternalLink className="h-3.5 w-3.5" />
@@ -492,7 +492,7 @@ export function CourseCard({ course }: CourseCardProps) {
                 </>
               )}
             </Button>
-            <Link href={`/course/${course.id}`} className="w-full">
+            <Link className="w-full" href={`/course/${course.id}`}>
               <Button
                 className="h-10 text-sm font-medium bg-secondary/20 border-border text-secondary-foreground hover:bg-secondary/30 hover:border-border/60 transition-all duration-300 w-full"
                 size="default"

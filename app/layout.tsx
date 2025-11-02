@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { geistSans, geistMono } from "./fonts";
-import { GlobalCommandPalette } from "@/components/shared/GlobalCommandPalette";
-import { CommandPaletteProvider } from "@/components/shared/CommandPaletteContext";
 import { ProfileProvider } from "@/components/profile/ProfileContext";
 import StructuredData from "@/components/seo/StructuredData";
+import { CommandPaletteProvider } from "@/components/shared/CommandPaletteContext";
+import { GlobalCommandPalette } from "@/components/shared/GlobalCommandPalette";
 import { ThemeProvider } from "@/components/theme-provider";
+import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -86,8 +86,8 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
-          enableSystem
           disableTransitionOnChange
+          enableSystem
         >
           <CommandPaletteProvider>
             <ProfileProvider>

@@ -4,12 +4,12 @@ import { BookOpen, Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getProfileSummary } from "@/lib/profile-utils";
 import {
   MASTER_PROGRAM_TARGET_CREDITS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import { getProfileSummary } from "@/lib/profile-utils";
 import type { StudentProfile } from "@/types/profile";
 import { PinnedCourseCard } from "./PinnedCourseCard";
 
@@ -165,7 +165,8 @@ export function ProfilePinboard({
                 <div className="text-2xl font-bold text-card-foreground">
                   {Math.round(
                     (summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS) * 100
-                  )}%
+                  )}
+                  %
                 </div>
                 <div className="text-xs text-muted-foreground">Complete</div>
               </div>

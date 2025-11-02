@@ -7,8 +7,8 @@ import { VercelEdgeConfigInitDataProvider } from "hypertune";
 import { unstable_noStore as noStore } from "next/cache";
 
 import {
-  createSource,
   type Context,
+  createSource,
   type HypertuneRoot,
   type HypertuneSource,
 } from "@/generated/hypertune";
@@ -24,8 +24,8 @@ function createInitDataProvider() {
   const edgeConfig = process.env.EXPERIMENTATION_CONFIG;
   const itemKey = process.env.EXPERIMENTATION_CONFIG_ITEM_KEY;
 
-  if (!edgeConfig || !itemKey) {
-    return undefined;
+  if (!(edgeConfig && itemKey)) {
+    return;
   }
 
   try {
@@ -34,7 +34,7 @@ function createInitDataProvider() {
       itemKey,
     });
   } catch {
-    return undefined;
+    return;
   }
 }
 

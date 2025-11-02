@@ -10,18 +10,20 @@ function getInitialSidebarState(breakpoint: number): boolean {
   }
 
   const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
-  
+
   // If user has manually toggled before, respect that preference
   if (stored !== null) {
     return stored === "true";
   }
-  
+
   // Otherwise, default to viewport-based (auto-open on desktop)
   return window.innerWidth >= breakpoint;
 }
 
 export function useResponsiveSidebar(breakpoint: number = DEFAULT_BREAKPOINT) {
-  const [isOpen, setIsOpen] = useState(() => getInitialSidebarState(breakpoint));
+  const [isOpen, setIsOpen] = useState(() =>
+    getInitialSidebarState(breakpoint)
+  );
   const [hasManuallyToggled, setHasManuallyToggled] = useState(false);
 
   useEffect(() => {
@@ -63,12 +65,12 @@ export function getStoredSidebarState(): boolean {
   if (typeof window === "undefined") {
     return false;
   }
-  
+
   const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
   if (stored !== null) {
     return stored === "true";
   }
-  
+
   // Default: auto-open on desktop
   return window.innerWidth >= DEFAULT_BREAKPOINT;
 }

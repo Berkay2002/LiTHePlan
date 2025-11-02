@@ -2,9 +2,9 @@
 
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { ProfileDataSkeleton } from "@/components/profile/ProfileDataSkeleton";
 import { createClient } from "@/utils/supabase/server";
 import ProfilePageClient from "./ProfilePageClient";
-import { ProfileDataSkeleton } from "@/components/profile/ProfileDataSkeleton";
 
 export async function generateMetadata({
   params,
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
-  
+
   try {
     const { id: profileId } = await params;
     const supabase = await createClient();
@@ -25,7 +25,7 @@ export async function generateMetadata({
       .single();
 
     // If profile not found or not public, return generic metadata with noindex
-    if (!profileData || !profileData.is_public) {
+    if (!(profileData && profileData.is_public)) {
       return {
         title: "Profile Not Found",
         description: "This profile does not exist or is not publicly shared.",
@@ -69,10 +69,11 @@ export async function generateMetadata({
     };
   } catch (error) {
     console.error("Error generating profile metadata:", error);
-    
+
     return {
       title: "Profile",
-      description: "View a student's course profile created with LiTHePlan, an unofficial planning tool for Linköping University students",
+      description:
+        "View a student's course profile created with LiTHePlan, an unofficial planning tool for Linköping University students",
       robots: {
         index: false,
         follow: false,

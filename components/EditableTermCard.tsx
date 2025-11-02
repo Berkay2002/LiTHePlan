@@ -1,10 +1,21 @@
 // components/EditableTermCard.tsx
 
-import { ArrowLeft, ArrowRight, ExternalLink, Info, Trash2, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ExternalLink,
+  Info,
+  Trash2,
+  X,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   getAllPeriodConflicts,
   getConflictBorderClass,
@@ -161,7 +172,10 @@ export function EditableTermCard({
               <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
             </TooltipTrigger>
             <TooltipContent>
-              <p>Shows course distribution across 4 study blocks. Number indicates courses per block. Red = scheduling conflict.</p>
+              <p>
+                Shows course distribution across 4 study blocks. Number
+                indicates courses per block. Red = scheduling conflict.
+              </p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -181,11 +195,11 @@ export function EditableTermCard({
                 </div>
                 <div
                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
-                    !isActive
-                      ? "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
-                      : hasConflict
+                    isActive
+                      ? hasConflict
                         ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
                         : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
+                      : "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
                   }`}
                 >
                   {courses.length > 0 && (
@@ -360,7 +374,9 @@ export function EditableTermCard({
   };
 
   return (
-    <Card className={`h-full bg-background border-border shadow-lg ${className}`}>
+    <Card
+      className={`h-full bg-background border-border shadow-lg ${className}`}
+    >
       <CardHeader className="pb-3">
         <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
           {getTermLabel(termNumber)}

@@ -1,11 +1,11 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function CoursePageSkeleton() {
   return (
@@ -36,7 +36,8 @@ export function CoursePageSkeleton() {
                 <Skeleton className="h-8 w-32" /> {/* Course ID */}
                 <Skeleton className="h-10 w-3/4" /> {/* Course name */}
               </div>
-              <Skeleton className="h-10 w-40 hidden sm:block" /> {/* CTA button */}
+              <Skeleton className="h-10 w-40 hidden sm:block" />{" "}
+              {/* CTA button */}
             </div>
             <div className="flex flex-wrap gap-2">
               <Skeleton className="h-6 w-16" /> {/* Badge 1 */}
@@ -67,7 +68,7 @@ export function CoursePageSkeleton() {
               </CardHeader>
               <CardContent className="grid sm:grid-cols-2 gap-4">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="space-y-2">
+                  <div className="space-y-2" key={i}>
                     <Skeleton className="h-4 w-24" />
                     <Skeleton className="h-5 w-full" />
                   </div>
@@ -83,7 +84,7 @@ export function CoursePageSkeleton() {
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {[...Array(4)].map((_, i) => (
-                    <Skeleton key={i} className="h-6 w-16" />
+                    <Skeleton className="h-6 w-16" key={i} />
                   ))}
                 </div>
               </CardContent>
@@ -99,7 +100,7 @@ export function CoursePageSkeleton() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => (
-              <Card key={i} className="overflow-hidden">
+              <Card className="overflow-hidden" key={i}>
                 <CardHeader className="space-y-3">
                   <Skeleton className="h-5 w-20" />
                   <Skeleton className="h-6 w-full" />

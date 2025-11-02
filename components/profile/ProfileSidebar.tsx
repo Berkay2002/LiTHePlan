@@ -8,9 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   MASTER_PROGRAM_TARGET_CREDITS,
   MASTER_PROGRAM_TERMS,
+  type MasterProgramTerm,
   PIE_CHART_RADIUS_FACTOR,
   PROFILE_SIDEBAR_PIE_CHART_SIZE,
-  type MasterProgramTerm,
 } from "@/lib/profile-constants";
 import { cn } from "@/lib/utils";
 import type { StudentProfile } from "@/types/profile";
@@ -41,9 +41,17 @@ export function ProfileSidebar({
   // Pie chart segments
   const remaining = targetCredits - currentCredits;
   const segments = [
-    { label: "Advanced", value: advancedCredits, color: "var(--color-chart-1)" },
+    {
+      label: "Advanced",
+      value: advancedCredits,
+      color: "var(--color-chart-1)",
+    },
     { label: "Basic", value: basicCredits, color: "var(--color-chart-2)" },
-    { label: "Remaining", value: Math.max(0, remaining), color: "var(--color-chart-3)" },
+    {
+      label: "Remaining",
+      value: Math.max(0, remaining),
+      color: "var(--color-chart-3)",
+    },
   ].filter((segment) => segment.value > 0);
 
   const total = segments.reduce((sum, segment) => sum + segment.value, 0);
@@ -78,7 +86,7 @@ export function ProfileSidebar({
 
   const currentTerm = terms[currentTermIndex] ?? terms[0];
   const currentTermCourses =
-    currentTerm !== undefined ? profile?.terms[currentTerm] ?? [] : [];
+    currentTerm !== undefined ? (profile?.terms[currentTerm] ?? []) : [];
 
   const nextTerm = () => {
     setCurrentTermIndex((prev) => (prev + 1) % terms.length);
@@ -327,7 +335,8 @@ export function ProfileSidebar({
                   </div>
                   <div className="space-y-2 text-xs text-sidebar-foreground/60">
                     <p>
-                      💡 Tip: You can add up to {MASTER_PROGRAM_TARGET_CREDITS} credits
+                      💡 Tip: You can add up to {MASTER_PROGRAM_TARGET_CREDITS}{" "}
+                      credits
                     </p>
                     <p>📚 Mix advanced and basic level courses</p>
                   </div>

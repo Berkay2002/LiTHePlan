@@ -68,14 +68,16 @@ export function CourseCardSkeleton() {
   );
 }
 
-export function CourseGridSkeleton({
-  count = 12,
-}: {
-  count?: number;
-}) {
+export function CourseGridSkeleton({ count = 12 }: { count?: number }) {
   // Match CourseGrid layout logic - use same auto-fit pattern with 450px max
   return (
-    <div className="grid gap-4 lg:gap-5 w-full justify-center" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))' }}>
+    <div
+      className="grid gap-4 lg:gap-5 w-full justify-center"
+      style={{
+        gridTemplateColumns:
+          "repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))",
+      }}
+    >
       {Array.from({ length: count }).map((_, index) => (
         <CourseCardSkeleton key={index} />
       ))}

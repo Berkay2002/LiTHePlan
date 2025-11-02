@@ -3,7 +3,7 @@
 "use client";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DraggableTermCard } from "@/components/DraggableTermCard";
 import { EditableTermCard } from "@/components/EditableTermCard";
 import { PageLayout } from "@/components/layout/PageLayout";
@@ -23,7 +23,7 @@ function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
   const [isMobile, setIsMobile] = useState(false);
   const [showBlockTimeline, setShowBlockTimeline] = useState(true);
-  
+
   // Track loading state with minimum display time for better UX
   const [isLoading, setIsLoading] = useState(true);
   const [showLoading, setShowLoading] = useState(true);
@@ -45,11 +45,11 @@ function ProfileEditPageContent() {
   useEffect(() => {
     if (state.current_profile && isLoading) {
       setIsLoading(false);
-      
+
       // Calculate remaining time to show skeleton
       const elapsed = Date.now() - loadingStartTime;
       const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
-      
+
       setTimeout(() => {
         setShowLoading(false);
       }, remaining);
@@ -95,9 +95,7 @@ function ProfileEditPageContent() {
       }
 
       const parsed = Number.parseInt(match[1], 10);
-      return (
-        MASTER_PROGRAM_TERMS.find((term) => term === parsed) ?? null
-      );
+      return MASTER_PROGRAM_TERMS.find((term) => term === parsed) ?? null;
     };
 
     const sourceTerm = parseTerm(sourceTermMatch);
@@ -160,8 +158,8 @@ function ProfileEditPageContent() {
                       IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
                     return (
                       <EditableTermCard
-                        key={term}
                         courses={currentProfile.terms[term]}
+                        key={term}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
                         onRemoveCourse={removeCourse}
@@ -175,9 +173,9 @@ function ProfileEditPageContent() {
                       IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
                     return (
                       <DraggableTermCard
-                        key={term}
                         courses={currentProfile.terms[term]}
                         isDragDisabled={isImmutable}
+                        key={term}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
                         onRemoveCourse={removeCourse}

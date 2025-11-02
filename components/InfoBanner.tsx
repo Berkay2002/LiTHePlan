@@ -58,5 +58,5 @@ export function InfoBanner() {
 
   if (!isVisible) return null;
 
-  return <GuestModeBanner onDismiss={handleDismiss} className="mb-6" />;
+  return <GuestModeBanner className="mb-6" onDismiss={handleDismiss} />;
 }

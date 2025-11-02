@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
-import type { User } from '@supabase/supabase-js';
-import type { CommandDefinition } from '@/lib/command-registry';
-import { isCommandVisible } from '@/lib/command-registry';
+import type { User } from "@supabase/supabase-js";
+import { usePathname } from "next/navigation";
+import { useMemo } from "react";
+import type { CommandDefinition } from "@/lib/command-registry";
+import { isCommandVisible } from "@/lib/command-registry";
 
 export function useCommandRegistry(
   commands: CommandDefinition[],
@@ -13,11 +13,13 @@ export function useCommandRegistry(
   const pathname = usePathname();
   const isAuthenticated = !!user;
 
-  return useMemo(() => {
-    return commands.filter((command) =>
-      isCommandVisible(command, pathname, isAuthenticated)
-    );
-  }, [commands, pathname, isAuthenticated]);
+  return useMemo(
+    () =>
+      commands.filter((command) =>
+        isCommandVisible(command, pathname, isAuthenticated)
+      ),
+    [commands, pathname, isAuthenticated]
+  );
 }
 
 export function groupCommands(

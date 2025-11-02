@@ -1,31 +1,31 @@
 import { createHypertuneAdapter } from "@flags-sdk/hypertune";
 import { createClient as createEdgeConfigClient } from "@vercel/edge-config";
 import type { Identify } from "flags";
-import { dedupe, flag as declareFlag } from "flags/next";
+import { flag as declareFlag, dedupe } from "flags/next";
 import { VercelEdgeConfigInitDataProvider } from "hypertune";
 
 import {
-  createSource,
-  flagFallbacks,
-  vercelFlagDefinitions,
   type Context,
+  createSource,
   type FlagDefinition,
+  flagFallbacks,
   type RootFlagValues,
+  vercelFlagDefinitions,
 } from "@/generated/hypertune";
 import { resolveHypertuneContext } from "@/lib/getHypertune";
 
 const token = process.env.NEXT_PUBLIC_HYPERTUNE_TOKEN;
 
-const identify: Identify<Context> = dedupe(async () => {
-  return resolveHypertuneContext();
-});
+const identify: Identify<Context> = dedupe(async () =>
+  resolveHypertuneContext()
+);
 
 const initDataProvider = (() => {
   const edgeConfig = process.env.EXPERIMENTATION_CONFIG;
   const itemKey = process.env.EXPERIMENTATION_CONFIG_ITEM_KEY;
 
-  if (!edgeConfig || !itemKey) {
-    return undefined;
+  if (!(edgeConfig && itemKey)) {
+    return;
   }
 
   try {
@@ -34,7 +34,7 @@ const initDataProvider = (() => {
       itemKey,
     });
   } catch {
-    return undefined;
+    return;
   }
 })();
 
@@ -42,7 +42,9 @@ const flagDefinitions = vercelFlagDefinitions as Record<string, FlagDefinition>;
 
 const hypertuneAdapter = token
   ? createHypertuneAdapter<RootFlagValues, Context>({
-      createSource: createSource as unknown as Parameters<typeof createHypertuneAdapter>[0]["createSource"],
+      createSource: createSource as unknown as Parameters<
+        typeof createHypertuneAdapter
+      >[0]["createSource"],
       flagFallbacks: flagFallbacks as RootFlagValues,
       flagDefinitions: flagDefinitions as Record<string, FlagDefinition>,
       identify,
@@ -67,13 +69,15 @@ export type FlagKey = keyof AdapterDeclarations & string;
 
 export function createServerFlag<Key extends FlagKey>(key: Key) {
   if (!hypertuneAdapter) {
-    return async () => flagFallbacks[key as keyof RootFlagValues] as AdapterDeclarations[Key];
+    return async () =>
+      flagFallbacks[key as keyof RootFlagValues] as AdapterDeclarations[Key];
   }
 
   const declaration = hypertuneAdapter.declarations[key];
 
   if (!declaration) {
-    return async () => flagFallbacks[key as keyof RootFlagValues] as AdapterDeclarations[Key];
+    return async () =>
+      flagFallbacks[key as keyof RootFlagValues] as AdapterDeclarations[Key];
   }
 
   return declareFlag(declaration) as () => Promise<AdapterDeclarations[Key]>;

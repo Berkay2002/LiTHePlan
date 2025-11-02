@@ -1,10 +1,10 @@
+import { captureException, setContext } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { errorResponse, successResponse } from "@/lib/api-response";
 import { UUIDSchema } from "@/lib/api-validation";
-import { profileReadLimiter, getClientIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
-import { successResponse, errorResponse } from "@/lib/api-response";
-import * as Sentry from "@sentry/nextjs";
+import { getClientIP, profileReadLimiter } from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET(
   request: NextRequest,
@@ -46,7 +46,7 @@ export async function GET(
       );
     }
 
-    Sentry.setContext("profile", { profileId });
+    setContext("profile", { profileId });
 
     // First, try to find by profile ID
     const { data, error } = await supabase
@@ -103,7 +103,7 @@ export async function GET(
   } catch (error) {
     logger.error("Unexpected error in profile by ID", error, { requestId });
 
-    Sentry.captureException(error, {
+    captureException(error, {
       contexts: {
         request: { requestId },
       },

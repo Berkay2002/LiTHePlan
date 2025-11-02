@@ -1,7 +1,10 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState } from "react";
 
 // Helper to get initial state from localStorage if storage key provided
-function getInitialToggleState(initialState: boolean, storageKey?: string): boolean {
+function getInitialToggleState(
+  initialState: boolean,
+  storageKey?: string
+): boolean {
   if (!storageKey || typeof window === "undefined") {
     return initialState;
   }
@@ -11,7 +14,9 @@ function getInitialToggleState(initialState: boolean, storageKey?: string): bool
 }
 
 export function useToggle(initialState = false, storageKey?: string) {
-  const [value, setValue] = useState(() => getInitialToggleState(initialState, storageKey));
+  const [value, setValue] = useState(() =>
+    getInitialToggleState(initialState, storageKey)
+  );
 
   const toggle = useCallback(() => {
     setValue((previous) => {
@@ -28,11 +33,14 @@ export function useToggle(initialState = false, storageKey?: string) {
 }
 
 // Export helper to read stored state for use in skeleton components
-export function getStoredToggleState(storageKey: string, defaultValue = false): boolean {
+export function getStoredToggleState(
+  storageKey: string,
+  defaultValue = false
+): boolean {
   if (typeof window === "undefined") {
     return defaultValue;
   }
-  
+
   const stored = localStorage.getItem(storageKey);
   return stored !== null ? stored === "true" : defaultValue;
 }

@@ -48,7 +48,7 @@ export default function ProfilePageClient({
         }
 
         const responseData = await response.json();
-        
+
         // Extract profile data from API response wrapper
         const profileData = responseData.data || responseData;
 
@@ -90,7 +90,7 @@ export default function ProfilePageClient({
       // Calculate remaining time to show skeleton
       const elapsed = Date.now() - loadingStartTime;
       const remaining = Math.max(0, MIN_LOADING_TIME_MS - elapsed);
-      
+
       setTimeout(() => {
         setShowLoading(false);
       }, remaining);
@@ -139,10 +139,7 @@ export default function ProfilePageClient({
   }
 
   return (
-    <PageLayout
-      navbarMode="profile-edit"
-      profileId={databaseId || undefined}
-    >
+    <PageLayout navbarMode="profile-edit" profileId={databaseId || undefined}>
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 space-y-8">
           {/* Shared Profile Header */}

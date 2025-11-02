@@ -25,7 +25,13 @@ export function ViewToggleSkeleton() {
 export function TopControlsSkeleton() {
   return (
     <div className="w-full mb-6">
-      <div className="grid gap-4 lg:gap-5 w-full justify-center" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))' }}>
+      <div
+        className="grid gap-4 lg:gap-5 w-full justify-center"
+        style={{
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))",
+        }}
+      >
         <div className="col-start-1 -col-end-1 flex justify-end">
           <ViewToggleSkeleton />
         </div>

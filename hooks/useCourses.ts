@@ -39,9 +39,7 @@ const CACHE_DURATION_MINUTES = 5;
 const SECONDS_PER_MINUTE = 60;
 const MILLISECONDS_PER_SECOND = 1000;
 const CACHE_DURATION_MS =
-  CACHE_DURATION_MINUTES *
-  SECONDS_PER_MINUTE *
-  MILLISECONDS_PER_SECOND; // 5 minutes
+  CACHE_DURATION_MINUTES * SECONDS_PER_MINUTE * MILLISECONDS_PER_SECOND; // 5 minutes
 
 export function useCourses(
   options: {
@@ -101,7 +99,7 @@ export function useCourses(
       }
 
       const json = await response.json();
-      
+
       // Handle both old and new API response formats
       const data: CoursesResponse = json.data || json;
 

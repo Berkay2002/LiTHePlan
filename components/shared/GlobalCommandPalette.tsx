@@ -1,17 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useMemo, useCallback } from 'react';
-import {
-  Home,
-  LogIn,
-  Moon,
-  Sun,
-  Eye,
-  EyeOff,
-  Share2,
-} from 'lucide-react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useTheme } from 'next-themes';
+import { Eye, EyeOff, Home, LogIn, Moon, Share2, Sun } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { useEffect, useMemo, useState } from "react";
+import { CourseCommandItem } from "@/components/course/CourseCommandItem";
 import {
   CommandDialog,
   CommandEmpty,
@@ -21,21 +14,20 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from '@/components/ui/command';
-import { createClient } from '@/utils/supabase/client';
-import type { Course } from '@/types/course';
-import type { CommandDefinition } from '@/lib/command-registry';
-import { CourseCommandItem } from '@/components/course/CourseCommandItem';
-import { useCommandRegistry, groupCommands } from '@/hooks/useCommandRegistry';
-import { useCommandPalette } from './CommandPaletteContext';
+} from "@/components/ui/command";
+import { groupCommands, useCommandRegistry } from "@/hooks/useCommandRegistry";
+import type { CommandDefinition } from "@/lib/command-registry";
+import type { Course } from "@/types/course";
+import { createClient } from "@/utils/supabase/client";
+import { useCommandPalette } from "./CommandPaletteContext";
 
 export function GlobalCommandPalette() {
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
-  
+
   const router = useRouter();
   const pathname = usePathname();
   const { setTheme, theme } = useTheme();
@@ -67,12 +59,12 @@ export function GlobalCommandPalette() {
   const commands = useMemo<CommandDefinition[]>(() => {
     const handleNavigateHome = () => {
       setOpen(false);
-      router.push('/');
+      router.push("/");
     };
 
     const handleNavigateLogin = () => {
       setOpen(false);
-      router.push('/login');
+      router.push("/login");
     };
 
     const handleSignOut = async () => {
@@ -83,7 +75,7 @@ export function GlobalCommandPalette() {
     };
 
     const handleToggleTheme = () => {
-      setTheme(theme === 'dark' ? 'light' : 'dark');
+      setTheme(theme === "dark" ? "light" : "dark");
       setOpen(false);
     };
 
@@ -99,7 +91,7 @@ export function GlobalCommandPalette() {
       if (navigator.share) {
         try {
           await navigator.share({
-            title: 'My Course Profile - LiTHePlan',
+            title: "My Course Profile - LiTHePlan",
             url,
           });
         } catch (error) {
@@ -114,75 +106,75 @@ export function GlobalCommandPalette() {
     return [
       // Navigation
       {
-        id: 'nav-home',
-        label: 'Go to Home',
+        id: "nav-home",
+        label: "Go to Home",
         icon: Home,
         action: handleNavigateHome,
-        shortcut: '⌘H',
-        group: 'navigation',
-        keywords: ['home', 'main', 'index'],
+        shortcut: "⌘H",
+        group: "navigation",
+        keywords: ["home", "main", "index"],
         // NO VISIBILITY RESTRICTIONS - always show
       },
       {
-        id: 'nav-login',
-        label: 'Sign In',
+        id: "nav-login",
+        label: "Sign In",
         icon: LogIn,
         action: handleNavigateLogin,
-        shortcut: '⌘L',
-        group: 'navigation',
+        shortcut: "⌘L",
+        group: "navigation",
         visible: {
           requiresGuest: true,
         },
-        keywords: ['login', 'signin', 'auth'],
+        keywords: ["login", "signin", "auth"],
       },
       // Profile Actions
       {
-        id: 'profile-timeline',
-        label: isTimelineVisible ? 'Hide Timeline' : 'Show Timeline',
+        id: "profile-timeline",
+        label: isTimelineVisible ? "Hide Timeline" : "Show Timeline",
         icon: isTimelineVisible ? EyeOff : Eye,
         action: handleToggleTimeline,
-        shortcut: '⌘T',
-        group: 'profile',
+        shortcut: "⌘T",
+        group: "profile",
         visible: {
-          routes: ['/profile/edit', '/profile/[id]'],
+          routes: ["/profile/edit", "/profile/[id]"],
         },
-        keywords: ['timeline', 'blocks', 'view'],
+        keywords: ["timeline", "blocks", "view"],
       },
       {
-        id: 'profile-share',
-        label: 'Share Profile',
+        id: "profile-share",
+        label: "Share Profile",
         icon: Share2,
         action: handleShare,
-        shortcut: '⌘S',
-        group: 'profile',
+        shortcut: "⌘S",
+        group: "profile",
         visible: {
-          routes: ['/profile/edit', '/profile/[id]'],
+          routes: ["/profile/edit", "/profile/[id]"],
         },
-        keywords: ['share', 'copy', 'link'],
+        keywords: ["share", "copy", "link"],
       },
       // Settings
       {
-        id: 'settings-theme',
-        label: 'Toggle Theme',
-        icon: theme === 'dark' ? Sun : Moon,
+        id: "settings-theme",
+        label: "Toggle Theme",
+        icon: theme === "dark" ? Sun : Moon,
         action: handleToggleTheme,
-        shortcut: '⌘D',
-        group: 'settings',
-        keywords: ['theme', 'dark', 'light', 'mode'],
+        shortcut: "⌘D",
+        group: "settings",
+        keywords: ["theme", "dark", "light", "mode"],
         // NO VISIBILITY RESTRICTIONS - always show
       },
       // Account
       {
-        id: 'account-signout',
-        label: 'Sign Out',
+        id: "account-signout",
+        label: "Sign Out",
         icon: LogIn,
         action: handleSignOut,
-        shortcut: '⌘Q',
-        group: 'account',
+        shortcut: "⌘Q",
+        group: "account",
         visible: {
           requiresAuth: true,
         },
-        keywords: ['logout', 'signout', 'exit'],
+        keywords: ["logout", "signout", "exit"],
       },
     ];
   }, [router, theme, setTheme, timelineToggleHandler, isTimelineVisible]);
@@ -197,14 +189,14 @@ export function GlobalCommandPalette() {
   // Handle keyboard shortcut (Cmd+K / Ctrl+K)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+      if ((event.metaKey || event.ctrlKey) && event.key === "k") {
         event.preventDefault();
         setOpen((currentOpen) => !currentOpen);
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
   // Debounced course search
@@ -223,13 +215,13 @@ export function GlobalCommandPalette() {
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch courses');
+          throw new Error("Failed to fetch courses");
         }
 
         const data = await response.json();
         setCourses(data.data?.courses || []);
       } catch (error) {
-        console.error('Error searching courses:', error);
+        console.error("Error searching courses:", error);
         setCourses([]);
       } finally {
         setIsLoading(false);
@@ -242,7 +234,7 @@ export function GlobalCommandPalette() {
   // Reset search when dialog closes
   useEffect(() => {
     if (!open) {
-      setSearchQuery('');
+      setSearchQuery("");
       setCourses([]);
     }
   }, [open]);
@@ -262,38 +254,41 @@ export function GlobalCommandPalette() {
 
   // Debug logging
   useEffect(() => {
-    if (open && searchQuery.trim() !== '') {
-      console.log('🔍 Search query:', searchQuery);
-      console.log('📊 Grouped commands:', groupedCommands);
-      console.log('📝 All commands:', allCommands);
-      console.log('👤 User:', user);
-      console.log('📍 Pathname:', pathname);
+    if (open && searchQuery.trim() !== "") {
+      console.log("🔍 Search query:", searchQuery);
+      console.log("📊 Grouped commands:", groupedCommands);
+      console.log("📝 All commands:", allCommands);
+      console.log("👤 User:", user);
+      console.log("📍 Pathname:", pathname);
     }
   }, [open, searchQuery, groupedCommands, allCommands, user, pathname]);
 
   return (
     <CommandDialog
-      open={open}
-      onOpenChange={setOpen}
-      title="Command Palette"
       description="Search courses or run commands"
+      onOpenChange={setOpen}
+      open={open}
+      title="Command Palette"
     >
       <CommandInput
+        onValueChange={setSearchQuery}
         placeholder="Type course code or command..."
         value={searchQuery}
-        onValueChange={setSearchQuery}
       />
       <CommandList>
         {/* Static Commands - Always visible at top */}
-        {!hasVisibleCommands && searchQuery.trim() === '' ? (
+        {!hasVisibleCommands && searchQuery.trim() === "" ? (
           <CommandEmpty>Type to search courses or run commands</CommandEmpty>
         ) : (
           <>
             {/* When searching: compact layout without group headings */}
-            {searchQuery.trim() !== '' && allCommands.length > 0 ? (
+            {searchQuery.trim() !== "" && allCommands.length > 0 ? (
               <CommandGroup>
                 {allCommands.map((command) => (
-                  <CommandItem key={command.id} onSelect={() => command.action()}>
+                  <CommandItem
+                    key={command.id}
+                    onSelect={() => command.action()}
+                  >
                     {command.icon && <command.icon className="mr-2 h-4 w-4" />}
                     <span>{command.label}</span>
                     {command.shortcut && (
@@ -304,14 +299,19 @@ export function GlobalCommandPalette() {
               </CommandGroup>
             ) : null}
             {/* When NOT searching: categorized layout with headings */}
-            {searchQuery.trim() === '' && (
+            {searchQuery.trim() === "" && (
               <>
                 {/* When NOT searching: categorized layout with headings */}
                 {groupedCommands.navigation.length > 0 && (
                   <CommandGroup heading="Navigation">
                     {groupedCommands.navigation.map((command) => (
-                      <CommandItem key={command.id} onSelect={() => command.action()}>
-                        {command.icon && <command.icon className="mr-2 h-4 w-4" />}
+                      <CommandItem
+                        key={command.id}
+                        onSelect={() => command.action()}
+                      >
+                        {command.icon && (
+                          <command.icon className="mr-2 h-4 w-4" />
+                        )}
                         <span>{command.label}</span>
                         {command.shortcut && (
                           <CommandShortcut>{command.shortcut}</CommandShortcut>
@@ -324,8 +324,13 @@ export function GlobalCommandPalette() {
                 {groupedCommands.profile.length > 0 && (
                   <CommandGroup heading="Profile Actions">
                     {groupedCommands.profile.map((command) => (
-                      <CommandItem key={command.id} onSelect={() => command.action()}>
-                        {command.icon && <command.icon className="mr-2 h-4 w-4" />}
+                      <CommandItem
+                        key={command.id}
+                        onSelect={() => command.action()}
+                      >
+                        {command.icon && (
+                          <command.icon className="mr-2 h-4 w-4" />
+                        )}
                         <span>{command.label}</span>
                         {command.shortcut && (
                           <CommandShortcut>{command.shortcut}</CommandShortcut>
@@ -338,8 +343,13 @@ export function GlobalCommandPalette() {
                 {groupedCommands.settings.length > 0 && (
                   <CommandGroup heading="Settings">
                     {groupedCommands.settings.map((command) => (
-                      <CommandItem key={command.id} onSelect={() => command.action()}>
-                        {command.icon && <command.icon className="mr-2 h-4 w-4" />}
+                      <CommandItem
+                        key={command.id}
+                        onSelect={() => command.action()}
+                      >
+                        {command.icon && (
+                          <command.icon className="mr-2 h-4 w-4" />
+                        )}
                         <span>{command.label}</span>
                         {command.shortcut && (
                           <CommandShortcut>{command.shortcut}</CommandShortcut>
@@ -352,8 +362,13 @@ export function GlobalCommandPalette() {
                 {groupedCommands.account.length > 0 && (
                   <CommandGroup heading="Account">
                     {groupedCommands.account.map((command) => (
-                      <CommandItem key={command.id} onSelect={() => command.action()}>
-                        {command.icon && <command.icon className="mr-2 h-4 w-4" />}
+                      <CommandItem
+                        key={command.id}
+                        onSelect={() => command.action()}
+                      >
+                        {command.icon && (
+                          <command.icon className="mr-2 h-4 w-4" />
+                        )}
                         <span>{command.label}</span>
                         {command.shortcut && (
                           <CommandShortcut>{command.shortcut}</CommandShortcut>
@@ -366,7 +381,7 @@ export function GlobalCommandPalette() {
             )}
 
             {/* Course Search Results - Appears below static commands when searching */}
-            {searchQuery.trim() !== '' && (
+            {searchQuery.trim() !== "" && (
               <>
                 <CommandSeparator />
                 {isLoading ? (
@@ -374,11 +389,13 @@ export function GlobalCommandPalette() {
                     Searching courses...
                   </div>
                 ) : courses.length > 0 ? (
-                  <CommandGroup heading={`Found ${courses.length} course${courses.length === 1 ? '' : 's'}`}>
+                  <CommandGroup
+                    heading={`Found ${courses.length} course${courses.length === 1 ? "" : "s"}`}
+                  >
                     {courses.map((course) => (
                       <CourseCommandItem
-                        key={course.id}
                         course={course}
+                        key={course.id}
                         onSelect={() => setOpen(false)}
                       />
                     ))}

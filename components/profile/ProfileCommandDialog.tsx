@@ -1,18 +1,9 @@
 "use client";
 
-import * as React from "react";
-import {
-  Home,
-  User,
-  LogIn,
-  Moon,
-  Sun,
-  Eye,
-  EyeOff,
-  Share2,
-} from "lucide-react";
+import { Eye, EyeOff, Home, LogIn, Moon, Share2, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import * as React from "react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -24,7 +15,6 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { createClient } from "@/utils/supabase/client";
-import { Kbd } from "@/components/ui/kbd";
 
 interface ProfileCommandDialogProps {
   onToggleBlockTimeline?: () => void;
@@ -123,7 +113,7 @@ export function ProfileCommandDialog({
 
   return (
     <>
-      <CommandDialog open={open} onOpenChange={setOpen}>
+      <CommandDialog onOpenChange={setOpen} open={open}>
         <CommandInput placeholder="Type a command or search..." />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>

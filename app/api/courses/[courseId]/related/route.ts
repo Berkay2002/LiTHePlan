@@ -1,10 +1,10 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
-import { logger } from "@/lib/logger";
-import { successResponse, errorResponse } from "@/lib/api-response";
 import * as Sentry from "@sentry/nextjs";
+import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { errorResponse, successResponse } from "@/lib/api-response";
+import { logger } from "@/lib/logger";
+import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
+import { createClient } from "@/utils/supabase/server";
 
 const CourseIdSchema = z.object({
   courseId: z.string().min(1).max(20),
@@ -40,7 +40,7 @@ export async function GET(
 
   try {
     const params = await context.params;
-    
+
     // Validate course ID
     const validationResult = CourseIdSchema.safeParse(params);
     if (!validationResult.success) {
@@ -50,10 +50,9 @@ export async function GET(
         errors: validationResult.error.issues,
       });
 
-      return NextResponse.json(
-        errorResponse("Invalid course ID", requestId),
-        { status: 400 }
-      );
+      return NextResponse.json(errorResponse("Invalid course ID", requestId), {
+        status: 400,
+      });
     }
 
     const { courseId } = validationResult.data;
@@ -82,25 +81,27 @@ export async function GET(
     }
 
     // Transform data: convert numeric pace to percentage string for frontend
-    const transformedCourses = (relatedCourses || []).map((course: {
-      relevance_score?: number;
-      pace?: number | string;
-      [key: string]: unknown;
-    }) => {
-      // Remove relevance_score from response (internal scoring)
-      const { relevance_score, ...courseData } = course;
-      
-      return {
-        ...courseData,
-        // Convert numeric pace (1.0, 0.5) to percentage string (100%, 50%)
-        pace:
-          typeof courseData.pace === "number"
-            ? courseData.pace === 1 || courseData.pace === 1.0
-              ? "100%"
-              : "50%"
-            : courseData.pace,
-      };
-    });
+    const transformedCourses = (relatedCourses || []).map(
+      (course: {
+        relevance_score?: number;
+        pace?: number | string;
+        [key: string]: unknown;
+      }) => {
+        // Remove relevance_score from response (internal scoring)
+        const { relevance_score, ...courseData } = course;
+
+        return {
+          ...courseData,
+          // Convert numeric pace (1.0, 0.5) to percentage string (100%, 50%)
+          pace:
+            typeof courseData.pace === "number"
+              ? courseData.pace === 1 || courseData.pace === 1.0
+                ? "100%"
+                : "50%"
+              : courseData.pace,
+        };
+      }
+    );
 
     const duration = Date.now() - startTime;
 

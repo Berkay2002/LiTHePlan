@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Info } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 interface AlertBannerProps {
@@ -66,8 +66,7 @@ interface SharedProfileBannerProps {
 export function SharedProfileBanner({ className }: SharedProfileBannerProps) {
   return (
     <AlertBanner
-      icon="📖"
-      title="Shared Profile - You're viewing someone else's course profile"
+      className={className}
       description={
         <>
           This is a read-only view. To build your own profile,{" "}
@@ -77,8 +76,9 @@ export function SharedProfileBanner({ className }: SharedProfileBannerProps) {
           .
         </>
       }
+      icon="📖"
+      title="Shared Profile - You're viewing someone else's course profile"
       variant="info"
-      className={className}
     />
   );
 }
@@ -95,30 +95,30 @@ export function GuestModeBanner({
   return (
     <div className={`relative ${className || ""}`}>
       <AlertBanner
+        description="Sign up only if you want to save profiles permanently and share them across devices."
         icon={<Info className="h-5 w-5 text-accent" />}
         title="💡 No account needed! You can build and save your course profile locally without signing up."
-        description="Sign up only if you want to save profiles permanently and share them across devices."
         variant="accent"
       />
       {onDismiss && (
         <button
-          onClick={onDismiss}
-          className="absolute top-4 right-4 text-accent hover:text-accent/80 hover:bg-accent/10 rounded-sm p-1 transition-colors"
           aria-label="Dismiss banner"
+          className="absolute top-4 right-4 text-accent hover:text-accent/80 hover:bg-accent/10 rounded-sm p-1 transition-colors"
+          onClick={onDismiss}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
             fill="none"
+            height="16"
             stroke="currentColor"
-            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <line x1="18" y1="6" x2="6" y2="18" />
-            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" x2="6" y1="6" y2="18" />
+            <line x1="6" x2="18" y1="6" y2="18" />
           </svg>
         </button>
       )}

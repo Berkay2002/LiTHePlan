@@ -113,10 +113,8 @@ const matchesBlock = (course: Course, selectedBlocks: FilterState["block"]) => {
   );
 };
 
-const matchesSimpleArray = (
-  selectedValues: string[],
-  value: string
-) => selectedValues.length === 0 || selectedValues.includes(value);
+const matchesSimpleArray = (selectedValues: string[], value: string) =>
+  selectedValues.length === 0 || selectedValues.includes(value);
 
 const matchesExamination = (
   course: Course,
@@ -172,10 +170,10 @@ export function filterCourses(
   courses: Course[],
   filterState: FilterState
 ): Course[] {
-  if (!courses || !Array.isArray(courses)) {
+  if (!(courses && Array.isArray(courses))) {
     return [];
   }
-  
+
   return courses.filter((course) => {
     if (!matchesSearch(course, filterState.search)) {
       return false;

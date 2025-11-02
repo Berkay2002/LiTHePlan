@@ -10,12 +10,13 @@ type PersistentStateOptions<T> = {
   onSaveError?: (error: unknown) => void;
 };
 
-const defaultSerialize = <T,>(value: T) => JSON.stringify(value);
-const defaultDeserialize = <T,>(value: string) => JSON.parse(value) as T;
+const defaultSerialize = <T>(value: T) => JSON.stringify(value);
+const defaultDeserialize = <T>(value: string) => JSON.parse(value) as T;
 
-const createLogger = (action: "load" | "save", key: string) => (error: unknown) => {
-  console.warn(`Failed to ${action} persisted state for "${key}"`, error);
-};
+const createLogger =
+  (action: "load" | "save", key: string) => (error: unknown) => {
+    console.warn(`Failed to ${action} persisted state for "${key}"`, error);
+  };
 
 export function usePersistentState<T>(
   key: string,
