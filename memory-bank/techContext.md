@@ -279,7 +279,7 @@ logger.error("Database error", error, {
 4. Error → Constraint violation (if fails)
 
 ### Input Validation (Zod)
-**Library**: `zod` (v3+)  
+**Library**: `zod` (v4+)  
 **Pattern**: Strict schemas prevent injection attacks  
 **Implementation**: `lib/api-validation.ts`
 

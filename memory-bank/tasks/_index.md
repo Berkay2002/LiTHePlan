@@ -1,7 +1,7 @@
 # Tasks Index
 
 ## In Progress
-No tasks currently in progress.
+- [SEO-003] Comprehensive course page SEO enhancement - Phase 1 & 2 complete (60%), Phase 3 deferred
 
 ## Pending
 No pending tasks at this time.

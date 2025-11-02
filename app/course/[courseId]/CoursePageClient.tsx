@@ -9,6 +9,8 @@ import { TermSelectionModal } from "@/components/course/TermSelectionModal";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
 import CourseStructuredData from "@/components/seo/CourseStructuredData";
+import { CourseFAQSchema } from "@/components/seo/CourseFAQSchema";
+import { CourseOverview } from "@/components/course/CourseOverview";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -103,6 +105,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
       onSearchChange={setSearchQuery}
     >
       <CourseStructuredData course={course} />
+      <CourseFAQSchema course={course} />
       
       <div className="min-h-screen bg-background pt-20">
         <div className="container mx-auto px-4 py-8 max-w-5xl">
@@ -192,6 +195,9 @@ function CoursePageContent({ course }: CoursePageClientProps) {
 
             {/* Details Tab */}
             <TabsContent value="details" className="space-y-6 mt-6">
+              {/* Course Overview - SEO-optimized rich text content */}
+              <CourseOverview course={course} />
+
               {/* Academic Information */}
               <Card className="bg-background border-border">
                 <CardHeader>

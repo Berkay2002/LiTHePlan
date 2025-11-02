@@ -248,14 +248,6 @@ Next.js 16+ includes a built-in MCP endpoint at `/_next/mcp` that runs within th
 
 This architecture decouples the agent interface from internal implementation, enabling seamless operation across different Next.js projects.
 
-## Project Overview
-
-LiTHePlan is a Next.js 16 course planning application that helps Linköping University civil engineering students discover and plan 90hp master's programs (terms 7-9) by filtering 339 curated courses across 25+ specializations and building custom academic profiles.
-
-**Key Technologies**: Next.js 16.0.1 (App Router), React 19.2, TypeScript 5, Tailwind CSS v4, Supabase (PostgreSQL + Auth), shadcn/ui components
-
-**Architecture**: Hybrid storage pattern (Supabase for authenticated users, localStorage for guests), server-side course filtering via API routes, global state management with React Context + useReducer.
-
 ## Critical Domain Knowledge
 
 ### Swedish Academic Terminology (DO NOT TRANSLATE)
@@ -282,30 +274,6 @@ The course database (339 curated courses, duplicates/deprecated removed) is **ma
 - Node.js 18+
 - npm 9+
 - Supabase account (free tier)
-
-### Installation
-```powershell
-# Clone repository
-git clone https://github.com/Berkay2002/LiTHePlan.git
-cd LiTHePlan
-
-# Install dependencies
-npm install
-
-# Configure environment variables
-# Create .env.local with:
-# NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-# NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_anon_key
-
-# Start development server
-npm run dev
-```
-
-### Database Setup
-Database is already populated in Supabase. To regenerate course statistics:
-```powershell
-node scripts/fetch-course-stats.js
-```
 
 ## Development Workflow
 
@@ -485,6 +453,44 @@ export default async function DashboardPage() {
 const Navbar = dynamic(() => import('./Navbar'), { ssr: false }); // ERROR
 ```
 
+**Theme-Aware Banners** (AlertBanner pattern):
+```typescript
+// ✅ Correct: Use theme tokens for light/dark compatibility
+import { AlertBanner } from '@/components/shared/AlertBanner';
+
+<AlertBanner
+  icon="📖"
+  title="Main message"
+  description={<>Supporting text with <Link>links</Link></>}
+  variant="info"  // "info" | "accent"
+/>
+
+// Pre-configured wrappers
+import { SharedProfileBanner, GuestModeBanner } from '@/components/shared/AlertBanner';
+<SharedProfileBanner />  // Profile view pages
+<GuestModeBanner onDismiss={() => {}} />  // Home page with dismiss
+
+// ❌ Wrong: Hardcoded Tailwind colors (breaks dark mode)
+<div className="bg-blue-50 text-blue-800">...</div>
+```
+
+**Global Command Palette** (Cmd/Ctrl+K):
+```typescript
+// Automatically available on all pages via CommandPaletteProvider in layout.tsx
+// Keyboard shortcut: Cmd+K (Mac) / Ctrl+K (Windows)
+
+// Categories (context-aware based on route and auth state):
+// - Navigation: Home, Login
+// - Profile Actions: Toggle Timeline, Share Profile (on /profile routes)
+// - Settings: Toggle Theme
+// - Auth: Sign Out (when authenticated)
+// - Course Search: Type to search all 339 courses
+
+// Context integration for timeline toggle
+import { useCommandPalette } from '@/components/shared/CommandPaletteContext';
+const { registerTimelineToggle } = useCommandPalette();
+```
+
 ### File Naming Conventions
 - **Components**: `PascalCase.tsx` (e.g., `CourseCard.tsx`, `FilterPanel.tsx`)
 - **Hooks**: `camelCase.ts` (e.g., `useCourses.ts`, `useMediaQuery.ts`)
@@ -505,7 +511,10 @@ components/
 │   ├── ProfilePinboard.tsx
 │   └── ProfileSidebar.tsx
 ├── shared/          # Cross-feature components
+│   ├── AlertBanner.tsx             # Theme-aware banners (info/accent variants)
+│   ├── CommandPaletteContext.tsx   # Global command palette state
 │   ├── DynamicNavbar.tsx
+│   ├── GlobalCommandPalette.tsx    # Cmd/Ctrl+K command interface
 │   └── Pagination.tsx
 ├── layout/          # Page layouts
 └── ui/              # shadcn/ui primitives (DON'T MODIFY)
@@ -623,6 +632,7 @@ interface Course {
   examination: string[];                   // ['TEN', 'LAB', 'PROJ']
   campus: string;                          // 'Linköping' | 'Norrköping'
   programs: string[];                      // Program names
+  orientations?: string[];                 // Specializations within programs
   notes?: string | null;                   // Conflicts, warnings (unstructured)
   huvudomrade?: string | null;             // Subject area (Swedish)
   examinator?: string | null;
@@ -686,10 +696,11 @@ CREATE TABLE courses (
   term TEXT[] NOT NULL,                   -- ['7', '8', '9']
   period TEXT[] NOT NULL,                 -- ['1', '2']
   block TEXT[] NOT NULL,                  -- ['1', '2', '3', '4']
-  pace NUMERIC NOT NULL DEFAULT 1.0,      -- 1.0 = 100%, 0.5 = 50%
+  pace NUMERIC NOT NULL DEFAULT 1.0,      -- 1.0 = 100%, 0.5 = 50% (API transforms to "100%"/"50%")
   examination TEXT[] NOT NULL,            -- ['TEN', 'LAB', 'PROJ']
   campus TEXT NOT NULL,                   -- Campus location
   programs TEXT[] NOT NULL,               -- Program names (25+ programs)
+  orientations TEXT[],                    -- Specializations within programs (optional)
   notes TEXT,                             -- Restrictions (unstructured)
   huvudomrade TEXT,                       -- Subject area (Swedish)
   examinator TEXT,                        -- Course examiner
@@ -814,6 +825,21 @@ const Navbar = dynamic(() => import('./Navbar'), { ssr: false });
 // Good - create separate Client Component
 'use client';
 export default function ClientNavbar() { /* ... */ }
+```
+
+---
+
+### ❌ DON'T: Use hardcoded Tailwind colors for banners
+```typescript
+// Bad - breaks dark mode, not theme-aware
+<div className="bg-blue-50 border-blue-200 text-blue-800">...</div>
+```
+
+### ✅ DO: Use AlertBanner with theme tokens
+```typescript
+// Good - adapts to light/dark mode automatically
+import { AlertBanner } from '@/components/shared/AlertBanner';
+<AlertBanner variant="info" title="Message" description="Details" />
 ```
 
 ## Task Management (MANDATORY)

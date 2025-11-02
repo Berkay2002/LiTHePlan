@@ -69,17 +69,28 @@ export async function generateMetadata({
       };
     }
 
-    // Build comprehensive description
+    // Build comprehensive description with examiner for better CTR
     const levelText = course.level === "avancerad nivå" ? "Advanced level" : "Basic level";
-    const termsText = Array.isArray(course.term) ? `Term ${course.term.join(", ")}` : `Term ${course.term}`;
-    const programsText = Array.isArray(course.programs) && course.programs.length > 0
+    const termsText = `Term ${course.term.join(", ")}`;
+    const programsText = course.programs.length > 0
       ? `Available in ${course.programs.length} program${course.programs.length > 1 ? 's' : ''}`
       : "";
-    const examinationText = Array.isArray(course.examination) && course.examination.length > 0
+    const examinationText = course.examination.length > 0
       ? `Examination: ${course.examination.join(", ")}`
       : "";
+    const examinerText = course.examinator ? `Taught by ${course.examinator}` : "";
 
-    const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. ${examinationText}. Plan your master's degree with LiTHePlan's interactive course planner.`;
+    // Build description from non-empty fragments to avoid double periods
+    const descriptionFragments = [
+      `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University`,
+      termsText,
+      programsText,
+      `Campus: ${course.campus}`,
+      examinationText,
+      examinerText,
+      "Plan your degree with LiTHePlan."
+    ].filter(Boolean);
+    const description = descriptionFragments.join(' ');
 
     const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
 
@@ -98,10 +109,11 @@ export async function generateMetadata({
       course.level,
       course.campus,
       `${course.credits}hp`,
-      ...(Array.isArray(course.programs) ? course.programs : []),
+      ...course.programs,
       ...(course.huvudomrade ? [course.huvudomrade] : []),
-      ...(Array.isArray(course.examination) ? course.examination : []),
-      ...(Array.isArray(course.term) ? course.term.map((t: string) => `term ${t}`) : []),
+      ...course.examination,
+      ...course.term.map((t: string) => `term ${t}`),
+      ...(course.examinator ? [course.examinator, `${course.examinator} courses`] : []), // Support examiner-based searches
     ];
 
     // Convert to comma-separated string
