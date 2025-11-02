@@ -16,7 +16,7 @@ export const revalidate = 3600;
 export async function generateStaticParams() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  
+
   if (!supabaseUrl || !supabaseServiceKey) {
     console.warn('Supabase credentials not found for generateStaticParams');
     return [];
@@ -24,7 +24,7 @@ export async function generateStaticParams() {
 
   const { createClient: createServiceClient } = await import('@supabase/supabase-js');
   const supabase = createServiceClient(supabaseUrl, supabaseServiceKey);
-  
+
   const { data: courses } = await supabase
     .from('courses')
     .select('id')
@@ -42,10 +42,10 @@ export async function generateMetadata({
   params: Promise<{ courseId: string }>;
 }): Promise<Metadata> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
-  
+
   try {
     const { courseId } = await params;
-    
+
     // Use read-only client for metadata (no cookies needed)
     const supabase = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -78,16 +78,19 @@ export async function generateMetadata({
     const examinationText = Array.isArray(course.examination) && course.examination.length > 0
       ? `Examination: ${course.examination.join(", ")}`
       : "";
-    
+
     const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. ${examinationText}. Plan your master's degree with LiTHePlan's interactive course planner.`;
 
     const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
 
-    // Enhanced keywords with all programs and examination types
-    const keywords = [
+    // Enhanced keywords as comma-separated string for optimal SEO
+    const keywordsArray = [
       courseId,
       course.name,
+      `${course.name} ${courseId}`, // Combined for exact match searches
       "Linköping University",
+      "Linköpings universitet",
+      "LiU",
       "LiU course",
       "course planning",
       "master's program",
@@ -99,6 +102,9 @@ export async function generateMetadata({
       ...(Array.isArray(course.examination) ? course.examination : []),
       ...(Array.isArray(course.term) ? course.term.map((t: string) => `term ${t}`) : []),
     ];
+
+    // Convert to comma-separated string
+    const keywords = keywordsArray.join(", ");
 
     return {
       title,
@@ -122,16 +128,10 @@ export async function generateMetadata({
       alternates: {
         canonical: `${baseUrl}/course/${courseId}`,
       },
-      other: {
-        "course:code": courseId,
-        "course:credits": course.credits.toString(),
-        "course:level": course.level,
-        "course:campus": course.campus,
-      },
     };
   } catch (error) {
     console.error("Error generating course metadata:", error);
-    
+
     return {
       title: "Course Details",
       description: "View course details at Linköping University using LiTHePlan, an unofficial student planning tool",
@@ -167,7 +167,7 @@ export default async function CoursePage({
   // Related courses fetched client-side via API (/api/courses/[courseId]/related)
   return (
     <Suspense fallback={<CoursePageSkeleton />}>
-      <CoursePageClient 
+      <CoursePageClient
         course={course as Course}
       />
     </Suspense>
