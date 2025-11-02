@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: 'Course Planning | LiTHePlan',
     description: 'Plan your courses for Linköping University',
     type: 'website',
-    url: 'https://litheplan.se',
+    url: 'https://litheplan.tech',
     siteName: 'LiTHePlan',
     images: [{
       url: '/og-image.png',
@@ -111,7 +111,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/', '/_next/'],
       },
     ],
-    sitemap: 'https://litheplan.se/sitemap.xml',
+    sitemap: 'https://litheplan.tech/sitemap.xml',
   };
 }
 ```
@@ -123,7 +123,7 @@ export default function robots(): MetadataRoute.Robots {
 import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://litheplan.se';
+  const baseUrl = 'https://litheplan.tech';
   
   // Fetch dynamic course data
   const courses = await fetchCourses();
@@ -166,7 +166,7 @@ export default function RootLayout({ children }) {
     '@context': 'https://schema.org',
     '@type': 'EducationalOrganization',
     name: 'LiTHePlan',
-    url: 'https://litheplan.se',
+    url: 'https://litheplan.tech',
     description: 'Course planning tool for Linköping University students',
     sameAs: [
       'https://github.com/yourusername/litheplan',
@@ -510,8 +510,8 @@ export async function generateMetadata({ params }) {
   return {
     alternates: {
       languages: {
-        'en': 'https://litheplan.se/en',
-        'sv': 'https://litheplan.se/sv',
+        'en': 'https://litheplan.tech/en',
+        'sv': 'https://litheplan.tech/sv',
       },
     },
   };

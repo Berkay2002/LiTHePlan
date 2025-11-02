@@ -89,7 +89,7 @@ export function CourseOverview({ course }: CourseOverviewProps) {
         <p className="text-foreground leading-relaxed">
           {subjectText} The course is assessed through {examinationMethods}. 
           Students can take this course during {termsText}, typically in {blocksText}, 
-          at a study pace of {typeof course.pace === 'number' ? `${course.pace * 100}%` : course.pace}.
+          at a study pace of {course.pace}.
         </p>
 
         <p className="text-foreground leading-relaxed">

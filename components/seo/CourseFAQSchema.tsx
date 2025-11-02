@@ -11,7 +11,6 @@ interface CourseFAQSchemaProps {
  * Enables rich snippets and featured snippets in Google search results
  */
 export function CourseFAQSchema({ course }: CourseFAQSchemaProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://litheplan.tech';
 
   // Format examination methods for answer
   const examinationMapping: Record<string, string> = {
@@ -64,7 +63,12 @@ export function CourseFAQSchema({ course }: CourseFAQSchemaProps) {
         "name": `When is ${course.id} offered?`,
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": `${course.name} is offered during term ${termsText}, in period ${periodsText}, block ${blocksText} at ${course.campus} campus.`
+          "text": [
+            `${course.name} is offered during term ${termsText}`,
+            periodsText ? `in period ${periodsText}` : '',
+            blocksText ? `block ${blocksText}` : '',
+            `at ${course.campus} campus`
+          ].filter(Boolean).join(', ') + '.'
         }
       },
       {

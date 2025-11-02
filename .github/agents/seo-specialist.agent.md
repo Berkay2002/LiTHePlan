@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: 'Social-optimized title',
     description: 'Social description',
     type: 'website',
-    url: 'https://litheplan.se/page-url',
+    url: 'https://litheplan.tech/page-url',
     siteName: 'LiTHePlan',
     images: [{
       url: '/og-image.png',
@@ -106,7 +106,7 @@ const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'EducationalOrganization',
   name: 'LiTHePlan',
-  url: 'https://litheplan.se',
+  url: 'https://litheplan.tech',
   description: 'Course planning tool for Linköping University students',
   sameAs: ['https://github.com/Berkay2002/LiTHePlan'],
 };
@@ -145,13 +145,13 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: 'https://litheplan.se',
+      item: 'https://litheplan.tech',
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Courses',
-      item: 'https://litheplan.se/courses',
+      item: 'https://litheplan.tech/courses',
     },
   ],
 };
@@ -191,7 +191,7 @@ const breadcrumbSchema = {
 import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://litheplan.se';
+  const baseUrl = 'https://litheplan.tech';
   
   // Fetch dynamic course data (339 curated courses)
   const courses = await fetchCourses();
@@ -236,7 +236,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin/', '/_next/', '/profile/edit'],
       },
     ],
-    sitemap: 'https://litheplan.se/sitemap.xml',
+    sitemap: 'https://litheplan.tech/sitemap.xml',
   };
 }
 ```
@@ -421,7 +421,7 @@ Before considering SEO implementation complete:
 
 ### LiTHePlan Application Details
 
-**Domain**: https://litheplan.se
+**Domain**: https://litheplan.tech
 **Target Audience**: Linköping University civil engineering students
 **Content Focus**: Course planning, academic profile management
 **Key Pages**:

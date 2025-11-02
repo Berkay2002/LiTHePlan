@@ -80,7 +80,17 @@ export async function generateMetadata({
       : "";
     const examinerText = course.examinator ? `Taught by ${course.examinator}` : "";
 
-    const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. ${examinationText}. ${examinerText}. Plan your degree with LiTHePlan.`.replace(/\.\s+\./g, '.');
+    // Build description from non-empty fragments to avoid double periods
+    const descriptionFragments = [
+      `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University`,
+      termsText,
+      programsText,
+      `Campus: ${course.campus}`,
+      examinationText,
+      examinerText,
+      "Plan your degree with LiTHePlan"
+    ].filter(Boolean);
+    const description = descriptionFragments.join('. ') + '.';
 
     const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
 
