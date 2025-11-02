@@ -3,6 +3,7 @@
 import type { Course } from "@/types/course";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { BookOpen } from "lucide-react";
+import { EXAMINATION_MAPPING } from "@/lib/profile-constants";
 
 interface CourseOverviewProps {
   course: Course;
@@ -27,22 +28,18 @@ export function CourseOverview({ course }: CourseOverviewProps) {
     ? `This course is part of ${programCount} program${programCount > 1 ? 's' : ''} including ${topPrograms}${programCount > topProgramsArray.length ? ', and others' : ''}.`
     : "";
 
-  // Format examination methods for readability
-  const examinationMapping: Record<string, string> = {
-    'TEN': 'written examination',
-    'LAB': 'laboratory work',
-    'PROJ': 'project work',
-    'SEM': 'seminars',
-    'UPG': 'assignments'
-  };
+  // Format examination methods for readability (defensive check for runtime safety)
+  const examinationMethods = Array.isArray(course.examination) && course.examination.length > 0
+    ? course.examination.map(exam => EXAMINATION_MAPPING[exam] || exam.toLowerCase()).join(", ")
+    : "various assessment methods";
 
-  const examinationMethods = course.examination
-    .map(exam => examinationMapping[exam] || exam.toLowerCase())
-    .join(", ") || "various assessment methods";
-
-  // Format term and block information
-  const termsText = `term ${course.term.join(", ")}`;
-  const blocksText = `block ${course.block.join(", ")}`;
+  // Format term and block information (defensive checks for runtime safety)
+  const termsText = Array.isArray(course.term) && course.term.length > 0
+    ? `term ${course.term.join(", ")}`
+    : "term N/A";
+  const blocksText = Array.isArray(course.block) && course.block.length > 0
+    ? `block ${course.block.join(", ")}`
+    : "block N/A";
 
   // Build subject area context
   const subjectText = course.huvudomrade

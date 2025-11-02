@@ -21,3 +21,15 @@ export const PROGRESS_CIRCLE_STROKE_WIDTH = 12;
 export const PROFILE_STATS_PIE_CHART_SIZE = 220;
 export const PROFILE_SIDEBAR_PIE_CHART_SIZE = 180;
 export const PIE_CHART_RADIUS_FACTOR = 0.35;
+
+/**
+ * Mapping of examination codes to human-readable descriptions
+ * Used for SEO-friendly text generation
+ */
+export const EXAMINATION_MAPPING: Record<string, string> = {
+  'TEN': 'written examination',
+  'LAB': 'laboratory work',
+  'PROJ': 'project work',
+  'SEM': 'seminars',
+  'UPG': 'assignments'
+};

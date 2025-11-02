@@ -1,6 +1,7 @@
 'use client';
 
 import type { Course } from "@/types/course";
+import { EXAMINATION_MAPPING } from "@/lib/profile-constants";
 
 interface CourseFAQSchemaProps {
   course: Course;
@@ -12,17 +13,9 @@ interface CourseFAQSchemaProps {
  */
 export function CourseFAQSchema({ course }: CourseFAQSchemaProps) {
 
-  // Format examination methods for answer
-  const examinationMapping: Record<string, string> = {
-    'TEN': 'written examination',
-    'LAB': 'laboratory work',
-    'PROJ': 'project work',
-    'SEM': 'seminars',
-    'UPG': 'assignments'
-  };
-
-  const examinationMethods = Array.isArray(course.examination)
-    ? course.examination.map(exam => examinationMapping[exam] || exam).join(", ")
+  // Format examination methods for answer (defensive check for runtime safety)
+  const examinationMethods = Array.isArray(course.examination) && course.examination.length > 0
+    ? course.examination.map(exam => EXAMINATION_MAPPING[exam] || exam).join(", ")
     : "various assessment methods";
 
   // Build program list
@@ -36,7 +29,7 @@ export function CourseFAQSchema({ course }: CourseFAQSchemaProps) {
 
   // Build course overview answer
   const levelText = course.level === "avancerad nivå" ? "advanced level" : "basic level";
-  const courseOverview = `${course.name} (${course.id}) is a ${course.credits}hp ${levelText} course offered at Linköping University. The course covers ${course.huvudomrade || 'engineering topics'} and is assessed through ${examinationMethods}.`;
+  const courseOverview = `${course.name} (${course.id}) is worth ${course.credits}hp and is a ${levelText} course offered at Linköping University. The course covers ${course.huvudomrade || 'engineering topics'} and is assessed through ${examinationMethods}.`;
 
   const faqSchema = {
     "@context": "https://schema.org",
