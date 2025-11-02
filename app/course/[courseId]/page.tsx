@@ -69,7 +69,7 @@ export async function generateMetadata({
       };
     }
 
-    // Build comprehensive description
+    // Build comprehensive description with examiner for better CTR
     const levelText = course.level === "avancerad nivå" ? "Advanced level" : "Basic level";
     const termsText = Array.isArray(course.term) ? `Term ${course.term.join(", ")}` : `Term ${course.term}`;
     const programsText = Array.isArray(course.programs) && course.programs.length > 0
@@ -78,8 +78,9 @@ export async function generateMetadata({
     const examinationText = Array.isArray(course.examination) && course.examination.length > 0
       ? `Examination: ${course.examination.join(", ")}`
       : "";
+    const examinerText = course.examinator ? `Taught by ${course.examinator}` : "";
 
-    const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. ${examinationText}. Plan your master's degree with LiTHePlan's interactive course planner.`;
+    const description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University. ${termsText}. ${programsText}. Campus: ${course.campus}. ${examinationText}. ${examinerText}. Plan your degree with LiTHePlan.`.replace(/\.\s+\./g, '.');
 
     const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
 
@@ -102,6 +103,7 @@ export async function generateMetadata({
       ...(course.huvudomrade ? [course.huvudomrade] : []),
       ...(Array.isArray(course.examination) ? course.examination : []),
       ...(Array.isArray(course.term) ? course.term.map((t: string) => `term ${t}`) : []),
+      ...(course.examinator ? [course.examinator, `${course.examinator} courses`] : []), // Support examiner-based searches
     ];
 
     // Convert to comma-separated string

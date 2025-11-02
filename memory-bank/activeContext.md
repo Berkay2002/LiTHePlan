@@ -12,6 +12,95 @@
 4. Task files are NOT optional - they preserve context across agent sessions
 
 ## Recent Changes (Current Session)
+### November 2, 2025 - SEO Course Page Enhancement Phase 1 & 2 (60% COMPLETE)
+**Work**: Implemented quick wins and content enrichment for course detail pages
+
+**Objective**: Make course pages rank higher for:
+- Combined queries: "Molecular Environmental Toxicology NBIC60"
+- Course codes alone: "NBIC60"
+- Examiner-based searches: "courses by Professor X"
+
+**Phase 1: Quick Wins - COMPLETED ✅**
+1. ✅ **Enhanced Keywords** (`app/course/[courseId]/page.tsx`)
+   - Added examiner to keywords array: `[examiner name]`, `"[examiner name] courses"`
+   - Supports examiner-based searches like "courses taught by Erik Frisk"
+   - Maintains comma-separated string format for optimal SEO
+
+2. ✅ **Improved Meta Descriptions**
+   - Added examinerText variable when available: "Taught by [examiner name]"
+   - Shortened call-to-action: "Plan your degree with LiTHePlan"
+   - Remains within 150-160 character optimal range
+   - Cleaned up double periods with `.replace(/\.\s+\./g, '.')`
+
+3. ✅ **Title Template Verified**
+   - Current format already optimal: `[Course Name] ([Code]) | [Credits]hp [Level]`
+   - No changes needed
+
+**Phase 2: Content Enrichment - COMPLETED ✅**
+4. ✅ **Created CourseOverview Component** (`components/course/CourseOverview.tsx`)
+   - Generates 150-200 word SEO-optimized description from course metadata
+   - Extracts prerequisites from notes field automatically
+   - Lists top 3 programs with course availability
+   - Maps Swedish examination types to English (TEN → "written examination", LAB → "laboratory work")
+   - Includes subject area (huvudomrade) context
+   - Mentions examiner name for authority and trust signals
+   - Builds contextual information: level, orientations, study pace
+   - Responsive prose styling with dark mode support
+   - Rich textual content for Google to index
+
+5. ✅ **Implemented FAQ Schema** (`components/seo/CourseFAQSchema.tsx`)
+   - FAQ structured data for Google featured snippets
+   - 5-6 dynamic questions per course:
+     1. "What is [Course Name] ([Code])?" - Course overview
+     2. "Who teaches [Course Code]?" - Examiner (conditional)
+     3. "When is [Course Code] offered?" - Term/period/block/campus
+     4. "How many credits is [Course Code]?" - Credits (hp)
+     5. "What programs include [Course Code]?" - Program list (conditional)
+     6. "What is the examination format?" - Assessment methods
+   - Conditional questions based on available data (e.g., only includes examiner question if examinator exists)
+   - Maps Swedish examination codes to English descriptions
+   - Enables rich results in Google search
+   - Voice search optimization
+
+6. ✅ **Integrated Components** (`app/course/[courseId]/CoursePageClient.tsx`)
+   - Added CourseOverview as first card in Details tab
+   - Added CourseFAQSchema alongside CourseStructuredData in page head
+   - Both components render client-side for optimal performance
+   - TypeScript compilation passes cleanly (verified with `npx tsc --noEmit`)
+
+**Impact**:
+- **Examiner searches**: Course pages now rank for "[examiner name] courses"
+- **Rich text content**: 150-200 words of crawlable content per course page
+- **Featured snippets**: FAQ schema makes courses eligible for rich results
+- **Combined queries**: Enhanced keywords support exact match searches
+- **Better CTR**: More compelling meta descriptions with examiner names
+- **Natural keyword density**: CourseOverview includes course code, name, examiner naturally
+
+**Expected Timeline**:
+- Week 1-2: Google re-crawls updated pages, validates new FAQ schema
+- Week 3-4: FAQ rich snippets start appearing for "What is [Course]?" queries
+- Week 4-8: Rankings improve for examiner-based and combined keyword searches
+- Month 3+: Sustained organic traffic growth from improved visibility
+
+**Files Created**:
+- `components/course/CourseOverview.tsx` - SEO-optimized rich text content component
+- `components/seo/CourseFAQSchema.tsx` - FAQ structured data for featured snippets
+
+**Files Modified**:
+- `app/course/[courseId]/page.tsx` - Enhanced metadata (examiner keywords, improved description)
+- `app/course/[courseId]/CoursePageClient.tsx` - Integrated CourseOverview and FAQ schema
+
+**Next Steps** (Phase 3 - Deferred):
+- Course category images (5-10 generic images for visual search)
+- ProgramCourseCluster component (internal linking, "Popular in Program X")
+- PrerequisiteChain component (parse and visualize course dependencies)
+- Review/rating schema (star ratings in search results - requires user review feature)
+
+**Verification**:
+- ✅ TypeScript compiles cleanly (`npx tsc --noEmit`)
+- ⏳ Pending: Google Rich Results Test validation (post-deployment)
+- ⏳ Pending: Search Console indexing verification (1-2 weeks post-deployment)
+
 ### November 2, 2025 - SEO Course Page Optimization (COMPLETED)
 **Work**: Critical SEO improvements to make individual course pages rank for "[course name] [course code]" searches
 

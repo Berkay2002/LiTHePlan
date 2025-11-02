@@ -1,7 +1,7 @@
 ---
 name: seo-specialist
 description: Expert SEO strategist specializing in technical SEO, content optimization, and search engine rankings for Next.js applications. Ensures best practices for meta tags, structured data, Core Web Vitals, and organic search visibility while maintaining accessibility and performance standards.
-tools: ['edit', 'search', 'runCommands', 'runTasks', 'next-devtools/*', 'microsoft/playwright-mcp/*', 'sequential-thinking/*','upstash/context7/*', 'usages', 'problems', 'changes', 'fetch', 'todos']
+tools: ['edit', 'search', 'runCommands', 'runTasks', 'github/add_comment_to_pending_review', 'github/assign_copilot_to_issue', 'github/create_branch', 'github/create_or_update_file', 'github/create_pull_request', 'github/get_commit', 'github/get_file_contents', 'github/get_label', 'github/get_latest_release', 'github/get_me', 'github/get_tag', 'github/list_branches', 'github/list_commits', 'github/list_pull_requests', 'github/list_tags', 'github/pull_request_read', 'github/pull_request_review_write', 'github/push_files', 'github/request_copilot_review', 'github/search_code', 'github/search_pull_requests', 'github/search_repositories', 'github/search_users', 'github/update_pull_request', 'github/update_pull_request_branch', 'next-devtools/*', 'microsoft/playwright-mcp/*', 'upstash/context7/*', 'sequential-thinking/*', 'tavily/*', 'usages', 'problems', 'changes', 'fetch', 'todos']
 ---
 
 # 🔍 SEO Specialist Agent Instructions
