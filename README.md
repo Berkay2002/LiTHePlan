@@ -1,179 +1,126 @@
-# LiTHePlan
+<div align="center">
+  <img src="public/LiTHePlan-transparent.png" alt="LiTHePlan Logo" width="200"/>
+  
+  # LiTHePlan
+  
+  **Intelligent course planning for Linköping University civil engineering students**
+  
+  [![Next.js](https://img.shields.io/badge/Next.js-16.0-black?logo=next.js)](https://nextjs.org/)
+  [![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
+  [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?logo=supabase)](https://supabase.com/)
+  [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://litheplan.tech)
+  
+  [Live Demo](https://litheplan.tech) · [Report Bug](https://github.com/Berkay2002/LiTHePlan/issues) · [Request Feature](https://github.com/Berkay2002/LiTHePlan/issues)
+</div>
 
-A modern web application that empowers civil engineering students at Linköping University (LiTH) to discover, explore, and plan their master's program courses across different specializations. Build unique 90hp academic profiles that align with your career goals.
+---
 
-## 🎯 Why This Project Exists
+## 📸 Overview
+
+<div align="center">
+  <img src="public/litheplan-screenshot.png" alt="LiTHePlan Application Screenshot" width="100%"/>
+</div>
+
+LiTHePlan is a modern web application that solves the course planning challenge for Linköping University (LiTH) civil engineering master's students. With **339 curated courses** across **29 program specializations**, students can discover cross-disciplinary opportunities, build validated 90hp study plans, and share profiles with academic advisors.
 
 ### The Problem
-Civil engineering master's students at Linköping University face a significant challenge when planning their studies. While the university offers incredible flexibility to combine courses across different specializations, students often remain unaware of these opportunities due to:
 
-- **Fragmented Information**: Course data scattered across multiple university portals
-- **Poor Discoverability**: No intuitive way to explore cross-disciplinary combinations
-- **Manual Planning**: Time-consuming, error-prone spreadsheet-based course selection
-- **Missed Opportunities**: Students defaulting to standard tracks, missing career-focused customization
+- **Fragmented Information**: Course data scattered across multiple university systems
+- **Poor Discoverability**: No efficient way to explore courses across different programs
+- **Manual Validation**: Time-consuming spreadsheet planning with error-prone requirement checking
+- **Limited Cross-Specialization**: Students miss opportunities outside their default track
 
 ### The Solution
-LiTHePlan transforms the course planning experience by providing a centralized, interactive platform where students can:
 
-- **Discover** all available master's level courses in one place
-- **Filter** courses by term, block, pace, campus, and other criteria
-- **Visualize** their 3-semester plan on an interactive pinboard
-- **Validate** their profile meets degree requirements (30hp advanced courses)
-- **Share** their custom profiles with advisors and peers
+- 🔍 **Unified Course Catalog**: 339 master's level courses (terms 7-9) with advanced filtering
+- 📌 **Interactive Profile Builder**: Visual drag-and-drop pinboard with real-time validation
+- ✅ **Automatic Validation**: Ensures 90hp total and 60hp advanced-level requirements
+- 🔗 **Profile Sharing**: Cloud-synced profiles with unique URLs for advisor collaboration
+- 💾 **Hybrid Storage**: Guest users get localStorage persistence, authenticated users get cloud sync
 
-## 📚 Course Database & Programs
-
-### **Database Overview**
-This application contains **475 courses** from Linköping University's master's level programs (terms 7-9), covering courses relevant to **15 official civil engineering programs** and additional specialization areas.
-
-### **Official Civil Engineering Programs (Civilingenjör)**
-The application supports course planning for all **15 civil engineering programs** at Linköping University (300 hp each):
-
-1. **Civilingenjör i datateknik** (Computer Science and Engineering)
-2. **Civilingenjör i design- och produktutveckling** (Design and Product Development)
-3. **Civilingenjör i elektronik och systemdesign** (Electronics and System Design)
-4. **Civilingenjör i energi - miljö - management** (Energy - Environment - Management)
-5. **Civilingenjör i industriell ekonomi** (Industrial Engineering and Management)
-6. **Civilingenjör i informationsteknologi** (Information Technology)
-7. **Civilingenjör i kemisk biologi** (Chemical Biology)
-8. **Civilingenjör i kommunikation, transport och samhälle** (Communication, Transportation and Society)
-9. **Civilingenjör i maskinteknik** (Mechanical Engineering)
-10. **Civilingenjör i medicinsk teknik** (Biomedical Engineering)
-11. **Civilingenjör i medieteknik och AI** (Media Technology and AI)
-12. **Civilingenjör i mjukvaruteknik** (Software Engineering)
-13. **Civilingenjör i teknisk biologi** (Engineering Biology)
-14. **Civilingenjör i teknisk fysik och elektroteknik** (Applied Physics and Electrical Engineering)
-15. **Civilingenjör i teknisk matematik** (Applied Mathematics)
-
-### **Course Distribution by Specialization Areas**
-
-**🔧 Technology & Computing** (339 courses)
-- Computer Science and Engineering (106 courses)
-- Electrical Engineering (98 courses) 
-- Computer Science (76 courses)
-- Information Technology (59 courses)
-
-**📐 Mathematics & Physics** (74 courses)
-- Applied Mathematics (37 courses)
-- Mathematics (37 courses)
-
-**⚙️ Mechanical & Transportation** (65 courses)
-- Mechanical Engineering (65 courses)
-
-**💼 Management & Design** (69 courses)
-- Industrial Engineering and Management (41 courses)
-- Media Technology and Engineering (28 courses)
-
-**🧬 Life Sciences & Biology** (46 courses)
-- Applied Physics (27 courses)
-- Biology (19 courses)
-
-**🌱 Other Engineering & Sciences** (106 courses)
-- Energy and Environmental Engineering (16 courses)
-- Biomedical Engineering (15 courses)
-- Engineering Biology (15 courses)
-- Biotechnology (12 courses)
-- Chemistry (11 courses)
-- Chemical Biology (10 courses)
-- Design (9 courses)
-- Programming (7 courses)
-- Logistics (4 courses)
-- Product Development (4 courses)
-- Graphic Design and Communication (3 courses)
-
-*Note: Some course categories represent broader specialization areas or elective options that may be available across multiple civil engineering programs.*
-
-### **Database Statistics**
-- **72.2%** advanced level courses (343 courses)
-- **27.8%** basic level courses (132 courses)
-- **80.8%** courses at Linköping campus (384 courses)
-- **17.7%** courses at Norrköping campus (84 courses)
-- **89.7%** standard 6hp courses (426 courses)
-- **6.3%** courses with special notes/restrictions (30 courses)
-- **25 different program areas** represented
-
-### **⚠️ Important Data Disclaimer**
-This course database was **independently compiled and is NOT officially provided by Linköping University (LiU)**. While every effort has been made to ensure accuracy:
-
-- **No Real-Time Updates**: Course information, availability, and requirements may change without being reflected in this application
-- **Manual Updates Only**: Any changes to courses, new course additions, or program modifications require manual database updates
-- **Verification Required**: Always verify course details, prerequisites, and availability with official LiU sources before making academic decisions
-- **Academic Advisor Consultation**: This tool is meant to aid planning - final course selection should always be discussed with your academic advisor
-
-For the most current course information, please consult:
-- Official LiU course catalog
-- Your academic advisor
-- Program coordinators
-- Student portal systems
+---
 
 ## ✨ Key Features
 
-### 🔍 **Smart Course Discovery**
-- Comprehensive catalog of 475 master's level courses (terms 7-9)
-- Real-time filtering by multiple criteria across 25+ program specializations
-- Grid and list view options with pagination
-- Advanced search functionality
-- **Course conflict detection and resolution system**
-- **OBS warnings** for courses with special restrictions
+### Smart Course Discovery
+- **Comprehensive Catalog**: 339 curated master's level courses (terms 7-9) from 29 program specializations
+- **Advanced Filtering**: Multi-criteria search by term, level, block, pace, campus, and program
+- **Dual View Modes**: Toggle between grid and list layouts with server-side pagination
+- **Conflict Detection**: Automatically identifies and resolves mutually exclusive course selections
+- **Course Details**: Enhanced metadata including examiner, study director, and subject area
 
-### 📌 **Interactive Profile Builder**
-- Visual "pinboard" for organizing courses across 3 semesters
-- **Intelligent course conflict resolution** with user-friendly modal
-- Real-time credit tracking (targeting 90hp total)
-- Term-by-term course organization
-- **Mobile-friendly touch interactions**
+### Interactive Profile Builder
+- **Visual Pinboard**: Drag-and-drop interface for organizing courses across 3 semesters
+- **Real-time Validation**: Instant feedback on credit totals and degree requirement compliance
+- **Mobile Optimized**: Touch-friendly interactions with responsive design
+- **Term Management**: Add, remove, and move courses between terms with validation
 
-### ✅ **Requirements Validation**
-- Automatic validation of degree requirements
-- Advanced course credit tracking (minimum 30hp required)
-- Real-time feedback on profile completeness
-- Visual indicators for requirement compliance
+### Academic Requirements
+- **Credit Tracking**: Automatic calculation of total (90hp) and advanced-level (60hp) credits
+- **Validation Indicators**: Color-coded feedback (green = valid, yellow = warning, red = error)
+- **Conflict Resolution**: Smart modal system for handling course conflicts
+- **Swedish Terminology**: Preserves official LiU academic terms (grundnivå, avancerad nivå)
 
-### 🔗 **Profile Sharing & Authentication**
-- **User accounts** with Supabase authentication
-- **Save and share profiles** with unique URLs
-- Facilitate discussions with academic advisors
-- **Persistent profile storage** across devices
+### Profile Management
+- **Hybrid Storage Pattern**: 
+  - **Guest Mode**: Profiles stored locally with full functionality, no signup required
+  - **Authenticated Mode**: Cloud-synced via Supabase with cross-device access
+  - **Graceful Fallback**: Automatic localStorage fallback if cloud sync fails
+- **Profile Sharing**: Generate unique URLs to share study plans with advisors
+- **Multi-Device Sync**: Real-time profile updates across browsers and devices
 
-### 📱 **Responsive Design**
-- Fully responsive across desktop, tablet, and mobile
-- Accessible UI components
-- Modern, intuitive interface
-- Dark/light mode support
+---
 
 ## 🛠 Tech Stack
 
 ### Frontend
-- **Next.js 15** with App Router
-- **React 19** with TypeScript
-- **Tailwind CSS** for styling
-- **shadcn/ui** component library
-- **Lucide React** for icons
+- **Next.js 16.0.1** with App Router (Server Components by default)
+- **React 19.2** with TypeScript 5 (strict mode)
+- **Tailwind CSS v4** with PostCSS architecture
+- **shadcn/ui** component library (built on Radix UI primitives)
+- **Lucide React** icons
 
 ### Backend & Data
-- **Next.js API Routes** for backend logic
-- **Supabase** database with 475 courses from LiU
-- **PostgreSQL** for data storage and querying
-- **Vercel** for deployment
+- **Next.js API Routes** for serverless backend
+- **Supabase** (PostgreSQL) with 339 curated courses
+- **Row-Level Security (RLS)** for data protection
+- **Real-time Subscriptions** for profile sync
 
-### Development
-- **TypeScript** for type safety
-- **ESLint** for code quality
-- **Modern React patterns** (Context, Hooks, useReducer)
+### State Management
+- **React Context API** with useReducer for global profile state
+- **ProfileProvider** wrapping entire application
+- **Type-safe operations** with TypeScript interfaces
+
+### Developer Experience
+- **Ultracite** (Biome-based) linting with 200+ strict rules
+- **TypeScript** strict mode (no `any` types allowed)
+- **Playwright** for end-to-end testing
+- **Sentry** error tracking and monitoring
+- **Upstash Redis** for API rate limiting
+
+### Production Infrastructure
+- **Vercel** deployment with edge functions
+- **Rate Limiting**: Sliding window algorithm (100 req/min for catalog, 10 req/min for writes)
+- **Structured Logging**: JSON logs with request correlation IDs
+- **Input Validation**: Zod schemas with strict mode (prevents injection attacks)
+- **HTTP Caching**: TTL-based caching (5min client, 10min CDN for courses)
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn package manager
-- Supabase environment variables configured in `.env.local` (for database statistics)
+- Node.js 18.18.0 or higher
+- npm, yarn, or pnpm
+- Supabase account (free tier)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Berkay2002/profile-builder.git
-   cd profile-builder
+   git clone https://github.com/Berkay2002/LiTHePlan.git
+   cd LiTHePlan
    ```
 
 2. **Install dependencies**
@@ -181,212 +128,334 @@ For the most current course information, please consult:
    npm install
    ```
 
-3. **Start development server**
+3. **Set up environment variables**
+   
+   Create `.env.local` in the project root:
+   ```bash
+   # Supabase
+   NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+   SUPABASE_SECRET_KEY=your_secret_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+   # Sentry (Optional - Error Tracking)
+   SENTRY_AUTH_TOKEN=your_sentry_token
+   SENTRY_ORG=your_org
+   SENTRY_PROJECT=your_project
+
+   # Upstash Redis (Optional - Rate Limiting)
+   UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+   UPSTASH_REDIS_REST_TOKEN=your_token
+   ```
+
+4. **Start the development server**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**
+5. **Open your browser**
+   
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build production version (includes TypeScript checking)
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
-- `node scripts/fetch-course-stats.js` - Generate database statistics from Supabase
+```bash
+npm run dev          # Start development server (localhost:3000)
+npm run build        # Production build with TypeScript checking
+npm start            # Serve production build
+npm run lint         # Run Ultracite linter
+npm run format       # Auto-fix code style
+npm run test         # Run Playwright tests
+npm run test:ui      # Open Playwright test UI
+```
+
+---
 
 ## 📁 Project Structure
 
 ```
-profile-builder/
-├── app/                    # Next.js App Router
-│   ├── page.tsx           # Main course catalog page
-│   ├── layout.tsx         # Root layout
-│   ├── profile/           # Profile management pages
-│   └── api/               # API routes for Supabase integration
-├── components/            # React components
-│   ├── course/           # Course discovery & filtering
-│   ├── profile/          # Profile builder components
-│   ├── shared/           # Navigation and utilities
-│   └── ui/               # shadcn/ui base components
-├── scripts/              # Utility scripts
-│   └── fetch-course-stats.js  # Database statistics generator
-├── utils/                # Supabase utilities
-│   └── supabase/         # Supabase client configuration
-├── lib/                  # Utilities and helpers
-│   ├── course-utils.ts   # Course formatting and styling
-│   ├── profile-utils.ts  # Profile management logic
-│   └── utils.ts          # General utilities
-├── types/                # TypeScript definitions
-│   ├── course.ts         # Course interfaces
-│   └── profile.ts        # Profile state management
-└── docs/                 # Project documentation
-    ├── brief.md          # Project brief
-    └── prd.md            # Product requirements
+LiTHePlan/
+├── app/                          # Next.js App Router
+│   ├── page.tsx                 # Home page (course catalog)
+│   ├── layout.tsx               # Root layout with ProfileProvider
+│   ├── api/                     # API routes
+│   │   ├── courses/route.ts    # Course filtering & pagination
+│   │   ├── profile/route.ts    # Profile CRUD operations
+│   │   └── auth/               # Supabase authentication
+│   ├── login/                  # Authentication pages
+│   ├── profile/                # Profile management
+│   │   ├── [id]/page.tsx       # View shared profiles
+│   │   └── edit/page.tsx       # Edit profile
+│   └── course/[courseId]/      # Individual course pages
+│
+├── components/
+│   ├── course/                 # Course discovery features
+│   │   ├── CourseCard.tsx     # Course display component
+│   │   ├── FilterPanel.tsx    # Multi-select filters
+│   │   ├── ConflictResolutionModal.tsx
+│   │   └── TermSelectionModal.tsx
+│   ├── profile/               # Profile builder
+│   │   ├── ProfileContext.tsx # Global state (CRITICAL)
+│   │   ├── ProfilePinboard.tsx # Drag-drop interface
+│   │   └── ProfileSidebar.tsx  # Credit tracking
+│   ├── shared/                # Reusable components
+│   │   ├── DynamicNavbar.tsx
+│   │   ├── GlobalCommandPalette.tsx
+│   │   └── AlertBanner.tsx
+│   └── ui/                    # shadcn/ui primitives
+│
+├── lib/
+│   ├── profile-utils.ts       # Profile CRUD logic
+│   ├── course-conflict-utils.ts # Conflict detection
+│   ├── api-validation.ts      # Zod schemas
+│   ├── rate-limit.ts          # Redis rate limiting
+│   └── logger.ts              # Structured logging
+│
+├── types/
+│   ├── course.ts              # Course interfaces
+│   └── profile.ts             # Profile state types
+│
+├── utils/supabase/
+│   ├── client.ts              # Browser Supabase client
+│   ├── server.ts              # Server Supabase client (SSR)
+│   └── session.ts             # Auth utilities
+│
+├── proxy.ts                    # Auth session refresh (Next.js 16)
+└── memory-bank/               # Project documentation
 ```
 
-## 🎨 Data Models
+---
 
-### Course Interface
-The core data structure supporting Swedish university courses:
+## 🗄 Database
+
+### Course Database
+
+**339 curated courses** from Linköping University's master's level programs (terms 7-9), covering **15 civil engineering programs** and additional specialization areas.
+
+**Statistics:**
+- **Advanced Level**: 79.4% (269 courses)
+- **Basic Level**: 20.6% (70 courses)
+- **Linköping Campus**: 83.2% (282 courses)
+- **Norrköping Campus**: 15.6% (53 courses)
+- **Standard 6hp Courses**: 89.7% (304 courses)
+
+**Programs Covered:**
+Civil engineering programs in Computer Science, Electrical Engineering, Mechanical Engineering, Industrial Engineering, Biomedical Engineering, Media Technology, Applied Mathematics, and more.
+
+### Data Management
+
+> **Note on Data Currency**: The course database is maintained through an automated crawler that runs periodically (every 3-6 months) to update course information, remove deprecated courses, and add new offerings. While this ensures reasonable data freshness, always verify critical course details with official Linköping University sources and your academic advisor before finalizing your study plan.
+
+**Database Schema:**
+
+```sql
+-- courses table (339 active courses)
+CREATE TABLE courses (
+  id TEXT PRIMARY KEY,              -- Course code (e.g., 'TSBK02')
+  name TEXT NOT NULL,
+  credits NUMERIC NOT NULL,         -- HP (usually 6)
+  level TEXT NOT NULL,              -- 'grundnivå' | 'avancerad nivå'
+  term TEXT[] NOT NULL,             -- ['7', '8', '9']
+  period TEXT[] NOT NULL,           -- ['1', '2']
+  block TEXT[] NOT NULL,            -- ['1', '2', '3', '4']
+  pace NUMERIC NOT NULL,            -- 1.0 = 100%, 0.5 = 50%
+  examination TEXT[] NOT NULL,      -- ['TEN', 'LAB', 'PROJ']
+  campus TEXT NOT NULL,
+  programs TEXT[] NOT NULL,         -- 29 programs
+  huvudomrade TEXT,                 -- Subject area (Swedish)
+  examinator TEXT,                  -- Course examiner
+  studierektor TEXT,                -- Study director
+  notes TEXT                        -- Restrictions, conflicts
+);
+
+-- academic_profiles table (user profiles)
+CREATE TABLE academic_profiles (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id),
+  name TEXT NOT NULL,
+  profile_data JSONB NOT NULL,      -- StudentProfile JSON
+  is_public BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ
+);
+```
+
+---
+
+## 🏗 Architecture Highlights
+
+### Hybrid Storage Pattern
+
+**The Challenge**: Balancing user experience (no signup friction) with data persistence and cross-device sync.
+
+**The Solution**: Intelligent storage routing based on authentication state:
 
 ```typescript
-interface Course {
-  id: string;
-  name: string;
-  credits: number;
-  level: 'grundnivå' | 'avancerad nivå';
-  term: number[];           // [7, 8, 9] - master's level terms
-  period: number[];         // Study periods within terms
-  block: string[];          // Study blocks
-  pace: string;            // Study pace (50%, 100%, etc.)
-  examination: string[];    // Assessment methods
-  campus: 'Linköping' | 'Norrköping' | 'Distans';
-  programs: string[];       // Applicable programs
+const saveProfile = async (profile: StudentProfile) => {
+  if (user) {
+    // Authenticated: Cloud sync with localStorage fallback
+    try {
+      await supabase.from('academic_profiles').upsert({
+        user_id: user.id,
+        profile_data: profile
+      });
+    } catch (error) {
+      // Graceful degradation to localStorage
+      localStorage.setItem('profile', JSON.stringify(profile));
+    }
+  } else {
+    // Guest: Always localStorage
+    localStorage.setItem('profile', JSON.stringify(profile));
+  }
+};
+```
+
+**Benefits:**
+- Zero friction for guest users
+- Automatic upgrade to cloud sync on authentication
+- Reliable fallback ensures no data loss
+- Transparent to consuming components
+
+### Server-Side Filtering
+
+All course filtering happens in `/api/courses` using PostgreSQL:
+
+```typescript
+// Offloads filtering to database, reduces client bundle
+const response = await fetch('/api/courses?term=7&level=avancerad+nivå');
+const { courses, pagination } = await response.json();
+```
+
+**Performance:** Sub-500ms response times with pagination and caching.
+
+### Conflict Detection System
+
+Parses course `notes` field for restriction patterns:
+
+```typescript
+// Example: "The course may not be included in a degree together with: TSBK02"
+const conflicts = findCourseConflicts(newCourse, currentProfile);
+if (conflicts.length > 0) {
+  // Show modal - user chooses to replace or cancel
+  showConflictModal({ newCourse, conflicts });
 }
 ```
 
-### Student Profile
-Profile management supporting the 90hp master's program:
+**Prevents academic integrity violations** while maintaining user agency.
 
-```typescript
-interface StudentProfile {
-  id: string;
-  name: string;
-  terms: {
-    7: Course[];
-    8: Course[];
-    9: Course[];
-  };
-  metadata: {
-    total_credits: number;
-    advanced_credits: number;
-    created_at: Date;
-    updated_at: Date;
-  };
-}
-```
+---
 
-## 🎯 Development Philosophy
+## 🚀 Deployment
 
-### Mock-First Approach
-The project follows a **"mock data first"** development strategy:
+### Vercel Deployment
 
-1. **Phase 1** (Current): Uses local JSON file for rapid development and testing
-2. **Phase 2** (Future): Will transition to Supabase database with real university data
+The application is deployed on [Vercel](https://vercel.com) at [litheplan.tech](https://litheplan.tech).
 
-### State Management
-- **ProfileContext**: Global profile state using React Context + useReducer
-- **Local Storage**: Persistent profile data across sessions
-- **Component State**: Local UI state and filtering logic
+**Deployment Configuration:**
+- **Framework**: Next.js 16
+- **Build Command**: `npm run build`
+- **Output Directory**: `.next`
+- **Node Version**: 20.9+
 
-### Component Architecture
-- **Atomic Design**: Components organized by complexity and reusability
-- **TypeScript First**: Strict typing for all components and data flows
-- **Accessibility**: Full WCAG compliance with shadcn/ui components
+**Environment Variables** must be configured in Vercel dashboard:
+- Supabase credentials (`NEXT_PUBLIC_*` and service keys)
+- Sentry authentication token
+- Upstash Redis credentials
 
-## 📊 Database Statistics Script
+**Automatic Deployments:**
+- Push to `main` branch triggers production deployment
+- Pull requests create preview deployments
 
-A Node.js script is included to generate comprehensive statistics from the Supabase database:
+---
+
+## 🧪 Testing
+
+### Playwright End-to-End Tests
 
 ```bash
-node scripts/fetch-course-stats.js
+npm run test              # Run all tests
+npm run test:ui           # Open Playwright UI
+npm run test:chromium     # Run in Chromium only
+npm run test:report       # View test report
 ```
 
-This script provides detailed analytics including:
-- Course distribution by level, campus, credits, and pace
-- Program coverage analysis 
-- Term and scheduling breakdowns
-- Examination type statistics
-- Courses with special restrictions
-- README-ready summary data
+**Test Coverage:**
+- Course search and filtering
+- Profile creation and validation
+- Conflict detection modals
+- Authentication flows
+- Mobile responsive interactions
 
-The script requires Supabase environment variables to be configured in `.env.local`.
+---
 
-## 🔄 Development Workflow
+## 🔒 Security & Performance
 
-### Current Implementation Status
-- ✅ Course catalog with advanced filtering
-- ✅ Interactive profile builder (pinboard)
-- ✅ Requirements validation and credit tracking
-- ✅ **Course conflict detection and resolution system**
-- ✅ **User authentication** with Supabase
-- ✅ **Profile sharing and persistence** 
-- ✅ **Real Supabase database integration** (475 courses)
-- ✅ Mobile-responsive design with touch interactions
-- ✅ **OBS warning system** for course restrictions
+### Security Measures
+- **Row-Level Security (RLS)**: Users can only access their own profiles
+- **Input Validation**: Zod schemas with strict mode prevent injection attacks
+- **Rate Limiting**: Upstash Redis with sliding window algorithm
+  - Courses API: 100 requests/minute per IP
+  - Profile writes: 10 requests/minute per IP
+- **HTTPS Only**: Enforced in production
+- **No Sensitive Data**: Stack traces and debug info excluded from production responses
 
-### Key Implementation Details
-- **Profile Operations**: ADD_COURSE, REMOVE_COURSE, CLEAR_TERM, CLEAR_PROFILE
-- **Validation Logic**: Real-time checking of 90hp total and 30hp advanced requirements
-- **Filter Persistence**: Maintains filter state during course selection
-- **Type Safety**: Runtime validation with `isValidCourse()` and `isValidStudentProfile()`
+### Performance Optimizations
+- **Server Components**: Reduce client-side JavaScript bundle
+- **Edge Functions**: Low-latency API responses
+- **HTTP Caching**: 5-minute client cache, 10-minute CDN cache for courses
+- **Database Indexes**: GIN and B-tree indexes on frequently queried columns
+- **Code Splitting**: Automatic route-based splitting
+- **Image Optimization**: Next.js Image component with WebP
 
-## 🎓 Target Users
+**Metrics:**
+- LCP: < 2.5s
+- FID: < 100ms
+- CLS: < 0.1
 
-**Primary**: Civil Engineering Master's Students at Linköping University
-- Planning their final 90hp (terms 7-9)
-- Seeking cross-specialization opportunities
-- Need validated, requirement-compliant study plans
-- Want to maximize their educational value and career alignment
-
-**Secondary**: Academic Advisors
-- Supporting student course planning
-- Reviewing custom study profiles
-- Ensuring degree requirement compliance
-
-## 📈 Success Metrics
-
-### User Success Indicators
-- Students discover courses from multiple specializations
-- Reduced time to create a complete study plan
-- Increased confidence in academic planning decisions  
-- Active use of export/share functionality for advisor consultations
-
-### Technical KPIs
-- Fast initial page loads (LCP < 2.5s)
-- Instant, lag-free filtering performance
-- High task completion rates for profile building
-- Cross-device compatibility and accessibility
-
-## 🔮 Future Roadmap
-
-### Phase 2: Enhanced Functionality
-- **User Accounts**: Save and manage multiple profile drafts
-- **Real Data Integration**: Connect to university database
-- **Advanced Validation**: Prerequisite checking and dependency analysis
-- **Profile Templates**: Common specialization starting points
-
-### Phase 3: Ecosystem Integration
-- **Advisor Dashboard**: Tools for academic counselors
-- **Registration Links**: Direct integration with university systems
-- **Alumni Showcase**: Career outcome examples
-- **Analytics**: Usage insights for university administration
+---
 
 ## 🤝 Contributing
 
-This project was developed as part of an academic initiative to improve student experience at Linköping University. While primarily a personal project, contributions that align with the educational mission are welcome.
+This project was developed to improve student experience at Linköping University. Contributions that align with this educational mission are welcome.
 
 ### Development Guidelines
-- Follow existing TypeScript patterns and component structure
-- Maintain accessibility standards (WCAG compliance)
-- Ensure responsive design across all screen sizes
-- Add comprehensive type definitions for new features
-- Test across major browsers and devices
+- Follow TypeScript strict mode (no `any` types)
+- Maintain WCAG 2.1 AA accessibility standards
+- Use Ultracite for code formatting (`npm run format`)
+- Add tests for new features
+- Ensure mobile responsiveness
+
+### Pull Request Process
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes following [Conventional Commits](https://www.conventionalcommits.org/)
+4. Run linting and tests (`npm run lint && npm run build`)
+5. Push to your fork and submit a pull request
+
+---
 
 ## 📄 License
 
-This project is developed for educational purposes. Please respect university data policies and student privacy when contributing or using this codebase.
+This project is developed for educational purposes at Linköping University.
+
+---
 
 ## 🙏 Acknowledgments
 
-- **Linköping University** for the educational context and requirements
+- **Linköping University** for the educational context and course data
 - **shadcn/ui** for the exceptional component library
-- **Next.js** and **React** teams for the development framework
+- **Vercel** for Next.js and deployment infrastructure
+- **Supabase** for the database and authentication platform
 - **Academic advisors** who provided insights into student planning challenges
 
 ---
 
-Built with ❤️ for Linköping University civil engineering students
+<div align="center">
+  <p>Built with ❤️ for Linköping University civil engineering students</p>
+  <p>
+    <a href="https://litheplan.tech">Live Demo</a> ·
+    <a href="https://github.com/Berkay2002/LiTHePlan/issues">Report Bug</a> ·
+    <a href="https://github.com/Berkay2002/LiTHePlan/issues">Request Feature</a>
+  </p>
+</div>
