@@ -1,9 +1,9 @@
 # Active Context
 
 ## Current Status
-**Date**: November 1, 2025
+**Date**: November 2, 2025
 **Phase**: Production Maintenance
-**Focus**: All MVP features complete, monitoring production stability
+**Focus**: All MVP features complete, monitoring production stability, integrating Hypertune Flags scaffolding
 
 **⚠️ CRITICAL FOR AI AGENTS**: When working on ANY task (feature, bug fix, enhancement):
 1. **MUST** create individual task file in `memory-bank/tasks/TASKID-description.md`
@@ -12,6 +12,41 @@
 4. Task files are NOT optional - they preserve context across agent sessions
 
 ## Recent Changes (Current Session)
+### November 2, 2025 - Hypertune Flags SDK Integration (IN PROGRESS)
+**Work**: Scaffolded Hypertune ↔ Vercel Flags integration (Task `FEAT-008`)
+
+**Objective**: Enable feature flag evaluations through Hypertune with Vercel Edge Config for upcoming experiments
+
+**What Was Done**:
+1. ✅ **Dependencies & Environment**
+   - Added `hypertune`, `@flags/sdk`, `@flags-sdk/hypertune`, `@vercel/edge-config`, and `server-only` packages
+   - Documented/added Hypertune CLI environment variables in `.env.local`
+2. ✅ **Server Helper**
+   - Created `lib/getHypertune.ts` to instantiate a Hypertune source with Edge Config init data and Supabase-derived user traits
+3. ✅ **Flags Adapter**
+   - Implemented `flags.ts`, wiring Hypertune into the Vercel Flags SDK and exposing `createServerFlag`
+4. ✅ **Discovery Endpoint**
+   - Added `app/.well-known/vercel/flags/route.ts` so Vercel Toolbar can discover available flags
+5. ✅ **Generated Client Placeholders**
+   - Added `generated/hypertune.ts` and `generated/hypertune.vercel.ts` stubs until real code generation can succeed
+6. ✅ **Type Safety**
+   - Resolved initial TypeScript issues by narrowing unknown values and casting to SDK interfaces where necessary
+
+**Outstanding / Blocked**:
+- `npx hypertune` currently exits with “Code generation for projects with no flags is not supported” — need at least one flag defined in Hypertune project before regeneration
+- `npm run lint` still fails because `biome.jsonc` references unsupported rules (pre-existing issue noted in Known Issues)
+- Layout/provider wiring deferred until first flag use-case is defined
+
+**Verification**:
+- ✅ `npx tsc --noEmit`
+- ❌ `npm run lint` (fails due to existing Ultracite configuration issue)
+- 📝 Logged progress and blockers in `memory-bank/tasks/FEAT-008-hypertune-flags-integration.md`
+
+**Next Steps**:
+1. Define initial flags in Hypertune dashboard and rerun `npx hypertune`
+2. Decide where to consume flags (layout/providers or specific feature modules)
+3. Address Ultracite config incompatibilities so linting passes again
+
 ### November 2, 2025 - README Overhaul (COMPLETED)
 **Work**: Complete rewrite of README.md for technical audience with production-ready documentation
 
@@ -728,9 +763,32 @@ NEW (Database-optimized):
 - ✅ **Profile Metadata**: Dynamic Open Graph tags for social sharing
 
 ## Current Work Focus
+### Hypertune Flags Integration - IN PROGRESS 🔄
+**Status**: Server-side scaffolding ready; awaiting first flag definitions
+**Date**: November 2, 2025
+
+**Scope**:
+1. Establish Hypertune source with Supabase user context and Vercel Edge Config init data (`lib/getHypertune.ts`)
+2. Wrap Hypertune with Vercel Flags SDK adapter (`flags.ts`) and expose helper utilities
+3. Provide discovery endpoint for Vercel Toolbar (`app/.well-known/vercel/flags/route.ts`)
+4. Generate typed Hypertune clients once flags exist and integrate into layout/providers as needed
+
+**Current Status**:
+- ✅ Dependencies installed and environment variables documented
+- ✅ Helper/adapter/discovery route implemented with placeholder generated clients
+- ✅ TypeScript compilation passes (`npx tsc --noEmit`)
+- ⏳ `npx hypertune` blocked until at least one flag is defined in Hypertune dashboard
+- ⏳ Ultracite lint failing due to existing `biome.jsonc` rule incompatibility (separate maintenance item)
+
+**Immediate Next Actions**:
+1. Coordinate with stakeholders to create initial flags in Hypertune project
+2. Regenerate clients via `npx hypertune` and replace placeholder files
+3. Decide on consumer locations (e.g., layout providers, feature modules) and add flag usages/tests
+4. Resolve Ultracite rule mismatch so `npm run lint` succeeds again
+
 ### Production Maintenance Mode - STABLE ✅
 **Status**: All critical features complete and deployed
-**Date**: November 1, 2025
+**Date**: November 2, 2025
 
 **Completed Major Work**:
 1. ✅ **Next.js 16 Compliance** - Upgraded and verified (99/100 score)

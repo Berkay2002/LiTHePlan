@@ -2,6 +2,7 @@
 
 ## In Progress
 - [SEO-003] Comprehensive course page SEO enhancement - Phase 1 & 2 complete (60%), Phase 3 deferred
+- [FEAT-008] Hypertune Flags SDK integration - Server scaffolding complete, awaiting first flags for generation
 
 ## Pending
 No pending tasks at this time.

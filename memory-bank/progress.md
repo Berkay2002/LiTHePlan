@@ -2,7 +2,7 @@
 
 ## Project Status Overview
 **Current Phase**: Production Maintenance  
-**Last Updated**: November 1, 2025  
+**Last Updated**: November 2, 2025  
 **Overall Completion**: 98% (MVP complete, minor enhancements deferred)
 
 ## Feature Completion Status
@@ -168,6 +168,27 @@
 
 **Impact**: Minor - theme switching partially works, not blocking functionality
 
+### In Progress Enhancements
+
+#### Hypertune Flags SDK Integration (70% Complete)
+**Priority**: Medium - Enables feature flagging / experimentation via Vercel Flags
+**Status**: In Progress (FEAT-008)
+
+**Completed**:
+- ✅ Added Hypertune, Vercel Flags, and supporting packages to dependencies
+- ✅ Created server helper (`lib/getHypertune.ts`) that hydrates the Hypertune source with Supabase user context and Vercel Edge Config init data
+- ✅ Implemented Vercel Flags adapter (`flags.ts`) exposing `createServerFlag` for consistent server-side flag evaluation
+- ✅ Added discovery endpoint (`app/.well-known/vercel/flags/route.ts`) for Vercel Toolbar flag awareness
+- ✅ Configured Hypertune CLI environment variables in `.env.local`
+- ✅ Verified TypeScript builds cleanly using placeholder generated clients
+
+**Blocked / Pending**:
+- ⏳ `npx hypertune` cannot generate clients until the Hypertune project contains at least one flag definition
+- ⏳ Ultracite lint still fails because `biome.jsonc` references unsupported rule keys (pre-existing issue)
+- ⏳ Need to wire Hypertune context into providers/layout once real client and flag usages are defined
+
+**Impact**: Server-side scaffolding ready; finalization depends on Hypertune dashboard configuration
+
 ### Phase 2: Feature Enhancements (Not Planned)
 These are documented feature ideas but not currently planned:
 
@@ -200,7 +221,11 @@ These are documented feature ideas but not currently planned:
    - **Affected**: 15+ components (ProfileStatsCard, ProfileSummary, CourseListItem, etc.)
    - **Status**: Deferred - not blocking production functionality
 
-### Low Priority
+2. **Hypertune Client Generation Blocked**:
+   - **Impact**: Medium - prevents real Hypertune clients from being generated, but placeholder stubs keep builds passing
+   - **Cause**: Hypertune project currently has no flags defined; CLI exits with "Code generation for projects with no flags is not supported"
+   - **Next Step**: Define at least one flag in Hypertune dashboard and rerun `npx hypertune`
+
 ### Low Priority
 1. **Database Backup Tables**: Three backup tables from October 31, 2025
    - **Impact**: Low - 2.3 MB disk space, RLS warnings in Supabase advisor
@@ -210,15 +235,19 @@ These are documented feature ideas but not currently planned:
    - **Impact**: Minimal - responses consistently < 500ms with current user load
    - **Future**: Consider React Query/SWR if user base grows significantly
    
-3. **Mobile drag-drop quirks**: Some Android browsers have inconsistent touch behavior
+3. **Ultracite Lint Configuration**: `npm run lint` currently fails because `biome.jsonc` references rules that the pinned Ultracite release does not recognise
+   - **Impact**: Low - TypeScript build succeeds; issue predates Hypertune work
+   - **Action**: Determine compatible rule set or upgrade Ultracite when scheduled
+   
+4. **Mobile drag-drop quirks**: Some Android browsers have inconsistent touch behavior
    - **Impact**: Minor - affects UX on certain older devices
    - **Workaround**: Add/remove buttons available as fallback
 
-4. **Large profile performance**: No optimization for 100+ course selections
+5. **Large profile performance**: No optimization for 100+ course selections
    - **Impact**: Low - unlikely use case (students typically plan 15-20 courses)
    - **Mitigation**: localStorage limits prevent extreme cases
 
-5. **Static course data**: Manual database updates required
+6. **Static course data**: Manual database updates required
    - **Impact**: Expected - documented limitation
    - **Process**: Manual updates when LiU publishes course changes annually
 
