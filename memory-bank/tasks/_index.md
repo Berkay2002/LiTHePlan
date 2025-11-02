@@ -31,6 +31,7 @@ No pending tasks at this time.
 - [REFACTOR-001] AlertBanner component extraction - Completed November 1, 2025
 - [REFACTOR-002] Unified global command palette - Completed November 1, 2025
 - [SEO-002] Course page search optimization - Completed November 2, 2025
+- [DOC-004] Complete community standards files - Completed November 2, 2025
 
 ## Deferred
 - [DESIGN-001] Color theme migration (40% complete) - Deferred until prioritized

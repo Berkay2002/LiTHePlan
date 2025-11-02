@@ -12,6 +12,109 @@
 4. Task files are NOT optional - they preserve context across agent sessions
 
 ## Recent Changes (Current Session)
+### November 2, 2025 - README Overhaul (COMPLETED)
+**Work**: Complete rewrite of README.md for technical audience with production-ready documentation
+
+**Objective**: Create comprehensive, technically-focused README targeting developers, LiU stakeholders, and portfolio visitors
+
+**What Was Done**:
+1. ✅ **Complete README Rewrite**
+   - Header with theme-aware logo (GitHub dark/light mode detection)
+   - Technology badges (Next.js 16, React 19, TypeScript 5, Supabase, Vercel)
+   - Screenshot integration from `public/litheplan-screenshot.png`
+   - Live demo link to litheplan.tech throughout document
+   
+2. ✅ **Content Structure** (inspired by Azure Samples READMEs):
+   - **Overview**: Problem/solution statement with key features
+   - **Features**: Organized by category (Discovery, Profile Builder, Academic Requirements, Management)
+   - **Tech Stack**: Comprehensive breakdown (Frontend, Backend, State Management, DevEx, Production Infrastructure)
+   - **Getting Started**: Installation guide with environment variables
+   - **Project Structure**: File organization with purpose descriptions
+   - **Database**: Schema documentation with 339 accurate course count
+   - **Data Management**: Note about periodic crawler updates (3-6 months)
+   - **Architecture Highlights**: Hybrid storage, server-side filtering, conflict detection with code examples
+   - **Deployment**: Vercel configuration details
+   - **Testing**: Playwright commands and coverage
+   - **Security & Performance**: Detailed database indexing strategy, performance optimizations
+   - **Contributing**: Development guidelines and PR process
+   
+3. ✅ **Key Technical Highlights Added**:
+   - **Database Indexing Strategy** (new section):
+     - Explained 14 indexes on courses table (GIN for arrays, B-tree for scalars)
+     - Explained 4 indexes on academic_profiles table
+     - Performance impact: 100ms with indexes vs 2-3 seconds without
+     - Composite index enabling <50ms related courses queries
+   - **Hybrid Storage Pattern**: Code example showing intelligent routing
+   - **Conflict Detection**: Pattern explanation with examples
+   - **Production Infrastructure**: Rate limiting, Sentry, validation, logging
+   
+4. ✅ **Theme-Aware Logo Implementation**:
+   - Used `<picture>` element with `prefers-color-scheme` media queries
+   - Dark mode: Shows `LiTHePlan-white-transparent.png`
+   - Light mode: Shows `LiTHePlan-transparent.png`
+   - Adapts automatically to GitHub user's theme preference
+   
+5. ✅ **Accurate Data**:
+   - **339 courses** (not 475) - reflects curated active courses
+   - **29 program specializations** - accurate count
+   - **Periodic crawler updates** - mentioned in Data Management section (not "manual only")
+   - **60hp advanced credits** - correct requirement (not 30hp)
+   
+6. ✅ **GitHub Repository Metadata**:
+   - Created description: "Intelligent course planning platform for Linköping University civil engineering students. Discover 339 master's courses, build validated 90hp profiles, and share with advisors. Built with Next.js 16, React 19, TypeScript, and Supabase."
+   - Optimized for GitHub's 160-character limit
+   - Includes searchable keywords
+   
+7. ✅ **Git Workflow**:
+   - README initially created on `seo/course-page-enhancements` branch
+   - Cherry-picked commits to `main` branch
+   - Pushed to `origin/main` successfully
+   - Switched back to seo branch for continued work
+
+**Files Created**:
+- `.github/prompts/create-readme.prompt.md` - Instructions for README generation
+- `public/litheplan-screenshot.png` - Main page screenshot for documentation
+
+**Files Modified**:
+- `README.md` - Complete overhaul with 500+ lines of technical documentation
+
+**Impact**:
+- **Portfolio Presentation**: Professional, technically detailed README showcases project sophistication
+- **Developer Onboarding**: Clear setup instructions, architecture explanations, code examples
+- **SEO Benefits**: Rich metadata in GitHub repository improves discoverability
+- **Technical Credibility**: Database optimization details, performance metrics demonstrate expertise
+
+**Verification**:
+- ✅ Theme-aware logo renders correctly in GitHub dark/light modes
+- ✅ All badges link to correct technology documentation
+- ✅ Live demo link (litheplan.tech) functional
+- ✅ Screenshot displays properly
+- ✅ Markdown formatting valid
+- ✅ Code examples syntax-highlighted
+- ✅ Successfully merged to main branch
+
+**Next Steps**: None - README documentation complete and live on main branch
+
+### November 2, 2025 - Community Standards Files (COMPLETED)
+**Work**: Added the missing GitHub community health files so LiTHePlan meets the community standards checklist
+
+**Deliverables**:
+- `.github/CODE_OF_CONDUCT.md` adapted from Contributor Covenant 2.1 with private reporting guidance
+- `.github/CONTRIBUTING.md` outlining setup steps, coding standards, Memory Bank workflow, and PR expectations
+- `LICENSE` (MIT) covering distribution and reuse terms
+- `.github/SECURITY.md` defining supported versions and the coordinated disclosure process
+- Issue templates (`bug_report.md`, `feature_request.md`) plus `config.yml` to disable blank issues and link to documentation
+- `.github/pull_request_template.md` containing required checks (lint, build, tests, documentation updates)
+
+**Impact**:
+- Contributors now receive consistent instructions before filing issues or opening pull requests
+- Maintainers have a defined contact channel for conduct or security concerns
+- Repository should appear 100% complete in GitHub's community profile checklist
+
+**Verification**:
+- Confirmed new markdown content follows project conventions and references existing tooling (Next.js 16, Memory Bank, testing flow)
+- Logged completion in Memory Bank task `DOC-004` and updated the tasks index
+
 ### November 2, 2025 - SEO Course Page Enhancement Phase 1 & 2 (60% COMPLETE)
 **Work**: Implemented quick wins and content enrichment for course detail pages
 

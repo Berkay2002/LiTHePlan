@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Review the README
+    url: https://github.com/Berkay2002/LiTHePlan#readme
+    about: Check existing documentation before opening a new issue.
+  - name: Security advisory
+    url: https://github.com/Berkay2002/LiTHePlan/security/advisories/new
+    about: Report security vulnerabilities privately.
