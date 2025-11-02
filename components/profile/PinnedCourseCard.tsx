@@ -44,7 +44,7 @@ export function PinnedCourseCard({
                 <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                   <TooltipTrigger asChild>
                     <button
-                      className="flex items-center gap-1 bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                      className="flex items-center gap-1 bg-chart-4/15 text-chart-4 px-1.5 py-0.5 rounded border border-chart-4/30 shrink-0 hover:bg-chart-4/20 transition-colors cursor-pointer"
                       onBlur={() => isMobile && setShowNotesTooltip(false)}
                       onClick={() =>
                         isMobile && setShowNotesTooltip(!showNotesTooltip)
@@ -149,7 +149,7 @@ export function PinnedCourseCard({
                     <TooltipContent side="top">
                       <div className="space-y-1">
                         <p className="font-medium">Additional programs:</p>
-                        <div className="text-slate-200 leading-relaxed">
+                        <div className="text-popover-foreground/80 leading-relaxed">
                           {allProgramsAndOrientations.slice(2).join(", ")}
                         </div>
                       </div>

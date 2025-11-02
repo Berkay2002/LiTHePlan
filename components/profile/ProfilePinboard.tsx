@@ -185,7 +185,7 @@ export function ProfilePinboard({
                 ))}
                 {summary.warnings.map((warning, index) => (
                   <div
-                    className="text-sm text-amber-600 bg-amber-50 p-2 rounded"
+                    className="text-sm text-chart-4 bg-chart-4/10 p-2 rounded"
                     key={`warning-${index}-${warning.slice(0, 20)}`}
                   >
                     ℹ️ {warning}

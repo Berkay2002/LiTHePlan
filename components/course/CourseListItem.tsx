@@ -239,7 +239,7 @@ export function CourseListItem({
                   <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                     <TooltipTrigger asChild>
                       <button
-                        className="flex items-center gap-1 bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                        className="flex items-center gap-1 bg-chart-4/15 text-chart-4 px-1.5 py-0.5 rounded border border-chart-4/30 shrink-0 hover:bg-chart-4/20 transition-colors cursor-pointer"
                         onBlur={() => isMobile && setShowNotesTooltip(false)}
                         onClick={() =>
                           isMobile && setShowNotesTooltip(!showNotesTooltip)
@@ -385,7 +385,7 @@ export function CourseListItem({
                     <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                       <TooltipTrigger asChild>
                         <button
-                          className="flex items-center gap-1 bg-amber-100 text-amber-800 px-2 py-1 rounded-md border border-amber-200 shrink-0 hover:bg-amber-200 transition-colors cursor-pointer"
+                          className="flex items-center gap-1 bg-chart-4/15 text-chart-4 px-2 py-1 rounded-md border border-chart-4/30 shrink-0 hover:bg-chart-4/20 transition-colors cursor-pointer"
                           onBlur={() => isMobile && setShowNotesTooltip(false)}
                           onClick={() =>
                             isMobile && setShowNotesTooltip(!showNotesTooltip)
@@ -396,13 +396,15 @@ export function CourseListItem({
                         </button>
                       </TooltipTrigger>
                       <TooltipContent
-                        className="max-w-xs bg-gray-900 text-white border-gray-700"
+                        className="max-w-xs bg-popover text-popover-foreground border border-border"
                         onPointerDownOutside={() =>
                           isMobile && setShowNotesTooltip(false)
                         }
                         side="top"
                       >
-                        <p className="text-xs text-white">{course.notes}</p>
+                        <p className="text-xs text-popover-foreground/80">
+                          {course.notes}
+                        </p>
                       </TooltipContent>
                     </Tooltip>
                   )}
@@ -539,17 +541,17 @@ export function CourseListItem({
                             +{allProgramsAndOrientations.length - 2} more
                           </Badge>
                           {/* Tooltip */}
-                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-slate-900 text-slate-50 border border-slate-700/50 shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-100 max-w-md w-max">
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 peer-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-100 max-w-md w-max">
                             <div className="space-y-1">
-                              <p className="font-medium text-slate-100">
+                              <p className="font-medium text-popover-foreground">
                                 Additional programs:
                               </p>
-                              <div className="text-slate-200 leading-relaxed">
+                              <div className="text-popover-foreground/80 leading-relaxed">
                                 {allProgramsAndOrientations.slice(2).join(", ")}
                               </div>
                             </div>
                             {/* Arrow */}
-                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-slate-900" />
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-popover" />
                           </div>
                         </div>
                       )}

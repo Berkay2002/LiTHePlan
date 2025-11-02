@@ -73,10 +73,10 @@ export function ConflictResolutionModal({
 
   return (
     <Dialog onOpenChange={handleClose} open={isOpen}>
-      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto bg-gradient-to-br from-card to-card/95 border-2 border-picton-blue/20 shadow-2xl">
+      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto bg-gradient-to-br from-card to-card/95 border-2 border-primary/30 shadow-2xl shadow-primary/10">
         <DialogHeader className="text-center pb-6">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-picton-blue/20 to-air-superiority-blue/20 rounded-full flex items-center justify-center mb-4">
-            <AlertTriangle className="h-8 w-8 text-picton-blue" />
+          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="h-8 w-8 text-primary" />
           </div>
           <DialogTitle className="text-2xl font-bold text-foreground">
             Course Selection Choice
@@ -92,8 +92,8 @@ export function ConflictResolutionModal({
           <div
             className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer ${
               selectedChoice === "new"
-                ? "border-picton-blue bg-gradient-to-r from-picton-blue/10 to-picton-blue/5 shadow-lg shadow-picton-blue/10"
-                : "border-picton-blue/30 bg-picton-blue/5 hover:border-picton-blue/50 hover:shadow-md"
+                ? "border-primary bg-linear-to-r from-primary/10 to-primary/5 shadow-lg shadow-primary/10"
+                : "border-primary/30 bg-primary/5 hover:border-primary/50 hover:shadow-md"
             }`}
             onClick={() => {
               setSelectedChoice("new");
@@ -102,8 +102,8 @@ export function ConflictResolutionModal({
           >
             {/* Selection indicator */}
             {selectedChoice === "new" && (
-              <div className="absolute top-4 right-4 w-6 h-6 bg-picton-blue rounded-full flex items-center justify-center">
-                <Check className="h-4 w-4 text-white" />
+              <div className="absolute top-4 right-4 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                <Check className="h-4 w-4 text-primary-foreground" />
               </div>
             )}
 
@@ -111,7 +111,7 @@ export function ConflictResolutionModal({
               <div className="flex items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-lg font-semibold text-picton-blue">
+                    <h3 className="text-lg font-semibold text-primary">
                       New Course
                     </h3>
                     <span className="text-sm text-muted-foreground">
@@ -123,17 +123,17 @@ export function ConflictResolutionModal({
                   </h4>
                   <div className="mb-3">
                     <Badge
-                      className="bg-picton-blue/15 text-picton-blue border-picton-blue/30 font-medium"
+                      className="bg-primary/10 text-primary border-primary/30 font-medium"
                       variant="secondary"
                     >
                       {newCourse.id}
                     </Badge>
                   </div>
                   {newCourse.notes && (
-                    <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-200 rounded-lg p-3">
+                    <div className="bg-gradient-to-r from-chart-4/15 to-chart-4/10 border border-chart-4/30 rounded-lg p-3">
                       <div className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                        <p className="text-sm text-amber-800 font-medium">
+                        <AlertTriangle className="h-4 w-4 text-chart-4 shrink-0 mt-0.5" />
+                        <p className="text-sm text-chart-4 font-medium">
                           {getConflictReason(newCourse)}
                         </p>
                       </div>
@@ -148,15 +148,15 @@ export function ConflictResolutionModal({
           <div
             className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 ${
               selectedChoice === "existing"
-                ? "border-air-superiority-blue bg-gradient-to-r from-air-superiority-blue/10 to-air-superiority-blue/5 shadow-lg shadow-air-superiority-blue/10"
-                : "border-air-superiority-blue/30 bg-air-superiority-blue/5 hover:border-air-superiority-blue/50 hover:shadow-md"
+                ? "border-accent bg-linear-to-r from-accent/10 to-accent/5 shadow-lg shadow-accent/10"
+                : "border-accent/40 bg-accent/10 hover:border-accent/60 hover:shadow-md"
             }`}
           >
             <div className="p-6">
               <div className="flex items-start gap-4 mb-4">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-lg font-semibold text-air-superiority-blue">
+                    <h3 className="text-lg font-semibold text-accent">
                       Current Course{conflictingCourses.length > 1 ? "s" : ""}
                     </h3>
                     <span className="text-sm text-muted-foreground">
@@ -174,8 +174,8 @@ export function ConflictResolutionModal({
                 {/* Selection indicator for single course */}
                 {conflictingCourses.length === 1 &&
                   selectedChoice === "existing" && (
-                    <div className="absolute top-4 right-4 w-6 h-6 bg-air-superiority-blue rounded-full flex items-center justify-center">
-                      <Check className="h-4 w-4 text-white" />
+                    <div className="absolute top-4 right-4 w-6 h-6 bg-accent rounded-full flex items-center justify-center">
+                      <Check className="h-4 w-4 text-accent-foreground" />
                     </div>
                   )}
               </div>
@@ -187,12 +187,12 @@ export function ConflictResolutionModal({
                     className={`relative border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
                       conflictingCourses.length === 1
                         ? selectedChoice === "existing"
-                          ? "border-air-superiority-blue bg-air-superiority-blue/10"
-                          : "border-air-superiority-blue/40 hover:border-air-superiority-blue/60"
+                          ? "border-accent bg-accent/10"
+                          : "border-accent/40 hover:border-accent/60"
                         : selectedChoice === "existing" &&
                             selectedExistingCourse?.id === conflictingCourse.id
-                          ? "border-air-superiority-blue bg-air-superiority-blue/10 shadow-md"
-                          : "border-air-superiority-blue/40 hover:border-air-superiority-blue/60 hover:bg-air-superiority-blue/5"
+                          ? "border-accent bg-accent/10 shadow-md"
+                          : "border-accent/40 hover:border-accent/60 hover:bg-accent/10"
                     }`}
                     key={conflictingCourse.id}
                     onClick={() => {
@@ -204,8 +204,8 @@ export function ConflictResolutionModal({
                     {conflictingCourses.length > 1 &&
                       selectedChoice === "existing" &&
                       selectedExistingCourse?.id === conflictingCourse.id && (
-                        <div className="absolute top-3 right-3 w-5 h-5 bg-air-superiority-blue rounded-full flex items-center justify-center">
-                          <Check className="h-3 w-3 text-white" />
+                        <div className="absolute top-3 right-3 w-5 h-5 bg-accent rounded-full flex items-center justify-center">
+                          <Check className="h-3 w-3 text-accent-foreground" />
                         </div>
                       )}
 
@@ -214,17 +214,17 @@ export function ConflictResolutionModal({
                     </h4>
                     <div className="mb-3">
                       <Badge
-                        className="bg-picton-blue/15 text-picton-blue border-picton-blue/30 font-medium"
+                        className="bg-primary/10 text-primary border-primary/30 font-medium"
                         variant="secondary"
                       >
                         {conflictingCourse.id}
                       </Badge>
                     </div>
                     {conflictingCourse.notes && (
-                      <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 border border-amber-200 rounded-lg p-3">
+                      <div className="bg-gradient-to-r from-chart-4/15 to-chart-4/10 border border-chart-4/30 rounded-lg p-3">
                         <div className="flex items-start gap-2">
-                          <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                          <p className="text-sm text-amber-800 font-medium">
+                          <AlertTriangle className="h-4 w-4 text-chart-4 shrink-0 mt-0.5" />
+                          <p className="text-sm text-chart-4 font-medium">
                             {getConflictReason(conflictingCourse)}
                           </p>
                         </div>
@@ -255,7 +255,7 @@ export function ConflictResolutionModal({
                 Cancel
               </Button>
               <Button
-                className="flex items-center gap-2 bg-gradient-to-r from-picton-blue to-picton-blue-600 hover:from-picton-blue-600 hover:to-picton-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all duration-200"
+                className="flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition-all duration-200"
                 disabled={
                   !selectedChoice ||
                   (selectedChoice === "existing" && !selectedExistingCourse)

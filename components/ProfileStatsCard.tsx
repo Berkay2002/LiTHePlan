@@ -187,11 +187,11 @@ export function ProfileStatsCard({
                   Required: {minAdvancedCredits}hp
                 </span>
                 {advancedCredits >= minAdvancedCredits ? (
-                  <span className="text-green-600 dark:text-green-400 font-medium">
+                  <span className="text-chart-2 font-medium">
                     ✓ Complete
                   </span>
                 ) : (
-                  <span className="text-amber-600 dark:text-amber-400 font-medium">
+                  <span className="text-chart-4 font-medium">
                     {minAdvancedCredits - advancedCredits}hp needed
                   </span>
                 )}

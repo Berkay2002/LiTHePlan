@@ -54,14 +54,14 @@ export function AuthStatus() {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="flex items-center gap-2 text-white text-sm">
+      <div className="flex items-center gap-2 text-sidebar-foreground text-sm">
         <span className="hidden sm:inline font-medium">
           Hi, {user.email?.split("@")[0] || `User ${user.id.slice(0, 8)}`}!
         </span>
       </div>
 
       <Button
-        className="h-10 bg-white/10 border-white/30 text-white hover:bg-white hover:text-air-superiority-blue-400 transition-all duration-200"
+        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground/20 hover:text-primary transition-all duration-200"
         onClick={handleSignOut}
         size="sm"
         variant="outline"

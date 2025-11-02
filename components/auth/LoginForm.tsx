@@ -90,7 +90,7 @@ export function LoginForm() {
             />
           </div>
 
-          {error && <div className="text-red-600 text-sm">{error}</div>}
+          {error && <div className="text-destructive text-sm">{error}</div>}
 
           <Button className="w-full" disabled={loading} type="submit">
             {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
@@ -99,7 +99,7 @@ export function LoginForm() {
 
         <div className="mt-4 text-center">
           <button
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-primary hover:underline"
             disabled={loading}
             onClick={() => setIsSignUp(!isSignUp)}
             type="button"

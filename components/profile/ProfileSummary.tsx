@@ -19,14 +19,21 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
   const completionRatio = summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS;
 
   const getCompletionColor = () => {
-    if (completionRatio >= 1) return "text-green-600";
-    if (completionRatio >= 0.75) return "text-blue-600";
-    if (completionRatio >= 0.5) return "text-yellow-600";
-    return "text-red-600";
+    if (completionRatio >= 1) return "text-chart-2";
+    if (completionRatio >= 0.75) return "text-primary";
+    if (completionRatio >= 0.5) return "text-chart-4";
+    return "text-destructive";
+  };
+
+  const getCompletionBarColor = () => {
+    if (completionRatio >= 1) return "bg-chart-2";
+    if (completionRatio >= 0.75) return "bg-primary";
+    if (completionRatio >= 0.5) return "bg-chart-4";
+    return "bg-destructive";
   };
 
   const getAdvancedRequirementColor = () =>
-    summary.meetsAdvancedRequirement ? "text-green-600" : "text-amber-600";
+    summary.meetsAdvancedRequirement ? "text-chart-2" : "text-chart-4";
 
   return (
     <Card className="w-full bg-card border-border shadow-lg">
@@ -94,15 +101,7 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
               </div>
               <div className="w-full bg-muted rounded-full h-2">
                 <div
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    completionRatio >= 1
-                      ? "bg-green-500"
-                      : completionRatio >= 0.75
-                        ? "bg-blue-500"
-                        : completionRatio >= 0.5
-                          ? "bg-yellow-500"
-                          : "bg-red-500"
-                  }`}
+                  className={`h-2 rounded-full transition-all duration-300 ${getCompletionBarColor()}`}
                   style={{
                     width: `${Math.min(completionRatio * 100, 100)}%`,
                   }}
@@ -114,9 +113,9 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 {summary.meetsAdvancedRequirement ? (
-                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <CheckCircle className="h-4 w-4 text-chart-2" />
                 ) : (
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  <AlertTriangle className="h-4 w-4 text-chart-4" />
                 )}
                 <span className={getAdvancedRequirementColor()}>
                   Advanced Level Requirement
@@ -129,13 +128,13 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
 
               <div className="flex items-center gap-2 text-sm">
                 {summary.isComplete ? (
-                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <CheckCircle className="h-4 w-4 text-chart-2" />
                 ) : (
-                  <Target className="h-4 w-4 text-blue-600" />
+                  <Target className="h-4 w-4 text-primary" />
                 )}
                 <span
                   className={
-                    summary.isComplete ? "text-green-600" : "text-blue-600"
+                    summary.isComplete ? "text-chart-2" : "text-primary"
                   }
                 >
                   Total Credits Target
@@ -163,8 +162,8 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
                     className="flex items-start gap-2 text-xs"
                     key={`warning-${index}-${warning.slice(0, 20)}`}
                   >
-                    <AlertTriangle className="h-3 w-3 text-amber-600 mt-0.5 shrink-0" />
-                    <span className="text-amber-600">{warning}</span>
+                    <AlertTriangle className="h-3 w-3 text-chart-4 mt-0.5 shrink-0" />
+                    <span className="text-chart-4">{warning}</span>
                   </div>
                 ))}
               </div>

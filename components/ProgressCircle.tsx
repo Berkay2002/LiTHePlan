@@ -38,7 +38,7 @@ export function ProgressCircle({
         >
           {/* Background circle */}
           <circle
-            className="text-gray-200 dark:text-gray-700"
+            className="text-muted-foreground/20"
             cx={size / 2}
             cy={size / 2}
             fill="transparent"
@@ -49,7 +49,7 @@ export function ProgressCircle({
 
           {/* Progress circle */}
           <circle
-            className="text-blue-500 transition-all duration-300 ease-in-out"
+            className="text-primary transition-all duration-300 ease-in-out"
             cx={size / 2}
             cy={size / 2}
             fill="transparent"
