@@ -274,48 +274,55 @@ function HomeContent() {
             } ${profileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
           >
             <div className="container mx-auto px-4 py-8">
-              <InfoBanner />
-              <div className="w-full mb-6">
-                <div
-                  className="grid gap-4 lg:gap-5 w-full justify-center"
-                  style={{
-                    gridTemplateColumns:
-                      "repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))",
-                  }}
-                >
-                  <div className="col-start-1 -col-end-1 flex justify-end">
-                    <ViewToggle
-                      onViewModeChange={setViewMode}
-                      viewMode={viewMode}
+              {/* Wrapper grid to constrain all content to match CourseGrid width */}
+              <div
+                className="grid gap-4 lg:gap-5 w-full justify-center"
+                style={{
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
+                }}
+              >
+                {/* InfoBanner spans all columns */}
+                <div className="col-start-1 -col-end-1 mb-2">
+                  <InfoBanner />
+                </div>
+
+                {/* ViewToggle spans all columns, aligned to the right */}
+                <div className="col-start-1 -col-end-1 flex justify-end mb-2">
+                  <ViewToggle
+                    onViewModeChange={setViewMode}
+                    viewMode={viewMode}
+                  />
+                </div>
+
+                {/* Course display spans all columns */}
+                <div className="col-start-1 -col-end-1">
+                  {viewMode === "grid" ? (
+                    <CourseGrid
+                      courses={paginatedCourses}
+                      currentPage={currentPage}
+                      isFiltered={hasActiveFilters(filterState)}
+                      itemsPerPage={COURSES_PER_PAGE}
+                      onPageChange={handlePageChange}
+                      profileSidebarOpen={profileSidebarOpen}
+                      sidebarOpen={sidebarOpen}
+                      totalCourses={filteredCourses.length}
+                      totalPages={totalPages}
                     />
-                  </div>
+                  ) : (
+                    <CourseList
+                      activeFilters={filterState}
+                      courses={paginatedCourses}
+                      currentPage={currentPage}
+                      isFiltered={hasActiveFilters(filterState)}
+                      itemsPerPage={COURSES_PER_PAGE}
+                      onPageChange={handlePageChange}
+                      totalCourses={filteredCourses.length}
+                      totalPages={totalPages}
+                    />
+                  )}
                 </div>
               </div>
-
-              {viewMode === "grid" ? (
-                <CourseGrid
-                  courses={paginatedCourses}
-                  currentPage={currentPage}
-                  isFiltered={hasActiveFilters(filterState)}
-                  itemsPerPage={COURSES_PER_PAGE}
-                  onPageChange={handlePageChange}
-                  profileSidebarOpen={profileSidebarOpen}
-                  sidebarOpen={sidebarOpen}
-                  totalCourses={filteredCourses.length}
-                  totalPages={totalPages}
-                />
-              ) : (
-                <CourseList
-                  activeFilters={filterState}
-                  courses={paginatedCourses}
-                  currentPage={currentPage}
-                  isFiltered={hasActiveFilters(filterState)}
-                  itemsPerPage={COURSES_PER_PAGE}
-                  onPageChange={handlePageChange}
-                  totalCourses={filteredCourses.length}
-                  totalPages={totalPages}
-                />
-              )}
             </div>
           </div>
         </div>
