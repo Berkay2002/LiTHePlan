@@ -15,7 +15,7 @@ export function createDefaultFilterState(): FilterState {
     block: [],
     pace: [],
     campus: [],
-    examination: [...EXAMINATION_TYPES],
+    examination: {},
     programs: [],
     huvudomraden: [],
     search: "",
@@ -33,10 +33,6 @@ export function parseFilterState(serialized: string): FilterState | null {
       ...createDefaultFilterState(),
       ...parsed,
     };
-
-    if (!next.examination?.length) {
-      next.examination = [...EXAMINATION_TYPES];
-    }
 
     return next;
   } catch (error) {
@@ -118,23 +114,38 @@ const matchesSimpleArray = (selectedValues: string[], value: string) =>
 
 const matchesExamination = (
   course: Course,
-  selectedExaminations: FilterState["examination"]
+  examinationFilters: FilterState["examination"]
 ) => {
-  // If all examination types are selected, show all courses
-  if (selectedExaminations.length === EXAMINATION_TYPES.length) {
+  // If no filters are set, show all courses
+  const hasFilters = Object.keys(examinationFilters).length > 0;
+  if (!hasFilters) {
     return true;
   }
 
-  // If course has no examination data, include it (assume it matches)
+  // If course has no examination data, exclude it when filters are active
   if (!course.examination || course.examination.length === 0) {
-    return true;
+    return false;
   }
 
-  const unselected = EXAMINATION_TYPES.filter(
-    (exam) => !selectedExaminations.includes(exam)
-  );
+  // Check each examination type filter
+  for (const [examType, mode] of Object.entries(examinationFilters)) {
+    const courseHasExam = course.examination.includes(examType);
 
-  return !unselected.some((exam) => course.examination.includes(exam));
+    if (mode === 'include') {
+      // MUST have this examination type
+      if (!courseHasExam) {
+        return false;
+      }
+    } else if (mode === 'exclude') {
+      // MUST NOT have this examination type
+      if (courseHasExam) {
+        return false;
+      }
+    }
+    // 'ignore' mode: no constraint for this type
+  }
+
+  return true;
 };
 
 const matchesPrograms = (
@@ -220,9 +231,13 @@ export function filterCourses(
 }
 
 export function hasActiveFilters(filterState: FilterState) {
-  return Object.entries(filterState).some(([key, value]) =>
-    key === "programs" || key === "search"
-      ? Boolean(value)
-      : (value as (string | number)[]).length > 0
-  );
+  return Object.entries(filterState).some(([key, value]) => {
+    if (key === "programs" || key === "search") {
+      return Boolean(value);
+    }
+    if (key === "examination") {
+      return Object.keys(value as Record<string, string>).length > 0;
+    }
+    return (value as (string | number)[]).length > 0;
+  });
 }

@@ -24,6 +24,8 @@ const examinationOptions = [
   { value: "UPG", label: "UPG" },
 ];
 
+export type ExaminationFilterMode = 'include' | 'exclude' | 'ignore';
+
 export interface FilterState {
   level: string[];
   term: number[];
@@ -31,7 +33,7 @@ export interface FilterState {
   block: number[];
   pace: string[];
   campus: string[];
-  examination: string[]; // Selected examination types
+  examination: Record<string, ExaminationFilterMode>; // Per-type include/exclude/ignore
   programs: string[]; // Multiple string selection for main programs
   huvudomraden: string[]; // Multiple string selection for huvudområden (replaces orientations)
   search: string; // New search field
@@ -334,34 +336,65 @@ export function CollapsibleFilterSidebar({
                 />
               </div>
 
-              {/* Examination Filter - Multi-Select */}
+              {/* Examination Filter - Tri-State (Include/Exclude/Ignore) */}
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
                     Examination
                   </h3>
                 </div>
-                <MultiSelect
-                  className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
-                  defaultValue={
-                    filterState.examination || [
-                      "TEN",
-                      "LAB",
-                      "PROJ",
-                      "SEM",
-                      "UPG",
-                    ]
-                  }
-                  maxCount={1}
-                  onValueChange={(values) => {
-                    const newFilters = { ...filterState };
-                    newFilters.examination = values;
-                    onFilterChange(newFilters);
-                  }}
-                  options={examinationOptions}
-                  placeholder="Välj examinationsformer..."
-                  variant="secondary"
-                />
+                <div className="space-y-2 bg-inherit p-3 rounded-md border shadow-sm">
+                  {examinationOptions.map((option) => {
+                    const mode = filterState.examination[option.value] || 'ignore';
+                    return (
+                      <div key={option.value} className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-medium text-sidebar-foreground">
+                          {option.label}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <Button
+                            className={cn(
+                              "h-7 px-2 text-xs",
+                              mode === 'include' && "bg-green-600 hover:bg-green-700 text-white"
+                            )}
+                            onClick={() => {
+                              const newFilters = { ...filterState };
+                              if (mode === 'include') {
+                                delete newFilters.examination[option.value];
+                              } else {
+                                newFilters.examination = { ...newFilters.examination, [option.value]: 'include' };
+                              }
+                              onFilterChange(newFilters);
+                            }}
+                            size="sm"
+                            variant={mode === 'include' ? 'default' : 'outline'}
+                          >
+                            Include
+                          </Button>
+                          <Button
+                            className={cn(
+                              "h-7 px-2 text-xs",
+                              mode === 'exclude' && "bg-red-600 hover:bg-red-700 text-white"
+                            )}
+                            onClick={() => {
+                              const newFilters = { ...filterState };
+                              if (mode === 'exclude') {
+                                delete newFilters.examination[option.value];
+                              } else {
+                                newFilters.examination = { ...newFilters.examination, [option.value]: 'exclude' };
+                              }
+                              onFilterChange(newFilters);
+                            }}
+                            size="sm"
+                            variant={mode === 'exclude' ? 'default' : 'outline'}
+                          >
+                            Exclude
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Level and Study Pace - Side by Side */}
@@ -792,28 +825,65 @@ export function FilterPanel({
           />
         </div>
 
-        {/* Examination Filter - Multi-Select */}
+        {/* Examination Filter - Tri-State (Include/Exclude/Ignore) */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <h3 className="text-xs font-semibold text-sidebar-foreground uppercase tracking-wide">
               Examination
             </h3>
           </div>
-          <MultiSelect
-            className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
-            defaultValue={
-              filterState.examination || ["TEN", "LAB", "PROJ", "SEM", "UPG"]
-            }
-            maxCount={1}
-            onValueChange={(values) => {
-              const newFilters = { ...filterState };
-              newFilters.examination = values;
-              onFilterChange(newFilters);
-            }}
-            options={examinationOptions}
-            placeholder="Välj examinationsformer..."
-            variant="secondary"
-          />
+          <div className="space-y-2 bg-inherit p-3 rounded-md border shadow-sm">
+            {examinationOptions.map((option) => {
+              const mode = filterState.examination[option.value] || 'ignore';
+              return (
+                <div key={option.value} className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-sidebar-foreground">
+                    {option.label}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      className={cn(
+                        "h-7 px-2 text-xs",
+                        mode === 'include' && "bg-green-600 hover:bg-green-700 text-white"
+                      )}
+                      onClick={() => {
+                        const newFilters = { ...filterState };
+                        if (mode === 'include') {
+                          delete newFilters.examination[option.value];
+                        } else {
+                          newFilters.examination = { ...newFilters.examination, [option.value]: 'include' };
+                        }
+                        onFilterChange(newFilters);
+                      }}
+                      size="sm"
+                      variant={mode === 'include' ? 'default' : 'outline'}
+                    >
+                      Include
+                    </Button>
+                    <Button
+                      className={cn(
+                        "h-7 px-2 text-xs",
+                        mode === 'exclude' && "bg-red-600 hover:bg-red-700 text-white"
+                      )}
+                      onClick={() => {
+                        const newFilters = { ...filterState };
+                        if (mode === 'exclude') {
+                          delete newFilters.examination[option.value];
+                        } else {
+                          newFilters.examination = { ...newFilters.examination, [option.value]: 'exclude' };
+                        }
+                        onFilterChange(newFilters);
+                      }}
+                      size="sm"
+                      variant={mode === 'exclude' ? 'default' : 'outline'}
+                    >
+                      Exclude
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Level and Study Pace - Side by Side */}
