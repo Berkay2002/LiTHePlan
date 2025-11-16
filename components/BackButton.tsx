@@ -19,10 +19,10 @@ export function BackButton({
 }: BackButtonProps) {
   const buttonContent = (
     <Button
-      className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+      className="h-10 px-2 sm:px-3 bg-sidebar text-sidebar-foreground hover:bg-primary/10 hover:text-primary transition-all duration-200"
       onClick={onClick}
       size="sm"
-      variant="outline"
+      variant="ghost"
     >
       <ArrowLeft
         className={`h-4 w-4 ${hideTextOnMobile ? "" : "mr-2"} ${hideTextOnMobile ? "sm:mr-2" : ""}`}

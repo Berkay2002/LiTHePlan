@@ -343,25 +343,25 @@ export function ShareButtons({
       {/* Only show share button for authenticated users */}
       {user ? (
         <Button
-          className="h-10 px-2 sm:px-3 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+          className="h-10 px-2 sm:px-3 bg-sidebar text-sidebar-foreground hover:bg-primary/10 hover:text-primary transition-all duration-200"
           disabled={saving}
           onClick={handleShare}
           size="sm"
           title="Save profile to cloud and share"
-          variant="outline"
+          variant="ghost"
         >
           {buttonContent}
         </Button>
       ) : (
         /* Show sign up prompt for anonymous users */
         <Button
-          className="h-10 px-2 sm:px-3 gap-1 bg-sidebar-foreground/10 border-sidebar-foreground/40 text-sidebar-foreground hover:bg-primary/10 hover:border-primary/50 hover:text-primary transition-all duration-200"
+          className="h-10 px-2 sm:px-3 gap-1 bg-sidebar text-sidebar-foreground hover:bg-primary/10 hover:text-primary transition-all duration-200"
           onClick={() => {
             window.location.href = "/login";
           }}
           size="sm"
           title="Sign up to save profiles permanently and share with others"
-          variant="outline"
+          variant="ghost"
         >
           <UserIcon className="w-4 h-4" />
           <span className="hidden sm:inline">Sign Up to Share</span>

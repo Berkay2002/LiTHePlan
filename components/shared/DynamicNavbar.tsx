@@ -140,7 +140,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 {/* Profile button - always visible */}
                 <Link href="/profile/edit">
                   <Button
-                    className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                    className="h-10 px-3 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                     size="sm"
                     title="Build your course profile (no login required)"
                     variant="ghost"
@@ -185,7 +185,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 ) : (
                   <Link href="/login">
                     <Button
-                      className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                      className="h-10 px-3 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                       size="sm"
                       title="Optional: Sign in for cloud storage and permanent profile saving"
                       variant="ghost"
@@ -206,7 +206,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               <div className="shrink-0 w-10 flex justify-start">
                 {props.onMobileMenuToggle && (
                   <Button
-                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 relative overflow-hidden"
+                    className="h-10 w-10 p-0 bg-sidebar hover:bg-primary/10 transition-all duration-200 relative overflow-hidden"
                     onClick={props.onMobileMenuToggle}
                     size="sm"
                     variant="ghost"
@@ -254,7 +254,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
-                        className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
+                        className="h-10 w-10 p-0 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                         size="sm"
                         title="Build your course profile (no login required)"
                         variant="ghost"
@@ -282,7 +282,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
+                          className="h-10 w-10 p-0 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="ghost"
@@ -312,18 +312,8 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 <BackButton href="/" text="Back to Home" />
               </div>
 
-              {/* Right Side - Ctrl+K Indicator, Share, Timeline Toggle, Theme Toggle, Separator, and Authentication */}
+              {/* Right Side - Share, Timeline Toggle, Theme Toggle, Ctrl+K Indicator, Separator, and Authentication */}
               <div className="flex items-center gap-4">
-                {/* Ctrl+K Keyboard Shortcut Indicator */}
-                <div className="flex items-center gap-2 h-10 px-3 py-2 rounded-md bg-background">
-                  <p className="text-muted-foreground text-sm">
-                    Press{" "}
-                    <Kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
-                      <span className="text-xs">⌘</span>K
-                    </Kbd>
-                  </p>
-                </div>
-
                 {/* Share Button */}
                 <ShareButtons
                   profile={profileState?.current_profile || undefined}
@@ -333,7 +323,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 {/* Timeline Toggle */}
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                    className="h-10 px-3 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="ghost"
@@ -359,6 +349,11 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 {/* Theme Toggle */}
                 <ModeToggle />
 
+                {/* Ctrl+K Keyboard Shortcut Indicator */}
+                <Kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-10 items-center gap-1 rounded border px-3 font-mono text-sm font-medium opacity-100 select-none">
+                  <span className="text-base">⌘</span>K
+                </Kbd>
+
                 {/* Vertical Separator */}
                 <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20" />
 
@@ -379,7 +374,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 ) : (
                   <Link href="/login">
                     <Button
-                      className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                      className="h-10 px-3 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                       size="sm"
                       title="Optional: Sign in for cloud storage and permanent profile saving"
                       variant="ghost"
@@ -411,7 +406,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 {/* Timeline Toggle - Mobile */}
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
+                    className="h-10 w-10 p-0 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="ghost"
@@ -447,7 +442,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 ) : (
                   <Link href="/login">
                     <Button
-                      className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
+                      className="h-10 w-10 p-0 bg-sidebar hover:bg-primary/10 transition-all duration-200"
                       size="sm"
                       title="Optional: Sign in for cloud storage and permanent profile saving"
                       variant="ghost"

@@ -3,8 +3,6 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { CoursePageSkeleton } from "@/components/course/CoursePageSkeleton";
 import type { Course } from "@/types/course";
 import { createClient } from "@/utils/supabase/server";
 import CoursePageClient from "./CoursePageClient";
@@ -187,12 +185,9 @@ export default async function CoursePage({
     notFound();
   }
 
-  // ISR + Suspense: Static course shell prerendered, revalidated every hour
-  // ProfileProvider streams user-specific data with Suspense
+  // ISR: Static course shell prerendered, revalidated every hour
+  // Course data is fetched server-side, so no Suspense needed
+  // ProfileProvider handles user-specific data client-side
   // Related courses fetched client-side via API (/api/courses/[courseId]/related)
-  return (
-    <Suspense fallback={<CoursePageSkeleton />}>
-      <CoursePageClient course={course as Course} />
-    </Suspense>
-  );
+  return <CoursePageClient course={course as Course} />;
 }
