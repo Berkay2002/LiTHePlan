@@ -8,25 +8,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
 
   try {
-    // Use service role client for sitemap generation (no cookies needed)
+    // Use public anon key for reading public course data
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    if (!(supabaseUrl && supabaseServiceKey)) {
+    if (!(supabaseUrl && supabaseAnonKey)) {
       console.warn(
-        "Supabase credentials not found for sitemap generation, returning homepage only"
+        "Supabase credentials not found for sitemap generation, returning static pages only"
       );
-      return [
-        {
-          url: baseUrl,
-          lastModified: new Date(),
-          changeFrequency: "daily",
-          priority: 1.0,
-        },
-      ];
+      return getStaticPages(baseUrl);
     }
 
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     // Fetch public profiles updated in the last 30 days
     const thirtyDaysAgo = new Date();
@@ -45,15 +38,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .select("id, updated_at")
       .order("id");
 
-    // Homepage entry
-    const staticPages: MetadataRoute.Sitemap = [
-      {
-        url: baseUrl,
-        lastModified: new Date(),
-        changeFrequency: "daily",
-        priority: 1.0,
-      },
-    ];
+    // Static pages
+    const staticPages: MetadataRoute.Sitemap = getStaticPages(baseUrl);
 
     // Course detail pages (all 339 courses)
     const coursePages: MetadataRoute.Sitemap =
@@ -79,14 +65,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   } catch (error) {
     console.error("Error generating sitemap:", error);
 
-    // Fallback to just homepage if database query fails
-    return [
-      {
-        url: baseUrl,
-        lastModified: new Date(),
-        changeFrequency: "daily",
-        priority: 1.0,
-      },
-    ];
+    // Fallback to static pages if database query fails
+    return getStaticPages(baseUrl);
   }
+}
+
+// Helper function for static pages
+function getStaticPages(baseUrl: string): MetadataRoute.Sitemap {
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/login`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/signup`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+  ];
 }
