@@ -221,7 +221,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                   />
                   <CourseMetadataRow
                     label="Study Director"
-                    value={course.studiorektor}
+                    value={course.studierektor}
                   />
                   <CourseMetadataRow
                     label="Study Pace"
