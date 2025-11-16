@@ -17,7 +17,6 @@ import { CourseMetadataRow } from "@/components/course/CourseMetadataRow";
 import { CourseOverview } from "@/components/course/CourseOverview";
 import { ProgramsList } from "@/components/course/ProgramsList";
 import { TermSelectionModal } from "@/components/course/TermSelectionModal";
-import { TruncatedExaminationBadges } from "@/components/course/TruncatedExaminationBadges";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { CourseFAQSchema } from "@/components/seo/CourseFAQSchema";
@@ -38,8 +37,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
 import type { Course } from "@/types/course";
@@ -60,12 +59,13 @@ function CoursePageContent({ course }: CoursePageClientProps) {
     ? findCourseConflicts(course, state.current_profile)
     : [];
 
-  // Check if course is already in profile
-  const isInProfile = state.current_profile
-    ? Object.values(state.current_profile.terms).some((termCourses) =>
+  // Check if course is already in profile and which term
+  const profileTerm = state.current_profile
+    ? (Object.entries(state.current_profile.terms).find(([_, termCourses]) =>
         termCourses.some((c) => c.id === course.id)
-      )
-    : false;
+      )?.[0] as '7' | '8' | '9' | undefined)
+    : undefined;
+  const isInProfile = !!profileTerm;
 
   // Fetch related courses from API
   useEffect(() => {
@@ -111,15 +111,14 @@ function CoursePageContent({ course }: CoursePageClientProps) {
     await addCourse(selectedCourse, selectedTerm);
   };
 
-  // Truncate course name for mobile breadcrumb
+  // Truncate course name for mobile breadcrumb (increased from 30 to 45 chars for Swedish course names)
   const truncatedName =
-    course.name.length > 30
-      ? `${course.name.substring(0, 30)}...`
+    course.name.length > 45
+      ? `${course.name.substring(0, 45)}...`
       : course.name;
 
-  // Determine if we should show Programs tab (5+ programs)
+  // Combine programs and orientations
   const allPrograms = [...course.programs, ...(course.orientations || [])];
-  const showProgramsTab = allPrograms.length >= 5;
 
   return (
     <PageLayout
@@ -133,7 +132,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
       <CourseFAQSchema course={course} />
 
       <div className="min-h-screen bg-background pt-20">
-        <div className="container mx-auto px-4 py-8 max-w-5xl">
+        <div className="container mx-auto px-4 py-8 pb-24 sm:pb-8 max-w-5xl">
           {/* Breadcrumb Navigation */}
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
@@ -161,7 +160,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
               size="lg"
             >
               <Plus className="h-5 w-5 mr-2" />
-              {isInProfile ? "Already in Profile" : "Add to Profile"}
+              {isInProfile ? `Added to Term ${profileTerm}` : "Add to Profile"}
             </Button>
           </CourseHero>
 
@@ -174,7 +173,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
               size="lg"
             >
               <Plus className="h-5 w-5 mr-2" />
-              {isInProfile ? "Already in Profile" : "Add to Profile"}
+              {isInProfile ? `Added to Term ${profileTerm}` : "Add to Profile"}
             </Button>
           </div>
 
@@ -197,50 +196,21 @@ function CoursePageContent({ course }: CoursePageClientProps) {
             </div>
           )}
 
-          {/* Tabbed Content */}
-          <Tabs className="mb-8" defaultValue="details">
-            <TabsList
-              className="grid w-full"
-              style={{
-                gridTemplateColumns: `repeat(${showProgramsTab ? 3 : 2}, 1fr)`,
-              }}
-            >
-              <TabsTrigger
-                className="border-l-4 border-transparent data-[state=active]:border-picton-blue"
-                value="details"
-              >
-                Details
-              </TabsTrigger>
-              <TabsTrigger
-                className="border-l-4 border-transparent data-[state=active]:border-picton-blue"
-                value="schedule"
-              >
-                Schedule
-              </TabsTrigger>
-              {showProgramsTab && (
-                <TabsTrigger
-                  className="border-l-4 border-transparent data-[state=active]:border-picton-blue"
-                  value="programs"
-                >
-                  Programs
-                </TabsTrigger>
-              )}
-            </TabsList>
+          {/* Course Content - Vertical Card Layout */}
+          <div className="space-y-6">
+            {/* Course Overview - SEO-optimized rich text content */}
+            <CourseOverview course={course} />
 
-            {/* Details Tab */}
-            <TabsContent className="space-y-6 mt-6" value="details">
-              {/* Course Overview - SEO-optimized rich text content */}
-              <CourseOverview course={course} />
-
-              {/* Academic Information */}
-              <Card className="bg-background border-border">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <GraduationCap className="h-5 w-5 text-primary" />
-                    Academic Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid sm:grid-cols-2 gap-4">
+            {/* Academic Information */}
+            <Card className="bg-background border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <GraduationCap className="h-5 w-5 text-primary" />
+                  Academic Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
                   <CourseMetadataRow
                     label="Examiner"
                     value={course.examinator}
@@ -251,7 +221,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                   />
                   <CourseMetadataRow
                     label="Study Director"
-                    value={course.studierektor}
+                    value={course.studiorektor}
                   />
                   <CourseMetadataRow
                     label="Study Pace"
@@ -266,94 +236,62 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                     value={course.huvudomrade}
                   />
                   <CourseMetadataRow label="Level" value={course.level} />
-                  <div className="sm:col-span-2">
-                    <a
-                      className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
-                      href={`https://studieinfo.liu.se/kurs/${course.id}`}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                      View on LiU Official Site
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="pt-2 border-t border-border">
+                  <a
+                    className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-medium"
+                    href={`https://studieinfo.liu.se/kurs/${course.id}`}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    View on LiU Official Site
+                  </a>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* Examination */}
-              {Array.isArray(course.examination) &&
-                course.examination.length > 0 && (
-                  <Card className="bg-background border-border">
-                    <CardHeader>
-                      <CardTitle className="text-foreground">
-                        Examination
-                      </CardTitle>
-                      <CardDescription>
-                        Assessment methods for this course
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <TruncatedExaminationBadges
-                        examinations={course.examination}
-                        maxVisible={5}
-                        shortMode={false}
-                      />
-                    </CardContent>
-                  </Card>
-                )}
-
-              {/* Programs (if < 5, show here instead of separate tab) */}
-              {!showProgramsTab && allPrograms.length > 0 && (
+            {/* Examination */}
+            {Array.isArray(course.examination) &&
+              course.examination.length > 0 && (
                 <Card className="bg-background border-border">
                   <CardHeader>
                     <CardTitle className="text-foreground">
-                      Available in Programs
+                      Examination
                     </CardTitle>
                     <CardDescription>
-                      This course is available for students in the following
-                      programs
+                      Assessment methods for this course
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ProgramsList
-                      orientations={course.orientations}
-                      programs={course.programs}
-                    />
+                    <div className="flex flex-wrap gap-2">
+                      {course.examination.map((exam, index) => (
+                        <Badge
+                          key={`${exam}-${index}`}
+                          variant="secondary"
+                          className="bg-muted/50 text-foreground border border-border/50 px-3 py-1.5 text-sm font-medium hover:bg-muted/70 transition-colors"
+                        >
+                          {exam}
+                        </Badge>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               )}
 
-              {/* Notes/Restrictions */}
-              {course.notes && (
-                <Card className="bg-background border-border border-l-4 border-l-destructive">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-foreground">
-                      <AlertTriangle className="h-5 w-5 text-destructive" />
-                      Important Notes
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm whitespace-pre-wrap text-foreground">
-                      {course.notes}
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
-            </TabsContent>
-
-            {/* Schedule Tab */}
-            <TabsContent className="space-y-6 mt-6" value="schedule">
-              <Card className="bg-background border-border">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <BookOpen className="h-5 w-5 text-primary" />
-                    Schedule Information
-                  </CardTitle>
-                  <CardDescription>
-                    When and where this course is offered
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="grid sm:grid-cols-2 gap-4">
+            {/* Schedule Information */}
+            <Card className="bg-background border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <BookOpen className="h-5 w-5 text-primary" />
+                  Schedule Information
+                </CardTitle>
+                <CardDescription>
+                  When and where this course is offered
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
                   <CourseMetadataRow
                     label="Available Terms"
                     value={
@@ -374,35 +312,52 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                     label="Block"
                     value={formatBlocks(course.block)}
                   />
-                  <CourseMetadataRow label="Study Pace" value={course.pace} />
-                  <CourseMetadataRow label="Campus" value={course.campus} />
+                  <CourseMetadataRow
+                    label="Campus"
+                    value={course.campus}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Programs */}
+            {allPrograms.length > 0 && (
+              <Card className="bg-background border-border">
+                <CardHeader>
+                  <CardTitle className="text-foreground">
+                    Available in Programs
+                  </CardTitle>
+                  <CardDescription>
+                    This course is available for students in{" "}
+                    {allPrograms.length} program{allPrograms.length > 1 ? "s" : ""}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ProgramsList
+                    orientations={course.orientations}
+                    programs={course.programs}
+                  />
                 </CardContent>
               </Card>
-            </TabsContent>
-
-            {/* Programs Tab (only if 5+ programs) */}
-            {showProgramsTab && (
-              <TabsContent className="space-y-6 mt-6" value="programs">
-                <Card className="bg-background border-border">
-                  <CardHeader>
-                    <CardTitle className="text-foreground">
-                      Available in Programs
-                    </CardTitle>
-                    <CardDescription>
-                      This course is available for students in{" "}
-                      {allPrograms.length} programs
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ProgramsList
-                      orientations={course.orientations}
-                      programs={course.programs}
-                    />
-                  </CardContent>
-                </Card>
-              </TabsContent>
             )}
-          </Tabs>
+
+            {/* Notes/Restrictions */}
+            {course.notes && (
+              <Card className="bg-background border-border border-l-4 border-l-destructive">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <AlertTriangle className="h-5 w-5 text-destructive" />
+                    Important Notes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm whitespace-pre-wrap text-foreground leading-relaxed">
+                    {course.notes}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </div>
 
           <Separator className="my-8" />
 
