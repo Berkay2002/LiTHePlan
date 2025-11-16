@@ -1,8 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import type { MetadataRoute } from "next";
 
-// Revalidate sitemap every hour (ISR)
-export const revalidate = 3600;
+// Revalidate sitemap once per day (ISR)
+// Course data is relatively static, no need for hourly updates
+export const revalidate = 86400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
