@@ -50,7 +50,7 @@ export function CourseListItem({
     block: [],
     pace: [],
     campus: [],
-    examination: [],
+    examination: {},
     programs: [],
     huvudomraden: [],
     search: "",
@@ -214,11 +214,14 @@ export function CourseListItem({
 
   // Helper function to filter examination badges - show only selected examination types when filter is active
   const getVisibleExaminations = (examinations: string[]) => {
-    const examinationFilters = activeFilters.examination || [];
-    if (examinationFilters.length === 0) return examinations;
+    const examinationFilters = activeFilters.examination || {};
+    const filterKeys = Object.keys(examinationFilters);
+    if (filterKeys.length === 0) return examinations;
 
     // Return examinations that are included in the filters
-    return examinations.filter((exam) => examinationFilters.includes(exam));
+    return examinations.filter((exam) => 
+      examinationFilters[exam] === 'include' || !examinationFilters[exam]
+    );
   };
 
   return (

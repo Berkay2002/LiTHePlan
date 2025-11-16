@@ -71,38 +71,70 @@ export async function generateMetadata({
       };
     }
 
-    // Build comprehensive description with examiner for better CTR
+    // Build SEO-optimized description using English terminology
+    // Avoid generic "is a" pattern - use keyword-dense, action-oriented language
     const levelText =
+      course.level === "avancerad nivå" 
+        ? "second-cycle" 
+        : "first-cycle";
+    const shortLevelText =
       course.level === "avancerad nivå" ? "Advanced level" : "Basic level";
-    const termsText = `Term ${course.term.join(", ")}`;
-    const programsText =
-      course.programs.length > 0
-        ? `Available in ${course.programs.length} program${course.programs.length > 1 ? "s" : ""}`
-        : "";
-    const examinationText =
-      course.examination.length > 0
-        ? `Examination: ${course.examination.join(", ")}`
-        : "";
-    const examinerText = course.examinator
-      ? `Taught by ${course.examinator}`
-      : "";
-
-    // Build description from non-empty fragments to avoid double periods
-    const descriptionFragments = [
-      `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course at Linköping University`,
-      termsText,
-      programsText,
-      `Campus: ${course.campus}`,
-      examinationText,
-      examinerText,
-      "Plan your degree with LiTHePlan.",
+    
+    // Feature subject area (huvudomrade) prominently - key for competitor ranking
+    const subjectArea = course.huvudomrade 
+      ? course.huvudomrade.split(",")[0].trim() // Use primary subject area only
+      : "Engineering";
+    
+    // Use top 2-3 program/orientation names instead of count for keyword density
+    const allPrograms = [...course.programs, ...(course.orientations || [])];
+    const topPrograms = allPrograms.slice(0, 2); // Limit to 2 for description length
+    
+    // Build keyword-rich description (target 150-160 chars)
+    // Pattern: "[Name] ([Code]) - [Credits]hp [cycle] course, [Subject]. [Campus]. [Programs]"
+    // Avoids generic "is a" while maintaining keyword density
+    const baseParts = [
+      `${course.name} (${courseId})`,
+      `${course.credits}hp ${levelText} course`,
+      subjectArea,
+    ];
+    
+    const additionalParts = [
+      `${course.campus} campus`,
+      topPrograms.length > 0 ? topPrograms.join(", ") : null,
     ].filter(Boolean);
-    const description = descriptionFragments.join(" ");
+    
+    // Build description with smart truncation
+    let description = `${baseParts.join(" - ")}. ${additionalParts.join(". ")}`;
+    
+    // Enforce 150-160 character optimal length for SERP snippets
+    if (description.length > 160) {
+      // Truncate programs first if needed
+      if (topPrograms.length > 0) {
+        description = `${baseParts.join(" - ")}. ${course.campus} campus`;
+      }
+      // Still too long? Truncate subject area
+      if (description.length > 160) {
+        description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course. ${course.campus} campus`;
+      }
+      // Final truncation if still needed
+      if (description.length > 160) {
+        description = description.substring(0, 157) + "...";
+      }
+    }
+    
+    // Add examiner if we have room and it fits
+    if (description.length < 140 && course.examinator) {
+      const withExaminer = `${description}. ${course.examinator}`;
+      if (withExaminer.length <= 160) {
+        description = withExaminer;
+      }
+    }
 
-    const title = `${course.name} (${courseId}) | ${course.credits}hp ${levelText}`;
+    const title = `${courseId} ${course.name} - LiTHePlan`;
 
-    // Enhanced keywords as comma-separated string for optimal SEO
+    // Enhanced keywords - add orientations (specializations) and study director
     // Supports exact match queries like "Molecular Environmental Toxicology NBIC60"
+    // and specialization searches like "Computer Graphics courses LiU"
     const keywordsArray = [
       courseId,
       course.name,
@@ -117,12 +149,14 @@ export async function generateMetadata({
       course.campus,
       `${course.credits}hp`,
       ...course.programs,
+      ...(course.orientations || []), // High-value specialization keywords
       ...(course.huvudomrade ? [course.huvudomrade] : []),
       ...course.examination,
       ...course.term.map((t: string) => `term ${t}`),
       ...(course.examinator
         ? [course.examinator, `${course.examinator} courses`]
-        : []), // Support examiner-based searches
+        : []),
+      ...(course.studierektor ? [course.studierektor] : []), // Study director as secondary authority signal
     ];
 
     // Convert to comma-separated string

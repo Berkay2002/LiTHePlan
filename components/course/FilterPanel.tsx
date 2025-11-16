@@ -140,16 +140,19 @@ export function CollapsibleFilterSidebar({
       filterType === "pace" ||
       filterType === "campus" ||
       filterType === "huvudomraden" ||
-      filterType === "examination" ||
       filterType === "programs"
     ) {
-      // Array-based filters (checkboxes)
+      // Array-based filters (checkboxes) - examination excluded (uses tri-state Record)
       const currentArray = [...(newFilters[filterType] as string[])];
       if (currentArray.includes(value as string)) {
         newFilters[filterType] = currentArray.filter((item) => item !== value);
       } else {
         newFilters[filterType] = [...currentArray, value as string];
       }
+    } else if (filterType === "examination") {
+      // Examination uses special tri-state handling, not this generic handler
+      console.warn("Examination filter should use tri-state buttons");
+      return;
     } else {
       // term, period, block are number arrays
       const currentArray = [...(newFilters[filterType] as number[])];
@@ -715,16 +718,19 @@ export function FilterPanel({
       filterType === "pace" ||
       filterType === "campus" ||
       filterType === "huvudomraden" ||
-      filterType === "examination" ||
       filterType === "programs"
     ) {
-      // Array-based filters (checkboxes)
+      // Array-based filters (checkboxes) - examination excluded (uses tri-state Record)
       const currentArray = [...(newFilters[filterType] as string[])];
       if (currentArray.includes(value as string)) {
         newFilters[filterType] = currentArray.filter((item) => item !== value);
       } else {
         newFilters[filterType] = [...currentArray, value as string];
       }
+    } else if (filterType === "examination") {
+      // Examination uses special tri-state handling, not this generic handler
+      console.warn("Examination filter should use tri-state buttons");
+      return;
     } else {
       // term, period, block are number arrays
       const currentArray = [...(newFilters[filterType] as number[])];

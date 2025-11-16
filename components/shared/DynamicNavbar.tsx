@@ -43,7 +43,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
   // Register timeline toggle for profile edit mode
   useEffect(() => {
-    if (props.mode === "profile-edit" && props.onToggleBlockTimeline) {
+    if (props.mode === "profile-edit" && props.onToggleBlockTimeline && props.showBlockTimeline !== undefined) {
       registerTimelineToggle(
         props.onToggleBlockTimeline,
         props.showBlockTimeline
