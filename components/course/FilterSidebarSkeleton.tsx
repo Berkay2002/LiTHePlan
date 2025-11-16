@@ -100,9 +100,33 @@ export function FilterSidebarSkeleton({
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 pb-20 lg:pb-4 xl:pb-6 space-y-4 lg:space-y-4 xl:space-y-5 filter-panel-scroll">
               {/* Programs Filter - Dropdown Skeleton */}
               <div className="space-y-3">
-                <Skeleton className="h-4 w-16" /> {/* "PROGRAM" label */}
-                <Skeleton className="w-full h-10 lg:h-11 xl:h-12 2xl:h-14 rounded" />{" "}
-                {/* Select dropdown */}
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-4 w-16" /> {/* "PROGRAM" label */}
+                  <Skeleton className="h-5 w-5" /> {/* Info icon */}
+                </div>
+                <Skeleton className="w-full h-10 rounded" /> {/* MultiSelect dropdown */}
+              </div>
+
+              {/* Huvudområden Filter - Multi-Select Skeleton */}
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-24" /> {/* "HUVUDOMRÅDEN" label */}
+                <Skeleton className="w-full h-10 rounded" /> {/* MultiSelect dropdown */}
+              </div>
+
+              {/* Examination Filter - Tri-state controls Skeleton */}
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-24" /> {/* "EXAMINATION" label */}
+                <div className="space-y-2 bg-inherit p-3 rounded-md border shadow-sm">
+                  {[1, 2, 3, 4, 5].map((item) => (
+                    <div className="flex items-center justify-between gap-2" key={item}>
+                      <Skeleton className="h-4 w-12" /> {/* Exam type label */}
+                      <div className="flex items-center gap-1">
+                        <Skeleton className="h-7 w-16 rounded" /> {/* Include button */}
+                        <Skeleton className="h-7 w-16 rounded" /> {/* Exclude button */}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Level and Study Pace - Side by Side */}
@@ -113,8 +137,8 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
-                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-4 shrink-0 rounded" />
+                        <Skeleton className="h-4 w-20" />
                       </div>
                     ))}
                   </div>
@@ -126,7 +150,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2, 3].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-12" />
                       </div>
                     ))}
@@ -142,7 +166,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-6" />
                       </div>
                     ))}
@@ -155,7 +179,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-10" />
                       </div>
                     ))}
@@ -171,7 +195,7 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2, 3].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-20" />
                       </div>
                     ))}
@@ -184,32 +208,11 @@ export function FilterSidebarSkeleton({
                   <div className="grid gap-3">
                     {[1, 2, 3, 4].map((item) => (
                       <div className="flex items-center space-x-3" key={item}>
-                        <Skeleton className="h-4 w-4 lg:h-4 lg:w-4 xl:h-4 xl:w-4 shrink-0 rounded" />
+                        <Skeleton className="h-4 w-4 shrink-0 rounded" />
                         <Skeleton className="h-4 w-6" />
                       </div>
                     ))}
                   </div>
-                </div>
-              </div>
-
-              {/* Examination Filter - Tri-state controls Skeleton */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-4 w-24" /> {/* "EXAMINATION" label */}
-                  <Skeleton className="h-3 w-32" />{" "}
-                  {/* "(Include/Exclude/Ignore)" text */}
-                </div>
-                <div className="grid gap-3">
-                  {[1, 2, 3, 4, 5].map((item) => (
-                    <div className="flex items-center gap-3" key={item}>
-                      <Skeleton className="h-4 w-12 shrink-0" />{" "}
-                      {/* Exam type label */}
-                      <div className="ml-3">
-                        <Skeleton className="w-28 h-6 rounded" />{" "}
-                        {/* Select dropdown */}
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>

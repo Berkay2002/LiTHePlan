@@ -24,17 +24,30 @@ export function ViewToggleSkeleton() {
 // Combined Top Controls Skeleton - matches page.tsx layout exactly
 export function TopControlsSkeleton() {
   return (
-    <div className="w-full mb-6">
-      <div
-        className="grid gap-4 lg:gap-5 w-full justify-center"
-        style={{
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))",
-        }}
-      >
-        <div className="col-start-1 -col-end-1 flex justify-end">
-          <ViewToggleSkeleton />
+    <div
+      className="grid gap-4 lg:gap-5 w-full justify-center"
+      style={{
+        gridTemplateColumns:
+          "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
+      }}
+    >
+      {/* InfoBanner skeleton - spans all columns */}
+      <div className="col-start-1 -col-end-1 mb-2">
+        <div className="rounded-lg border border-sidebar-border bg-sidebar p-4">
+          <div className="flex items-start gap-3">
+            <Skeleton className="h-5 w-5 shrink-0" /> {/* Icon */}
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-5 w-48" /> {/* Title */}
+              <Skeleton className="h-4 w-full" /> {/* Description line 1 */}
+              <Skeleton className="h-4 w-3/4" /> {/* Description line 2 */}
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* ViewToggle skeleton - spans all columns, aligned right */}
+      <div className="col-start-1 -col-end-1 flex justify-end mb-2">
+        <ViewToggleSkeleton />
       </div>
     </div>
   );

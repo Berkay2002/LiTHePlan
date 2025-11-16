@@ -382,12 +382,28 @@ function HomeContentSkeleton() {
             } ${storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
           >
             <div className="container mx-auto px-4 py-8">
-              <TopControlsSkeleton />
-              {storedViewMode === "grid" ? (
-                <CourseGridSkeleton count={COURSES_PER_PAGE} />
-              ) : (
-                <CourseListSkeleton count={COURSES_PER_PAGE} />
-              )}
+              {/* Wrapper grid to constrain all content to match CourseGrid width */}
+              <div
+                className="grid gap-4 lg:gap-5 w-full justify-center"
+                style={{
+                  gridTemplateColumns:
+                    "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
+                }}
+              >
+                {/* TopControls (InfoBanner + ViewToggle) already has grid structure */}
+                <div className="col-start-1 -col-end-1">
+                  <TopControlsSkeleton />
+                </div>
+
+                {/* Course display skeleton spans all columns */}
+                <div className="col-start-1 -col-end-1">
+                  {storedViewMode === "grid" ? (
+                    <CourseGridSkeleton count={COURSES_PER_PAGE} />
+                  ) : (
+                    <CourseListSkeleton count={COURSES_PER_PAGE} />
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

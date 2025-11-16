@@ -23,7 +23,7 @@ export function SearchBar({
 
   return (
     <div
-      className={`relative flex items-center w-full max-w-md border-2 border-sidebar-border focus-within:border-primary bg-background rounded-md transition-colors ${className}`}
+      className={`relative flex items-center w-full max-w-md border-2 border-sidebar-border focus-within:border-primary bg-sidebar rounded-md transition-colors ${className}`}
     >
       {/* Search Icon */}
       <div className="flex items-center justify-center pl-3 pr-0 py-1.5 text-muted-foreground pointer-events-none">

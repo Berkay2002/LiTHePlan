@@ -10,8 +10,10 @@ import { useProfileSafe } from "@/components/profile/ProfileContext";
 import { ShareButtons } from "@/components/ShareButtons";
 import { SearchBar } from "@/components/shared/SearchBar";
 import { ModeToggle } from "@/components/theme-toggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
+import { Separator } from "@/components/ui/separator";
 import { createClient } from "@/utils/supabase/client";
 import { useCommandPalette } from "./CommandPaletteContext";
 
@@ -35,6 +37,7 @@ type DynamicNavbarProps = MainPageNavbarProps | ProfileEditNavbarProps;
 export function DynamicNavbar(props: DynamicNavbarProps) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const { registerTimelineToggle, unregisterTimelineToggle } =
     useCommandPalette();
 
@@ -65,15 +68,37 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
       } = await supabase.auth.getUser();
       setUser(user);
       setLoading(false);
+
+      if (user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', user.id)
+          .single();
+        setAvatarUrl(profile?.avatar_url ?? null);
+      } else {
+        setAvatarUrl(null);
+      }
     };
 
     getUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
+
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('avatar_url')
+          .eq('id', session.user.id)
+          .single();
+        setAvatarUrl(profile?.avatar_url ?? null);
+      } else {
+        setAvatarUrl(null);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -102,7 +127,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
           <>
             {/* Desktop Layout */}
             <div className="hidden lg:flex lg:items-center lg:justify-between">
-              {/* Left Side - Logo, Course Profile, Authentication */}
+              {/* Left Side - Logo and Course Profile */}
               <div className="flex items-center gap-4">
                 {/* Logo */}
                 <Link className="block" href="/">
@@ -112,62 +137,23 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   />
                 </Link>
 
-                {loading ? (
-                  <div className="flex items-center gap-2 text-sidebar-foreground">
-                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
-                    <span className="text-sm hidden sm:inline">Loading...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    {/* Profile button - always visible */}
-                    <Link href="/profile/edit">
-                      <Button
-                        className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
-                        size="sm"
-                        title="Build your course profile (no login required)"
-                        variant="ghost"
-                      >
-                        <UserIcon className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
-                        <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
-                          Course Profile
-                        </span>
-                      </Button>
-                    </Link>
-
-                    {/* Authentication status - conditional */}
-                    {user ? (
-                      <Button
-                        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
-                        onClick={async () => {
-                          await signOut();
-                          window.location.reload();
-                        }}
-                        size="sm"
-                        variant="outline"
-                      >
-                        <LogIn className="w-4 h-4 mr-2" />
-                        <span className="hidden sm:inline">Sign Out</span>
-                      </Button>
-                    ) : (
-                      <Link href="/login">
-                        <Button
-                          className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
-                          size="sm"
-                          title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="ghost"
-                        >
-                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
-                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
-                            Sign In
-                          </span>
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                )}
+                {/* Profile button - always visible */}
+                <Link href="/profile/edit">
+                  <Button
+                    className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                    size="sm"
+                    title="Build your course profile (no login required)"
+                    variant="ghost"
+                  >
+                    <UserIcon className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                    <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                      Course Profile
+                    </span>
+                  </Button>
+                </Link>
               </div>
 
-              {/* Right Side - Search Bar and Theme Toggle */}
+              {/* Right Side - Search Bar, Theme Toggle, Separator, and Authentication */}
               <div className="flex items-center gap-4">
                 {/* Search Bar */}
                 <SearchBar
@@ -178,6 +164,39 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
                 {/* Theme toggle */}
                 <ModeToggle />
+
+                {/* Vertical Separator */}
+                <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20" />
+
+                {/* Authentication status */}
+                {loading ? (
+                  <div className="flex items-center gap-2 text-sidebar-foreground">
+                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : user ? (
+                  <Link href="/profile/edit">
+                    <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
+                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {user.email?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                ) : (
+                  <Link href="/login">
+                    <Button
+                      className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                      size="sm"
+                      title="Optional: Sign in for cloud storage and permanent profile saving"
+                      variant="ghost"
+                    >
+                      <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                      <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                        Sign In
+                      </span>
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -187,7 +206,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
               <div className="shrink-0 w-10 flex justify-start">
                 {props.onMobileMenuToggle && (
                   <Button
-                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 relative overflow-hidden border border-sidebar-foreground/30"
+                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 relative overflow-hidden"
                     onClick={props.onMobileMenuToggle}
                     size="sm"
                     variant="ghost"
@@ -224,22 +243,18 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 />
               </div>
 
-              {/* Right Side - Profile and Authentication */}
+              {/* Right Side - Profile, Theme Toggle, Separator, and Authentication */}
               <div className="shrink-0 flex justify-end">
                 {loading ? (
-                  <div className="flex items-center gap-2 text-sidebar-foreground">
+                  <div className="flex items-center gap-1 text-sidebar-foreground">
                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
-                    <span className="text-sm">Loading...</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1">
-                    {/* Theme toggle */}
-                    <ModeToggle />
-
                     {/* Profile button - always visible */}
                     <Link href="/profile/edit">
                       <Button
-                        className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
+                        className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
                         size="sm"
                         title="Build your course profile (no login required)"
                         variant="ghost"
@@ -248,23 +263,26 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                       </Button>
                     </Link>
 
-                    {/* Authentication status - conditional */}
+                    {/* Theme toggle */}
+                    <ModeToggle />
+
+                    {/* Vertical Separator */}
+                    <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20 mx-1" />
+
+                    {/* Authentication status */}
                     {user ? (
-                      <Button
-                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
-                        onClick={async () => {
-                          await signOut();
-                          window.location.reload();
-                        }}
-                        size="sm"
-                        variant="outline"
-                      >
-                        <LogIn className="w-4 h-4" />
-                      </Button>
+                      <Link href="/profile/edit">
+                        <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
+                          <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                          <AvatarFallback className="bg-primary/10 text-primary">
+                            {user.email?.charAt(0).toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Link>
                     ) : (
                       <Link href="/login">
                         <Button
-                          className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
+                          className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
                           size="sm"
                           title="Optional: Sign in for cloud storage and permanent profile saving"
                           variant="ghost"
@@ -283,7 +301,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
             {/* Profile Edit Layout */}
             {/* Desktop Layout */}
             <div className="hidden lg:flex lg:items-center lg:justify-between">
-              {/* Left Side - Logo, Back Button, and Sign In */}
+              {/* Left Side - Logo and Back Button */}
               <div className="flex items-center gap-4">
                 <Link className="block" href="/">
                   <LiThePlanLogo
@@ -292,51 +310,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   />
                 </Link>
                 <BackButton href="/" text="Back to Home" />
-
-                {/* Authentication */}
-                {loading ? (
-                  <div className="flex items-center gap-2 text-sidebar-foreground">
-                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
-                    <span className="text-sm hidden sm:inline">Loading...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    {user ? (
-                      <Button
-                        className="h-10 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
-                        onClick={async () => {
-                          await signOut();
-                          window.location.reload();
-                        }}
-                        size="sm"
-                        variant="outline"
-                      >
-                        <LogIn className="w-4 h-4 mr-2" />
-                        <span className="hidden sm:inline">Sign Out</span>
-                      </Button>
-                    ) : (
-                      <Link href="/login">
-                        <Button
-                          className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
-                          size="sm"
-                          title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="ghost"
-                        >
-                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
-                          <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
-                            Sign In
-                          </span>
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                )}
               </div>
 
-              {/* Right Side - Ctrl+K Indicator, Share, Timeline Toggle, Theme Toggle */}
+              {/* Right Side - Ctrl+K Indicator, Share, Timeline Toggle, Theme Toggle, Separator, and Authentication */}
               <div className="flex items-center gap-4">
                 {/* Ctrl+K Keyboard Shortcut Indicator */}
-                <div className="flex items-center gap-2 h-10 px-3 py-2 rounded-md border border-sidebar-foreground/30 bg-background">
+                <div className="flex items-center gap-2 h-10 px-3 py-2 rounded-md bg-background">
                   <p className="text-muted-foreground text-sm">
                     Press{" "}
                     <Kbd className="bg-muted text-muted-foreground pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
@@ -354,7 +333,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 {/* Timeline Toggle */}
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 px-3 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
+                    className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="ghost"
@@ -379,6 +358,39 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
                 {/* Theme Toggle */}
                 <ModeToggle />
+
+                {/* Vertical Separator */}
+                <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20" />
+
+                {/* Authentication status */}
+                {loading ? (
+                  <div className="flex items-center gap-2 text-sidebar-foreground">
+                    <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : user ? (
+                  <Link href="/profile/edit">
+                    <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
+                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {user.email?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                ) : (
+                  <Link href="/login">
+                    <Button
+                      className="h-10 px-3 hover:bg-primary/10 transition-all duration-200"
+                      size="sm"
+                      title="Optional: Sign in for cloud storage and permanent profile saving"
+                      variant="ghost"
+                    >
+                      <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200 mr-2" />
+                      <span className="text-sidebar-foreground hover:text-primary transition-colors duration-200 text-sm font-medium">
+                        Sign In
+                      </span>
+                    </Button>
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -396,13 +408,10 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
               {/* Right Side - Navigation buttons */}
               <div className="flex-1 flex justify-end items-center gap-1">
-                {/* Theme toggle */}
-                <ModeToggle />
-
                 {/* Timeline Toggle - Mobile */}
                 {props.onToggleBlockTimeline && (
                   <Button
-                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
+                    className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
                     onClick={props.onToggleBlockTimeline}
                     size="sm"
                     variant="ghost"
@@ -415,38 +424,37 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                   </Button>
                 )}
 
+                {/* Theme toggle */}
+                <ModeToggle />
+
+                {/* Vertical Separator */}
+                <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20 mx-1" />
+
                 {/* Authentication status - mobile */}
                 {loading ? (
                   <div className="flex items-center gap-1 text-sidebar-foreground">
                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
                   </div>
+                ) : user ? (
+                  <Link href="/profile/edit">
+                    <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
+                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {user.email?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
                 ) : (
-                  <div className="flex items-center gap-1">
-                    {user ? (
-                      <Button
-                        className="h-10 w-10 p-0 bg-sidebar-foreground/10 border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground hover:text-sidebar transition-all duration-200"
-                        onClick={async () => {
-                          await signOut();
-                          window.location.reload();
-                        }}
-                        size="sm"
-                        variant="outline"
-                      >
-                        <LogIn className="w-4 h-4" />
-                      </Button>
-                    ) : (
-                      <Link href="/login">
-                        <Button
-                          className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
-                          size="sm"
-                          title="Optional: Sign in for cloud storage and permanent profile saving"
-                          variant="ghost"
-                        >
-                          <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
+                  <Link href="/login">
+                    <Button
+                      className="h-10 w-10 p-0 hover:bg-primary/10 transition-all duration-200"
+                      size="sm"
+                      title="Optional: Sign in for cloud storage and permanent profile saving"
+                      variant="ghost"
+                    >
+                      <LogIn className="h-4 w-4 text-sidebar-foreground hover:text-primary transition-colors duration-200" />
+                    </Button>
+                  </Link>
                 )}
               </div>
             </div>

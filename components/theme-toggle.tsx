@@ -14,7 +14,7 @@ export function ModeToggle() {
 
   return (
     <Button
-      className="h-10 w-10 hover:bg-primary/10 transition-all duration-200 border border-sidebar-foreground/30 hover:border-primary/50"
+      className="h-10 w-10 hover:bg-primary/10 transition-all duration-200"
       onClick={toggleTheme}
       size="icon"
       variant="ghost"
