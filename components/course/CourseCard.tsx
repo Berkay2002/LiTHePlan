@@ -355,7 +355,7 @@ export function CourseCard({ course }: CourseCardProps) {
           </Button>
           <Link className="w-full" href={`/course/${course.id}`}>
             <Button
-              className="h-9 text-xs font-semibold bg-secondary/20 border-2 border-border/50 text-secondary-foreground hover:bg-secondary/30 hover:border-primary/30 transition-all w-full"
+              className="h-9 text-xs font-semibold bg-secondary/20 border-2 border-border/50 text-foreground hover:bg-secondary/30 hover:border-primary/30 hover:text-primary transition-all w-full"
               size="sm"
               variant="ghost"
             >
