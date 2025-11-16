@@ -35,7 +35,7 @@ import {
   VIEW_MODE_STORAGE_KEY,
 } from "@/lib/courseFiltering";
 
-const COURSES_PER_PAGE = 12;
+const COURSES_PER_PAGE = 60;
 const PROFILE_SIDEBAR_STORAGE_KEY = "profile-sidebar-open";
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
 

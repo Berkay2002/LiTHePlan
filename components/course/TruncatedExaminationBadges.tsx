@@ -47,12 +47,12 @@ export function TruncatedExaminationBadges({
   };
 
   return (
-    <div className={`flex flex-wrap gap-1.5 ${className}`}>
+    <div className={`flex flex-wrap gap-1 ${className}`}>
       {visibleExams.map((exam, index) => (
         <Badge
-          className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200"
+          className="text-[11px] px-2 py-0.5 font-semibold bg-muted/60 text-muted-foreground border border-border/40"
           key={`${exam}-${index}`}
-          variant="secondary"
+          variant="outline"
         >
           {getDisplayLabel(exam)}
         </Badge>
@@ -61,10 +61,10 @@ export function TruncatedExaminationBadges({
         <Tooltip>
           <TooltipTrigger asChild>
             <Badge
-              className="text-xs px-3 py-1 bg-secondary/50 text-secondary-foreground border border-secondary/30 hover:bg-secondary/60 transition-all duration-200 cursor-help"
-              variant="secondary"
+              className="text-[11px] px-2 py-0.5 font-semibold bg-muted/60 text-muted-foreground border border-border/40 cursor-help hover:bg-muted/80 transition-colors"
+              variant="outline"
             >
-              +{hiddenExams.length} more
+              +{hiddenExams.length}
             </Badge>
           </TooltipTrigger>
           <TooltipContent className="max-w-xs" side="top">
@@ -75,7 +75,7 @@ export function TruncatedExaminationBadges({
               <div className="flex flex-wrap gap-1">
                 {hiddenExams.map((exam, index) => (
                   <span
-                    className="text-xs px-2 py-0.5 rounded bg-secondary/20 border border-secondary/30"
+                    className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary-foreground font-medium"
                     key={`hidden-${exam}-${index}`}
                   >
                     {getDisplayLabel(exam)}

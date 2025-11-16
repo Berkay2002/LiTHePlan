@@ -65,15 +65,6 @@ export function CourseCard({ course }: CourseCardProps) {
     ? findCourseConflicts(course, state.current_profile).length > 0
     : false;
 
-  // Helper function to check if a field should be hidden
-  const shouldHideField = () => {
-    // Never hide any fields - always show course information
-    return false;
-  };
-
-  // Helper function to determine if period should be shown (not for 50% courses)
-  const shouldShowPeriod = () => course.pace === "100%";
-
   // This function is no longer used since we always check conflicts first
 
   // Handle adding course - always check conflicts first, then handle term selection
@@ -202,33 +193,37 @@ export function CourseCard({ course }: CourseCardProps) {
     setPendingTerm(null);
   };
 
-  // Helper function to get all examination badges - always show all examinations for the course
-  const getVisibleExaminations = (examinations: string[]) => {
-    // Always show all examinations that the course actually has
-    return examinations;
-  };
-
   return (
-    <Card className="group h-full flex flex-col transition-all duration-300 hover:shadow-xl border-2 border-primary/20 bg-background hover:border-primary/40 hover:shadow-primary/10">
-      <CardContent className="p-5 flex-1 flex flex-col">
-        {/* Main Course Header */}
-        <div className="mb-5">
-          <div className="flex items-start justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground line-clamp-3 leading-tight group-hover:text-primary transition-colors duration-300 flex-1 min-h-18">
-              {course.name}
-            </h3>
+    <Card className="group h-full flex flex-col transition-all duration-200 hover:shadow-xl border-2 border-primary/20 bg-background hover:border-primary/50 hover:scale-[1.01]">
+      <CardContent className="flex-1 flex flex-col gap-2.5 p-4">
+        {/* SCANNABLE HEADER - Course ID + Level + Warnings in single row */}
+        <div className="flex items-center justify-between gap-2 -mb-1">
+          {/* Left: Course ID + Level Badge */}
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-mono font-extrabold text-primary tracking-tight">
+              {course.id}
+            </span>
+            <Badge
+              className={`px-2 py-0.5 text-xs font-bold border-0 shadow-sm ${
+                course.level === "avancerad nivå"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-chart-2 text-white"
+              }`}
+            >
+              {course.level === "avancerad nivå" ? "ADVANCED" : "BASIC"}
+            </Badge>
             {course.notes && (
               <Tooltip open={isMobile ? showNotesTooltip : undefined}>
                 <TooltipTrigger asChild>
                   <button
-                    className="flex items-center gap-1 bg-accent/20 text-accent-foreground px-2 py-1 rounded-md border border-accent/30 ml-2 shrink-0 hover:bg-accent/30 transition-colors cursor-pointer"
+                    className="shrink-0 flex items-center gap-1 bg-chart-4/20 text-chart-4 px-2 py-0.5 rounded border border-chart-4/40 hover:bg-chart-4/30 transition-colors"
                     onBlur={() => isMobile && setShowNotesTooltip(false)}
                     onClick={() =>
                       isMobile && setShowNotesTooltip(!showNotesTooltip)
                     }
                   >
-                    <AlertTriangle className="h-4 w-4" />
-                    <span className="text-xs font-bold">OBS</span>
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    <span className="text-xs font-bold">NOTE</span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent
@@ -242,267 +237,132 @@ export function CourseCard({ course }: CourseCardProps) {
               </Tooltip>
             )}
           </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="text-sm text-primary font-mono font-bold">
-                {course.id}
-              </div>
-              <a
-                className="text-primary/60 hover:text-primary transition-colors"
-                href={`https://studieinfo.liu.se/kurs/${course.id}`}
-                rel="noopener noreferrer"
-                target="_blank"
-                title="View on LiU official site"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            </div>
-            <TruncatedExaminationBadges
-              examinations={getVisibleExaminations(course.examination)}
-              maxVisible={2}
-              shortMode={true}
-            />
-          </div>
+
+          {/* Right: External link */}
+          <a
+            className="shrink-0 text-muted-foreground/60 hover:text-primary transition-colors hover:scale-110"
+            href={`https://studieinfo.liu.se/kurs/${course.id}`}
+            rel="noopener noreferrer"
+            target="_blank"
+            title="View on LiU"
+          >
+            <ExternalLink className="h-4 w-4" />
+          </a>
         </div>
 
-        {/* Key Information Grid */}
-        <div
-          className="grid gap-3 mb-4"
-          style={{
-            gridTemplateColumns: `repeat(${Math.max(
-              1,
-              [
-                !shouldHideField(),
-                shouldShowPeriod() && !shouldHideField(),
-                !shouldHideField(),
-                !shouldHideField(),
-              ].filter(Boolean).length
-            )}, minmax(0, 1fr))`,
-          }}
-        >
-          {!shouldHideField() && (
-            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
-                Term
-              </div>
-              <div className="text-sm font-bold text-primary">
-                {isMultiTerm ? availableTerms.join(", ") : course.term}
-              </div>
-            </div>
-          )}
-          {shouldShowPeriod() && !shouldHideField() && (
-            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
-                Period
-              </div>
-              <div className="text-sm font-bold text-primary">
-                {course.period}
-              </div>
-            </div>
-          )}
-          {!shouldHideField() && (
-            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
-                {Array.isArray(course.block) ? "Blocks" : "Block"}
-              </div>
-              <div className="text-sm font-bold text-primary">
-                {formatBlocks(course.block)}
-              </div>
-            </div>
-          )}
-          {!shouldHideField() && (
-            <div className="text-center p-3 bg-primary/10 rounded-lg border border-primary/20 hover:border-primary/30 transition-colors duration-200">
-              <div className="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">
-                Level
-              </div>
-              <div className="text-sm font-bold text-primary">
-                {course.level === "grundnivå" ? "G" : "A"}
-              </div>
-            </div>
-          )}
-        </div>
+        {/* COURSE NAME - Prominent, readable */}
+        <h3 className="text-sm font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors min-h-[2.5rem]">
+          {course.name}
+        </h3>
 
-        {/* Secondary Information */}
-        <div className="space-y-3 flex-1">
-          <div className="p-4 bg-muted/30 rounded-lg border border-border space-y-3">
-            {/* Campus and Pace - only show if not filtered to single values */}
-            {!(shouldHideField() && shouldHideField()) && (
-              <div className="flex items-center justify-between">
-                {!shouldHideField() && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-medium text-foreground">
-                      {course.campus}
-                    </span>
-                  </div>
-                )}
-                {!shouldHideField() && (
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-muted-foreground" />
-                    <span className="text-sm font-medium text-foreground">
-                      {formatPace(course.pace)}
-                    </span>
-                  </div>
-                )}
+        {/* CRITICAL METADATA - Visual badges for instant recognition */}
+        <div className="flex items-center flex-wrap gap-1.5">
+          {/* Term Badge - Most critical for planning */}
+          <Badge className="px-2.5 py-1 font-bold text-xs bg-primary/95 text-primary-foreground border-0 shadow-sm">
+            T{isMultiTerm ? availableTerms.join(",") : course.term}
+          </Badge>
+
+          {/* Period Badge - Only for 100% courses */}
+          {course.pace === "100%" && (
+            <Badge className="px-2.5 py-1 font-bold text-xs bg-primary/85 text-primary-foreground border-0">
+              P{course.period}
+            </Badge>
+          )}
+
+          {/* Block Badge - Same color family for visual grouping */}
+          <Badge className="px-2.5 py-1 font-bold text-xs bg-primary/75 text-primary-foreground border-0">
+            B{formatBlocks(course.block)}
+          </Badge>
+
+          {/* Campus + Pace - Condensed info */}
+          <div className="flex items-center gap-1.5 ml-auto text-xs text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <MapPin className="h-3.5 w-3.5" />
+              <span className="font-semibold">{course.campus.slice(0, 3)}</span>
+            </div>
+            {course.pace !== "100%" && (
+              <div className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                <span className="font-semibold">{course.pace}</span>
               </div>
             )}
-
-            {/* Examinator and Studierektor */}
-            <div className="space-y-2">
-              {course.examinator && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium min-w-[60px]">
-                    Examiner:
-                  </span>
-                  <span className="text-xs text-foreground font-medium">
-                    {course.examinator}
-                  </span>
-                </div>
-              )}
-              {course.studierektor && (
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground uppercase tracking-wide font-medium min-w-[60px]">
-                    Director:
-                  </span>
-                  <span className="text-xs text-foreground font-medium">
-                    {course.studierektor}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Programs and Orientations */}
-            {(() => {
-              const allProgramsAndOrientations = [
-                ...course.programs,
-                ...(course.orientations || []),
-              ];
-              const maxDisplayItems = 1;
-              const displayedItems = allProgramsAndOrientations.slice(
-                0,
-                maxDisplayItems
-              );
-              const remainingItems =
-                allProgramsAndOrientations.slice(maxDisplayItems);
-
-              return (
-                allProgramsAndOrientations.length > 0 && (
-                  <div className="mt-3 pt-3 border-t border-border">
-                    <div className="space-y-1.5">
-                      {displayedItems.map((item, index) => (
-                        <Tooltip key={`${item}-${index}`}>
-                          <TooltipTrigger asChild>
-                            <Badge
-                              className="text-xs px-3 py-1 bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:border-primary/40 transition-all duration-200 w-full block cursor-help"
-                              variant="outline"
-                            >
-                              <span className="truncate text-center block w-full">
-                                {item}
-                              </span>
-                            </Badge>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            <p>{item}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      ))}
-                      {remainingItems.length > 0 && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Badge
-                              className="text-xs px-3 py-1 bg-muted text-muted-foreground border-border hover:bg-muted/80 hover:border-border/60 transition-all duration-200 cursor-help w-full block"
-                              variant="outline"
-                            >
-                              +{remainingItems.length} more
-                            </Badge>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            <div className="space-y-1">
-                              <p className="font-medium">
-                                Additional programs:
-                              </p>
-                              <div className="text-muted-foreground leading-relaxed">
-                                {remainingItems.join(", ")}
-                              </div>
-                            </div>
-                          </TooltipContent>
-                        </Tooltip>
-                      )}
-                    </div>
-                  </div>
-                )
-              );
-            })()}
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="border-t border-border pt-4 mt-4">
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              className={`h-10 text-sm font-medium transition-all duration-300 shadow-lg ${
-                isPinned
-                  ? isHovered
-                    ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                  : wouldHaveConflicts
-                    ? "bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-accent/40"
-                    : "bg-primary hover:bg-primary/90 text-primary-foreground"
-              }`}
-              onClick={() => {
-                console.log("🖱️ Button clicked for course:", course.id, {
-                  isPinned,
-                  isHovered,
-                });
-                if (isPinned && isHovered) {
-                  console.log("🗑️ Removing course");
-                  removeCourse(course.id);
-                } else if (isPinned) {
-                  console.log("⚠️ No action taken - button click ignored");
-                } else {
-                  console.log("➕ Adding course via handleAddCourse");
-                  handleAddCourse();
-                }
-              }}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              size="default"
-            >
-              {isPinned ? (
-                isHovered ? (
-                  <>
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
-                  </>
-                ) : (
-                  <>
-                    <Check className="h-4 w-4 mr-2" />
-                    Added
-                  </>
-                )
-              ) : wouldHaveConflicts ? (
+        {/* EXAMINATION TYPES - Subdued secondary info */}
+        <div className="flex items-center gap-1 pt-0.5">
+          <TruncatedExaminationBadges
+            examinations={course.examination}
+            maxVisible={5}
+            shortMode={true}
+          />
+        </div>
+
+        {/* SECONDARY INFO - Clear separation with subtle styling */}
+        <div className="flex-1 min-h-0 pt-1 border-t border-border/20">
+          {course.examinator && (
+            <div className="text-[11px] text-muted-foreground/80 truncate">
+              <span className="font-medium">Examiner:</span> <span className="font-normal">{course.examinator}</span>
+            </div>
+          )}
+        </div>
+
+        {/* ACTIONS - Clear, large touch targets */}
+        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/30">
+          <Button
+            className={`h-9 text-xs font-bold transition-all duration-200 shadow-md ${
+              isPinned
+                ? isHovered
+                  ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+                  : "bg-primary hover:bg-primary/90 text-primary-foreground"
+                : wouldHaveConflicts
+                  ? "bg-chart-4 hover:bg-chart-4/90 text-white border-2 border-chart-4/60"
+                  : "bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg"
+            }`}
+            onClick={() => {
+              if (isPinned && isHovered) {
+                removeCourse(course.id);
+              } else if (!isPinned) {
+                handleAddCourse();
+              }
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {isPinned ? (
+              isHovered ? (
                 <>
-                  <AlertTriangle className="h-4 w-4 mr-2" />
-                  Resolve Conflict
+                  <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+                  Remove
                 </>
               ) : (
                 <>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add to Profile
+                  <Check className="h-3.5 w-3.5 mr-1.5" />
+                  Added
                 </>
-              )}
+              )
+            ) : wouldHaveConflicts ? (
+              <>
+                <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
+                Conflict
+              </>
+            ) : (
+              <>
+                <Plus className="h-3.5 w-3.5 mr-1.5" />
+                Add
+              </>
+            )}
+          </Button>
+          <Link className="w-full" href={`/course/${course.id}`}>
+            <Button
+              className="h-9 text-xs font-semibold bg-secondary/20 border-2 border-border/50 text-secondary-foreground hover:bg-secondary/30 hover:border-primary/30 transition-all w-full"
+              size="sm"
+              variant="ghost"
+            >
+              <Info className="h-3.5 w-3.5 mr-1.5" />
+              Details
             </Button>
-            <Link className="w-full" href={`/course/${course.id}`}>
-              <Button
-                className="h-10 text-sm font-medium bg-secondary/20 border-border text-secondary-foreground hover:bg-secondary/30 hover:border-border/60 transition-all duration-300 w-full"
-                size="default"
-                variant="outline"
-              >
-                <Info className="h-4 w-4 mr-2" />
-                View Details
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </div>
       </CardContent>
 

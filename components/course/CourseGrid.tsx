@@ -52,7 +52,7 @@ export function CourseGrid({
         className="grid gap-4 lg:gap-5 w-full justify-center"
         style={{
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 380px), min(100%, 450px)))",
+            "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
         }}
       >
         {courses.map((course) => (
