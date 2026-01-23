@@ -84,7 +84,7 @@
     "@playwright/test": "^1.56.1",
     "@tailwindcss/oxide": "^4.1.16",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^22",
+    "@types/node": "^25",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "lightningcss": "^1.30.2",
