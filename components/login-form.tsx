@@ -105,11 +105,11 @@ export function LoginForm({
       });
       const payload = (await response.json()) as { error?: string };
 
-      if (!response.ok) {
-        setError(payload.error ?? INVALID_LOGIN_MESSAGE);
-      } else {
+      if (response.ok) {
         router.push("/");
         router.refresh();
+      } else {
+        setError(payload.error ?? INVALID_LOGIN_MESSAGE);
       }
     } catch {
       setError("An unexpected error occurred");

@@ -4,6 +4,7 @@ import StructuredData from "@/components/seo/StructuredData";
 import { CommandPaletteProvider } from "@/components/shared/CommandPaletteContext";
 import { GlobalCommandPalette } from "@/components/shared/GlobalCommandPalette";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
 import { JetBrains_Mono } from "next/font/google";
@@ -100,12 +101,14 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
-          <CommandPaletteProvider>
-            <ProfileProvider>
-              {children}
-              <GlobalCommandPalette />
-            </ProfileProvider>
-          </CommandPaletteProvider>
+          <TooltipProvider>
+            <CommandPaletteProvider>
+              <ProfileProvider>
+                {children}
+                <GlobalCommandPalette />
+              </ProfileProvider>
+            </CommandPaletteProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

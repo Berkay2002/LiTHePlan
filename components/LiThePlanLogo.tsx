@@ -17,9 +17,9 @@ export function LiThePlanLogo({
       className={className}
       height={height}
       role="img"
-      style={{ display: "block" }}
+      style={{ display: "block", width: width === "auto" ? "auto" : undefined }}
       viewBox="0 0 280 85"
-      width={width}
+      width={width === "auto" ? undefined : width}
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>LiTHePlan logo</title>
