@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import type { StudentProfile } from "@/types/profile";
 import { createClient } from "@/utils/supabase/client";
 
-type ShareButtonsProps = {
-  profileId?: string;
+interface ShareButtonsProps {
   hideTextOnMobile?: boolean;
   profile?: StudentProfile; // For cloud storage when authenticated
-};
+  profileId?: string;
+}
 
 type ShareState = "idle" | "copied" | "error";
 type ShareOutcome = "shared" | "copied" | "failed" | "aborted";

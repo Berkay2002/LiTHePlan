@@ -4,15 +4,15 @@ import { CourseListItem } from "./CourseListItem";
 import type { FilterState } from "./FilterPanel";
 
 interface CourseListProps {
-  courses: Course[];
-  isFiltered?: boolean;
   activeFilters?: FilterState;
+  courses: Course[];
   // Pagination props
   currentPage?: number;
-  totalPages?: number;
-  totalCourses?: number;
+  isFiltered?: boolean;
   itemsPerPage?: number;
   onPageChange?: (page: number) => void;
+  totalCourses?: number;
+  totalPages?: number;
 }
 
 export function CourseList({

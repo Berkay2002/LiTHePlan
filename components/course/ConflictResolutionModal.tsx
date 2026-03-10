@@ -15,16 +15,16 @@ import { extractConflictingCourses } from "@/lib/course-conflict-utils";
 import type { Course } from "@/types/course";
 
 interface ConflictResolutionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  newCourse: Course;
   conflictingCourses: {
     conflictingCourse: Course;
     conflictingCourseId: string;
   }[];
-  onChooseNew: (newCourse: Course) => void;
-  onChooseExisting: (existingCourse: Course) => void;
+  isOpen: boolean;
+  newCourse: Course;
   onCancel: () => void;
+  onChooseExisting: (existingCourse: Course) => void;
+  onChooseNew: (newCourse: Course) => void;
+  onClose: () => void;
 }
 
 export function ConflictResolutionModal({

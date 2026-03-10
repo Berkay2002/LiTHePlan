@@ -3,11 +3,11 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 interface AlertBannerProps {
+  className?: string;
+  description: string | ReactNode;
   icon?: ReactNode;
   title: string;
-  description: string | ReactNode;
   variant?: "info" | "accent";
-  className?: string;
 }
 
 export function AlertBanner({
@@ -84,8 +84,8 @@ export function SharedProfileBanner({ className }: SharedProfileBannerProps) {
 }
 
 interface GuestModeBannerProps {
-  onDismiss?: () => void;
   className?: string;
+  onDismiss?: () => void;
 }
 
 export function GuestModeBanner({

@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Kbd } from "@/components/ui/kbd";
 
 interface SearchBarProps {
-  value: string;
+  className?: string;
   onChange: (value: string) => void;
   placeholder?: string;
-  className?: string;
+  value: string;
 }
 
 export function SearchBar({

@@ -23,6 +23,7 @@
       "playwright.config.ts",
       "postcss.config.mjs",
       "proxy.ts",
+      "!!components/ui/**/*.{js,jsx,ts,tsx,css}",
       "!!.1code",
       "!!.agent",
       "!!.agents",

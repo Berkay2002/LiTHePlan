@@ -28,18 +28,18 @@ import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface DraggableTermCardProps {
-  termNumber: MasterProgramTerm;
+  className?: string;
   courses: Course[];
-  onRemoveCourse: (courseId: string) => void;
+  isDragDisabled?: boolean;
   onClearTerm: (term: MasterProgramTerm) => void;
   onMoveCourse?: (
     courseId: string,
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
   ) => void;
-  className?: string;
-  isDragDisabled?: boolean;
+  onRemoveCourse: (courseId: string) => void;
   showBlockTimeline?: boolean;
+  termNumber: MasterProgramTerm;
 }
 
 export function DraggableTermCard({
@@ -72,7 +72,7 @@ export function DraggableTermCard({
     ),
   };
 
-  const getBlockBadgeColor = (blockNum: number) => {
+  const getBlockBadgeColor = (_blockNum: number) => {
     // Use muted colors for all blocks - no color overload
     return "bg-muted text-muted-foreground";
   };
@@ -83,11 +83,11 @@ export function DraggableTermCard({
 
     if (is50Percent && Array.isArray(course.block)) {
       // For 50% courses: block[0] = period 1, block[1] = period 2
-      blocks = [Number.parseInt(course.block[currentPeriod - 1])];
+      blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
     } else {
       blocks = Array.isArray(course.block)
-        ? course.block.map((b) => Number.parseInt(b))
-        : [Number.parseInt(course.block)];
+        ? course.block.map((b) => Number.parseInt(b, 10))
+        : [Number.parseInt(course.block, 10)];
     }
 
     return (
@@ -129,11 +129,11 @@ export function DraggableTermCard({
 
       if (is50Percent && Array.isArray(course.block)) {
         // For 50% courses: use the block for the current period
-        blocks = [Number.parseInt(course.block[currentPeriod - 1])];
+        blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
       } else {
         blocks = Array.isArray(course.block)
-          ? course.block.map((b) => Number.parseInt(b))
-          : [Number.parseInt(course.block)];
+          ? course.block.map((b) => Number.parseInt(b, 10))
+          : [Number.parseInt(course.block, 10)];
       }
 
       blocks.forEach((blockNum) => {
@@ -497,7 +497,7 @@ export function DraggableTermCard({
             Desktop only: Drag courses between terms
           </p>
         )}
-        {termNumber === 8 && <p className="text-xs text-muted-foreground"></p>}
+        {termNumber === 8 && <p className="text-xs text-muted-foreground" />}
       </CardHeader>
 
       <CardContent className="space-y-4 flex-1 flex flex-col">

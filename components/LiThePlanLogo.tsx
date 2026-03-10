@@ -1,10 +1,10 @@
 // components/LiThePlanLogo.tsx
 
-type LiThePlanLogoProps = {
+interface LiThePlanLogoProps {
   className?: string;
-  width?: number | "auto";
   height?: number;
-};
+  width?: number | "auto";
+}
 
 export function LiThePlanLogo({
   className = "",

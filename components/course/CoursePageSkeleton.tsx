@@ -81,7 +81,7 @@ export function CoursePageSkeleton() {
                 <Skeleton className="h-6 w-52" />
               </CardHeader>
               <CardContent className="grid sm:grid-cols-2 gap-4">
-                {[...Array(6)].map((_, i) => (
+                {[...new Array(6)].map((_, i) => (
                   <div className="space-y-2" key={i}>
                     <Skeleton className="h-4 w-24" />
                     <Skeleton className="h-5 w-full" />
@@ -101,7 +101,7 @@ export function CoursePageSkeleton() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {[...Array(5)].map((_, i) => (
+                  {[...new Array(5)].map((_, i) => (
                     <Skeleton className="h-6 w-16" key={i} />
                   ))}
                 </div>
@@ -116,7 +116,7 @@ export function CoursePageSkeleton() {
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {[...Array(6)].map((_, i) => (
+                  {[...new Array(6)].map((_, i) => (
                     <Skeleton className="h-6 w-24" key={i} />
                   ))}
                 </div>
@@ -134,8 +134,11 @@ export function CoursePageSkeleton() {
             <Skeleton className="h-9 w-52" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => (
-              <Card className="overflow-hidden bg-background border-border" key={i}>
+            {[...new Array(6)].map((_, i) => (
+              <Card
+                className="overflow-hidden bg-background border-border"
+                key={i}
+              >
                 <CardHeader className="space-y-3">
                   <Skeleton className="h-5 w-20" />
                   <Skeleton className="h-6 w-full" />

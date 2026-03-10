@@ -14,10 +14,10 @@ import type { StudentProfile } from "@/types/profile";
 import { PinnedCourseCard } from "./PinnedCourseCard";
 
 interface ProfilePinboardProps {
-  profile: StudentProfile;
-  onRemoveCourse: (courseId: string) => void;
-  onClearTerm: (term: MasterProgramTerm) => void;
   onClearProfile: () => void;
+  onClearTerm: (term: MasterProgramTerm) => void;
+  onRemoveCourse: (courseId: string) => void;
+  profile: StudentProfile;
   readOnly?: boolean;
 }
 

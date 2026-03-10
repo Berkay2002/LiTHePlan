@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface NavbarProps {
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  onMobileMenuToggle?: () => void;
   isMobileMenuOpen?: boolean;
+  onMobileMenuToggle?: () => void;
+  onSearchChange: (query: string) => void;
+  searchQuery: string;
 }
 
 export function Navbar({

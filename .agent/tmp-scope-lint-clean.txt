@@ -1,0 +1,2295 @@
+components\DraggableTermCard.tsx:126:5 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    124 │     } = { 1: [], 2: [], 3: [], 4: [] };
+    125 │ 
+  > 126 │     periodCourses.forEach((course) => {
+        │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 127 │       let blocks: number[];
+         ...
+  > 144 │       });
+  > 145 │     });
+        │     ^^
+    146 │ 
+    147 │     return (
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\DraggableTermCard.tsx:139:7 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    137 │       }
+    138 │ 
+  > 139 │       blocks.forEach((blockNum) => {
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 140 │         blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
+  > 141 │           course,
+  > 142 │           is50Percent,
+  > 143 │         });
+  > 144 │       });
+        │       ^^
+    145 │     });
+    146 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\DraggableTermCard.tsx:182:25 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    180 │                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
+    181 │                     isActive
+  > 182 │                       ? hasConflict
+        │                         ^^^^^^^^^^^
+  > 183 │                         ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
+  > 184 │                         : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
+        │                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    185 │                       : "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
+    186 │                   }`}
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\DraggableTermCard.tsx:506:11 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    504 │         {courses.length === 0 ? (
+    505 │           // Only make terms 7 and 9 droppable when empty, not term 8
+  > 506 │           termNumber === 8 ? (
+        │           ^^^^^^^^^^^^^^^^^^^^
+  > 507 │             <div className="flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg border-border">
+         ...
+  > 530 │             </Droppable>
+  > 531 │           )
+        │           ^
+    532 │         ) : // Only make terms 7 and 9 droppable, term 8 should not be droppable
+    533 │         termNumber === 8 ? (
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\DraggableTermCard.tsx:217:7 lint/suspicious/noAlert ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected confirm
+  
+    215 │     if (
+    216 │       courses.length > 0 &&
+  > 217 │       confirm(
+        │       ^^^^^^^^
+  > 218 │         `Are you sure you want to clear all courses from ${getTermLabel(termNumber)}?`
+  > 219 │       )
+        │       ^
+    220 │     ) {
+    221 │       onClearTerm(termNumber);
+  
+  i The confirm function is considered to be obtrusive. Replace it with a custom UI implementation.
+  
+
+components\EditableTermCard.tsx:143:5 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    141 │     };
+    142 │ 
+  > 143 │     periodCourses.forEach((course) => {
+        │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 144 │       let blocks: number[];
+         ...
+  > 161 │       });
+  > 162 │     });
+        │     ^^
+    163 │ 
+    164 │     return (
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\EditableTermCard.tsx:156:7 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    154 │       }
+    155 │ 
+  > 156 │       blocks.forEach((blockNum) => {
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 157 │         blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
+  > 158 │           course,
+  > 159 │           is50Percent,
+  > 160 │         });
+  > 161 │       });
+        │       ^^
+    162 │     });
+    163 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\EditableTermCard.tsx:199:25 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    197 │                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
+    198 │                     isActive
+  > 199 │                       ? hasConflict
+        │                         ^^^^^^^^^^^
+  > 200 │                         ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
+  > 201 │                         : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
+        │                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    202 │                       : "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
+    203 │                   }`}
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\EditableTermCard.tsx:234:7 lint/suspicious/noAlert ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected confirm
+  
+    232 │     if (
+    233 │       courses.length > 0 &&
+  > 234 │       confirm(
+        │       ^^^^^^^^
+  > 235 │         `Are you sure you want to clear all courses from ${getTermLabel(termNumber)}?`
+  > 236 │       )
+        │       ^
+    237 │     ) {
+    238 │       onClearTerm(termNumber);
+  
+  i The confirm function is considered to be obtrusive. Replace it with a custom UI implementation.
+  
+
+components\ProfileStatsCard.tsx:41:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    39 │   const programCredits: Record<string, number> = {};
+    40 │ 
+  > 41 │   MASTER_PROGRAM_TERMS.forEach((term) => {
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 42 │     profile.terms[term].forEach((course) => {
+        ...
+  > 55 │     });
+  > 56 │   });
+       │   ^^
+    57 │ 
+    58 │   // Get top 3 programs
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\ProfileStatsCard.tsx:42:5 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    41 │   MASTER_PROGRAM_TERMS.forEach((term) => {
+  > 42 │     profile.terms[term].forEach((course) => {
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 43 │       // Only count advanced courses for Top Programs
+        ...
+  > 54 │       }
+  > 55 │     });
+       │     ^^
+    56 │   });
+    57 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\ProfileStatsCard.tsx:50:9 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    48 │           ...(course.orientations || []),
+    49 │         ];
+  > 50 │         allProgramsAndOrientations.forEach((program) => {
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 51 │           programCredits[program] =
+  > 52 │             (programCredits[program] || 0) + course.credits;
+  > 53 │         });
+       │         ^^
+    54 │       }
+    55 │     });
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\ProfileStatsCard.tsx:132:15 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    130 │             {/* Proper Pie Chart (no center hole) */}
+    131 │             <div>
+  > 132 │               <svg height={size} viewBox={`0 0 ${size} ${size}`} width={size}>
+        │               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    133 │                 {segmentsWithAngles.map((segment, index) => (
+    134 │                   <path
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+components\ProfileStatsCard.tsx:137:54 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    135 │                     d={createPath(segment.startAngle, segment.angle)}
+    136 │                     fill={segment.color}
+  > 137 │                     key={`segment-${segment.label}-${index}`}
+        │                                                      ^^^^^
+    138 │                     stroke="hsl(var(--card))"
+    139 │                     strokeWidth="2"
+  
+  i This is the source of the key value.
+  
+    131 │             <div>
+    132 │               <svg height={size} viewBox={`0 0 ${size} ${size}`} width={size}>
+  > 133 │                 {segmentsWithAngles.map((segment, index) => (
+        │                                                   ^^^^^
+    134 │                   <path
+    135 │                     d={createPath(segment.startAngle, segment.angle)}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\ProfileStatsCard.tsx:150:51 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    148 │                 <div
+    149 │                   className="flex items-center gap-2"
+  > 150 │                   key={`legend-${segment.label}-${index}`}
+        │                                                   ^^^^^
+    151 │                 >
+    152 │                   <div
+  
+  i This is the source of the key value.
+  
+    145 │             {/* Simple Legend */}
+    146 │             <div className="flex flex-wrap gap-4 justify-center">
+  > 147 │               {segmentsWithAngles.map((segment, index) => (
+        │                                                 ^^^^^
+    148 │                 <div
+    149 │                   className="flex items-center gap-2"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\ProgressCircle.tsx:33:9 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    31 │     <div className="flex items-center justify-center">
+    32 │       <div className="relative">
+  > 33 │         <svg
+       │         ^^^^
+  > 34 │           className="transform -rotate-90"
+  > 35 │           height={size}
+  > 36 │           viewBox={`0 0 ${size} ${size}`}
+  > 37 │           width={size}
+  > 38 │         >
+       │         ^
+    39 │           {/* Background circle */}
+    40 │           <circle
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+components\TermCard.tsx:91:5 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+     89 │     } = { 1: [], 2: [], 3: [], 4: [] };
+     90 │ 
+   > 91 │     periodCourses.forEach((course) => {
+        │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   > 92 │       let blocks: number[];
+         ...
+  > 109 │       });
+  > 110 │     });
+        │     ^^
+    111 │ 
+    112 │     return (
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\TermCard.tsx:135:25 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    133 │                     courses.length === 0
+    134 │                       ? "border-border bg-muted/30"
+  > 135 │                       : hasConflict
+        │                         ^^^^^^^^^^^
+  > 136 │                         ? "border-destructive/30 bg-destructive/10 text-destructive"
+  > 137 │                         : `border-opacity-50 ${getBlockBadgeColor(blockNum).replace("text-", "border-").replace("bg-", "border-")}`
+        │                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    138 │                   }`}
+    139 │                 >
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\TermCard.tsx:104:7 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    102 │       }
+    103 │ 
+  > 104 │       blocks.forEach((blockNum) => {
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 105 │         blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
+  > 106 │           course,
+  > 107 │           is50Percent,
+  > 108 │         });
+  > 109 │       });
+        │       ^^
+    110 │     });
+    111 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\auth\LoginForm.tsx:96:39 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    95 │           <Button className="w-full" disabled={loading} type="submit">
+  > 96 │             {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
+       │                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    97 │           </Button>
+    98 │         </form>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\ConflictResolutionModal.tsx:92:11 lint/a11y/noNoninteractiveElementInteractions ━━━━━━━━━━
+
+  × Non-interactive element should not have event handler.
+  
+     90 │         <div className="space-y-6">
+     91 │           {/* New Course */}
+   > 92 │           <div
+        │           ^^^^
+   > 93 │             className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+         ...
+  > 101 │             }}
+  > 102 │           >
+        │           ^
+    103 │             {/* Selection indicator */}
+    104 │             {selectedChoice === "new" && (
+  
+  i Consider replace semantically interactive element like <button/> or <a href/>.
+  
+
+components\course\ConflictResolutionModal.tsx:243:19 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    241 │             <p className="text-sm text-muted-foreground">
+    242 │               {selectedChoice
+  > 243 │                 ? selectedChoice === "new"
+        │                   ^^^^^^^^^^^^^^^^^^^^^^^^
+  > 244 │                   ? "New course will be added"
+  > 245 │                   : "Current course will be kept"
+        │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    246 │                 : "Please make a selection to continue"}
+    247 │             </p>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\ConflictResolutionModal.tsx:92:11 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+     90 │         <div className="space-y-6">
+     91 │           {/* New Course */}
+   > 92 │           <div
+        │           ^^^^
+   > 93 │             className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+         ...
+  > 101 │             }}
+  > 102 │           >
+        │           ^
+    103 │             {/* Selection indicator */}
+    104 │             {selectedChoice === "new" && (
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+components\course\ConflictResolutionModal.tsx:92:11 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+     90 │         <div className="space-y-6">
+     91 │           {/* New Course */}
+   > 92 │           <div
+        │           ^^^^
+   > 93 │             className={`group relative overflow-hidden rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+         ...
+  > 101 │             }}
+  > 102 │           >
+        │           ^
+    103 │             {/* Selection indicator */}
+    104 │             {selectedChoice === "new" && (
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+components\course\ConflictResolutionModal.tsx:186:19 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    184 │               <div className="space-y-3">
+    185 │                 {conflictingCourses.map(({ conflictingCourse }) => (
+  > 186 │                   <div
+        │                   ^^^^
+  > 187 │                     className={`relative border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+         ...
+  > 201 │                     }}
+  > 202 │                   >
+        │                   ^
+    203 │                     {/* Selection indicator for multiple courses */}
+    204 │                     {conflictingCourses.length > 1 &&
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+components\course\ConflictResolutionModal.tsx:186:19 lint/a11y/noStaticElementInteractions ━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    184 │               <div className="space-y-3">
+    185 │                 {conflictingCourses.map(({ conflictingCourse }) => (
+  > 186 │                   <div
+        │                   ^^^^
+  > 187 │                     className={`relative border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+         ...
+  > 201 │                     }}
+  > 202 │                   >
+        │                   ^
+    203 │                     {/* Selection indicator for multiple courses */}
+    204 │                     {conflictingCourses.length > 1 &&
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+components\course\ConflictResolutionModal.tsx:186:19 lint/a11y/noNoninteractiveElementInteractions ━━━━━━━━━━
+
+  × Non-interactive element should not have event handler.
+  
+    184 │               <div className="space-y-3">
+    185 │                 {conflictingCourses.map(({ conflictingCourse }) => (
+  > 186 │                   <div
+        │                   ^^^^
+  > 187 │                     className={`relative border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+         ...
+  > 201 │                     }}
+  > 202 │                   >
+        │                   ^
+    203 │                     {/* Selection indicator for multiple courses */}
+    204 │                     {conflictingCourses.length > 1 &&
+  
+  i Consider replace semantically interactive element like <button/> or <a href/>.
+  
+
+components\course\ConflictResolutionModal.tsx:189:27 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    187 │                     className={`relative border rounded-lg p-4 cursor-pointer transition-all duration-200 ${
+    188 │                       conflictingCourses.length === 1
+  > 189 │                         ? selectedChoice === "existing"
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 190 │                           ? "border-accent bg-accent/10"
+  > 191 │                           : "border-accent/40 hover:border-accent/60"
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    192 │                         : selectedChoice === "existing" &&
+    193 │                             selectedExistingCourse?.id === conflictingCourse.id
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseCard.tsx:315:19 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    313 │             className={`h-9 text-xs font-bold transition-all duration-200 shadow-md ${
+    314 │               isPinned
+  > 315 │                 ? isHovered
+        │                   ^^^^^^^^^
+  > 316 │                   ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+  > 317 │                   : "bg-primary hover:bg-primary/90 text-primary-foreground"
+        │                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    318 │                 : wouldHaveConflicts
+    319 │                   ? "bg-chart-4 hover:bg-chart-4/90 text-white border-2 border-chart-4/60"
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseCard.tsx:333:15 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    331 │           >
+    332 │             {isPinned ? (
+  > 333 │               isHovered ? (
+        │               ^^^^^^^^^^^^^
+  > 334 │                 <>
+         ...
+  > 342 │                 </>
+  > 343 │               )
+        │               ^
+    344 │             ) : wouldHaveConflicts ? (
+    345 │               <>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseCard.tsx:217:19 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    215 │               <Tooltip open={isMobile ? showNotesTooltip : undefined}>
+    216 │                 <TooltipTrigger asChild>
+  > 217 │                   <button
+        │                   ^^^^^^^
+  > 218 │                     className="shrink-0 flex items-center gap-1 bg-chart-4/20 text-chart-4 px-2 py-0.5 rounded border border-chart-4/40 hover:bg-chart-4/30 transition-colors"
+         ...
+  > 222 │                     }
+  > 223 │                   >
+        │                   ^
+    224 │                     <AlertTriangle className="h-3.5 w-3.5" />
+    225 │                     <span className="text-xs font-bold">NOTE</span>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\course\CourseCardSkeleton.tsx:68:34 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    66 │     >
+    67 │       {Array.from({ length: count }).map((_, index) => (
+  > 68 │         <CourseCardSkeleton key={index} />
+       │                                  ^^^^^
+    69 │       ))}
+    70 │     </div>
+  
+  i This is the source of the key value.
+  
+    65 │       }}
+    66 │     >
+  > 67 │       {Array.from({ length: count }).map((_, index) => (
+       │                                              ^^^^^
+    68 │         <CourseCardSkeleton key={index} />
+    69 │       ))}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\CourseCommandItem.tsx:94:13 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+     92 │             Added
+     93 │           </Badge>
+   > 94 │         ) : wouldHaveConflicts ? (
+        │             ^^^^^^^^^^^^^^^^^^^^^^
+   > 95 │           <Badge
+         ...
+  > 111 │           </button>
+  > 112 │         )}
+        │         ^
+    113 │       </div>
+    114 │     </CommandItem>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseCommandSearch.tsx:91:13 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+     89 │             Searching courses...
+     90 │           </div>
+   > 91 │         ) : searchQuery.trim() === "" ? (
+        │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   > 92 │           <CommandEmpty>Type to search through courses</CommandEmpty>
+         ...
+  > 106 │           </CommandGroup>
+  > 107 │         )}
+        │         ^
+    108 │       </CommandList>
+    109 │     </CommandDialog>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseCommandSearch.tsx:93:13 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+     91 │         ) : searchQuery.trim() === "" ? (
+     92 │           <CommandEmpty>Type to search through courses</CommandEmpty>
+   > 93 │         ) : courses.length === 0 ? (
+        │             ^^^^^^^^^^^^^^^^^^^^^^^^
+   > 94 │           <CommandEmpty>No courses found for "{searchQuery}"</CommandEmpty>
+         ...
+  > 106 │           </CommandGroup>
+  > 107 │         )}
+        │         ^
+    108 │       </CommandList>
+    109 │     </CommandDialog>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseGrid.tsx:22:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    20 │   courses,
+    21 │   isFiltered = false,
+  > 22 │   sidebarOpen = false,
+       │   ^^^^^^^^^^^
+    23 │   profileSidebarOpen = false,
+    24 │   currentPage,
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+components\course\CourseGrid.tsx:23:3 lint/correctness/noUnusedFunctionParameters ━━━━━━━━━━━━━━━━━━
+
+  × This parameter is unused.
+  
+    21 │   isFiltered = false,
+    22 │   sidebarOpen = false,
+  > 23 │   profileSidebarOpen = false,
+       │   ^^^^^^^^^^^^^^^^^^
+    24 │   currentPage,
+    25 │   totalPages,
+  
+  i Unused parameters might be the result of an incomplete refactoring.
+  
+
+components\course\CourseListItem.tsx:601:17 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    599 │             >
+    600 │               {isPinned ? (
+  > 601 │                 isHovered ? (
+        │                 ^^^^^^^^^^^^^
+  > 602 │                   <>
+         ...
+  > 610 │                   </>
+  > 611 │                 )
+        │                 ^
+    612 │               ) : wouldHaveConflicts ? (
+    613 │                 <>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseListItem.tsx:541:45 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    539 │                           <Badge
+    540 │                             className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30"
+  > 541 │                             key={`${item}-${index}`}
+        │                                             ^^^^^
+    542 │                             variant="outline"
+    543 │                           >
+  
+  i This is the source of the key value.
+  
+    536 │                       {allProgramsAndOrientations
+    537 │                         .slice(0, 2)
+  > 538 │                         .map((item, index) => (
+        │                                     ^^^^^
+    539 │                           <Badge
+    540 │                             className="text-xs px-2 py-1 bg-primary/10 text-primary border-primary/30"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\CourseListItem.tsx:44:17 lint/complexity/noExcessiveCognitiveComplexity ━━━━━━━━━━
+
+  × Excessive complexity of 45 detected (max: 20).
+  
+    42 │ }
+    43 │ 
+  > 44 │ export function CourseListItem({
+       │                 ^^^^^^^^^^^^^^
+    45 │   course,
+    46 │   activeFilters = {
+  
+  i Please refactor this function to reduce its complexity score from 45 to the max allowed complexity 20.
+  
+
+components\course\CourseListItem.tsx:291:27 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    289 │                     className={`h-7 px-2 text-xs font-medium transition-all duration-300 shadow-sm ${
+    290 │                       isPinned
+  > 291 │                         ? isHovered
+        │                           ^^^^^^^^^
+  > 292 │                           ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+  > 293 │                           : "bg-primary hover:bg-primary/90 text-primary-foreground"
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    294 │                         : wouldHaveConflicts
+    295 │                           ? "bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-accent/40"
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseListItem.tsx:310:23 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    308 │                   >
+    309 │                     {isPinned ? (
+  > 310 │                       isHovered ? (
+        │                       ^^^^^^^^^^^^^
+  > 311 │                         <Trash2 className="h-3 w-3" />
+  > 312 │                       ) : (
+  > 313 │                         <Check className="h-3 w-3" />
+  > 314 │                       )
+        │                       ^
+    315 │                     ) : wouldHaveConflicts ? (
+    316 │                       <AlertTriangle className="h-3 w-3" />
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseListItem.tsx:582:21 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    580 │               className={`h-8 text-xs font-medium transition-all duration-300 shadow-md ${
+    581 │                 isPinned
+  > 582 │                   ? isHovered
+        │                     ^^^^^^^^^
+  > 583 │                     ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+  > 584 │                     : "bg-primary hover:bg-primary/90 text-primary-foreground"
+        │                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    585 │                   : wouldHaveConflicts
+    586 │                     ? "bg-accent hover:bg-accent/90 text-accent-foreground border-2 border-accent/40"
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\course\CourseListItem.tsx:253:23 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    251 │                   <Tooltip open={isMobile ? showNotesTooltip : undefined}>
+    252 │                     <TooltipTrigger asChild>
+  > 253 │                       <button
+        │                       ^^^^^^^
+  > 254 │                         className="flex items-center gap-1 bg-chart-4/15 text-chart-4 px-1.5 py-0.5 rounded border border-chart-4/30 shrink-0 hover:bg-chart-4/20 transition-colors cursor-pointer"
+         ...
+  > 258 │                         }
+  > 259 │                       >
+        │                       ^
+    260 │                         <AlertTriangle className="h-3 w-3" />
+    261 │                         <span className="text-xs font-bold">OBS</span>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\course\CourseListItem.tsx:399:25 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    397 │                     <Tooltip open={isMobile ? showNotesTooltip : undefined}>
+    398 │                       <TooltipTrigger asChild>
+  > 399 │                         <button
+        │                         ^^^^^^^
+  > 400 │                           className="flex items-center gap-1 bg-chart-4/15 text-chart-4 px-2 py-1 rounded-md border border-chart-4/30 shrink-0 hover:bg-chart-4/20 transition-colors cursor-pointer"
+         ...
+  > 404 │                           }
+  > 405 │                         >
+        │                         ^
+    406 │                           <AlertTriangle className="h-4 w-4" />
+    407 │                           <span className="text-xs font-bold">OBS</span>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\course\CourseListSkeleton.tsx:68:38 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    66 │     <div className="space-y-3 w-full">
+    67 │       {Array.from({ length: count }).map((_, index) => (
+  > 68 │         <CourseListItemSkeleton key={index} />
+       │                                      ^^^^^
+    69 │       ))}
+    70 │     </div>
+  
+  i This is the source of the key value.
+  
+    65 │   return (
+    66 │     <div className="space-y-3 w-full">
+  > 67 │       {Array.from({ length: count }).map((_, index) => (
+       │                                              ^^^^^
+    68 │         <CourseListItemSkeleton key={index} />
+    69 │       ))}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\CourseOverview.tsx:25:5 lint/performance/useTopLevelRegex ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This regex literal is not defined in the top level scope. This can lead to performance issues if this function is called frequently.
+  
+    23 │   // Extract prerequisite information from notes if available
+    24 │   const prerequisiteMatch = course.notes?.match(
+  > 25 │     /(?:prerequisite|förutsättning|required?(?:ments)?)[s]?:?\s*([^.]+)/i
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    26 │   );
+    27 │   const prerequisiteText = prerequisiteMatch
+  
+  i Move the regex literal outside of this scope, and place it at the top level of this module, as a constant.
+  
+
+components\course\CoursePageSkeleton.tsx:85:51 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    83 │               <CardContent className="grid sm:grid-cols-2 gap-4">
+    84 │                 {[...new Array(6)].map((_, i) => (
+  > 85 │                   <div className="space-y-2" key={i}>
+       │                                                   ^
+    86 │                     <Skeleton className="h-4 w-24" />
+    87 │                     <Skeleton className="h-5 w-full" />
+  
+  i This is the source of the key value.
+  
+    82 │               </CardHeader>
+    83 │               <CardContent className="grid sm:grid-cols-2 gap-4">
+  > 84 │                 {[...new Array(6)].map((_, i) => (
+       │                                            ^
+    85 │                   <div className="space-y-2" key={i}>
+    86 │                     <Skeleton className="h-4 w-24" />
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\CoursePageSkeleton.tsx:105:57 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    103 │                 <div className="flex flex-wrap gap-2">
+    104 │                   {[...new Array(5)].map((_, i) => (
+  > 105 │                     <Skeleton className="h-6 w-16" key={i} />
+        │                                                         ^
+    106 │                   ))}
+    107 │                 </div>
+  
+  i This is the source of the key value.
+  
+    102 │               <CardContent>
+    103 │                 <div className="flex flex-wrap gap-2">
+  > 104 │                   {[...new Array(5)].map((_, i) => (
+        │                                              ^
+    105 │                     <Skeleton className="h-6 w-16" key={i} />
+    106 │                   ))}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\CoursePageSkeleton.tsx:120:57 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    118 │                 <div className="flex flex-wrap gap-2">
+    119 │                   {[...new Array(6)].map((_, i) => (
+  > 120 │                     <Skeleton className="h-6 w-24" key={i} />
+        │                                                         ^
+    121 │                   ))}
+    122 │                 </div>
+  
+  i This is the source of the key value.
+  
+    117 │               <CardContent>
+    118 │                 <div className="flex flex-wrap gap-2">
+  > 119 │                   {[...new Array(6)].map((_, i) => (
+        │                                              ^
+    120 │                     <Skeleton className="h-6 w-24" key={i} />
+    121 │                   ))}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\CoursePageSkeleton.tsx:140:22 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    138 │               <Card
+    139 │                 className="overflow-hidden bg-background border-border"
+  > 140 │                 key={i}
+        │                      ^
+    141 │               >
+    142 │                 <CardHeader className="space-y-3">
+  
+  i This is the source of the key value.
+  
+    135 │           </div>
+    136 │           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  > 137 │             {[...new Array(6)].map((_, i) => (
+        │                                        ^
+    138 │               <Card
+    139 │                 className="overflow-hidden bg-background border-border"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\ExaminationBadges.tsx:34:27 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    32 │         <Badge
+    33 │           className="text-xs px-3 py-1 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200"
+  > 34 │           key={`${exam}-${index}`}
+       │                           ^^^^^
+    35 │           variant="secondary"
+    36 │         >
+  
+  i This is the source of the key value.
+  
+    29 │   return (
+    30 │     <div className={`flex flex-wrap gap-2 ${className}`}>
+  > 31 │       {examinations.map((exam, index) => (
+       │                                ^^^^^
+    32 │         <Badge
+    33 │           className="text-xs px-3 py-1 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\FilterPanel.tsx:173:9 lint/a11y/noStaticElementInteractions ━━━━━━━━━━━━━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    171 │       {/* Sidebar Overlay for Mobile */}
+    172 │       {isOpen && (
+  > 173 │         <div
+        │         ^^^^
+  > 174 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 175 │           onClick={onToggle}
+  > 176 │         />
+        │         ^^
+    177 │       )}
+    178 │ 
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+components\course\FilterPanel.tsx:779:19 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    777 │               <Tooltip open={isMobile ? showProgramTooltip : undefined}>
+    778 │                 <TooltipTrigger asChild>
+  > 779 │                   <button
+        │                   ^^^^^^^
+  > 780 │                     className="flex items-center justify-center p-1 rounded-md hover:bg-sidebar-accent transition-colors duration-200 touch-manipulation"
+         ...
+  > 784 │                     }
+  > 785 │                   >
+        │                   ^
+    786 │                     <Info className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-help transition-colors duration-200" />
+    787 │                   </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\course\FilterPanel.tsx:73:7 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    71 │       // Extract all unique terms from courses - now they're string arrays
+    72 │       const allTerms = new Set<string>();
+  > 73 │       safeCourses.forEach((course) => {
+       │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 74 │         course.term.forEach((term) => allTerms.add(term));
+  > 75 │       });
+       │       ^^
+    76 │       const uniqueTerms = Array.from(allTerms).sort();
+    77 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\course\FilterPanel.tsx:74:9 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    72 │       const allTerms = new Set<string>();
+    73 │       safeCourses.forEach((course) => {
+  > 74 │         course.term.forEach((term) => allTerms.add(term));
+       │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    75 │       });
+    76 │       const uniqueTerms = Array.from(allTerms).sort();
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\course\FilterPanel.tsx:74:21 lint/suspicious/useIterableCallbackReturn ━━━━━━━━━━━━━━━━━━
+
+  × This callback passed to forEach() iterable method should not return a value.
+  
+    72 │       const allTerms = new Set<string>();
+    73 │       safeCourses.forEach((course) => {
+  > 74 │         course.term.forEach((term) => allTerms.add(term));
+       │                     ^^^^^^^
+    75 │       });
+    76 │       const uniqueTerms = Array.from(allTerms).sort();
+  
+  i Either remove this return or remove the returned value.
+  
+    72 │       const allTerms = new Set<string>();
+    73 │       safeCourses.forEach((course) => {
+  > 74 │         course.term.forEach((term) => allTerms.add(term));
+       │                                       ^^^^^^^^^^^^^^^^^^
+    75 │       });
+    76 │       const uniqueTerms = Array.from(allTerms).sort();
+  
+
+components\course\FilterPanel.tsx:173:9 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    171 │       {/* Sidebar Overlay for Mobile */}
+    172 │       {isOpen && (
+  > 173 │         <div
+        │         ^^^^
+  > 174 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 175 │           onClick={onToggle}
+  > 176 │         />
+        │         ^^
+    177 │       )}
+    178 │ 
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+components\course\FilterPanel.tsx:173:9 lint/a11y/noNoninteractiveElementInteractions ━━━━━━━━━━━━━━
+
+  × Non-interactive element should not have event handler.
+  
+    171 │       {/* Sidebar Overlay for Mobile */}
+    172 │       {isOpen && (
+  > 173 │         <div
+        │         ^^^^
+  > 174 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 175 │           onClick={onToggle}
+  > 176 │         />
+        │         ^^
+    177 │       )}
+    178 │ 
+  
+  i Consider replace semantically interactive element like <button/> or <a href/>.
+  
+
+components\course\FilterPanel.tsx:663:7 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    661 │       // Extract all unique terms from courses - now they're string arrays
+    662 │       const allTerms = new Set<string>();
+  > 663 │       safeCourses.forEach((course) => {
+        │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 664 │         course.term.forEach((term) => allTerms.add(term));
+  > 665 │       });
+        │       ^^
+    666 │       const uniqueTerms = Array.from(allTerms).sort();
+    667 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\course\FilterPanel.tsx:664:9 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    662 │       const allTerms = new Set<string>();
+    663 │       safeCourses.forEach((course) => {
+  > 664 │         course.term.forEach((term) => allTerms.add(term));
+        │         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    665 │       });
+    666 │       const uniqueTerms = Array.from(allTerms).sort();
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+components\course\FilterPanel.tsx:664:21 lint/suspicious/useIterableCallbackReturn ━━━━━━━━━━━━━━━━━
+
+  × This callback passed to forEach() iterable method should not return a value.
+  
+    662 │       const allTerms = new Set<string>();
+    663 │       safeCourses.forEach((course) => {
+  > 664 │         course.term.forEach((term) => allTerms.add(term));
+        │                     ^^^^^^^
+    665 │       });
+    666 │       const uniqueTerms = Array.from(allTerms).sort();
+  
+  i Either remove this return or remove the returned value.
+  
+    662 │       const allTerms = new Set<string>();
+    663 │       safeCourses.forEach((course) => {
+  > 664 │         course.term.forEach((term) => allTerms.add(term));
+        │                                       ^^^^^^^^^^^^^^^^^^
+    665 │       });
+    666 │       const uniqueTerms = Array.from(allTerms).sort();
+  
+
+components\course\FilterPanel.tsx:272:25 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    270 │                     <Tooltip open={isMobile ? showProgramTooltip : undefined}>
+    271 │                       <TooltipTrigger asChild>
+  > 272 │                         <button
+        │                         ^^^^^^^
+  > 273 │                           className="flex items-center justify-center p-1 rounded-md hover:bg-sidebar-accent transition-colors duration-200 touch-manipulation"
+         ...
+  > 280 │                           }
+  > 281 │                         >
+        │                         ^
+    282 │                           <Info className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-help transition-colors duration-200" />
+    283 │                         </button>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\course\FilterSidebarSkeleton.tsx:25:9 lint/a11y/noNoninteractiveElementInteractions ━━━━━━━━━━
+
+  × Non-interactive element should not have event handler.
+  
+    23 │       {/* Sidebar Overlay for Mobile */}
+    24 │       {sidebarOpen && (
+  > 25 │         <div
+       │         ^^^^
+  > 26 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 27 │           onClick={onToggle}
+  > 28 │         />
+       │         ^^
+    29 │       )}
+    30 │ 
+  
+  i Consider replace semantically interactive element like <button/> or <a href/>.
+  
+
+components\course\FilterSidebarSkeleton.tsx:25:9 lint/a11y/noStaticElementInteractions ━━━━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    23 │       {/* Sidebar Overlay for Mobile */}
+    24 │       {sidebarOpen && (
+  > 25 │         <div
+       │         ^^^^
+  > 26 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 27 │           onClick={onToggle}
+  > 28 │         />
+       │         ^^
+    29 │       )}
+    30 │ 
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+components\course\FilterSidebarSkeleton.tsx:25:9 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    23 │       {/* Sidebar Overlay for Mobile */}
+    24 │       {sidebarOpen && (
+  > 25 │         <div
+       │         ^^^^
+  > 26 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 27 │           onClick={onToggle}
+  > 28 │         />
+       │         ^^
+    29 │       )}
+    30 │ 
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+components\course\ProgramsList.tsx:73:35 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    71 │                 <Badge
+    72 │                   className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 px-3 py-1.5 text-sm font-medium"
+  > 73 │                   key={`${item}-${index}`}
+       │                                   ^^^^^
+    74 │                   variant="secondary"
+    75 │                 >
+  
+  i This is the source of the key value.
+  
+    68 │           <AccordionContent>
+    69 │             <div className="flex flex-wrap gap-2 pt-2">
+  > 70 │               {chunk.map((item, index) => (
+       │                                 ^^^^^
+    71 │                 <Badge
+    72 │                   className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 px-3 py-1.5 text-sm font-medium"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\ProgramsList.tsx:35:29 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    33 │           <Badge
+    34 │             className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 px-3 py-1.5 text-sm font-medium"
+  > 35 │             key={`${item}-${index}`}
+       │                             ^^^^^
+    36 │             variant="secondary"
+    37 │           >
+  
+  i This is the source of the key value.
+  
+    30 │     return (
+    31 │       <div className={`flex flex-wrap gap-2 ${className}`}>
+  > 32 │         {allItems.map((item, index) => (
+       │                              ^^^^^
+    33 │           <Badge
+    34 │             className="bg-primary/10 text-primary border border-primary/20 hover:bg-primary/15 hover:border-primary/30 transition-all duration-200 px-3 py-1.5 text-sm font-medium"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\ProgramsList.tsx:62:25 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    60 │       {chunks.map((chunk, chunkIndex) => (
+    61 │         <AccordionItem
+  > 62 │           key={`chunk-${chunkIndex}`}
+       │                         ^^^^^^^^^^
+    63 │           value={`programs-${chunkIndex}`}
+    64 │         >
+  
+  i This is the source of the key value.
+  
+    58 │       type="single"
+    59 │     >
+  > 60 │       {chunks.map((chunk, chunkIndex) => (
+       │                           ^^^^^^^^^^
+    61 │         <AccordionItem
+    62 │           key={`chunk-${chunkIndex}`}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\SortDropdown.tsx:76:30 lint/performance/useTopLevelRegex ━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This regex literal is not defined in the top level scope. This can lead to performance issues if this function is called frequently.
+  
+    74 │   // Split strings into alphabetic and numeric parts
+    75 │   const parseCode = (code: string) => {
+  > 76 │     const match = code.match(/^([A-Za-z]+)(\d+)(.*)$/);
+       │                              ^^^^^^^^^^^^^^^^^^^^^^^^
+    77 │     if (match) {
+    78 │       return {
+  
+  i Move the regex literal outside of this scope, and place it at the top level of this module, as a constant.
+  
+
+components\course\TruncatedExaminationBadges.tsx:56:27 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    54 │         <Badge
+    55 │           className="text-[11px] px-2 py-0.5 font-semibold bg-muted/60 text-muted-foreground border border-border/40"
+  > 56 │           key={`${exam}-${index}`}
+       │                           ^^^^^
+    57 │           variant="outline"
+    58 │         >
+  
+  i This is the source of the key value.
+  
+    51 │   return (
+    52 │     <div className={`flex flex-wrap gap-1 ${className}`}>
+  > 53 │       {visibleExams.map((exam, index) => (
+       │                                ^^^^^
+    54 │         <Badge
+    55 │           className="text-[11px] px-2 py-0.5 font-semibold bg-muted/60 text-muted-foreground border border-border/40"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\course\TruncatedExaminationBadges.tsx:81:44 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    79 │                   <span
+    80 │                     className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary-foreground font-medium"
+  > 81 │                     key={`hidden-${exam}-${index}`}
+       │                                            ^^^^^
+    82 │                   >
+    83 │                     {getDisplayLabel(exam)}
+  
+  i This is the source of the key value.
+  
+    76 │               </p>
+    77 │               <div className="flex flex-wrap gap-1">
+  > 78 │                 {hiddenExams.map((exam, index) => (
+       │                                         ^^^^^
+    79 │                   <span
+    80 │                     className="text-xs px-2 py-0.5 rounded bg-primary/20 text-primary-foreground font-medium"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\login-form.tsx:258:19 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    256 │                   variant="outline"
+    257 │                 >
+  > 258 │                   <svg
+        │                   ^^^^
+  > 259 │                     className="w-4 h-4 mr-2 text-popover-foreground"
+  > 260 │                     viewBox="0 0 24 24"
+  > 261 │                     xmlns="http://www.w3.org/2000/svg"
+  > 262 │                   >
+        │                   ^
+    263 │                     <path
+    264 │                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+components\login-form.tsx:322:11 lint/a11y/useValidAnchor ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide a valid value for the attribute href.
+  
+    320 │         <a
+    321 │           className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+  > 322 │           href="#"
+        │           ^^^^^^^^
+    323 │         >
+    324 │           Terms of Service
+  
+  i The href attribute should be a valid a URL
+  
+  i Check this thorough explanation to better understand the context.
+  
+
+components\login-form.tsx:329:11 lint/a11y/useValidAnchor ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide a valid value for the attribute href.
+  
+    327 │         <a
+    328 │           className="text-primary hover:text-primary/80 underline underline-offset-4 transition-colors"
+  > 329 │           href="#"
+        │           ^^^^^^^^
+    330 │         >
+    331 │           Privacy Policy
+  
+  i The href attribute should be a valid a URL
+  
+  i Check this thorough explanation to better understand the context.
+  
+
+components\login-form.tsx:61:11 lint/suspicious/noImplicitAnyLet ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × This variable implicitly has the any type.
+  
+    60 │     try {
+  > 61 │       let result;
+       │           ^^^^^^
+    62 │       let emailToUse = emailOrUsername;
+    63 │ 
+  
+  i Variable declarations without type annotation and initialization implicitly have the any type. Declare a type or initialize the variable with some value.
+  
+
+components\login-form.tsx:61:11 lint/suspicious/noEvolvingTypes ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × The type of this variable may evolve implicitly to any type, including the any type.
+  
+    60 │     try {
+  > 61 │       let result;
+       │           ^^^^^^
+    62 │       let emailToUse = emailOrUsername;
+    63 │ 
+  
+  i Add an explicit type or initialization to avoid implicit type evolution.
+  
+
+components\login-form.tsx:212:27 lint/a11y/useValidAnchor ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide a valid value for the attribute href.
+  
+    210 │                         <a
+    211 │                           className="ml-auto text-sm text-primary hover:text-primary/80 underline-offset-2 hover:underline transition-colors"
+  > 212 │                           href="#"
+        │                           ^^^^^^^^
+    213 │                         >
+    214 │                           Forgot your password?
+  
+  i The href attribute should be a valid a URL
+  
+  i Check this thorough explanation to better understand the context.
+  
+
+components\login-form.tsx:242:23 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    240 │                   {loading
+    241 │                     ? "Loading..."
+  > 242 │                     : isSignup
+        │                       ^^^^^^^^
+  > 243 │                       ? "Create Account"
+  > 244 │                       : "Sign In"}
+        │                       ^^^^^^^^^^^
+    245 │                 </Button>
+    246 │                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\profile\PinnedCourseCard.tsx:46:21 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    44 │                 <Tooltip open={isMobile ? showNotesTooltip : undefined}>
+    45 │                   <TooltipTrigger asChild>
+  > 46 │                     <button
+       │                     ^^^^^^^
+  > 47 │                       className="flex items-center gap-1 bg-chart-4/15 text-chart-4 px-1.5 py-0.5 rounded border border-chart-4/30 shrink-0 hover:bg-chart-4/20 transition-colors cursor-pointer"
+        ...
+  > 51 │                       }
+  > 52 │                     >
+       │                     ^
+    53 │                       <AlertTriangle className="h-3 w-3" />
+    54 │                       <span className="text-xs font-bold">OBS</span>
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\profile\PinnedCourseCard.tsx:133:37 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    131 │                   <Badge
+    132 │                     className="text-xs px-2 py-0.5"
+  > 133 │                     key={`${item}-${index}`}
+        │                                     ^^^^^
+    134 │                     variant="outline"
+    135 │                   >
+  
+  i This is the source of the key value.
+  
+    128 │             allProgramsAndOrientations.length > 0 && (
+    129 │               <div className="flex flex-wrap gap-1">
+  > 130 │                 {allProgramsAndOrientations.slice(0, 2).map((item, index) => (
+        │                                                                    ^^^^^
+    131 │                   <Badge
+    132 │                     className="text-xs px-2 py-0.5"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfileCommandDialog.tsx:6:8 lint/performance/noNamespaceImport ━━━━━━━━━━━━━━━━━
+
+  × Avoid namespace imports, it can prevent efficient tree shaking and increase bundle size.
+  
+    4 │ import { useRouter } from "next/navigation";
+    5 │ import { useTheme } from "next-themes";
+  > 6 │ import * as React from "react";
+      │        ^^^^^^^^^^^^^^^^^^^^^^^
+    7 │ import {
+    8 │   CommandDialog,
+  
+  i Use named imports instead.
+  
+
+components\profile\ProfileCommandDialog.tsx:29:42 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    27 │ }: ProfileCommandDialogProps) {
+    28 │   const [open, setOpen] = React.useState(false);
+  > 29 │   const [user, setUser] = React.useState<any>(null);
+       │                                          ^^^
+    30 │   const router = useRouter();
+    31 │   const { setTheme, theme } = useTheme();
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+components\profile\ProfileContext.tsx:226:55 lint/complexity/noExcessiveCognitiveComplexity ━━━━━━━━━━
+
+  × Excessive complexity of 22 detected (max: 20).
+  
+    225 │   // Hybrid storage functions
+  > 226 │   const saveProfile = async (profile: StudentProfile) => {
+        │                                                       ^^^
+    227 │     if (user) {
+    228 │       // Save to Supabase when authenticated - use Supabase client directly
+  
+  i Please refactor this function to reduce its complexity score from 22 to the max allowed complexity 20.
+  
+
+components\profile\ProfileDataSkeleton.tsx:26:22 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    24 │       <div className="grid gap-4 md:grid-cols-3">
+    25 │         {[...new Array(3)].map((_, i) => (
+  > 26 │           <Card key={i}>
+       │                      ^
+    27 │             <CardHeader className="space-y-2">
+    28 │               <Skeleton className="h-4 w-24" />
+  
+  i This is the source of the key value.
+  
+    23 │       {/* Profile Stats Cards */}
+    24 │       <div className="grid gap-4 md:grid-cols-3">
+  > 25 │         {[...new Array(3)].map((_, i) => (
+       │                                    ^
+    26 │           <Card key={i}>
+    27 │             <CardHeader className="space-y-2">
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfileDataSkeleton.tsx:47:56 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    45 │             <div className="grid gap-3 sm:grid-cols-2">
+    46 │               {[...new Array(4)].map((_, i) => (
+  > 47 │                 <Card className="overflow-hidden" key={i}>
+       │                                                        ^
+    48 │                   <CardHeader className="space-y-2">
+    49 │                     <Skeleton className="h-5 w-20" />
+  
+  i This is the source of the key value.
+  
+    44 │           <CardContent>
+    45 │             <div className="grid gap-3 sm:grid-cols-2">
+  > 46 │               {[...new Array(4)].map((_, i) => (
+       │                                          ^
+    47 │                 <Card className="overflow-hidden" key={i}>
+    48 │                   <CardHeader className="space-y-2">
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfilePinboard.tsx:181:35 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    179 │                   <div
+    180 │                     className="text-sm text-destructive bg-destructive/10 p-2 rounded"
+  > 181 │                     key={`error-${index}-${error.slice(0, 20)}`}
+        │                                   ^^^^^
+    182 │                   >
+    183 │                     !� {error}
+  
+  i This is the source of the key value.
+  
+    176 │             {(summary.errors.length > 0 || summary.warnings.length > 0) && (
+    177 │               <div className="mt-4 space-y-2">
+  > 178 │                 {summary.errors.map((error, index) => (
+        │                                             ^^^^^
+    179 │                   <div
+    180 │                     className="text-sm text-destructive bg-destructive/10 p-2 rounded"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfilePinboard.tsx:189:37 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    187 │                   <div
+    188 │                     className="text-sm text-chart-4 bg-chart-4/10 p-2 rounded"
+  > 189 │                     key={`warning-${index}-${warning.slice(0, 20)}`}
+        │                                     ^^^^^
+    190 │                   >
+    191 │                     i� {warning}
+  
+  i This is the source of the key value.
+  
+    184 │                   </div>
+    185 │                 ))}
+  > 186 │                 {summary.warnings.map((warning, index) => (
+        │                                                 ^^^^^
+    187 │                   <div
+    188 │                     className="text-sm text-chart-4 bg-chart-4/10 p-2 rounded"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfileSidebar.tsx:105:9 lint/a11y/noStaticElementInteractions ━━━━━━━━━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    103 │       {/* Sidebar Overlay for Mobile */}
+    104 │       {isOpen && (
+  > 105 │         <div
+        │         ^^^^
+  > 106 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 107 │           onClick={onToggle}
+  > 108 │         />
+        │         ^^
+    109 │       )}
+    110 │ 
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+components\profile\ProfileSidebar.tsx:105:9 lint/a11y/noNoninteractiveElementInteractions ━━━━━━━━━━
+
+  × Non-interactive element should not have event handler.
+  
+    103 │       {/* Sidebar Overlay for Mobile */}
+    104 │       {isOpen && (
+  > 105 │         <div
+        │         ^^^^
+  > 106 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 107 │           onClick={onToggle}
+  > 108 │         />
+        │         ^^
+    109 │       )}
+    110 │ 
+  
+  i Consider replace semantically interactive element like <button/> or <a href/>.
+  
+
+components\profile\ProfileSidebar.tsx:105:9 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    103 │       {/* Sidebar Overlay for Mobile */}
+    104 │       {isOpen && (
+  > 105 │         <div
+        │         ^^^^
+  > 106 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 107 │           onClick={onToggle}
+  > 108 │         />
+        │         ^^
+    109 │       )}
+    110 │ 
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+components\profile\ProfileSidebar.tsx:206:23 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    204 │                     {/* Compact Pie Chart */}
+    205 │                     <div className="flex justify-center">
+  > 206 │                       <svg
+        │                       ^^^^
+  > 207 │                         height={size}
+  > 208 │                         viewBox={`0 0 ${size} ${size}`}
+  > 209 │                         width={size}
+  > 210 │                       >
+        │                       ^
+    211 │                         {segmentsWithAngles.map((segment, index) => (
+    212 │                           <path
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+components\profile\ProfileSidebar.tsx:215:62 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    213 │                             d={createPath(segment.startAngle, segment.angle)}
+    214 │                             fill={segment.color}
+  > 215 │                             key={`segment-${segment.label}-${index}`}
+        │                                                              ^^^^^
+    216 │                             stroke="hsl(var(--background))"
+    217 │                             strokeWidth="2"
+  
+  i This is the source of the key value.
+  
+    209 │                         width={size}
+    210 │                       >
+  > 211 │                         {segmentsWithAngles.map((segment, index) => (
+        │                                                           ^^^^^
+    212 │                           <path
+    213 │                             d={createPath(segment.startAngle, segment.angle)}
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfileSidebar.tsx:228:59 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    226 │                         <div
+    227 │                           className="flex items-center gap-2"
+  > 228 │                           key={`legend-${segment.label}-${index}`}
+        │                                                           ^^^^^
+    229 │                         >
+    230 │                           <div
+  
+  i This is the source of the key value.
+  
+    223 │                     {/* Compact Legend */}
+    224 │                     <div className="space-y-1">
+  > 225 │                       {segmentsWithAngles.map((segment, index) => (
+        │                                                         ^^^^^
+    226 │                         <div
+    227 │                           className="flex items-center gap-2"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfileSidebarSkeleton.tsx:26:9 lint/a11y/noNoninteractiveElementInteractions ━━━━━━━━━━
+
+  × Non-interactive element should not have event handler.
+  
+    24 │       {/* Sidebar Overlay for Mobile */}
+    25 │       {isOpen && (
+  > 26 │         <div
+       │         ^^^^
+  > 27 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 28 │           onClick={onToggle}
+  > 29 │         />
+       │         ^^
+    30 │       )}
+    31 │ 
+  
+  i Consider replace semantically interactive element like <button/> or <a href/>.
+  
+
+components\profile\ProfileSidebarSkeleton.tsx:26:9 lint/a11y/noStaticElementInteractions ━━━━━━━━━━━
+
+  × Static Elements should not be interactive.
+  
+    24 │       {/* Sidebar Overlay for Mobile */}
+    25 │       {isOpen && (
+  > 26 │         <div
+       │         ^^^^
+  > 27 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 28 │           onClick={onToggle}
+  > 29 │         />
+       │         ^^
+    30 │       )}
+    31 │ 
+  
+  i To add interactivity such as a mouse or key event listener to a static element, give the element an appropriate role value.
+  
+
+components\profile\ProfileSidebarSkeleton.tsx:26:9 lint/a11y/useKeyWithClickEvents ━━━━━━━━━━━━━━━━━
+
+  × Enforce to have the onClick mouse event with the onKeyUp, the onKeyDown, or the onKeyPress keyboard event.
+  
+    24 │       {/* Sidebar Overlay for Mobile */}
+    25 │       {isOpen && (
+  > 26 │         <div
+       │         ^^^^
+  > 27 │           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+  > 28 │           onClick={onToggle}
+  > 29 │         />
+       │         ^^
+    30 │       )}
+    31 │ 
+  
+  i Actions triggered using mouse events should have corresponding keyboard events to account for keyboard-only navigation.
+  
+
+components\profile\ProfileSummary.tsx:166:35 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    164 │                   <div
+    165 │                     className="flex items-start gap-2 text-xs"
+  > 166 │                     key={`error-${index}-${error.slice(0, 20)}`}
+        │                                   ^^^^^
+    167 │                   >
+    168 │                     <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 shrink-0" />
+  
+  i This is the source of the key value.
+  
+    161 │             {(summary.errors.length > 0 || summary.warnings.length > 0) && (
+    162 │               <div className="space-y-2 pt-2 border-t border-border/40">
+  > 163 │                 {summary.errors.map((error, index) => (
+        │                                             ^^^^^
+    164 │                   <div
+    165 │                     className="flex items-start gap-2 text-xs"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\profile\ProfileSummary.tsx:175:37 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    173 │                   <div
+    174 │                     className="flex items-start gap-2 text-xs"
+  > 175 │                     key={`warning-${index}-${warning.slice(0, 20)}`}
+        │                                     ^^^^^
+    176 │                   >
+    177 │                     <AlertTriangle className="h-3 w-3 text-chart-4 mt-0.5 shrink-0" />
+  
+  i This is the source of the key value.
+  
+    170 │                   </div>
+    171 │                 ))}
+  > 172 │                 {summary.warnings.map((warning, index) => (
+        │                                                 ^^^^^
+    173 │                   <div
+    174 │                     className="flex items-start gap-2 text-xs"
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+components\seo\CourseFAQSchema.tsx:119:7 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    117 │   return (
+    118 │     <script
+  > 119 │       dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        │       ^^^^^^^^^^^^^^^^^^^^^^^
+    120 │       type="application/ld+json"
+    121 │     />
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+components\seo\CourseStructuredData.tsx:82:5 lint/performance/useTopLevelRegex ━━━━━━━━━━━━━━━━━━━━━
+
+  × This regex literal is not defined in the top level scope. This can lead to performance issues if this function is called frequently.
+  
+    80 │   // Extract prerequisites from notes if present
+    81 │   const prerequisitesMatch = course.notes?.match(
+  > 82 │     /(?:prerequisite|förutsättning|require)[s]?:?\s*([^.]+)/i
+       │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    83 │   );
+    84 │   const prerequisites = prerequisitesMatch
+  
+  i Move the regex literal outside of this scope, and place it at the top level of this module, as a constant.
+  
+
+components\seo\CourseStructuredData.tsx:224:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    222 │     <>
+    223 │       <script
+  > 224 │         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    225 │         type="application/ld+json"
+    226 │       />
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+components\seo\CourseStructuredData.tsx:228:9 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    226 │       />
+    227 │       <script
+  > 228 │         dangerouslySetInnerHTML={{ __html: JSON.stringify(courseSchema) }}
+        │         ^^^^^^^^^^^^^^^^^^^^^^^
+    229 │         type="application/ld+json"
+    230 │       />
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+components\seo\StructuredData.tsx:56:7 lint/security/noDangerouslySetInnerHtml ━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid passing content using the dangerouslySetInnerHTML prop.
+  
+    54 │   return (
+    55 │     <script
+  > 56 │       dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+       │       ^^^^^^^^^^^^^^^^^^^^^^^
+    57 │       type="application/ld+json"
+    58 │     />
+  
+  ! Setting content using code can expose users to cross-site scripting (XSS) attacks
+  
+
+components\shared\AlertBanner.tsx:109:11 lint/a11y/noSvgWithoutTitle ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Alternative text title element cannot be empty
+  
+    107 │           onClick={onDismiss}
+    108 │         >
+  > 109 │           <svg
+        │           ^^^^
+  > 110 │             fill="none"
+         ...
+  > 118 │             xmlns="http://www.w3.org/2000/svg"
+  > 119 │           >
+        │           ^
+    120 │             <line x1="18" x2="6" y1="6" y2="18" />
+    121 │             <line x1="6" x2="18" y1="6" y2="18" />
+  
+  i For accessibility purposes, SVGs should have an alternative text, provided via title element. If the svg element has role="img", you should add the aria-label or aria-labelledby attribute.
+  
+
+components\shared\AlertBanner.tsx:104:9 lint/a11y/useButtonType ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Provide an explicit type prop for the button element.
+  
+    102 │       />
+    103 │       {onDismiss && (
+  > 104 │         <button
+        │         ^^^^^^^
+  > 105 │           aria-label="Dismiss banner"
+  > 106 │           className="absolute top-4 right-4 text-accent hover:text-accent/80 hover:bg-accent/10 rounded-sm p-1 transition-colors"
+  > 107 │           onClick={onDismiss}
+  > 108 │         >
+        │         ^
+    109 │           <svg
+    110 │             fill="none"
+  
+  i The default type of a button is submit, which causes the submission of a form when placed inside a `form` element. This is likely not the behaviour that you want inside a React application.
+  
+  i Allowed button types are: submit, button or reset
+  
+
+components\shared\DynamicNavbar.tsx:37:17 lint/complexity/noExcessiveCognitiveComplexity ━━━━━━━━━━━
+
+  × Excessive complexity of 42 detected (max: 20).
+  
+    35 │ type DynamicNavbarProps = MainPageNavbarProps | ProfileEditNavbarProps;
+    36 │ 
+  > 37 │ export function DynamicNavbar(props: DynamicNavbarProps) {
+       │                 ^^^^^^^^^^^^^
+    38 │   const [user, setUser] = useState<User | null>(null);
+    39 │   const [loading, setLoading] = useState(true);
+  
+  i Please refactor this function to reduce its complexity score from 42 to the max allowed complexity 20.
+  
+
+components\shared\DynamicNavbar.tsx:183:21 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    181 │                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
+    182 │                   </div>
+  > 183 │                 ) : user ? (
+        │                     ^^^^^^^^
+  > 184 │                   <Link href="/profile/edit">
+         ...
+  > 208 │                   </Link>
+  > 209 │                 )}
+        │                 ^
+    210 │               </div>
+    211 │             </div>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\shared\DynamicNavbar.tsx:384:21 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    382 │                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
+    383 │                   </div>
+  > 384 │                 ) : user ? (
+        │                     ^^^^^^^^
+  > 385 │                   <Link href="/profile/edit">
+         ...
+  > 409 │                   </Link>
+  > 410 │                 )}
+        │                 ^
+    411 │               </div>
+    412 │             </div>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\shared\DynamicNavbar.tsx:458:21 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    456 │                     <div className="w-4 h-4 border-2 border-sidebar-foreground border-t-transparent rounded-full animate-spin" />
+    457 │                   </div>
+  > 458 │                 ) : user ? (
+        │                     ^^^^^^^^
+  > 459 │                   <Link href="/profile/edit">
+         ...
+  > 480 │                   </Link>
+  > 481 │                 )}
+        │                 ^
+    482 │               </div>
+    483 │             </div>
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\shared\GlobalCommandPalette.tsx:24:17 lint/complexity/noExcessiveCognitiveComplexity ━━━━━━━━━━
+
+  × Excessive complexity of 21 detected (max: 20).
+  
+    22 │ import { useCommandPalette } from "./CommandPaletteContext";
+    23 │ 
+  > 24 │ export function GlobalCommandPalette() {
+       │                 ^^^^^^^^^^^^^^^^^^^^
+    25 │   const [open, setOpen] = useState(false);
+    26 │   const [searchQuery, setSearchQuery] = useState("");
+  
+  i Please refactor this function to reduce its complexity score from 21 to the max allowed complexity 20.
+  
+
+components\shared\GlobalCommandPalette.tsx:29:36 lint/suspicious/noExplicitAny ━━━━━━━━━━━━━━━━━━━━━
+
+  × Unexpected any. Specify a different type.
+  
+    27 │   const [courses, setCourses] = useState<Course[]>([]);
+    28 │   const [isLoading, setIsLoading] = useState(false);
+  > 29 │   const [user, setUser] = useState<any>(null);
+       │                                    ^^^
+    30 │ 
+    31 │   const router = useRouter();
+  
+  i any disables many type checking rules. Its use should be avoided.
+  
+
+components\shared\GlobalCommandPalette.tsx:391:21 lint/style/noNestedTernary ━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Do not nest ternary expressions.
+  
+    389 │                     Searching courses...
+    390 │                   </div>
+  > 391 │                 ) : courses.length > 0 ? (
+        │                     ^^^^^^^^^^^^^^^^^^^^^^
+  > 392 │                   <CommandGroup
+         ...
+  > 406 │                   </div>
+  > 407 │                 )}
+        │                 ^
+    408 │               </>
+    409 │             )}
+  
+  i Nesting ternary expressions can make code more difficult to understand.
+  
+  i Convert nested ternary expression into if-else statements or separate the conditions to make the logic easier to understand.
+  
+
+components\shared\GlobalCommandPalette.tsx:264:43 lint/correctness/useExhaustiveDependencies ━━━━━━━━━━
+
+  × allCommands changes on every re-render and should not be used as a hook dependency.
+  
+    262 │       console.log("📍 Pathname:", pathname);
+    263 │     }
+  > 264 │   }, [open, searchQuery, groupedCommands, allCommands, user, pathname]);
+        │                                           ^^^^^^^^^^^
+    265 │ 
+    266 │   return (
+  
+  i To fix this, wrap the definition of allCommands in its own useMemo() hook.
+  
+
+components\shared\Pagination.tsx:24:29 lint/complexity/noExcessiveCognitiveComplexity ━━━━━━━━━━━━━━
+
+  × Excessive complexity of 23 detected (max: 20).
+  
+    23 │   // Generate page numbers to show
+  > 24 │   const getPageNumbers = () => {
+       │                             ^^^
+    25 │     const pages: (number | string)[] = [];
+    26 │     const maxVisible = 7; // Maximum number of page buttons to show
+  
+  i Please refactor this function to reduce its complexity score from 23 to the max allowed complexity 20.
+  
+
+components\shared\Pagination.tsx:92:39 lint/suspicious/noArrayIndexKey ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Avoid using the index of an array as key property in an element.
+  
+    90 │         <div className="flex items-center gap-1">
+    91 │           {getPageNumbers().map((page, index) => (
+  > 92 │             <div key={`page-${page}-${index}`}>
+       │                                       ^^^^^
+    93 │               {page === "..." ? (
+    94 │                 <Button
+  
+  i This is the source of the key value.
+  
+    89 │         {/* Page numbers */}
+    90 │         <div className="flex items-center gap-1">
+  > 91 │           {getPageNumbers().map((page, index) => (
+       │                                        ^^^^^
+    92 │             <div key={`page-${page}-${index}`}>
+    93 │               {page === "..." ? (
+  
+  i The order of the items may change, and this also affects performances and component state.
+  
+  i Check the React documentation. 
+  
+
+types\database.ts internalError/io  INTERNAL  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × stream did not contain valid UTF-8
+  
+  ! This diagnostic was derived from an internal Biome error. Potential bug, please report it if necessary.
+  
+
+types\profile.ts:149:5 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    147 │     }
+    148 │ 
+  > 149 │     termCourses.forEach((course) => {
+        │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 150 │       // Check for duplicate courses
+         ...
+  > 172 │       }
+  > 173 │     });
+        │     ^^
+    174 │   });
+    175 │ 
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+types\profile.ts:141:3 lint/complexity/noForEach ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Prefer for...of instead of forEach.
+  
+    140 │   // Validate each term
+  > 141 │   MASTER_PROGRAM_TERMS.forEach((term) => {
+        │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  > 142 │     const termCourses = profile.terms[term];
+         ...
+  > 173 │     });
+  > 174 │   });
+        │   ^^
+    175 │ 
+    176 │   // Check advanced credits requirement (60hp minimum)
+  
+  i forEach may lead to performance issues when working with large arrays. When combined with functions like filter or map, this causes multiple iterations over the same type.
+  
+
+Checked 64 files in 86ms. No fixes applied.
+Found 118 errors.
+check ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  × Some errors were emitted while running checks.
+  
+

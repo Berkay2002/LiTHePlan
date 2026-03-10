@@ -8,7 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 export function InfoBanner() {
   const [isVisible, setIsVisible] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [user, setUser] = useState<User | null>(null);
+  const [_user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -33,7 +33,7 @@ export function InfoBanner() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
 
       // Hide banner when user logs in
@@ -56,7 +56,9 @@ export function InfoBanner() {
     localStorage.setItem("info-banner-dismissed", "true");
   };
 
-  if (!isVisible) return null;
+  if (!isVisible) {
+    return null;
+  }
 
   return <GuestModeBanner className="mb-6" onDismiss={handleDismiss} />;
 }

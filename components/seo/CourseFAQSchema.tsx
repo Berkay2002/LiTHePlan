@@ -73,15 +73,14 @@ export function CourseFAQSchema({ course }: CourseFAQSchemaProps) {
         name: `When is ${course.id} offered?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text:
-            [
-              `${course.name} is offered during term ${termsText}`,
-              periodsText ? `in period ${periodsText}` : "",
-              blocksText ? `block ${blocksText}` : "",
-              `at ${course.campus} campus`,
-            ]
-              .filter(Boolean)
-              .join(", ") + ".",
+          text: `${[
+            `${course.name} is offered during term ${termsText}`,
+            periodsText ? `in period ${periodsText}` : "",
+            blocksText ? `block ${blocksText}` : "",
+            `at ${course.campus} campus`,
+          ]
+            .filter(Boolean)
+            .join(", ")}.`,
         },
       },
       {

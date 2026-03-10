@@ -23,7 +23,6 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import {
   formatBlocks,
-  formatPace,
   getAvailableTerms,
   isMultiTermCourse,
 } from "@/lib/course-utils";
@@ -302,7 +301,8 @@ export function CourseCard({ course }: CourseCardProps) {
         <div className="flex-1 min-h-0 pt-1 border-t border-border/20">
           {course.examinator && (
             <div className="text-[11px] text-muted-foreground/80 truncate">
-              <span className="font-medium">Examiner:</span> <span className="font-normal">{course.examinator}</span>
+              <span className="font-medium">Examiner:</span>{" "}
+              <span className="font-normal">{course.examinator}</span>
             </div>
           )}
         </div>

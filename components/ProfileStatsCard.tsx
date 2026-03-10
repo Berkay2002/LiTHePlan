@@ -14,8 +14,8 @@ import {
 import type { StudentProfile } from "@/types/profile";
 
 interface ProfileStatsCardProps {
-  profile: StudentProfile;
   className?: string;
+  profile: StudentProfile;
 }
 
 export function ProfileStatsCard({
@@ -187,9 +187,7 @@ export function ProfileStatsCard({
                   Required: {minAdvancedCredits}hp
                 </span>
                 {advancedCredits >= minAdvancedCredits ? (
-                  <span className="text-chart-2 font-medium">
-                    ✓ Complete
-                  </span>
+                  <span className="text-chart-2 font-medium">✓ Complete</span>
                 ) : (
                   <span className="text-chart-4 font-medium">
                     {minAdvancedCredits - advancedCredits}hp needed

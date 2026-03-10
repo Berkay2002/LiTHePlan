@@ -10,10 +10,10 @@ import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface TermSelectionModalProps {
+  availableTerms: MasterProgramTerm[];
+  course: Course | null;
   isOpen: boolean;
   onClose: () => void;
-  course: Course | null;
-  availableTerms: MasterProgramTerm[];
   onTermSelected: (course: Course, selectedTerm: MasterProgramTerm) => void;
 }
 
@@ -37,7 +37,9 @@ export function TermSelectionModal({
     }
   };
 
-  if (!course) return null;
+  if (!course) {
+    return null;
+  }
 
   return (
     <Dialog onOpenChange={onClose} open={isOpen}>

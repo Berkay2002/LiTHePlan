@@ -98,3 +98,19 @@ Focused the `app/**` lint pass on remaining non-API issues and brought the scope
 ### Verification
 
 - `npm exec -- ultracite check --max-diagnostics 200 app`
+
+---
+
+## 2026-03-10 - Exclude shadcn UI From Default Lint Scope
+
+Adjusted the default Biome/Ultracite scope to skip `components/ui/**` so lint work can stay focused on application-owned code instead of vendored UI primitives.
+
+### Updated
+
+- Added a `biome.jsonc` exclusion for `components/ui/**/*.{js,jsx,ts,tsx,css}` while keeping the rest of `components/**` in scope
+- Updated `.agent/context/conventions.md` to document that `components/ui/` is excluded from the default lint pass
+- Updated `.agent/context/commands.md` so the documented lint surface matches the Biome configuration
+
+### Verification
+
+- Full `npm exec -- ultracite check --max-diagnostics none` output no longer reports files under `components/ui/**`

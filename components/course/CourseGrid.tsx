@@ -4,16 +4,16 @@ import { CourseCard } from "./CourseCard";
 
 interface CourseGridProps {
   courses: Course[];
-  isFiltered?: boolean;
-  // Sidebar state props for responsive layout
-  sidebarOpen?: boolean;
-  profileSidebarOpen?: boolean;
   // Pagination props
   currentPage?: number;
-  totalPages?: number;
-  totalCourses?: number;
+  isFiltered?: boolean;
   itemsPerPage?: number;
   onPageChange?: (page: number) => void;
+  profileSidebarOpen?: boolean;
+  // Sidebar state props for responsive layout
+  sidebarOpen?: boolean;
+  totalCourses?: number;
+  totalPages?: number;
 }
 
 export function CourseGrid({

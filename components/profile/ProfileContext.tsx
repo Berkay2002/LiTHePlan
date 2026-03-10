@@ -48,18 +48,18 @@ type ProfileAction =
   | { type: "SET_UNSAVED_CHANGES"; hasChanges: boolean };
 
 interface ProfileContextType {
-  state: ProfileState;
   addCourse: (course: ProfileCourse, term: MasterProgramTerm) => Promise<void>;
-  removeCourse: (courseId: string) => Promise<void>;
+  clearProfile: () => Promise<void>;
+  clearTerm: (term: MasterProgramTerm) => Promise<void>;
   moveCourse: (
     courseId: string,
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
   ) => Promise<void>;
-  clearTerm: (term: MasterProgramTerm) => Promise<void>;
-  clearProfile: () => Promise<void>;
+  removeCourse: (courseId: string) => Promise<void>;
   setEditing: (isEditing: boolean) => void;
   setUnsavedChanges: (hasChanges: boolean) => void;
+  state: ProfileState;
 }
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -106,7 +106,9 @@ function profileReducer(
     }
 
     case "REMOVE_COURSE": {
-      if (!state.current_profile) return state;
+      if (!state.current_profile) {
+        return state;
+      }
       const updatedProfile = removeCourseFromProfile(
         state.current_profile,
         action.courseId
@@ -120,7 +122,9 @@ function profileReducer(
     }
 
     case "MOVE_COURSE": {
-      if (!state.current_profile) return state;
+      if (!state.current_profile) {
+        return state;
+      }
       const movedProfile = moveCourseInProfile(
         state.current_profile,
         action.courseId,
@@ -136,7 +140,9 @@ function profileReducer(
     }
 
     case "CLEAR_TERM": {
-      if (!state.current_profile) return state;
+      if (!state.current_profile) {
+        return state;
+      }
       const clearedTermProfile = clearTermInProfile(
         state.current_profile,
         action.term
@@ -150,7 +156,9 @@ function profileReducer(
     }
 
     case "CLEAR_PROFILE": {
-      if (!state.current_profile) return state;
+      if (!state.current_profile) {
+        return state;
+      }
       const emptyProfile = clearProfileUtil(state.current_profile);
       saveProfileToStorage(emptyProfile);
       return {
@@ -201,7 +209,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setAuthLoading(false);
     });
@@ -251,7 +259,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
             })
             .eq("id", existing.id);
 
-          if (error) throw error;
+          if (error) {
+            throw error;
+          }
           console.log("💾 Profile updated in cloud");
         } else {
           console.log("➕ Creating new profile...");
@@ -267,7 +277,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
             .select()
             .single();
 
-          if (error) throw error;
+          if (error) {
+            throw error;
+          }
           console.log("💾 New profile saved to cloud:", newProfile);
         }
       } catch (error) {
@@ -318,7 +330,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
   // Load profile on mount and when authentication state changes
   useEffect(() => {
-    if (authLoading) return; // Wait for auth to finish loading
+    if (authLoading) {
+      return; // Wait for auth to finish loading
+    }
 
     const loadInitialProfile = async () => {
       const savedProfile = await loadProfile();
@@ -328,7 +342,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     };
 
     loadInitialProfile();
-  }, [user, authLoading, loadProfile]);
+  }, [authLoading, loadProfile]);
 
   // Set up Realtime subscriptions for authenticated users
   useRealtimeProfiles(
@@ -365,7 +379,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   };
 
   const removeCourse = async (courseId: string) => {
-    if (!state.current_profile) return;
+    if (!state.current_profile) {
+      return;
+    }
     const updatedProfile = removeCourseFromProfile(
       state.current_profile,
       courseId
@@ -379,7 +395,9 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
   ) => {
-    if (!state.current_profile) return;
+    if (!state.current_profile) {
+      return;
+    }
     const updatedProfile = moveCourseInProfile(
       state.current_profile,
       courseId,
@@ -391,14 +409,18 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   };
 
   const clearTerm = async (term: MasterProgramTerm) => {
-    if (!state.current_profile) return;
+    if (!state.current_profile) {
+      return;
+    }
     const updatedProfile = clearTermInProfile(state.current_profile, term);
     await saveProfile(updatedProfile);
     dispatch({ type: "LOAD_PROFILE", profile: updatedProfile });
   };
 
   const clearProfile = async () => {
-    if (!state.current_profile) return;
+    if (!state.current_profile) {
+      return;
+    }
     const updatedProfile = clearProfileUtil(state.current_profile);
     await saveProfile(updatedProfile);
     dispatch({ type: "LOAD_PROFILE", profile: updatedProfile });

@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils";
 import type { StudentProfile } from "@/types/profile";
 
 interface ProfileSidebarProps {
-  profile: StudentProfile | null;
   isOpen: boolean;
   onToggle: () => void;
+  profile: StudentProfile | null;
 }
 
 export function ProfileSidebar({

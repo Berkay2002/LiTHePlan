@@ -5,53 +5,52 @@
  * Used for both mock data and final schema
  */
 export interface Course {
-  /** Unique course identifier (e.g., 'TQXX33') */
-  id: string;
-
-  /** Course name in English */
-  name: string;
-
-  /** Number of credits (typically 30 for master's courses) */
-  credits: number;
-
-  /** Course level in Swedish */
-  level: "grundnivå" | "avancerad nivå";
-
-  /** Academic term(s) (7 = first year, 8 = second year, 9 = third year) */
-  term: string[];
-
-  /** Period within the term (1 or 2) */
-  period: string[];
-
   /** Block within the period (1-4) - single block for 100% courses, two blocks for 50% courses */
   block: string[];
-
-  /** Study pace (100% = full-time, 50% = part-time) */
-  pace: "100%" | "50%";
-
-  /** Array of examination types: TEN (written exam), LAB (lab work), PROJ (project), SEM (seminar), UPG (assignment) */
-  examination: ("TEN" | "LAB" | "PROJ" | "SEM" | "UPG")[];
 
   /** Campus location or distance learning */
   campus: "Linköping" | "Norrköping" | "Distans";
 
-  /** Programs (main degree programs) this course belongs to */
-  programs: string[];
+  /** Number of credits (typically 30 for master's courses) */
+  credits: number;
 
-  /** Orientations (specializations within programs) this course belongs to */
-  orientations?: string[];
-
-  /** Huvudområde (main subject area) - comma-separated string from database */
-  huvudomrade?: string | null;
+  /** Array of examination types: TEN (written exam), LAB (lab work), PROJ (project), SEM (seminar), UPG (assignment) */
+  examination: ("TEN" | "LAB" | "PROJ" | "SEM" | "UPG")[];
 
   /** Course examiner/instructor */
   examinator?: string | null;
 
-  /** Study director/academic coordinator */
-  studierektor?: string | null;
+  /** Huvudområde (main subject area) - comma-separated string from database */
+  huvudomrade?: string | null;
+  /** Unique course identifier (e.g., 'TQXX33') */
+  id: string;
+
+  /** Course level in Swedish */
+  level: "grundnivå" | "avancerad nivå";
+
+  /** Course name in English */
+  name: string;
 
   /** Optional notes about course restrictions or warnings */
   notes?: string | null;
+
+  /** Orientations (specializations within programs) this course belongs to */
+  orientations?: string[];
+
+  /** Study pace (100% = full-time, 50% = part-time) */
+  pace: "100%" | "50%";
+
+  /** Period within the term (1 or 2) */
+  period: string[];
+
+  /** Programs (main degree programs) this course belongs to */
+  programs: string[];
+
+  /** Study director/academic coordinator */
+  studierektor?: string | null;
+
+  /** Academic term(s) (7 = first year, 8 = second year, 9 = third year) */
+  term: string[];
 }
 
 /**

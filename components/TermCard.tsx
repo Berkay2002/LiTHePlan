@@ -7,9 +7,9 @@ import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface TermCardProps {
-  termNumber: MasterProgramTerm;
-  courses: Course[];
   className?: string;
+  courses: Course[];
+  termNumber: MasterProgramTerm;
 }
 
 export function TermCard({ termNumber, courses, className }: TermCardProps) {
@@ -48,11 +48,11 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
 
     if (is50Percent && Array.isArray(course.block)) {
       // For 50% courses: block[0] = period 1, block[1] = period 2
-      blocks = [Number.parseInt(course.block[currentPeriod - 1])];
+      blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
     } else {
       blocks = Array.isArray(course.block)
-        ? course.block.map((b) => Number.parseInt(b))
-        : [Number.parseInt(course.block)];
+        ? course.block.map((b) => Number.parseInt(b, 10))
+        : [Number.parseInt(course.block, 10)];
     }
 
     return (
@@ -94,11 +94,11 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
 
       if (is50Percent && Array.isArray(course.block)) {
         // For 50% courses: use the block for the current period
-        blocks = [Number.parseInt(course.block[currentPeriod - 1])];
+        blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
       } else {
         blocks = Array.isArray(course.block)
-          ? course.block.map((b) => Number.parseInt(b))
-          : [Number.parseInt(course.block)];
+          ? course.block.map((b) => Number.parseInt(b, 10))
+          : [Number.parseInt(course.block, 10)];
       }
 
       blocks.forEach((blockNum) => {

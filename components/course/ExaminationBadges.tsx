@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 
 interface ExaminationBadgesProps {
-  examinations: string[];
   className?: string;
+  examinations: string[];
 }
 
 const EXAMINATION_LABELS: Record<string, string> = {
@@ -22,7 +22,9 @@ export function ExaminationBadges({
   examinations,
   className = "",
 }: ExaminationBadgesProps) {
-  if (!examinations || examinations.length === 0) return null;
+  if (!examinations || examinations.length === 0) {
+    return null;
+  }
 
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>

@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/tooltip";
 
 interface TruncatedExaminationBadgesProps {
+  className?: string;
   examinations: string[];
   maxVisible?: number;
   shortMode?: boolean;
-  className?: string;
 }
 
 const EXAMINATION_LABELS: Record<string, string> = {
@@ -33,7 +33,9 @@ export function TruncatedExaminationBadges({
   shortMode = false,
   className = "",
 }: TruncatedExaminationBadgesProps) {
-  if (!examinations || examinations.length === 0) return null;
+  if (!examinations || examinations.length === 0) {
+    return null;
+  }
 
   const visibleExams = examinations.slice(0, maxVisible);
   const hiddenExams = examinations.slice(maxVisible);

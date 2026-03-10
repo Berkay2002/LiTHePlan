@@ -44,17 +44,17 @@ type BlockNumber = (typeof BLOCK_NUMBERS)[number];
 const BLOCK_BADGE_COLOR = "bg-muted text-muted-foreground";
 
 interface EditableTermCardProps {
-  termNumber: MasterProgramTerm;
+  className?: string;
   courses: Course[];
-  onRemoveCourse: (courseId: string) => void;
   onClearTerm: (term: MasterProgramTerm) => void;
   onMoveCourse?: (
     courseId: string,
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
   ) => void;
-  className?: string;
+  onRemoveCourse: (courseId: string) => void;
   showBlockTimeline?: boolean;
+  termNumber: MasterProgramTerm;
 }
 
 export function EditableTermCard({
@@ -86,7 +86,7 @@ export function EditableTermCard({
     ),
   };
 
-  const getBlockBadgeColor = (blockNum: number) => BLOCK_BADGE_COLOR;
+  const getBlockBadgeColor = (_blockNum: number) => BLOCK_BADGE_COLOR;
 
   const renderBlockIndicators = (course: Course, currentPeriod: 1 | 2) => {
     const is50Percent = course.pace === "50%";
@@ -94,11 +94,11 @@ export function EditableTermCard({
 
     if (is50Percent && Array.isArray(course.block)) {
       // For 50% courses: block[0] = period 1, block[1] = period 2
-      blocks = [Number.parseInt(course.block[currentPeriod - 1])];
+      blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
     } else {
       blocks = Array.isArray(course.block)
-        ? course.block.map((b) => Number.parseInt(b))
-        : [Number.parseInt(course.block)];
+        ? course.block.map((b) => Number.parseInt(b, 10))
+        : [Number.parseInt(course.block, 10)];
     }
 
     return (
@@ -146,11 +146,11 @@ export function EditableTermCard({
 
       if (is50Percent && Array.isArray(course.block)) {
         // For 50% courses: use the block for the current period
-        blocks = [Number.parseInt(course.block[currentPeriod - 1])];
+        blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
       } else {
         blocks = Array.isArray(course.block)
-          ? course.block.map((b) => Number.parseInt(b))
-          : [Number.parseInt(course.block)];
+          ? course.block.map((b) => Number.parseInt(b, 10))
+          : [Number.parseInt(course.block, 10)];
       }
 
       blocks.forEach((blockNum) => {

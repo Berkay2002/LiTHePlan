@@ -3,10 +3,10 @@ import { Button } from "@/components/ui/button";
 
 interface PaginationProps {
   currentPage: number;
-  totalPages: number;
+  itemsPerPage: number;
   onPageChange: (page: number) => void;
   totalItems: number;
-  itemsPerPage: number;
+  totalPages: number;
 }
 
 export function Pagination({

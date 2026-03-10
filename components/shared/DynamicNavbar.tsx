@@ -18,18 +18,18 @@ import { createClient } from "@/utils/supabase/client";
 import { useCommandPalette } from "./CommandPaletteContext";
 
 interface MainPageNavbarProps {
-  mode: "main";
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  onMobileMenuToggle?: () => void;
   isMobileMenuOpen?: boolean;
+  mode: "main";
+  onMobileMenuToggle?: () => void;
+  onSearchChange: (query: string) => void;
+  searchQuery: string;
 }
 
 interface ProfileEditNavbarProps {
   mode: "profile-edit";
+  onToggleBlockTimeline?: () => void;
   profileId?: string;
   showBlockTimeline?: boolean;
-  onToggleBlockTimeline?: () => void;
 }
 
 type DynamicNavbarProps = MainPageNavbarProps | ProfileEditNavbarProps;
@@ -43,7 +43,11 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
   // Register timeline toggle for profile edit mode
   useEffect(() => {
-    if (props.mode === "profile-edit" && props.onToggleBlockTimeline && props.showBlockTimeline !== undefined) {
+    if (
+      props.mode === "profile-edit" &&
+      props.onToggleBlockTimeline &&
+      props.showBlockTimeline !== undefined
+    ) {
       registerTimelineToggle(
         props.onToggleBlockTimeline,
         props.showBlockTimeline
@@ -52,10 +56,10 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
     }
   }, [
     props.mode,
-    props.mode === "profile-edit" ? props.onToggleBlockTimeline : undefined,
-    props.mode === "profile-edit" ? props.showBlockTimeline : undefined,
     registerTimelineToggle,
     unregisterTimelineToggle,
+    props.onToggleBlockTimeline,
+    props.showBlockTimeline,
   ]);
 
   // Handle auth state
@@ -71,9 +75,9 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
       if (user) {
         const { data: profile } = await supabase
-          .from('profiles')
-          .select('avatar_url')
-          .eq('id', user.id)
+          .from("profiles")
+          .select("avatar_url")
+          .eq("id", user.id)
           .single();
         setAvatarUrl(profile?.avatar_url ?? null);
       } else {
@@ -85,15 +89,15 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
 
       if (session?.user) {
         const { data: profile } = await supabase
-          .from('profiles')
-          .select('avatar_url')
-          .eq('id', session.user.id)
+          .from("profiles")
+          .select("avatar_url")
+          .eq("id", session.user.id)
           .single();
         setAvatarUrl(profile?.avatar_url ?? null);
       } else {
@@ -104,7 +108,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signOut = async () => {
+  const _signOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.reload();
@@ -114,7 +118,7 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
   const profileContext = useProfileSafe();
   const profileState = profileContext?.state || null;
 
-  const handleClearSearch = () => {
+  const _handleClearSearch = () => {
     if (props.mode === "main") {
       props.onSearchChange("");
     }
@@ -166,7 +170,10 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 <ModeToggle />
 
                 {/* Vertical Separator */}
-                <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20" />
+                <Separator
+                  className="h-8 bg-sidebar-foreground/20"
+                  orientation="vertical"
+                />
 
                 {/* Authentication status */}
                 {loading ? (
@@ -176,9 +183,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 ) : user ? (
                   <Link href="/profile/edit">
                     <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
-                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                      <AvatarImage
+                        alt="User avatar"
+                        src={avatarUrl || undefined}
+                      />
                       <AvatarFallback className="bg-primary/10 text-primary">
-                        {user.email?.charAt(0).toUpperCase() || 'U'}
+                        {user.email?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Link>
@@ -267,15 +277,21 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                     <ModeToggle />
 
                     {/* Vertical Separator */}
-                    <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20 mx-1" />
+                    <Separator
+                      className="h-8 bg-sidebar-foreground/20 mx-1"
+                      orientation="vertical"
+                    />
 
                     {/* Authentication status */}
                     {user ? (
                       <Link href="/profile/edit">
                         <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
-                          <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                          <AvatarImage
+                            alt="User avatar"
+                            src={avatarUrl || undefined}
+                          />
                           <AvatarFallback className="bg-primary/10 text-primary">
-                            {user.email?.charAt(0).toUpperCase() || 'U'}
+                            {user.email?.charAt(0).toUpperCase() || "U"}
                           </AvatarFallback>
                         </Avatar>
                       </Link>
@@ -355,7 +371,10 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 </Kbd>
 
                 {/* Vertical Separator */}
-                <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20" />
+                <Separator
+                  className="h-8 bg-sidebar-foreground/20"
+                  orientation="vertical"
+                />
 
                 {/* Authentication status */}
                 {loading ? (
@@ -365,9 +384,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 ) : user ? (
                   <Link href="/profile/edit">
                     <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
-                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                      <AvatarImage
+                        alt="User avatar"
+                        src={avatarUrl || undefined}
+                      />
                       <AvatarFallback className="bg-primary/10 text-primary">
-                        {user.email?.charAt(0).toUpperCase() || 'U'}
+                        {user.email?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Link>
@@ -423,7 +445,10 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 <ModeToggle />
 
                 {/* Vertical Separator */}
-                <Separator orientation="vertical" className="h-8 bg-sidebar-foreground/20 mx-1" />
+                <Separator
+                  className="h-8 bg-sidebar-foreground/20 mx-1"
+                  orientation="vertical"
+                />
 
                 {/* Authentication status - mobile */}
                 {loading ? (
@@ -433,9 +458,12 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
                 ) : user ? (
                   <Link href="/profile/edit">
                     <Avatar className="h-10 w-10 cursor-pointer hover:opacity-80 transition-opacity">
-                      <AvatarImage src={avatarUrl || undefined} alt="User avatar" />
+                      <AvatarImage
+                        alt="User avatar"
+                        src={avatarUrl || undefined}
+                      />
                       <AvatarFallback className="bg-primary/10 text-primary">
-                        {user.email?.charAt(0).toUpperCase() || 'U'}
+                        {user.email?.charAt(0).toUpperCase() || "U"}
                       </AvatarFallback>
                     </Avatar>
                   </Link>

@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import type { Course } from "@/types/course";
 
 interface CourseHeroProps {
-  course: Course;
   children?: React.ReactNode;
+  course: Course;
 }
 
 export function CourseHero({ course, children }: CourseHeroProps) {

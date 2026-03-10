@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 export type ViewMode = "grid" | "list";
 
 interface ViewToggleProps {
-  viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
+  viewMode: ViewMode;
 }
 
 export function ViewToggle({ viewMode, onViewModeChange }: ViewToggleProps) {

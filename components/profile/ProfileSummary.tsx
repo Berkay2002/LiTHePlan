@@ -19,16 +19,28 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
   const completionRatio = summary.totalCredits / MASTER_PROGRAM_TARGET_CREDITS;
 
   const getCompletionColor = () => {
-    if (completionRatio >= 1) return "text-chart-2";
-    if (completionRatio >= 0.75) return "text-primary";
-    if (completionRatio >= 0.5) return "text-chart-4";
+    if (completionRatio >= 1) {
+      return "text-chart-2";
+    }
+    if (completionRatio >= 0.75) {
+      return "text-primary";
+    }
+    if (completionRatio >= 0.5) {
+      return "text-chart-4";
+    }
     return "text-destructive";
   };
 
   const getCompletionBarColor = () => {
-    if (completionRatio >= 1) return "bg-chart-2";
-    if (completionRatio >= 0.75) return "bg-primary";
-    if (completionRatio >= 0.5) return "bg-chart-4";
+    if (completionRatio >= 1) {
+      return "bg-chart-2";
+    }
+    if (completionRatio >= 0.75) {
+      return "bg-primary";
+    }
+    if (completionRatio >= 0.5) {
+      return "bg-chart-4";
+    }
     return "bg-destructive";
   };
 

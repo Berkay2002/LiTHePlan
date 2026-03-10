@@ -37,8 +37,8 @@ import { TermSelectionModal } from "./TermSelectionModal";
 import { TruncatedExaminationBadges } from "./TruncatedExaminationBadges";
 
 interface CourseListItemProps {
-  course: Course;
   activeFilters?: FilterState;
+  course: Course;
 }
 
 export function CourseListItem({
@@ -81,13 +81,19 @@ export function CourseListItem({
   // Helper function to check if a field should be hidden based on active filters
   const shouldHideField = (fieldName: keyof typeof activeFilters) => {
     const filterValues = activeFilters[fieldName];
-    if (!filterValues || filterValues.length === 0) return false;
+    if (!filterValues || filterValues.length === 0) {
+      return false;
+    }
 
     // Special handling for examination and programs - never hide these sections
-    if (fieldName === "examination" || fieldName === "programs") return false;
+    if (fieldName === "examination" || fieldName === "programs") {
+      return false;
+    }
 
     // If only one filter value is selected, hide the field
-    if (filterValues.length === 1) return true;
+    if (filterValues.length === 1) {
+      return true;
+    }
 
     // If multiple values selected, show the field to distinguish between options
     return false;
@@ -216,11 +222,14 @@ export function CourseListItem({
   const getVisibleExaminations = (examinations: string[]) => {
     const examinationFilters = activeFilters.examination || {};
     const filterKeys = Object.keys(examinationFilters);
-    if (filterKeys.length === 0) return examinations;
+    if (filterKeys.length === 0) {
+      return examinations;
+    }
 
     // Return examinations that are included in the filters
-    return examinations.filter((exam) => 
-      examinationFilters[exam] === 'include' || !examinationFilters[exam]
+    return examinations.filter(
+      (exam) =>
+        examinationFilters[exam] === "include" || !examinationFilters[exam]
     );
   };
 
@@ -360,13 +369,13 @@ export function CourseListItem({
 
               {course.examinator && (
                 <span className="text-foreground font-medium">
-                  Ex: {course.examinator.split(" ").slice(-1)[0]}
+                  Ex: {course.examinator.split(" ").at(-1)}
                 </span>
               )}
 
               {course.studierektor && (
                 <span className="text-foreground font-medium">
-                  Dir: {course.studierektor.split(" ").slice(-1)[0]}
+                  Dir: {course.studierektor.split(" ").at(-1)}
                 </span>
               )}
             </div>

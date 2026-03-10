@@ -7,9 +7,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 interface ProgramsListProps {
-  programs: string[];
-  orientations?: string[];
   className?: string;
+  orientations?: string[];
+  programs: string[];
 }
 
 export function ProgramsList({
@@ -19,7 +19,9 @@ export function ProgramsList({
 }: ProgramsListProps) {
   const allItems = [...programs, ...orientations];
 
-  if (allItems.length === 0) return null;
+  if (allItems.length === 0) {
+    return null;
+  }
 
   // Use accordion for 12+ items, otherwise show simple grid
   const useAccordion = allItems.length >= 12;

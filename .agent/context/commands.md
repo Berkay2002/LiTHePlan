@@ -39,7 +39,7 @@ npm run check      # Alias for lint
 ```
 
 `lint`/`format` are intentionally scoped through `biome.jsonc` to the main application surface:
-`app/`, `components/`, `hooks/`, `lib/`, `tests/`, `types/`, `utils/`, plus root files such as `next.config.ts`, `proxy.ts`, and instrumentation/config entrypoints. Repo metadata folders like `.agent/`, `.agents/`, `.claude/`, `.github/`, `.vscode/`, and similar support files are force-ignored from the default lint pass.
+`app/`, `components/` except `components/ui/`, `hooks/`, `lib/`, `tests/`, `types/`, `utils/`, plus root files such as `next.config.ts`, `proxy.ts`, and instrumentation/config entrypoints. Repo metadata folders like `.agent/`, `.agents/`, `.claude/`, `.github/`, `.vscode/`, and similar support files are force-ignored from the default lint pass.
 
 ## Dependency Maintenance
 

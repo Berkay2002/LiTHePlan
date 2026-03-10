@@ -1,7 +1,7 @@
 interface CourseMetadataRowProps {
+  className?: string;
   label: string;
   value: string | number | null | undefined;
-  className?: string;
 }
 
 export function CourseMetadataRow({
@@ -9,7 +9,9 @@ export function CourseMetadataRow({
   value,
   className = "",
 }: CourseMetadataRowProps) {
-  if (!value) return null;
+  if (!value) {
+    return null;
+  }
 
   return (
     <div className={className}>

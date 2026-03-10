@@ -5,19 +5,19 @@ import { DynamicNavbar } from "@/components/shared/DynamicNavbar";
 
 interface MainPageLayoutProps {
   children: ReactNode;
-  navbarMode: "main";
-  searchQuery: string;
-  onSearchChange: (query: string) => void;
-  onMobileMenuToggle?: () => void;
   isMobileMenuOpen?: boolean;
+  navbarMode: "main";
+  onMobileMenuToggle?: () => void;
+  onSearchChange: (query: string) => void;
+  searchQuery: string;
 }
 
 interface ProfileEditPageLayoutProps {
   children: ReactNode;
   navbarMode: "profile-edit";
+  onToggleBlockTimeline?: () => void;
   profileId?: string;
   showBlockTimeline?: boolean;
-  onToggleBlockTimeline?: () => void;
 }
 
 type PageLayoutProps = MainPageLayoutProps | ProfileEditPageLayoutProps;

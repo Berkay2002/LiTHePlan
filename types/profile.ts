@@ -22,20 +22,10 @@ export function createEmptyTerms(): StudentProfileTerms {
  * Student profile interface representing a user's course selection plan
  */
 export interface StudentProfile {
-  /** Unique profile identifier */
-  id: string;
-
-  /** Profile name (e.g., "My Master's Plan") */
-  name: string;
-
   /** Profile creation timestamp */
   created_at: Date;
-
-  /** Profile last update timestamp */
-  updated_at: Date;
-
-  /** Courses organized by academic term */
-  terms: StudentProfileTerms;
+  /** Unique profile identifier */
+  id: string;
 
   /** Profile metadata and validation info */
   metadata: {
@@ -43,6 +33,15 @@ export interface StudentProfile {
     advanced_credits: number;
     is_valid: boolean;
   };
+
+  /** Profile name (e.g., "My Master's Plan") */
+  name: string;
+
+  /** Courses organized by academic term */
+  terms: StudentProfileTerms;
+
+  /** Profile last update timestamp */
+  updated_at: Date;
 }
 
 /**
@@ -74,11 +73,11 @@ export type PinboardOperation =
  * Profile validation result interface
  */
 export interface ProfileValidationResult {
-  is_valid: boolean;
-  errors: string[];
-  warnings: string[];
-  total_credits: number;
   advanced_credits: number;
+  errors: string[];
+  is_valid: boolean;
+  total_credits: number;
+  warnings: string[];
 }
 
 /**

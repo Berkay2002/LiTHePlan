@@ -18,8 +18,8 @@ export type SortOption =
   | "exam-moments-desc";
 
 interface SortDropdownProps {
-  sortOption: SortOption | null;
   onSortChange: (option: SortOption | null) => void;
+  sortOption: SortOption | null;
 }
 
 export function SortDropdown({ sortOption, onSortChange }: SortDropdownProps) {
@@ -108,7 +108,9 @@ export function sortCourses(
   courses: Course[],
   sortOption: SortOption | null
 ): Course[] {
-  if (!sortOption) return courses;
+  if (!sortOption) {
+    return courses;
+  }
 
   const sortedCourses = [...courses];
 

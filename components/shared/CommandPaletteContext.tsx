@@ -9,10 +9,10 @@ import {
 } from "react";
 
 interface CommandPaletteContextValue {
-  registerTimelineToggle: (handler: () => void, visible: boolean) => void;
-  unregisterTimelineToggle: () => void;
-  timelineToggleHandler?: () => void;
   isTimelineVisible?: boolean;
+  registerTimelineToggle: (handler: () => void, visible: boolean) => void;
+  timelineToggleHandler?: () => void;
+  unregisterTimelineToggle: () => void;
 }
 
 const CommandPaletteContext = createContext<

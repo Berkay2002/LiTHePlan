@@ -7,9 +7,9 @@ import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 
 interface SimpleTermCardProps {
-  termNumber: MasterProgramTerm;
-  courses: Course[];
   className?: string;
+  courses: Course[];
+  termNumber: MasterProgramTerm;
 }
 
 export function SimpleTermCard({

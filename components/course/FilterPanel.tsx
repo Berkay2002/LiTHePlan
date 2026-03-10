@@ -24,19 +24,19 @@ const examinationOptions = [
   { value: "UPG", label: "UPG" },
 ];
 
-export type ExaminationFilterMode = 'include' | 'exclude' | 'ignore';
+export type ExaminationFilterMode = "include" | "exclude" | "ignore";
 
 export interface FilterState {
-  level: string[];
-  term: number[];
-  period: number[];
   block: number[];
-  pace: string[];
   campus: string[];
   examination: Record<string, ExaminationFilterMode>; // Per-type include/exclude/ignore
-  programs: string[]; // Multiple string selection for main programs
   huvudomraden: string[]; // Multiple string selection for huvudområden (replaces orientations)
+  level: string[];
+  pace: string[];
+  period: number[];
+  programs: string[]; // Multiple string selection for main programs
   search: string; // New search field
+  term: number[];
 }
 
 export interface FilterPanelProps {
@@ -89,16 +89,16 @@ export function CollapsibleFilterSidebar({
       new Set(
         safeCourses
           .flatMap((course) => course.period)
-          .map((p) => Number.parseInt(p))
-          .filter((p) => !isNaN(p))
+          .map((p) => Number.parseInt(p, 10))
+          .filter((p) => !Number.isNaN(p))
       )
     ).sort(),
     block: Array.from(
       new Set(
         safeCourses
           .flatMap((course) => course.block)
-          .map((b) => Number.parseInt(b))
-          .filter((b) => !isNaN(b))
+          .map((b) => Number.parseInt(b, 10))
+          .filter((b) => !Number.isNaN(b))
       )
     ).sort(),
     pace: Array.from(new Set(safeCourses.map((course) => course.pace))),
@@ -348,9 +348,13 @@ export function CollapsibleFilterSidebar({
                 </div>
                 <div className="space-y-2 bg-inherit p-3 rounded-md border shadow-sm">
                   {examinationOptions.map((option) => {
-                    const mode = filterState.examination[option.value] || 'ignore';
+                    const mode =
+                      filterState.examination[option.value] || "ignore";
                     return (
-                      <div key={option.value} className="flex items-center justify-between gap-2">
+                      <div
+                        className="flex items-center justify-between gap-2"
+                        key={option.value}
+                      >
                         <span className="text-sm font-medium text-sidebar-foreground">
                           {option.label}
                         </span>
@@ -358,38 +362,46 @@ export function CollapsibleFilterSidebar({
                           <Button
                             className={cn(
                               "h-7 px-2 text-xs",
-                              mode === 'include' && "bg-green-600 hover:bg-green-700 text-white"
+                              mode === "include" &&
+                                "bg-green-600 hover:bg-green-700 text-white"
                             )}
                             onClick={() => {
                               const newFilters = { ...filterState };
-                              if (mode === 'include') {
+                              if (mode === "include") {
                                 delete newFilters.examination[option.value];
                               } else {
-                                newFilters.examination = { ...newFilters.examination, [option.value]: 'include' };
+                                newFilters.examination = {
+                                  ...newFilters.examination,
+                                  [option.value]: "include",
+                                };
                               }
                               onFilterChange(newFilters);
                             }}
                             size="sm"
-                            variant={mode === 'include' ? 'default' : 'outline'}
+                            variant={mode === "include" ? "default" : "outline"}
                           >
                             Include
                           </Button>
                           <Button
                             className={cn(
                               "h-7 px-2 text-xs",
-                              mode === 'exclude' && "bg-red-600 hover:bg-red-700 text-white"
+                              mode === "exclude" &&
+                                "bg-red-600 hover:bg-red-700 text-white"
                             )}
                             onClick={() => {
                               const newFilters = { ...filterState };
-                              if (mode === 'exclude') {
+                              if (mode === "exclude") {
                                 delete newFilters.examination[option.value];
                               } else {
-                                newFilters.examination = { ...newFilters.examination, [option.value]: 'exclude' };
+                                newFilters.examination = {
+                                  ...newFilters.examination,
+                                  [option.value]: "exclude",
+                                };
                               }
                               onFilterChange(newFilters);
                             }}
                             size="sm"
-                            variant={mode === 'exclude' ? 'default' : 'outline'}
+                            variant={mode === "exclude" ? "default" : "outline"}
                           >
                             Exclude
                           </Button>
@@ -621,7 +633,7 @@ export function FilterPanel({
   const safeCourses = courses || [];
 
   // All available programs (complete and incomplete)
-  const allPrograms = [
+  const _allPrograms = [
     "Datateknik",
     "Design och produktutveckling",
     "Elektronik och systemdesign",
@@ -640,7 +652,7 @@ export function FilterPanel({
     "Teknisk matematik",
   ].sort();
 
-  const completePrograms = ["Media Technology and Engineering"]; // Only this one is complete
+  const _completePrograms = ["Media Technology and Engineering"]; // Only this one is complete
 
   // Generate unique filter options from course data
   const filterOptions = {
@@ -667,16 +679,16 @@ export function FilterPanel({
       new Set(
         safeCourses
           .flatMap((course) => course.period)
-          .map((p) => Number.parseInt(p))
-          .filter((p) => !isNaN(p))
+          .map((p) => Number.parseInt(p, 10))
+          .filter((p) => !Number.isNaN(p))
       )
     ).sort(),
     block: Array.from(
       new Set(
         safeCourses
           .flatMap((course) => course.block)
-          .map((b) => Number.parseInt(b))
-          .filter((b) => !isNaN(b))
+          .map((b) => Number.parseInt(b, 10))
+          .filter((b) => !Number.isNaN(b))
       )
     ).sort(),
     pace: Array.from(new Set(safeCourses.map((course) => course.pace))),
@@ -840,9 +852,12 @@ export function FilterPanel({
           </div>
           <div className="space-y-2 bg-inherit p-3 rounded-md border shadow-sm">
             {examinationOptions.map((option) => {
-              const mode = filterState.examination[option.value] || 'ignore';
+              const mode = filterState.examination[option.value] || "ignore";
               return (
-                <div key={option.value} className="flex items-center justify-between gap-2">
+                <div
+                  className="flex items-center justify-between gap-2"
+                  key={option.value}
+                >
                   <span className="text-sm font-medium text-sidebar-foreground">
                     {option.label}
                   </span>
@@ -850,38 +865,46 @@ export function FilterPanel({
                     <Button
                       className={cn(
                         "h-7 px-2 text-xs",
-                        mode === 'include' && "bg-green-600 hover:bg-green-700 text-white"
+                        mode === "include" &&
+                          "bg-green-600 hover:bg-green-700 text-white"
                       )}
                       onClick={() => {
                         const newFilters = { ...filterState };
-                        if (mode === 'include') {
+                        if (mode === "include") {
                           delete newFilters.examination[option.value];
                         } else {
-                          newFilters.examination = { ...newFilters.examination, [option.value]: 'include' };
+                          newFilters.examination = {
+                            ...newFilters.examination,
+                            [option.value]: "include",
+                          };
                         }
                         onFilterChange(newFilters);
                       }}
                       size="sm"
-                      variant={mode === 'include' ? 'default' : 'outline'}
+                      variant={mode === "include" ? "default" : "outline"}
                     >
                       Include
                     </Button>
                     <Button
                       className={cn(
                         "h-7 px-2 text-xs",
-                        mode === 'exclude' && "bg-red-600 hover:bg-red-700 text-white"
+                        mode === "exclude" &&
+                          "bg-red-600 hover:bg-red-700 text-white"
                       )}
                       onClick={() => {
                         const newFilters = { ...filterState };
-                        if (mode === 'exclude') {
+                        if (mode === "exclude") {
                           delete newFilters.examination[option.value];
                         } else {
-                          newFilters.examination = { ...newFilters.examination, [option.value]: 'exclude' };
+                          newFilters.examination = {
+                            ...newFilters.examination,
+                            [option.value]: "exclude",
+                          };
                         }
                         onFilterChange(newFilters);
                       }}
                       size="sm"
-                      variant={mode === 'exclude' ? 'default' : 'outline'}
+                      variant={mode === "exclude" ? "default" : "outline"}
                     >
                       Exclude
                     </Button>

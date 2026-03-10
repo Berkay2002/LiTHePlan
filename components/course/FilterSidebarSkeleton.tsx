@@ -104,13 +104,15 @@ export function FilterSidebarSkeleton({
                   <Skeleton className="h-4 w-16" /> {/* "PROGRAM" label */}
                   <Skeleton className="h-5 w-5" /> {/* Info icon */}
                 </div>
-                <Skeleton className="w-full h-10 rounded" /> {/* MultiSelect dropdown */}
+                <Skeleton className="w-full h-10 rounded" />{" "}
+                {/* MultiSelect dropdown */}
               </div>
 
               {/* Huvudområden Filter - Multi-Select Skeleton */}
               <div className="space-y-3">
                 <Skeleton className="h-4 w-24" /> {/* "HUVUDOMRÅDEN" label */}
-                <Skeleton className="w-full h-10 rounded" /> {/* MultiSelect dropdown */}
+                <Skeleton className="w-full h-10 rounded" />{" "}
+                {/* MultiSelect dropdown */}
               </div>
 
               {/* Examination Filter - Tri-state controls Skeleton */}
@@ -118,11 +120,16 @@ export function FilterSidebarSkeleton({
                 <Skeleton className="h-4 w-24" /> {/* "EXAMINATION" label */}
                 <div className="space-y-2 bg-inherit p-3 rounded-md border shadow-sm">
                   {[1, 2, 3, 4, 5].map((item) => (
-                    <div className="flex items-center justify-between gap-2" key={item}>
+                    <div
+                      className="flex items-center justify-between gap-2"
+                      key={item}
+                    >
                       <Skeleton className="h-4 w-12" /> {/* Exam type label */}
                       <div className="flex items-center gap-1">
-                        <Skeleton className="h-7 w-16 rounded" /> {/* Include button */}
-                        <Skeleton className="h-7 w-16 rounded" /> {/* Exclude button */}
+                        <Skeleton className="h-7 w-16 rounded" />{" "}
+                        {/* Include button */}
+                        <Skeleton className="h-7 w-16 rounded" />{" "}
+                        {/* Exclude button */}
                       </div>
                     </div>
                   ))}
