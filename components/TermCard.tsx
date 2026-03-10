@@ -79,6 +79,13 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
     );
   };
 
+  const getBlockClassName = (hasConflict: boolean, blockNum: number) => {
+    if (hasConflict) {
+      return "border-destructive/30 bg-destructive/10 text-destructive";
+    }
+    return `border-opacity-50 ${getBlockBadgeColor(blockNum).replace("text-", "border-").replace("bg-", "border-")}`;
+  };
+
   const renderPeriodBlockTimeline = (
     periodCourses: Course[],
     currentPeriod: 1 | 2
@@ -88,7 +95,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
       [key: number]: Array<{ course: Course; is50Percent: boolean }>;
     } = { 1: [], 2: [], 3: [], 4: [] };
 
-    periodCourses.forEach((course) => {
+    for (const course of periodCourses) {
       let blocks: number[];
       const is50Percent = course.pace === "50%";
 
@@ -101,13 +108,13 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
           : [Number.parseInt(course.block, 10)];
       }
 
-      blocks.forEach((blockNum) => {
+      for (const blockNum of blocks) {
         blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
           course,
           is50Percent,
         });
-      });
-    });
+      }
+    }
 
     return (
       <div className="mb-3 p-3 bg-muted/30 rounded-lg">
@@ -132,9 +139,7 @@ export function TermCard({ termNumber, courses, className }: TermCardProps) {
                   className={`h-8 rounded border-2 border-dashed flex items-center justify-center text-xs ${
                     courses.length === 0
                       ? "border-border bg-muted/30"
-                      : hasConflict
-                        ? "border-destructive/30 bg-destructive/10 text-destructive"
-                        : `border-opacity-50 ${getBlockBadgeColor(blockNum).replace("text-", "border-").replace("bg-", "border-")}`
+                      : getBlockClassName(hasConflict, blockNum)
                   }`}
                 >
                   {courses.length > 0 && (

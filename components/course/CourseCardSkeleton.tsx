@@ -3,6 +3,12 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 
+const getCourseCardSkeletonKeys = (count: number): string[] =>
+  Array.from(
+    { length: count },
+    (_, itemNumber) => `course-card-skeleton-${itemNumber + 1}`
+  );
+
 export function CourseCardSkeleton() {
   return (
     <div className="group h-full flex flex-col transition-all duration-200 border-2 border-primary/20 bg-background rounded-lg shadow-md">
@@ -64,8 +70,8 @@ export function CourseGridSkeleton({ count = 12 }: { count?: number }) {
           "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
       }}
     >
-      {Array.from({ length: count }).map((_, index) => (
-        <CourseCardSkeleton key={index} />
+      {getCourseCardSkeletonKeys(count).map((itemKey) => (
+        <CourseCardSkeleton key={itemKey} />
       ))}
     </div>
   );

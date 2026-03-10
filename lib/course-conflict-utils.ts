@@ -10,7 +10,9 @@ import type { StudentProfile } from "@/types/profile";
 export function extractConflictingCourses(
   notes: string | null | undefined
 ): string[] {
-  if (!notes) return [];
+  if (!notes) {
+    return [];
+  }
 
   // Match patterns like:
   // "The course may not be included in a degree together with: TSBK02, TSBK35"
@@ -24,7 +26,9 @@ export function extractConflictingCourses(
   const swedishMatch = notes.match(swedishPattern);
 
   const match = englishMatch || swedishMatch;
-  if (!match) return [];
+  if (!match) {
+    return [];
+  }
 
   // Extract course codes, split by comma and clean up
   const courseIds = match[1]
@@ -105,10 +109,14 @@ export function getAllConflictingCourses(
   const targetConflicts = extractConflictingCourses(targetCourse.notes);
 
   return allCourses.filter((course) => {
-    if (course.id === targetCourse.id) return false;
+    if (course.id === targetCourse.id) {
+      return false;
+    }
 
     // Check if target course conflicts with this course
-    if (targetConflicts.includes(course.id)) return true;
+    if (targetConflicts.includes(course.id)) {
+      return true;
+    }
 
     // Check if this course conflicts with target course
     const courseConflicts = extractConflictingCourses(course.notes);

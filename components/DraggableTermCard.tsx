@@ -77,6 +77,16 @@ export function DraggableTermCard({
     return "bg-muted text-muted-foreground";
   };
 
+  const getBlockClassName = (isActive: boolean, hasConflict: boolean) => {
+    if (!isActive) {
+      return "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20";
+    }
+    if (hasConflict) {
+      return "border-destructive/50 bg-destructive/10 text-destructive shadow-sm";
+    }
+    return "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40";
+  };
+
   const renderBlockIndicators = (course: Course, currentPeriod: 1 | 2) => {
     const is50Percent = course.pace === "50%";
     let blocks: number[];
@@ -123,7 +133,7 @@ export function DraggableTermCard({
       [key: number]: Array<{ course: Course; is50Percent: boolean }>;
     } = { 1: [], 2: [], 3: [], 4: [] };
 
-    periodCourses.forEach((course) => {
+    for (const course of periodCourses) {
       let blocks: number[];
       const is50Percent = course.pace === "50%";
 
@@ -136,13 +146,13 @@ export function DraggableTermCard({
           : [Number.parseInt(course.block, 10)];
       }
 
-      blocks.forEach((blockNum) => {
+      for (const blockNum of blocks) {
         blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
           course,
           is50Percent,
         });
-      });
-    });
+      }
+    }
 
     return (
       <div className="mb-3 p-3 bg-muted/30 rounded-lg">
@@ -177,13 +187,7 @@ export function DraggableTermCard({
                   B{blockNum}
                 </div>
                 <div
-                  className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
-                    isActive
-                      ? hasConflict
-                        ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
-                        : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
-                      : "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
-                  }`}
+                  className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${getBlockClassName(isActive, hasConflict)}`}
                 >
                   {courses.length > 0 && (
                     <div className="flex flex-col items-center">
@@ -214,6 +218,7 @@ export function DraggableTermCard({
   const handleClearTerm = () => {
     if (
       courses.length > 0 &&
+      // biome-ignore lint/suspicious/noAlert: Intentional use of confirm for destructive action
       confirm(
         `Are you sure you want to clear all courses from ${getTermLabel(termNumber)}?`
       )
@@ -501,36 +506,35 @@ export function DraggableTermCard({
       </CardHeader>
 
       <CardContent className="space-y-4 flex-1 flex flex-col">
-        {courses.length === 0 ? (
-          // Only make terms 7 and 9 droppable when empty, not term 8
-          termNumber === 8 ? (
-            <div className="flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg border-border">
-              <p className="text-sm">No courses selected</p>
-              <p className="text-xs mt-1" />
-            </div>
-          ) : (
-            <Droppable droppableId={`term-${termNumber}`} type="COURSE">
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg transition-colors ${
-                    snapshot.isDraggingOver
-                      ? "border-primary bg-primary/5"
-                      : "border-border"
-                  }`}
-                >
-                  <p className="text-sm">No courses selected</p>
-                  <p className="text-xs mt-1">
-                    Add courses from the catalog or drag them here
-                  </p>
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          )
-        ) : // Only make terms 7 and 9 droppable, term 8 should not be droppable
-        termNumber === 8 ? (
+        {courses.length === 0 && termNumber === 8 && (
+          <div className="flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg border-border">
+            <p className="text-sm">No courses selected</p>
+            <p className="text-xs mt-1" />
+          </div>
+        )}
+        {courses.length === 0 && termNumber !== 8 && (
+          <Droppable droppableId={`term-${termNumber}`} type="COURSE">
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={`flex-1 text-center py-8 text-muted-foreground border-2 border-dashed rounded-lg transition-colors ${
+                  snapshot.isDraggingOver
+                    ? "border-primary bg-primary/5"
+                    : "border-border"
+                }`}
+              >
+                <p className="text-sm">No courses selected</p>
+                <p className="text-xs mt-1">
+                  Add courses from the catalog or drag them here
+                </p>
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        )}
+        {/* Only make terms 7 and 9 droppable, term 8 should not be droppable */}
+        {courses.length > 0 && termNumber === 8 && (
           <div className="space-y-4">
             {/* Period 1 */}
             <div>
@@ -598,7 +602,8 @@ export function DraggableTermCard({
               </div>
             </div>
           </div>
-        ) : (
+        )}
+        {courses.length > 0 && termNumber !== 8 && (
           <Droppable droppableId={`term-${termNumber}`} type="COURSE">
             {(provided, snapshot) => (
               <div

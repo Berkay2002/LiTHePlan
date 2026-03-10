@@ -175,18 +175,18 @@ export function ProfilePinboard({
             {/* Validation Status */}
             {(summary.errors.length > 0 || summary.warnings.length > 0) && (
               <div className="mt-4 space-y-2">
-                {summary.errors.map((error, index) => (
+                {summary.errors.map((error) => (
                   <div
                     className="text-sm text-destructive bg-destructive/10 p-2 rounded"
-                    key={`error-${index}-${error.slice(0, 20)}`}
+                    key={`error-${error.slice(0, 40)}`}
                   >
                     ⚠️ {error}
                   </div>
                 ))}
-                {summary.warnings.map((warning, index) => (
+                {summary.warnings.map((warning) => (
                   <div
                     className="text-sm text-chart-4 bg-chart-4/10 p-2 rounded"
-                    key={`warning-${index}-${warning.slice(0, 20)}`}
+                    key={`warning-${warning.slice(0, 40)}`}
                   >
                     ℹ️ {warning}
                   </div>

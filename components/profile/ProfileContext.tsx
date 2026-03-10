@@ -223,65 +223,69 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   });
 
   // Hybrid storage functions
+  const saveProfileToCloud = async (
+    profile: StudentProfile,
+    userId: string,
+    userEmail: string | undefined
+  ) => {
+    console.log("🔐 Attempting to save profile for user:", {
+      userId,
+      userEmail,
+      profileName: profile.name,
+    });
+
+    const supabase = createClient();
+
+    console.log("🔍 Checking for existing profile...");
+    const { data: existing, error: selectError } = await supabase
+      .from("academic_profiles")
+      .select("id")
+      .eq("user_id", userId)
+      .single();
+
+    if (selectError && selectError.code !== "PGRST116") {
+      console.error("❌ Error checking existing profile:", selectError);
+      throw selectError;
+    }
+
+    if (existing) {
+      console.log("📝 Updating existing profile:", existing.id);
+      const { error } = await supabase
+        .from("academic_profiles")
+        .update({
+          profile_data: profile,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id);
+
+      if (error) {
+        throw error;
+      }
+      console.log("💾 Profile updated in cloud");
+    } else {
+      console.log("➕ Creating new profile...");
+      const { data: newProfile, error } = await supabase
+        .from("academic_profiles")
+        .insert({
+          user_id: userId,
+          name: profile.name || "My Course Profile",
+          profile_data: profile,
+          is_public: true,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+      console.log("💾 New profile saved to cloud:", newProfile);
+    }
+  };
+
   const saveProfile = async (profile: StudentProfile) => {
     if (user) {
-      // Save to Supabase when authenticated - use Supabase client directly
       try {
-        console.log("🔐 Attempting to save profile for user:", {
-          userId: user.id,
-          userEmail: user.email,
-          profileName: profile.name,
-        });
-
-        const supabase = createClient();
-
-        // First, check if user already has a profile
-        console.log("🔍 Checking for existing profile...");
-        const { data: existing, error: selectError } = await supabase
-          .from("academic_profiles")
-          .select("id")
-          .eq("user_id", user.id)
-          .single();
-
-        if (selectError && selectError.code !== "PGRST116") {
-          console.error("❌ Error checking existing profile:", selectError);
-          throw selectError;
-        }
-
-        if (existing) {
-          console.log("📝 Updating existing profile:", existing.id);
-          // Update existing profile
-          const { error } = await supabase
-            .from("academic_profiles")
-            .update({
-              profile_data: profile,
-              updated_at: new Date().toISOString(),
-            })
-            .eq("id", existing.id);
-
-          if (error) {
-            throw error;
-          }
-          console.log("💾 Profile updated in cloud");
-        } else {
-          console.log("➕ Creating new profile...");
-          // Create new profile
-          const { data: newProfile, error } = await supabase
-            .from("academic_profiles")
-            .insert({
-              user_id: user.id,
-              name: profile.name || "My Course Profile",
-              profile_data: profile,
-              is_public: true,
-            })
-            .select()
-            .single();
-
-          if (error) {
-            throw error;
-          }
-          console.log("💾 New profile saved to cloud:", newProfile);
-        }
+        await saveProfileToCloud(profile, user.id, user.email);
       } catch (error) {
         console.error(
           "❌ Failed to save to cloud, falling back to localStorage:",

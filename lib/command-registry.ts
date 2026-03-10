@@ -1,26 +1,28 @@
 import type { LucideIcon } from "lucide-react";
 
 export interface CommandDefinition {
-  id: string;
-  label: string;
-  description?: string;
-  icon?: LucideIcon;
   action: () => void | Promise<void>;
-  shortcut?: string;
-  keywords?: string[];
-  visible?: CommandVisibilityCondition;
+  description?: string;
   group: "navigation" | "profile" | "settings" | "account";
+  icon?: LucideIcon;
+  id: string;
+  keywords?: string[];
+  label: string;
+  shortcut?: string;
+  visible?: CommandVisibilityCondition;
 }
 
 export interface CommandVisibilityCondition {
-  routes?: string[];
   requiresAuth?: boolean;
   requiresGuest?: boolean;
+  routes?: string[];
 }
 
 export function matchesRoute(pathname: string, patterns: string[]): boolean {
   return patterns.some((pattern) => {
-    if (pattern === "*") return true;
+    if (pattern === "*") {
+      return true;
+    }
 
     const regex = new RegExp(
       `^${pattern.replace(/\[.*?\]/g, "[^/]+").replace(/\*/g, ".*")}$`
@@ -35,14 +37,22 @@ export function isCommandVisible(
   pathname: string,
   isAuthenticated: boolean
 ): boolean {
-  if (!command.visible) return true;
+  if (!command.visible) {
+    return true;
+  }
 
   const { routes, requiresAuth, requiresGuest } = command.visible;
 
-  if (requiresAuth && !isAuthenticated) return false;
-  if (requiresGuest && isAuthenticated) return false;
+  if (requiresAuth && !isAuthenticated) {
+    return false;
+  }
+  if (requiresGuest && isAuthenticated) {
+    return false;
+  }
 
-  if (routes && !matchesRoute(pathname, routes)) return false;
+  if (routes && !matchesRoute(pathname, routes)) {
+    return false;
+  }
 
   return true;
 }

@@ -125,6 +125,16 @@ export function EditableTermCard({
     );
   };
 
+  const getBlockClassName = (isActive: boolean, hasConflict: boolean) => {
+    if (!isActive) {
+      return "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20";
+    }
+    if (hasConflict) {
+      return "border-destructive/50 bg-destructive/10 text-destructive shadow-sm";
+    }
+    return "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40";
+  };
+
   const renderPeriodBlockTimeline = (
     periodCourses: Course[],
     currentPeriod: 1 | 2
@@ -140,7 +150,7 @@ export function EditableTermCard({
       [BLOCK_NUMBER_FOURTH]: [],
     };
 
-    periodCourses.forEach((course) => {
+    for (const course of periodCourses) {
       let blocks: number[];
       const is50Percent = course.pace === "50%";
 
@@ -153,13 +163,13 @@ export function EditableTermCard({
           : [Number.parseInt(course.block, 10)];
       }
 
-      blocks.forEach((blockNum) => {
+      for (const blockNum of blocks) {
         blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
           course,
           is50Percent,
         });
-      });
-    });
+      }
+    }
 
     return (
       <div className="mb-3 p-3 bg-muted/30 rounded-lg">
@@ -194,13 +204,7 @@ export function EditableTermCard({
                   B{blockNum}
                 </div>
                 <div
-                  className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${
-                    isActive
-                      ? hasConflict
-                        ? "border-destructive/50 bg-destructive/10 text-destructive shadow-sm"
-                        : "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40"
-                      : "border-muted bg-muted/50 text-muted-foreground shadow-sm hover:bg-muted hover:border-muted-foreground/20"
-                  }`}
+                  className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${getBlockClassName(isActive, hasConflict)}`}
                 >
                   {courses.length > 0 && (
                     <div className="flex flex-col items-center">
@@ -231,6 +235,7 @@ export function EditableTermCard({
   const handleClearTerm = () => {
     if (
       courses.length > 0 &&
+      // biome-ignore lint/suspicious/noAlert: Intentional use of confirm for destructive action
       confirm(
         `Are you sure you want to clear all courses from ${getTermLabel(termNumber)}?`
       )

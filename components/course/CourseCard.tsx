@@ -40,6 +40,73 @@ interface CourseCardProps {
   course: Course;
 }
 
+interface CourseCardActionState {
+  isHovered: boolean;
+  isPinned: boolean;
+  wouldHaveConflicts: boolean;
+}
+
+const getCourseCardActionButtonClassName = ({
+  isHovered,
+  isPinned,
+  wouldHaveConflicts,
+}: CourseCardActionState): string => {
+  const baseClassName =
+    "h-9 text-xs font-bold transition-all duration-200 shadow-md";
+
+  if (isPinned) {
+    return isHovered
+      ? `${baseClassName} bg-destructive hover:bg-destructive/90 text-destructive-foreground`
+      : `${baseClassName} bg-primary hover:bg-primary/90 text-primary-foreground`;
+  }
+
+  if (wouldHaveConflicts) {
+    return `${baseClassName} bg-chart-4 hover:bg-chart-4/90 text-white border-2 border-chart-4/60`;
+  }
+
+  return `${baseClassName} bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg`;
+};
+
+const getCourseCardActionButtonContent = ({
+  isHovered,
+  isPinned,
+  wouldHaveConflicts,
+}: CourseCardActionState) => {
+  if (isPinned && isHovered) {
+    return (
+      <>
+        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+        Remove
+      </>
+    );
+  }
+
+  if (isPinned) {
+    return (
+      <>
+        <Check className="h-3.5 w-3.5 mr-1.5" />
+        Added
+      </>
+    );
+  }
+
+  if (wouldHaveConflicts) {
+    return (
+      <>
+        <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
+        Conflict
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Plus className="h-3.5 w-3.5 mr-1.5" />
+      Add
+    </>
+  );
+};
+
 export function CourseCard({ course }: CourseCardProps) {
   const { state, addCourse, removeCourse } = useProfile();
   const isPinned = state.current_profile
@@ -63,6 +130,7 @@ export function CourseCard({ course }: CourseCardProps) {
   const wouldHaveConflicts = state.current_profile
     ? findCourseConflicts(course, state.current_profile).length > 0
     : false;
+  const actionState = { isHovered, isPinned, wouldHaveConflicts };
 
   // This function is no longer used since we always check conflicts first
 
@@ -220,6 +288,7 @@ export function CourseCard({ course }: CourseCardProps) {
                     onClick={() =>
                       isMobile && setShowNotesTooltip(!showNotesTooltip)
                     }
+                    type="button"
                   >
                     <AlertTriangle className="h-3.5 w-3.5" />
                     <span className="text-xs font-bold">NOTE</span>
@@ -310,15 +379,7 @@ export function CourseCard({ course }: CourseCardProps) {
         {/* ACTIONS - Clear, large touch targets */}
         <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/30">
           <Button
-            className={`h-9 text-xs font-bold transition-all duration-200 shadow-md ${
-              isPinned
-                ? isHovered
-                  ? "bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-                  : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                : wouldHaveConflicts
-                  ? "bg-chart-4 hover:bg-chart-4/90 text-white border-2 border-chart-4/60"
-                  : "bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg"
-            }`}
+            className={getCourseCardActionButtonClassName(actionState)}
             onClick={() => {
               if (isPinned && isHovered) {
                 removeCourse(course.id);
@@ -329,29 +390,7 @@ export function CourseCard({ course }: CourseCardProps) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
-            {isPinned ? (
-              isHovered ? (
-                <>
-                  <Trash2 className="h-3.5 w-3.5 mr-1.5" />
-                  Remove
-                </>
-              ) : (
-                <>
-                  <Check className="h-3.5 w-3.5 mr-1.5" />
-                  Added
-                </>
-              )
-            ) : wouldHaveConflicts ? (
-              <>
-                <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
-                Conflict
-              </>
-            ) : (
-              <>
-                <Plus className="h-3.5 w-3.5 mr-1.5" />
-                Add
-              </>
-            )}
+            {getCourseCardActionButtonContent(actionState)}
           </Button>
           <Link className="w-full" href={`/course/${course.id}`}>
             <Button

@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-03-10 - Navigation/Profile/Supabase Lint Cleanup
+
+Cleaned the scoped files (`components/shared/DynamicNavbar.tsx`, `components/profile/*`, `utils/supabase/*`) to zero Ultracite/Biome errors without changing behavior.
+
+### Updated
+
+- **ProfileDataSkeleton.tsx** – replaced `[...new Array(N)].map((_, i) => ... key={i})` index keys with stable string literal arrays
+- **ProfilePinboard.tsx** – removed `index` from error/warning map keys; use 40-char content slice as key
+- **ProfileSummary.tsx** – same index-key fix as ProfilePinboard for error/warning maps
+- **ProfileSidebar.tsx** – converted non-interactive overlay `<div onClick>` to `<button>`; added `aria-label` and `role="img"` + `aria-label` to SVG pie chart; removed index from segment/legend keys
+- **ProfileContext.tsx** – extracted `saveProfileToCloud` helper to bring `saveProfile` complexity from 22 → below 20
+- **DynamicNavbar.tsx** – extracted `fetchAvatarUrl` helper and `NavAuthSection` component; replaced three nested `loading ? … : user ? … : …` ternaries with early-return component; refactored mobile main right-side auth to use `NavAuthSection`; brought total complexity from 42 → ≤ 20
+
+### Verification
+
+- `npm exec -- ultracite check components/shared/DynamicNavbar.tsx components/profile/ProfileContext.tsx components/profile/ProfileSummary.tsx components/profile/ProfileSidebar.tsx components/profile/ProfilePinboard.tsx components/profile/ProfileDataSkeleton.tsx utils/supabase/client.ts utils/supabase/server.ts utils/supabase/session.ts` → 0 errors
+
+---
+
 ## 2026-03-10 - API Route Lint Cleanup
 
 Cleaned the `app/api/**` route handlers to satisfy the currently reported Ultracite/Biome issues without changing the broader repo surface.
@@ -114,3 +133,4 @@ Adjusted the default Biome/Ultracite scope to skip `components/ui/**` so lint wo
 ### Verification
 
 - Full `npm exec -- ultracite check --max-diagnostics none` output no longer reports files under `components/ui/**`
+- 2026-03-10: Cleaned scoped course list/filter components by fixing local a11y button issues, replacing `forEach` and index-key patterns, and extracting small helpers to satisfy targeted Ultracite lint.

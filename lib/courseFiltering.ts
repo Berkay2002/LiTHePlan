@@ -129,14 +129,16 @@ const matchesExamination = (
 
   // Check each examination type filter
   for (const [examType, mode] of Object.entries(examinationFilters)) {
-    const courseHasExam = course.examination.includes(examType as "TEN" | "LAB" | "PROJ" | "SEM" | "UPG");
+    const courseHasExam = course.examination.includes(
+      examType as "TEN" | "LAB" | "PROJ" | "SEM" | "UPG"
+    );
 
-    if (mode === 'include') {
+    if (mode === "include") {
       // MUST have this examination type
       if (!courseHasExam) {
         return false;
       }
-    } else if (mode === 'exclude') {
+    } else if (mode === "exclude") {
       // MUST NOT have this examination type
       if (courseHasExam) {
         return false;

@@ -7,10 +7,10 @@ import { randomUUID } from "crypto";
  */
 
 interface LogMetadata {
+  duration?: number;
+  path?: string;
   requestId?: string;
   userId?: string;
-  path?: string;
-  duration?: number;
   [key: string]: unknown;
 }
 

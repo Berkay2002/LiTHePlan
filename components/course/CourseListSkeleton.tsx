@@ -3,6 +3,12 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 
+const getCourseListSkeletonKeys = (count: number): string[] =>
+  Array.from(
+    { length: count },
+    (_, itemNumber) => `course-list-skeleton-${itemNumber + 1}`
+  );
+
 export function CourseListItemSkeleton() {
   return (
     <div className="border-2 border-primary/20 bg-background rounded-lg p-3 lg:p-4 animate-pulse">
@@ -64,8 +70,8 @@ export function CourseListItemSkeleton() {
 export function CourseListSkeleton({ count = 12 }: { count?: number }) {
   return (
     <div className="space-y-3 w-full">
-      {Array.from({ length: count }).map((_, index) => (
-        <CourseListItemSkeleton key={index} />
+      {getCourseListSkeletonKeys(count).map((itemKey) => (
+        <CourseListItemSkeleton key={itemKey} />
       ))}
     </div>
   );

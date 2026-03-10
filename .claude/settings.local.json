@@ -29,10 +29,13 @@
       "mcp__supabase__execute_sql",
       "mcp__shadcn__get_project_registries",
       "mcp__shadcn__search_items_in_registries",
-      "Bash(npx ultracite fix)"
+      "Bash(npx ultracite fix)",
+      "Bash(npm exec:*)"
     ],
     "deny": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["supabase"]
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
 }

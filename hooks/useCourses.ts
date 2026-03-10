@@ -3,9 +3,8 @@ import type { Course } from "@/types/course";
 
 export interface UseCoursesResult {
   courses: Course[];
-  loading: boolean;
   error: string | null;
-  refetch: () => void;
+  loading: boolean;
   pagination: {
     page: number;
     limit: number;
@@ -13,6 +12,7 @@ export interface UseCoursesResult {
     totalPages: number;
     hasMore: boolean;
   } | null;
+  refetch: () => void;
 }
 
 interface CoursesResponse {

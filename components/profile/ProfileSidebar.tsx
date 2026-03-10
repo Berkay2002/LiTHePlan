@@ -102,9 +102,11 @@ export function ProfileSidebar({
     <>
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
+        <button
+          aria-label="Close sidebar"
+          className="fixed inset-0 bg-foreground/50 z-40 lg:hidden w-full border-0 cursor-default"
           onClick={onToggle}
+          type="button"
         />
       )}
 
@@ -204,15 +206,17 @@ export function ProfileSidebar({
                     {/* Compact Pie Chart */}
                     <div className="flex justify-center">
                       <svg
+                        aria-label="Credit distribution pie chart"
                         height={size}
+                        role="img"
                         viewBox={`0 0 ${size} ${size}`}
                         width={size}
                       >
-                        {segmentsWithAngles.map((segment, index) => (
+                        {segmentsWithAngles.map((segment) => (
                           <path
                             d={createPath(segment.startAngle, segment.angle)}
                             fill={segment.color}
-                            key={`segment-${segment.label}-${index}`}
+                            key={`segment-${segment.label}`}
                             stroke="hsl(var(--background))"
                             strokeWidth="2"
                           />
@@ -222,10 +226,10 @@ export function ProfileSidebar({
 
                     {/* Compact Legend */}
                     <div className="space-y-1">
-                      {segmentsWithAngles.map((segment, index) => (
+                      {segmentsWithAngles.map((segment) => (
                         <div
                           className="flex items-center gap-2"
-                          key={`legend-${segment.label}-${index}`}
+                          key={`legend-${segment.label}`}
                         >
                           <div
                             className="w-3 h-3 rounded-full shrink-0"

@@ -1,12 +1,12 @@
 import type { Course } from "@/types/course";
 
 export interface ConflictInfo {
-  courseId: string;
-  conflictType: "block" | "time";
   conflictDetails: {
     blockConflicts: number[];
     conflictingCourses: string[];
   };
+  conflictType: "block" | "time";
+  courseId: string;
 }
 
 export function detectCourseConflicts(
@@ -37,7 +37,9 @@ export function detectCourseConflicts(
 
   // Check for conflicts with other courses in the same period
   const periodCourses = courses.filter((course) => {
-    if (course.id === targetCourse.id) return false; // Don't compare with self
+    if (course.id === targetCourse.id) {
+      return false; // Don't compare with self
+    }
 
     // Check if course appears in this period
     const courseInPeriod =

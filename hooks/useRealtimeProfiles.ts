@@ -13,7 +13,9 @@ export function useRealtimeProfiles(
 ) {
   useEffect(() => {
     // Only run on client-side and when user is authenticated
-    if (typeof window === "undefined" || !user) return;
+    if (typeof window === "undefined" || !user) {
+      return;
+    }
 
     console.log("🔄 Setting up Realtime subscription for user:", user.id);
 

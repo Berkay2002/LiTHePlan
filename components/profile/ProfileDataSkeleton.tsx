@@ -22,8 +22,8 @@ export function ProfileDataSkeleton() {
 
       {/* Profile Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
-        {[...new Array(3)].map((_, i) => (
-          <Card key={i}>
+        {(["stat-0", "stat-1", "stat-2"] as const).map((id) => (
+          <Card key={id}>
             <CardHeader className="space-y-2">
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-8 w-16" />
@@ -43,18 +43,20 @@ export function ProfileDataSkeleton() {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2">
-              {[...new Array(4)].map((_, i) => (
-                <Card className="overflow-hidden" key={i}>
-                  <CardHeader className="space-y-2">
-                    <Skeleton className="h-5 w-20" />
-                    <Skeleton className="h-6 w-full" />
-                    <div className="flex gap-2">
-                      <Skeleton className="h-4 w-12" />
-                      <Skeleton className="h-4 w-16" />
-                    </div>
-                  </CardHeader>
-                </Card>
-              ))}
+              {(["course-0", "course-1", "course-2", "course-3"] as const).map(
+                (id) => (
+                  <Card className="overflow-hidden" key={id}>
+                    <CardHeader className="space-y-2">
+                      <Skeleton className="h-5 w-20" />
+                      <Skeleton className="h-6 w-full" />
+                      <div className="flex gap-2">
+                        <Skeleton className="h-4 w-12" />
+                        <Skeleton className="h-4 w-16" />
+                      </div>
+                    </CardHeader>
+                  </Card>
+                )
+              )}
             </div>
           </CardContent>
         </Card>

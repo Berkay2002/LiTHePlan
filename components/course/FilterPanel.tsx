@@ -51,6 +51,29 @@ export interface CollapsibleFilterSidebarProps extends FilterPanelProps {
   onToggle: () => void;
 }
 
+const getTermOptions = (courses: Course[]): number[] => {
+  const allTerms = new Set<string>();
+
+  for (const course of courses) {
+    for (const term of course.term) {
+      allTerms.add(term);
+    }
+  }
+
+  const uniqueTerms = Array.from(allTerms).sort();
+  const termOptions: number[] = [];
+
+  if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
+    termOptions.push(7);
+  }
+
+  if (uniqueTerms.includes("8")) {
+    termOptions.push(8);
+  }
+
+  return termOptions;
+};
+
 export function CollapsibleFilterSidebar({
   courses,
   filterState,
@@ -67,24 +90,7 @@ export function CollapsibleFilterSidebar({
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(safeCourses.map((course) => course.level))),
-    term: (() => {
-      // Extract all unique terms from courses - now they're string arrays
-      const allTerms = new Set<string>();
-      safeCourses.forEach((course) => {
-        course.term.forEach((term) => allTerms.add(term));
-      });
-      const uniqueTerms = Array.from(allTerms).sort();
-
-      // Combine "7" & "9" into a single option, keep "8" separate
-      const termOptions: number[] = [];
-      if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
-        termOptions.push(7); // This represents "7 & 9"
-      }
-      if (uniqueTerms.includes("8")) {
-        termOptions.push(8);
-      }
-      return termOptions;
-    })(),
+    term: getTermOptions(safeCourses),
     period: Array.from(
       new Set(
         safeCourses
@@ -170,9 +176,11 @@ export function CollapsibleFilterSidebar({
     <>
       {/* Sidebar Overlay for Mobile */}
       {isOpen && (
-        <div
+        <button
+          aria-label="Close filters"
           className="fixed inset-0 bg-foreground/50 z-40 lg:hidden"
           onClick={onToggle}
+          type="button"
         />
       )}
 
@@ -270,6 +278,7 @@ export function CollapsibleFilterSidebar({
                     <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                       <TooltipTrigger asChild>
                         <button
+                          aria-label="Show program info"
                           className="flex items-center justify-center p-1 rounded-md hover:bg-sidebar-accent transition-colors duration-200 touch-manipulation"
                           onBlur={() =>
                             isMobile && setShowProgramTooltip(false)
@@ -278,6 +287,7 @@ export function CollapsibleFilterSidebar({
                             isMobile &&
                             setShowProgramTooltip(!showProgramTooltip)
                           }
+                          type="button"
                         >
                           <Info className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-help transition-colors duration-200" />
                         </button>
@@ -657,24 +667,7 @@ export function FilterPanel({
   // Generate unique filter options from course data
   const filterOptions = {
     level: Array.from(new Set(safeCourses.map((course) => course.level))),
-    term: (() => {
-      // Extract all unique terms from courses - now they're string arrays
-      const allTerms = new Set<string>();
-      safeCourses.forEach((course) => {
-        course.term.forEach((term) => allTerms.add(term));
-      });
-      const uniqueTerms = Array.from(allTerms).sort();
-
-      // Combine "7" & "9" into a single option, keep "8" separate
-      const termOptions: number[] = [];
-      if (uniqueTerms.includes("7") || uniqueTerms.includes("9")) {
-        termOptions.push(7); // This represents "7 & 9"
-      }
-      if (uniqueTerms.includes("8")) {
-        termOptions.push(8);
-      }
-      return termOptions;
-    })(),
+    term: getTermOptions(safeCourses),
     period: Array.from(
       new Set(
         safeCourses
@@ -777,11 +770,13 @@ export function FilterPanel({
               <Tooltip open={isMobile ? showProgramTooltip : undefined}>
                 <TooltipTrigger asChild>
                   <button
+                    aria-label="Show program info"
                     className="flex items-center justify-center p-1 rounded-md hover:bg-sidebar-accent transition-colors duration-200 touch-manipulation"
                     onBlur={() => isMobile && setShowProgramTooltip(false)}
                     onClick={() =>
                       isMobile && setShowProgramTooltip(!showProgramTooltip)
                     }
+                    type="button"
                   >
                     <Info className="h-5 w-5 text-sidebar-foreground/70 hover:text-sidebar-foreground cursor-help transition-colors duration-200" />
                   </button>

@@ -43,10 +43,10 @@ export const authLimiter = new Ratelimit({
 
 // Type for rate limit results
 export interface RateLimitResult {
-  success: boolean;
   limit: number;
   remaining: number;
   reset: number;
+  success: boolean;
 }
 
 /**

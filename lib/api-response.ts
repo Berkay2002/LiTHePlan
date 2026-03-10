@@ -4,16 +4,16 @@
  */
 
 export interface ApiSuccessResponse<T = unknown> {
-  success: true;
   data: T;
   requestId: string;
+  success: true;
   timestamp: string;
 }
 
 export interface ApiErrorResponse {
-  success: false;
   error: string;
   requestId: string;
+  success: false;
   timestamp: string;
 }
 

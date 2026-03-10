@@ -160,19 +160,19 @@ export function ProfileSummary({ profile }: ProfileSummaryProps) {
             {/* Validation Messages */}
             {(summary.errors.length > 0 || summary.warnings.length > 0) && (
               <div className="space-y-2 pt-2 border-t border-border/40">
-                {summary.errors.map((error, index) => (
+                {summary.errors.map((error) => (
                   <div
                     className="flex items-start gap-2 text-xs"
-                    key={`error-${index}-${error.slice(0, 20)}`}
+                    key={`error-${error.slice(0, 40)}`}
                   >
                     <AlertTriangle className="h-3 w-3 text-destructive mt-0.5 shrink-0" />
                     <span className="text-destructive">{error}</span>
                   </div>
                 ))}
-                {summary.warnings.map((warning, index) => (
+                {summary.warnings.map((warning) => (
                   <div
                     className="flex items-start gap-2 text-xs"
-                    key={`warning-${index}-${warning.slice(0, 20)}`}
+                    key={`warning-${warning.slice(0, 40)}`}
                   >
                     <AlertTriangle className="h-3 w-3 text-chart-4 mt-0.5 shrink-0" />
                     <span className="text-chart-4">{warning}</span>

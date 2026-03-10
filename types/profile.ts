@@ -138,15 +138,15 @@ export function validateProfile(
   const courseIds = new Set<string>();
 
   // Validate each term
-  MASTER_PROGRAM_TERMS.forEach((term) => {
+  for (const term of MASTER_PROGRAM_TERMS) {
     const termCourses = profile.terms[term];
 
     if (!Array.isArray(termCourses)) {
       errors.push(`Term ${term} courses must be an array`);
-      return;
+      continue;
     }
 
-    termCourses.forEach((course) => {
+    for (const course of termCourses) {
       // Check for duplicate courses
       if (courseIds.has(course.id)) {
         errors.push(`Duplicate course found: ${course.id} (${course.name})`);
@@ -170,8 +170,8 @@ export function validateProfile(
       if (course.level === "avancerad nivå") {
         advancedCredits += course.credits;
       }
-    });
-  });
+    }
+  }
 
   // Check advanced credits requirement (60hp minimum)
   if (advancedCredits < MASTER_PROGRAM_MIN_ADVANCED_CREDITS) {
