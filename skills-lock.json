@@ -1,15 +1,80 @@
 {
   "version": 1,
   "skills": {
+    "ctx7-cli": {
+      "source": "upstash/context7",
+      "sourceType": "github",
+      "computedHash": "fe4dad675716c54cea0095a5b0766e204179c1e8d0242557e67ef901c28e64dc"
+    },
+    "dev": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "computedHash": "2895341c0061c04328444399ca4e375625dc87615bf110d0cf77231232d20f27"
+    },
+    "docs": {
+      "source": "upstash/context7",
+      "sourceType": "github",
+      "computedHash": "c7f880998d5f0dad1f60223fd7882c71a0b6ff83c21c8ed45a539e4d75d63c98"
+    },
+    "documentation-lookup": {
+      "source": "upstash/context7",
+      "sourceType": "github",
+      "computedHash": "eb5e668b7575567d3252382d52320d69867e18df968695c946af066ffa686bad"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
+    },
+    "next-best-practices": {
+      "source": "vercel-labs/next-skills",
+      "sourceType": "github",
+      "computedHash": "515ba75178bd44875812d9a560bdf14651f86709f89cf1d4f209638e879807f3"
+    },
+    "next-cache-components": {
+      "source": "vercel-labs/next-skills",
+      "sourceType": "github",
+      "computedHash": "a94b83ddcd2ff1c30722577f693b1bfe32f2e1a83abdd6c08c2d6cc6753b53c8"
+    },
+    "playwright-cli": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "computedHash": "7075ab30f588019197a2f1518bb4c9d33d69d33352af079b5f9c60303ad3886e"
+    },
     "shadcn": {
       "source": "shadcn/ui",
       "sourceType": "github",
       "computedHash": "b1cc1defe03f0e8f78652b7d20e4d4e6421babc2b45835d4f361afe684dc47a2"
     },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
+    },
     "supabase-postgres-best-practices": {
       "source": "supabase/agent-skills",
       "sourceType": "github",
       "computedHash": "e3ba3d760c5f4cc43b02a91fb8924f726c7818f95cc35d79d0a606ca622b72f5"
+    },
+    "typescript-advanced-types": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "3a3be8c925f96ac4e1280db28a01677e7ca5197f3792de2bbf35ab3bb324b6dd"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "f98931159fa9c7fed043bcd18a891a46dcf89ababa38df13a4c5b7b30dc0ce07"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "3462ec83f862abb2d532953df33a4dbf87f4616849da5d4b5cc7c13601aaf997"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "computedHash": "a6a44d5498f7e8f68289902f3dedfc6f38ae0cee1e96527c80724cf27f727c2a"
     }
   }
 }
