@@ -107,26 +107,27 @@ export function DynamicNavbar(props: DynamicNavbarProps) {
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const { registerTimelineToggle, unregisterTimelineToggle } =
     useCommandPalette();
+  const timelineToggleHandler =
+    props.mode === "profile-edit" ? props.onToggleBlockTimeline : undefined;
+  const isBlockTimelineVisible =
+    props.mode === "profile-edit" ? props.showBlockTimeline : undefined;
 
   // Register timeline toggle for profile edit mode
   useEffect(() => {
     if (
       props.mode === "profile-edit" &&
-      props.onToggleBlockTimeline &&
-      props.showBlockTimeline !== undefined
+      timelineToggleHandler &&
+      isBlockTimelineVisible !== undefined
     ) {
-      registerTimelineToggle(
-        props.onToggleBlockTimeline,
-        props.showBlockTimeline
-      );
+      registerTimelineToggle(timelineToggleHandler, isBlockTimelineVisible);
       return () => unregisterTimelineToggle();
     }
   }, [
     props.mode,
     registerTimelineToggle,
     unregisterTimelineToggle,
-    props.onToggleBlockTimeline,
-    props.showBlockTimeline,
+    timelineToggleHandler,
+    isBlockTimelineVisible,
   ]);
 
   // Handle auth state

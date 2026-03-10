@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { createClient } from "@/utils/supabase/client";
 
+const normalizeEmail = (value: string) => value.trim().toLowerCase();
+
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,17 +23,36 @@ export function LoginForm() {
   const [isSignUp, setIsSignUp] = useState(false);
 
   const router = useRouter();
-  const supabase = createClient();
+  const getSupabaseClient = () => {
+    try {
+      return createClient();
+    } catch {
+      setError(
+        "Authentication is unavailable because Supabase is not configured."
+      );
+      return null;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
 
     try {
+      const normalizedEmail = normalizeEmail(email);
       const { error } = isSignUp
-        ? await supabase.auth.signUp({ email, password })
-        : await supabase.auth.signInWithPassword({ email, password });
+        ? await supabase.auth.signUp({ email: normalizedEmail, password })
+        : await supabase.auth.signInWithPassword({
+            email: normalizedEmail,
+            password,
+          });
 
       if (error) {
         setError(error.message);

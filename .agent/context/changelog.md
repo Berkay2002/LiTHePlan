@@ -1,5 +1,25 @@
 # Changelog
 
+## 2026-03-11 - Build Fixes And Dedicated Typecheck
+
+Made the production build pass locally and added a dedicated TypeScript validation command for faster feedback outside `next build`.
+
+### Updated
+
+- Added `npm run typecheck` as `tsc --noEmit` in `package.json`
+- Fixed `components/shared/DynamicNavbar.tsx` by narrowing the profile-edit-only timeline props before using them in the effect dependency list
+- Updated `components/login-form.tsx` and `components/auth/LoginForm.tsx` to create the Supabase browser client lazily inside submit/OAuth flows instead of during render, which prevents prerender failures on auth pages when Supabase env is missing during build
+- Added `utils/supabase/config.ts` so both Supabase client helpers resolve public credentials from one place and support either `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` or `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Normalized submitted email input and changed username-login failures to a generic credential error to avoid leaking whether a username exists
+- Updated `.agent/context/commands.md` and `.agent/context/architecture.md` to document the new command and the Supabase initialization/env pattern
+
+### Verification
+
+- `npm run typecheck`
+- `npm run build`
+
+---
+
 ## 2026-03-10 - Navigation/Profile/Supabase Lint Cleanup
 
 Cleaned the scoped files (`components/shared/DynamicNavbar.tsx`, `components/profile/*`, `utils/supabase/*`) to zero Ultracite/Biome errors without changing behavior.

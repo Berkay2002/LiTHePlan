@@ -14,6 +14,10 @@ interface LoginFormProps extends React.ComponentProps<"div"> {
   mode?: "login" | "signup";
 }
 
+const INVALID_LOGIN_MESSAGE = "Invalid email/username or password.";
+const normalizeEmail = (value: string) => value.trim().toLowerCase();
+const normalizeUsername = (value: string) => value.trim();
+
 export function LoginForm({
   className,
   mode = "login",
@@ -25,9 +29,18 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const supabase = createClient();
 
   const isSignup = mode === "signup";
+  const getSupabaseClient = () => {
+    try {
+      return createClient();
+    } catch {
+      setError(
+        "Authentication is unavailable because Supabase is not configured."
+      );
+      return null;
+    }
+  };
 
   // Helper function to check if input is email or username
   const isEmail = (input: string): boolean =>
@@ -37,6 +50,11 @@ export function LoginForm({
   const getEmailFromUsername = async (
     username: string
   ): Promise<string | null> => {
+    const supabase = getSupabaseClient();
+    if (!supabase) {
+      return null;
+    }
+
     try {
       const { data, error } = await supabase.rpc("get_email_from_username", {
         input_username: username,
@@ -56,52 +74,68 @@ export function LoginForm({
     e.preventDefault();
     setLoading(true);
     setError(null);
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
 
     try {
       let result;
-      let emailToUse = emailOrUsername;
+      const normalizedIdentity = emailOrUsername.trim();
+      let emailToUse = normalizedIdentity;
 
       if (isSignup) {
         // For signup, emailOrUsername should be an email
-        if (!isEmail(emailOrUsername)) {
+        if (!isEmail(normalizedIdentity)) {
           setError("Please enter a valid email address for signup");
           setLoading(false);
           return;
         }
+
+        if (!normalizeUsername(username)) {
+          setError("Please enter a username.");
+          setLoading(false);
+          return;
+        }
+
         result = await supabase.auth.signUp({
-          email: emailOrUsername,
+          email: normalizeEmail(normalizedIdentity),
           password,
           options: {
             data: {
-              username: username || null,
+              username: normalizeUsername(username),
             },
           },
         });
       } else {
         // For login, check if input is username or email
-        if (!isEmail(emailOrUsername)) {
+        if (!isEmail(normalizedIdentity)) {
           // It's a username, look up the email
-          const lookedUpEmail = await getEmailFromUsername(emailOrUsername);
+          const lookedUpEmail =
+            await getEmailFromUsername(normalizedIdentity);
           if (!lookedUpEmail) {
-            setError("Username not found");
+            setError(INVALID_LOGIN_MESSAGE);
             setLoading(false);
             return;
           }
           emailToUse = lookedUpEmail;
+        } else {
+          emailToUse = normalizeEmail(normalizedIdentity);
         }
 
         result = await supabase.auth.signInWithPassword({
-          email: emailToUse,
+          email: normalizeEmail(emailToUse),
           password,
         });
       }
 
       if (result.error) {
-        console.error("❌ Auth error:", result.error);
-        setError(result.error.message);
+        setError(isSignup ? result.error.message : INVALID_LOGIN_MESSAGE);
       } else {
-        console.log("✅ Auth success:", result.data);
         router.push("/");
+        router.refresh();
       }
     } catch {
       setError("An unexpected error occurred");
@@ -113,6 +147,12 @@ export function LoginForm({
   const handleGoogleLogin = async () => {
     setLoading(true);
     setError(null);
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const { error } = await supabase.auth.signInWithOAuth({

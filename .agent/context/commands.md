@@ -20,6 +20,7 @@ npm run dev
 
 ```powershell
 npm run dev        # Start dev server (localhost:3000)
+npm run typecheck  # One-off TypeScript validation
 npx tsc --watch --noEmit  # Type checking in separate terminal
 ```
 
@@ -84,6 +85,7 @@ UPSTASH_REDIS_REST_TOKEN=AXw-xxx
 
 ```powershell
 npm run lint       # Must pass
+npm run typecheck  # Must pass
 npm run build      # Must compile
 ```
 

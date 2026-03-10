@@ -29,7 +29,7 @@ LiTHePlan/
 ├── hooks/                   # useCourses, useRealtimeProfiles
 ├── lib/                     # profile-utils, course-conflict-utils
 ├── types/                   # course.ts, profile.ts
-├── utils/supabase/          # client.ts, server.ts
+├── utils/supabase/          # client.ts, server.ts, config.ts
 └── proxy.ts                 # Auth session refresh (Next.js 16)
 ```
 
@@ -59,6 +59,8 @@ User saves profile
 
 - **Server** (default): Pages, layouts, API routes
 - **Client** (`'use client'`): Interactive UI, hooks, ProfileContext
+- Supabase browser clients should be created lazily inside client-only effects or event handlers, not during render, so auth pages can prerender safely when local env is incomplete
+- Supabase public config is resolved centrally and accepts either `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` or `NEXT_PUBLIC_SUPABASE_ANON_KEY` to keep local/dev environments compatible
 
 ### Data Flow
 
