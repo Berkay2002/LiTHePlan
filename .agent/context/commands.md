@@ -38,6 +38,15 @@ npm run format     # Auto-fix issues
 npm run check      # Alias for lint
 ```
 
+## Dependency Maintenance
+
+```powershell
+npx npm-check-updates           # Show newer available package versions
+npx npm-check-updates -u        # Rewrite package.json to latest versions
+npm install --package-lock-only --ignore-scripts  # Refresh lockfile without a full local install
+npm audit                       # Check the resolved tree for known vulnerabilities
+```
+
 ## Environment Variables
 
 Required in `.env.local`:

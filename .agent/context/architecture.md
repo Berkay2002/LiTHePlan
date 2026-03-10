@@ -4,11 +4,11 @@
 
 | Layer       | Technology                             |
 | ----------- | -------------------------------------- |
-| Framework   | Next.js 16.0.1 (App Router, Turbopack) |
+| Framework   | Next.js 16.1.6 (App Router, Turbopack) |
 | UI          | React 19, Tailwind CSS v4, shadcn/ui   |
-| Database    | Supabase (PostgreSQL), @supabase/ssr   |
+| Database    | Supabase (PostgreSQL), @supabase/ssr 0.9 |
 | State       | React Context + useReducer             |
-| Linting     | Ultracite (Biome-based)                |
+| Linting     | Ultracite 7 (Biome-based)              |
 | Drag & Drop | @hello-pangea/dnd                      |
 | Icons       | Lucide React                           |
 

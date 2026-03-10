@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-03-10 - Dependency Upgrade Sweep
+
+Upgraded the root npm dependency manifest to the latest published versions and refreshed `package-lock.json`.
+
+### Updated
+
+- Runtime packages moved forward, including Next.js `16.0.7 -> 16.1.6`, React `19.2.1 -> 19.2.4`, Supabase JS `2.53.0 -> 2.99.0`, Sentry `10.22.0 -> 10.43.0`, Lucide React `0.556.0 -> 0.577.0`, and `react-resizable-panels` `3.0.6 -> 4.7.2`
+- Dev tooling moved forward, including Ultracite `6.1.0 -> 7.2.5`, Playwright `1.56.1 -> 1.58.2`, Biome `2.3.2 -> 2.4.6`, Tailwind oxide `4.1.16 -> 4.2.1`, Supabase CLI `2.33.9 -> 2.78.1`, and `@types/node` `^22 -> ^25`
+- Added a root `overrides.rollup = 4.59.0` entry to eliminate the transitive high-severity advisory reported through `@sentry/nextjs`
+
+### Verification
+
+- `npx npm-check-updates` now reports that all dependencies match the latest package versions
+- `npm audit --json` reports `0` vulnerabilities after the `rollup` override
+- Full local `npm ci` materialization was unusually slow on the mounted workspace filesystem, so the upgrade was verified at the manifest and lockfile level rather than by a completed local lint/build pass
+
+---
+
 ## 2025-12-06 - Codebase Scan (Evening)
 
 Ran `codebase-scan.md` workflow to verify context accuracy.
