@@ -1,10 +1,103 @@
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { CourseFiltersSchema } from "@/lib/api-validation";
 import { logger } from "@/lib/logger";
 import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
+
+const validateCourseFilters = (searchParams: URLSearchParams) =>
+  CourseFiltersSchema.safeParse(getRawCourseFilters(searchParams));
+
+type CourseFilters = Extract<
+  ReturnType<typeof validateCourseFilters>,
+  { success: true }
+>["data"];
+interface CourseRow {
+  pace?: number | string | null;
+  [key: string]: unknown;
+}
+
+const getRawCourseFilters = (searchParams: URLSearchParams) => ({
+  page: searchParams.get("page") || "1",
+  limit: searchParams.get("limit") || "50",
+  loadAll: searchParams.get("loadAll") || "false",
+  level: searchParams.getAll("level"),
+  term: searchParams.getAll("term"),
+  period: searchParams.getAll("period"),
+  block: searchParams.getAll("block"),
+  pace: searchParams.getAll("pace"),
+  campus: searchParams.getAll("campus"),
+  orientations: searchParams.getAll("orientations"),
+  programs: searchParams.get("programs") || undefined,
+  search: searchParams.get("search") || undefined,
+});
+
+const normalizePace = (pace: CourseRow["pace"]) => {
+  if (typeof pace !== "number") {
+    return pace;
+  }
+
+  return pace === 1 ? "100%" : "50%";
+};
+
+const transformCourse = (course: CourseRow) => ({
+  ...course,
+  pace: normalizePace(course.pace),
+});
+
+const buildCoursesQuery = (
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  filters: CourseFilters
+) => {
+  const { page, limit, loadAll } = filters;
+  const offset = (page - 1) * limit;
+  let query = supabase.from("courses").select("*", { count: "exact" });
+
+  if (filters.level.length > 0) {
+    query = query.in("level", filters.level);
+  }
+
+  if (filters.term.length > 0) {
+    query = query.overlaps("term", filters.term);
+  }
+
+  if (filters.period.length > 0) {
+    query = query.overlaps("period", filters.period);
+  }
+
+  if (filters.block.length > 0) {
+    query = query.overlaps("block", filters.block);
+  }
+
+  if (filters.pace.length > 0) {
+    query = query.in("pace", filters.pace);
+  }
+
+  if (filters.campus.length > 0) {
+    query = query.in("campus", filters.campus);
+  }
+
+  if (filters.programs) {
+    query = query.contains("programs", [filters.programs]);
+  }
+
+  if (filters.orientations.length > 0) {
+    query = query.overlaps("orientations", filters.orientations);
+  }
+
+  if (filters.search) {
+    query = query.or(
+      `id.ilike.%${filters.search}%,name.ilike.%${filters.search}%,examinator.ilike.%${filters.search}%,studierektor.ilike.%${filters.search}%,programs.cs.{${filters.search}}`
+    );
+  }
+
+  if (!loadAll) {
+    query = query.range(offset, offset + limit - 1);
+  }
+
+  return query.order("id");
+};
 
 export async function GET(request: NextRequest) {
   const startTime = Date.now();
@@ -33,28 +126,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const supabase = await createClient();
-
-    // Get and validate query parameters
     const { searchParams } = new URL(request.url);
-
-    // Convert searchParams to object for validation
-    const rawFilters = {
-      page: searchParams.get("page") || "1",
-      limit: searchParams.get("limit") || "50",
-      loadAll: searchParams.get("loadAll") || "false",
-      level: searchParams.getAll("level"),
-      term: searchParams.getAll("term"),
-      period: searchParams.getAll("period"),
-      block: searchParams.getAll("block"),
-      pace: searchParams.getAll("pace"),
-      campus: searchParams.getAll("campus"),
-      orientations: searchParams.getAll("orientations"),
-      programs: searchParams.get("programs") || undefined,
-      search: searchParams.get("search") || undefined,
-    };
-
-    // Validate filters with Zod
-    const validationResult = CourseFiltersSchema.safeParse(rawFilters);
+    const validationResult = validateCourseFilters(searchParams);
     if (!validationResult.success) {
       logger.warn("Invalid course filters", {
         requestId,
@@ -70,78 +143,8 @@ export async function GET(request: NextRequest) {
     const filters = validationResult.data;
     const { page, limit, loadAll } = filters;
     const offset = (page - 1) * limit;
-
-    let query = supabase.from("courses").select("*", { count: "exact" });
-
-    // Apply filters
-    const {
-      level,
-      term,
-      period,
-      block,
-      pace,
-      campus,
-      programs,
-      orientations,
-      search,
-    } = filters;
-
-    if (level.length > 0) {
-      query = query.in("level", level);
-    }
-
-    if (term.length > 0) {
-      query = query.overlaps("term", term);
-    }
-
-    if (period.length > 0) {
-      query = query.overlaps("period", period);
-    }
-
-    if (block.length > 0) {
-      query = query.overlaps("block", block);
-    }
-
-    if (pace.length > 0) {
-      query = query.in("pace", pace);
-    }
-
-    if (campus.length > 0) {
-      query = query.in("campus", campus);
-    }
-
-    if (programs) {
-      query = query.contains("programs", [programs]);
-    }
-
-    if (orientations.length > 0) {
-      query = query.overlaps("orientations", orientations);
-    }
-
-    if (search) {
-      query = query.or(
-        `id.ilike.%${search}%,name.ilike.%${search}%,examinator.ilike.%${search}%,studierektor.ilike.%${search}%,programs.cs.{${search}}`
-      );
-    }
-
-    // Apply pagination only if not loading all
-    if (!loadAll) {
-      query = query.range(offset, offset + limit - 1);
-    }
-
-    const { data, error, count } = await query.order("id");
-
-    // Transform data to match frontend types
-    const transformedData = data?.map((course) => ({
-      ...course,
-      // Convert numeric pace (1.0, 0.5) to percentage string (100%, 50%)
-      pace:
-        typeof course.pace === "number"
-          ? course.pace === 1 || course.pace === 1.0
-            ? "100%"
-            : "50%"
-          : course.pace,
-    }));
+    const { data, error, count } = await buildCoursesQuery(supabase, filters);
+    const transformedData = data?.map(transformCourse);
 
     const duration = Date.now() - startTime;
 
@@ -162,7 +165,7 @@ export async function GET(request: NextRequest) {
         duration,
       });
 
-      Sentry.captureException(error, {
+      captureException(error, {
         contexts: {
           request: { requestId, duration },
         },
@@ -203,7 +206,7 @@ export async function GET(request: NextRequest) {
       duration,
     });
 
-    Sentry.captureException(error, {
+    captureException(error, {
       contexts: {
         request: { requestId, duration },
       },

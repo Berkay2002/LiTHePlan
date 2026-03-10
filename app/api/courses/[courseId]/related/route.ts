@@ -1,10 +1,33 @@
-import * as Sentry from "@sentry/nextjs";
+import { captureException } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { logger } from "@/lib/logger";
 import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
+
+interface RelatedCourse {
+  pace?: number | string | null;
+  relevance_score?: number;
+  [key: string]: unknown;
+}
+
+const normalizePace = (pace: RelatedCourse["pace"]) => {
+  if (typeof pace !== "number") {
+    return pace;
+  }
+
+  return pace === 1 ? "100%" : "50%";
+};
+
+const transformRelatedCourse = (course: RelatedCourse) => {
+  const { relevance_score, ...courseData } = course;
+
+  return {
+    ...courseData,
+    pace: normalizePace(courseData.pace),
+  };
+};
 
 const CourseIdSchema = z.object({
   courseId: z.string().min(1).max(20),
@@ -80,27 +103,8 @@ export async function GET(
       );
     }
 
-    // Transform data: convert numeric pace to percentage string for frontend
     const transformedCourses = (relatedCourses || []).map(
-      (course: {
-        relevance_score?: number;
-        pace?: number | string;
-        [key: string]: unknown;
-      }) => {
-        // Remove relevance_score from response (internal scoring)
-        const { relevance_score, ...courseData } = course;
-
-        return {
-          ...courseData,
-          // Convert numeric pace (1.0, 0.5) to percentage string (100%, 50%)
-          pace:
-            typeof courseData.pace === "number"
-              ? courseData.pace === 1 || courseData.pace === 1.0
-                ? "100%"
-                : "50%"
-              : courseData.pace,
-        };
-      }
+      transformRelatedCourse
     );
 
     const duration = Date.now() - startTime;
@@ -136,7 +140,7 @@ export async function GET(
       duration,
     });
 
-    Sentry.captureException(error, {
+    captureException(error, {
       contexts: {
         request: { requestId, duration },
       },

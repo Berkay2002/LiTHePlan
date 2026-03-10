@@ -1,4 +1,4 @@
-import * as Sentry from "@sentry/nextjs";
+import { addBreadcrumb, captureException, setUser } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { ProfileDataSchema, UUIDSchema } from "@/lib/api-validation";
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
 
     // Auth check
-    Sentry.addBreadcrumb({
+    addBreadcrumb({
       category: "auth",
       message: "Checking user authentication",
       level: "info",
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    Sentry.setUser({ id: user.id, email: user.email });
+    setUser({ id: user.id, email: user.email });
 
     // Parse and validate request body
     const body = await request.json();
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    Sentry.addBreadcrumb({
+    addBreadcrumb({
       category: "validation",
       message: "Validating profile data",
       level: "info",
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       0
     );
 
-    Sentry.addBreadcrumb({
+    addBreadcrumb({
       category: "database",
       message: "Saving profile to database",
       level: "info",
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
         duration,
       });
 
-      Sentry.captureException(error, {
+      captureException(error, {
         contexts: {
           request: { requestId, userId: user.id, duration },
         },
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
       duration,
     });
 
-    Sentry.captureException(error, {
+    captureException(error, {
       contexts: {
         request: { requestId, duration },
       },
@@ -300,7 +300,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     logger.error("Unexpected error in profile GET", error, { requestId });
 
-    Sentry.captureException(error, {
+    captureException(error, {
       contexts: {
         request: { requestId },
       },

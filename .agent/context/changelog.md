@@ -1,5 +1,38 @@
 # Changelog
 
+## 2026-03-10 - API Route Lint Cleanup
+
+Cleaned the `app/api/**` route handlers to satisfy the currently reported Ultracite/Biome issues without changing the broader repo surface.
+
+### Updated
+
+- Replaced namespace Sentry imports in the course and profile API routes with named imports
+- Extracted course filter parsing/query assembly in `app/api/courses/route.ts` to bring the `GET` handler back under the cognitive complexity limit
+- Replaced nested pace ternaries in the course endpoints with small normalization helpers
+- Applied scoped formatting fixes in the remaining API route files that were already failing `ultracite check app/api`
+
+### Verification
+
+- `npm run lint -- app/api`
+
+---
+
+## 2026-03-10 - Biome Scope Narrowed To App Code
+
+Updated `biome.jsonc` so the default Ultracite/Biome pass only scans the main application surface instead of the entire repository.
+
+### Updated
+
+- Replaced the repo-wide include glob with explicit source targets: `app/`, `components/`, `hooks/`, `lib/`, `tests/`, `types/`, and `utils/`
+- Kept root runtime/config entrypoints in scope, including `next.config.ts`, `proxy.ts`, `playwright.config.ts`, `postcss.config.mjs`, `flags.ts`, and instrumentation files
+- Added Biome force-ignore (`!!`) patterns for repo metadata and support files so Ultracite does not crawl `.1code/`, `.agent/`, `.agents/`, `.claude/`, `.github/`, `.vscode/`, or root docs/package metadata during the default lint pass
+
+### Verification
+
+- `npm run lint` is configured to evaluate the application code path rather than repo-support directories and metadata files
+
+---
+
 ## 2026-03-10 - Dependency Upgrade Sweep
 
 Upgraded the root npm dependency manifest to the latest published versions and refreshed `package-lock.json`.

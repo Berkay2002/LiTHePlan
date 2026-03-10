@@ -77,6 +77,8 @@ const courses = await supabase.from("courses").select("*");
 - Arrow functions preferred over function expressions
 - Template literals over string concatenation
 - Async/await over raw promises
+- The default Biome/Ultracite pass is scoped to application code only: `app/`, `components/`, `hooks/`, `lib/`, `tests/`, `types/`, `utils/`, and root runtime/config entrypoints
+- Tooling and documentation folders such as `.agent/`, `.agents/`, `.claude/`, `.github/`, and `.vscode/` are force-ignored and intentionally out of scope for `npm run lint`
 
 ## Commit Conventions
 
