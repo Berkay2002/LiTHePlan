@@ -38,6 +38,7 @@ import {
 const COURSES_PER_PAGE = 60;
 const PROFILE_SIDEBAR_STORAGE_KEY = "profile-sidebar-open";
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
+const noop = () => undefined;
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -84,10 +85,18 @@ function HomeContent() {
     if (programsParam || levelParam || huvudomradenParam || campusParam) {
       // Start with default state, then apply ONLY the URL params
       const newState = createDefaultFilterState();
-      if (programsParam) newState.programs = [programsParam];
-      if (levelParam) newState.level = [levelParam];
-      if (huvudomradenParam) newState.huvudomraden = [huvudomradenParam];
-      if (campusParam) newState.campus = [campusParam];
+      if (programsParam) {
+        newState.programs = [programsParam];
+      }
+      if (levelParam) {
+        newState.level = [levelParam];
+      }
+      if (huvudomradenParam) {
+        newState.huvudomraden = [huvudomradenParam];
+      }
+      if (campusParam) {
+        newState.campus = [campusParam];
+      }
 
       setFilterState(newState);
     }
@@ -170,7 +179,7 @@ function HomeContent() {
       <PageLayout
         isMobileMenuOpen={storedSkeletonSidebarOpen}
         navbarMode="main"
-        onMobileMenuToggle={() => {}}
+        onMobileMenuToggle={noop}
         onSearchChange={handleSearchChange}
         searchQuery={filterState.search}
       >
@@ -178,12 +187,12 @@ function HomeContent() {
           <div className="flex">
             <FilterSidebarSkeleton
               isOpen={storedSkeletonSidebarOpen}
-              onToggle={() => {}}
+              onToggle={noop}
             />
 
             <ProfileSidebarSkeleton
               isOpen={storedSkeletonProfileSidebarOpen}
-              onToggle={() => {}}
+              onToggle={noop}
             />
 
             <div
@@ -224,6 +233,7 @@ function HomeContent() {
             <button
               className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/10"
               onClick={() => window.location.reload()}
+              type="button"
             >
               Retry
             </button>
@@ -362,19 +372,16 @@ function HomeContentSkeleton() {
     <PageLayout
       isMobileMenuOpen={storedSidebarOpen}
       navbarMode="main"
-      onMobileMenuToggle={() => {}}
-      onSearchChange={() => {}}
+      onMobileMenuToggle={noop}
+      onSearchChange={noop}
       searchQuery=""
     >
       <div className="min-h-screen bg-background">
         <div className="flex">
-          <FilterSidebarSkeleton
-            isOpen={storedSidebarOpen}
-            onToggle={() => {}}
-          />
+          <FilterSidebarSkeleton isOpen={storedSidebarOpen} onToggle={noop} />
           <ProfileSidebarSkeleton
             isOpen={storedProfileSidebarOpen}
-            onToggle={() => {}}
+            onToggle={noop}
           />
           <div
             className={`w-full pt-20 ${

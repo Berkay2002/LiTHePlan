@@ -18,6 +18,7 @@ import {
 
 const DESKTOP_BREAKPOINT_PX = 1024;
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
+const TERM_DROPPABLE_ID_PATTERN = /term-(\d+)(?:-period-\d+)?$/;
 
 function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
@@ -76,11 +77,9 @@ function ProfileEditPageContent() {
     const courseId = draggableId.split("-term")[0];
 
     // Extract term numbers from droppable IDs (now just term-X format)
-    const sourceTermMatch = source.droppableId.match(
-      /term-(\d+)(?:-period-\d+)?$/
-    );
+    const sourceTermMatch = source.droppableId.match(TERM_DROPPABLE_ID_PATTERN);
     const destTermMatch = destination.droppableId.match(
-      /term-(\d+)(?:-period-\d+)?$/
+      TERM_DROPPABLE_ID_PATTERN
     );
 
     if (!(sourceTermMatch && destTermMatch)) {

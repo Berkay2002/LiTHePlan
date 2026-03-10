@@ -79,3 +79,22 @@ Ran `codebase-scan.md` workflow to verify context accuracy.
 ## 2025-12-06 - Complete Memory Bank Migration
 
 Migrated all documentation from `memory-bank/` into `.agent/` structure.
+
+---
+
+## 2026-03-10 - app Lint Cleanup
+
+Focused the `app/**` lint pass on remaining non-API issues and brought the scope back to clean with targeted fixes only.
+
+### Updated
+
+- Ran targeted Ultracite autofix/formatting on `app/**` and kept the scope out of `app/api/**`
+- Fixed `app/global-error.tsx` by replacing the Sentry namespace import, adding `lang="en"` to `<html>`, and reformatting the file
+- Refactored `app/course/[courseId]/CoursePageClient.tsx` to remove empty callbacks, replace unstable list keys, avoid `Array(6)` placeholder generation, and extract helper sections to satisfy complexity limits without changing behavior
+- Refactored `app/course/[courseId]/page.tsx` metadata generation by extracting SEO description/keyword helpers, removing an unused variable, and preserving the existing metadata output shape
+- Cleaned `app/profile/[id]/page.tsx`, `app/profile/[id]/ProfilePageClient.tsx`, `app/profile/edit/page.tsx`, and `app/page.tsx` for optional chaining, callback hygiene, regex hoisting, accessibility, and complexity issues
+- Accepted formatter-only changes in other `app/**` files touched by the scoped Ultracite pass, including `app/.well-known/vercel/flags/route.ts`, `app/fonts/index.ts`, `app/layout.tsx`, `app/login/page.tsx`, `app/signup/page.tsx`, `app/globals.css`, and `app/sitemap.ts`
+
+### Verification
+
+- `npm exec -- ultracite check --max-diagnostics 200 app`

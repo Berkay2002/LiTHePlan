@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 
 // Revalidate sitemap once per day (ISR)
 // Course data is relatively static, no need for hourly updates
-export const revalidate = 86400; // 24 hours
+export const revalidate = 86_400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";

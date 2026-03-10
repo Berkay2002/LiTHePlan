@@ -25,7 +25,7 @@ export async function generateMetadata({
       .single();
 
     // If profile not found or not public, return generic metadata with noindex
-    if (!(profileData && profileData.is_public)) {
+    if (!profileData?.is_public) {
       return {
         title: "Profile Not Found",
         description: "This profile does not exist or is not publicly shared.",

@@ -21,6 +21,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { CourseFAQSchema } from "@/components/seo/CourseFAQSchema";
 import CourseStructuredData from "@/components/seo/CourseStructuredData";
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -37,7 +38,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
@@ -45,6 +45,141 @@ import type { Course } from "@/types/course";
 
 interface CoursePageClientProps {
   course: Course;
+}
+
+const RELATED_COURSE_SKELETON_KEYS = [
+  "related-course-skeleton-1",
+  "related-course-skeleton-2",
+  "related-course-skeleton-3",
+  "related-course-skeleton-4",
+  "related-course-skeleton-5",
+  "related-course-skeleton-6",
+] as const;
+
+const noop = () => undefined;
+
+const buildStableStringItems = (values: string[]) => {
+  const occurrences = new Map<string, number>();
+
+  return values.map((value) => {
+    const occurrence = (occurrences.get(value) ?? 0) + 1;
+    occurrences.set(value, occurrence);
+
+    return {
+      key: occurrence === 1 ? value : `${value}-${occurrence}`,
+      value,
+    };
+  });
+};
+
+function CourseConflictWarning({
+  conflicts,
+}: {
+  conflicts: ReturnType<typeof findCourseConflicts>;
+}) {
+  if (conflicts.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg p-4 mb-6">
+      <div className="flex items-start gap-3">
+        <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+        <div>
+          <p className="font-semibold text-destructive">Course Conflicts</p>
+          <p className="text-sm text-destructive/90 dark:text-destructive/80 mt-1">
+            This course conflicts with {conflicts.length} course
+            {conflicts.length > 1 ? "s" : ""} in your profile:{" "}
+            {conflicts
+              .map((conflict) => conflict.conflictingCourseId)
+              .join(", ")}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExaminationSection({
+  examination,
+}: {
+  examination: Course["examination"];
+}) {
+  if (!(Array.isArray(examination) && examination.length > 0)) {
+    return null;
+  }
+
+  const examinationItems = buildStableStringItems(examination);
+
+  return (
+    <Card className="bg-background border-border">
+      <CardHeader>
+        <CardTitle className="text-foreground">Examination</CardTitle>
+        <CardDescription>Assessment methods for this course</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-2">
+          {examinationItems.map((examItem) => (
+            <Badge
+              className="bg-muted/50 text-foreground border border-border/50 px-3 py-1.5 text-sm font-medium hover:bg-muted/70 transition-colors"
+              key={examItem.key}
+              variant="secondary"
+            >
+              {examItem.value}
+            </Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function RelatedCoursesSection({
+  course,
+  isLoadingRelated,
+  relatedCourses,
+}: {
+  course: Course;
+  isLoadingRelated: boolean;
+  relatedCourses: Course[];
+}) {
+  if (!isLoadingRelated && relatedCourses.length === 0) {
+    return null;
+  }
+
+  const encodedSubjectArea = encodeURIComponent(
+    (course.huvudomrade ?? "").split(",")[0].trim()
+  );
+
+  return (
+    <div className="mt-12 mb-20 sm:mb-12">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold">Related Courses</h2>
+        {!isLoadingRelated && relatedCourses.length > 0 && (
+          <Link href={`/?huvudomraden=${encodedSubjectArea}`}>
+            <Button size="sm" variant="outline">
+              <ExternalLink className="h-4 w-4 mr-2" />
+              View All Similar Courses
+            </Button>
+          </Link>
+        )}
+      </div>
+
+      {isLoadingRelated ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {RELATED_COURSE_SKELETON_KEYS.map((key) => (
+            <CourseCardSkeleton key={key} />
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0">
+          {relatedCourses.map((relatedCourse) => (
+            <CourseCard course={relatedCourse} key={relatedCourse.id} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function CoursePageContent({ course }: CoursePageClientProps) {
@@ -63,7 +198,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
   const profileTerm = state.current_profile
     ? (Object.entries(state.current_profile.terms).find(([_, termCourses]) =>
         termCourses.some((c) => c.id === course.id)
-      )?.[0] as '7' | '8' | '9' | undefined)
+      )?.[0] as "7" | "8" | "9" | undefined)
     : undefined;
   const isInProfile = !!profileTerm;
 
@@ -98,16 +233,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
     selectedCourse: Course,
     selectedTerm: 7 | 8 | 9
   ) => {
-    console.log(
-      "🔄 Term selected:",
-      selectedTerm,
-      "for course:",
-      selectedCourse.id
-    );
     setIsTermModalOpen(false);
-
-    // Add course with selected term
-    console.log("✅ Adding course with selected term");
     await addCourse(selectedCourse, selectedTerm);
   };
 
@@ -124,7 +250,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
     <PageLayout
       isMobileMenuOpen={false}
       navbarMode="main"
-      onMobileMenuToggle={() => {}}
+      onMobileMenuToggle={noop}
       onSearchChange={setSearchQuery}
       searchQuery={searchQuery}
     >
@@ -178,23 +304,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
           </div>
 
           {/* Conflict Warning */}
-          {conflicts.length > 0 && (
-            <div className="bg-destructive/10 dark:bg-destructive/20 border border-destructive/30 dark:border-destructive/40 rounded-lg p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                <div>
-                  <p className="font-semibold text-destructive">
-                    Course Conflicts
-                  </p>
-                  <p className="text-sm text-destructive/90 dark:text-destructive/80 mt-1">
-                    This course conflicts with {conflicts.length} course
-                    {conflicts.length > 1 ? "s" : ""} in your profile:{" "}
-                    {conflicts.map((c) => c.conflictingCourseId).join(", ")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
+          <CourseConflictWarning conflicts={conflicts} />
 
           {/* Course Content - Vertical Card Layout */}
           <div className="space-y-6">
@@ -252,32 +362,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
             </Card>
 
             {/* Examination */}
-            {Array.isArray(course.examination) &&
-              course.examination.length > 0 && (
-                <Card className="bg-background border-border">
-                  <CardHeader>
-                    <CardTitle className="text-foreground">
-                      Examination
-                    </CardTitle>
-                    <CardDescription>
-                      Assessment methods for this course
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {course.examination.map((exam, index) => (
-                        <Badge
-                          key={`${exam}-${index}`}
-                          variant="secondary"
-                          className="bg-muted/50 text-foreground border border-border/50 px-3 py-1.5 text-sm font-medium hover:bg-muted/70 transition-colors"
-                        >
-                          {exam}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+            <ExaminationSection examination={course.examination} />
 
             {/* Schedule Information */}
             <Card className="bg-background border-border">
@@ -312,10 +397,7 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                     label="Block"
                     value={formatBlocks(course.block)}
                   />
-                  <CourseMetadataRow
-                    label="Campus"
-                    value={course.campus}
-                  />
+                  <CourseMetadataRow label="Campus" value={course.campus} />
                 </div>
               </CardContent>
             </Card>
@@ -329,7 +411,8 @@ function CoursePageContent({ course }: CoursePageClientProps) {
                   </CardTitle>
                   <CardDescription>
                     This course is available for students in{" "}
-                    {allPrograms.length} program{allPrograms.length > 1 ? "s" : ""}
+                    {allPrograms.length} program
+                    {allPrograms.length > 1 ? "s" : ""}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -362,37 +445,11 @@ function CoursePageContent({ course }: CoursePageClientProps) {
           <Separator className="my-8" />
 
           {/* Related Courses */}
-          {(isLoadingRelated || relatedCourses.length > 0) && (
-            <div className="mt-12 mb-20 sm:mb-12">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">Related Courses</h2>
-                {!isLoadingRelated && relatedCourses.length > 0 && (
-                  <Link
-                    href={`/?huvudomraden=${encodeURIComponent((course.huvudomrade || "").split(",")[0].trim())}`}
-                  >
-                    <Button size="sm" variant="outline">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      View All Similar Courses
-                    </Button>
-                  </Link>
-                )}
-              </div>
-
-              {isLoadingRelated ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[...Array(6)].map((_, i) => (
-                    <CourseCardSkeleton key={i} />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0">
-                  {relatedCourses.map((relatedCourse) => (
-                    <CourseCard course={relatedCourse} key={relatedCourse.id} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <RelatedCoursesSection
+            course={course}
+            isLoadingRelated={isLoadingRelated}
+            relatedCourses={relatedCourses}
+          />
         </div>
       </div>
 

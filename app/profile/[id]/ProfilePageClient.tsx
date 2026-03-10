@@ -10,6 +10,54 @@ import type { StudentProfile } from "@/types/profile";
 
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
 
+type SharedProfilePayload = Omit<
+  StudentProfile,
+  "created_at" | "updated_at"
+> & {
+  created_at?: string;
+  updated_at?: string;
+};
+
+type SharedProfileResponse =
+  | SharedProfilePayload
+  | { data: SharedProfilePayload };
+
+const DEFAULT_PROFILE_TERMS: SharedProfilePayload["terms"] = {
+  7: [],
+  8: [],
+  9: [],
+};
+
+const DEFAULT_PROFILE_METADATA: SharedProfilePayload["metadata"] = {
+  total_credits: 0,
+  advanced_credits: 0,
+  is_valid: false,
+};
+
+const getProfileLoadErrorMessage = (status: number) =>
+  status === 404 ? "Profile not found" : "Failed to load profile";
+
+const unwrapSharedProfileResponse = (
+  responseData: SharedProfileResponse
+): SharedProfilePayload =>
+  "data" in responseData ? responseData.data : responseData;
+
+function normalizeSharedProfile(
+  profileData: SharedProfilePayload
+): StudentProfile {
+  return {
+    ...profileData,
+    terms: profileData.terms ?? DEFAULT_PROFILE_TERMS,
+    metadata: profileData.metadata ?? DEFAULT_PROFILE_METADATA,
+    created_at: profileData.created_at
+      ? new Date(profileData.created_at)
+      : new Date(),
+    updated_at: profileData.updated_at
+      ? new Date(profileData.updated_at)
+      : new Date(),
+  };
+}
+
 export default function ProfilePageClient({
   params,
 }: {
@@ -29,7 +77,9 @@ export default function ProfilePageClient({
 
   useEffect(() => {
     const loadProfile = async () => {
-      if (!profileId) return;
+      if (!profileId) {
+        return;
+      }
 
       try {
         setLoading(true);
@@ -38,38 +88,14 @@ export default function ProfilePageClient({
         const response = await fetch(`/api/profile/${profileId}`);
 
         if (!response.ok) {
-          if (response.status === 404) {
-            setError("Profile not found");
-          } else {
-            setError("Failed to load profile");
-          }
-          setLoading(false);
+          setError(getProfileLoadErrorMessage(response.status));
           return;
         }
 
-        const responseData = await response.json();
+        const responseData = (await response.json()) as SharedProfileResponse;
+        const profileData = unwrapSharedProfileResponse(responseData);
 
-        // Extract profile data from API response wrapper
-        const profileData = responseData.data || responseData;
-
-        // Ensure terms property exists with proper structure
-        const loadedProfile: StudentProfile = {
-          ...profileData,
-          terms: profileData.terms || { 7: [], 8: [], 9: [] },
-          metadata: profileData.metadata || {
-            total_credits: 0,
-            advanced_credits: 0,
-            is_valid: false,
-          },
-          created_at: profileData.created_at
-            ? new Date(profileData.created_at)
-            : new Date(),
-          updated_at: profileData.updated_at
-            ? new Date(profileData.updated_at)
-            : new Date(),
-        };
-
-        setProfile(loadedProfile);
+        setProfile(normalizeSharedProfile(profileData));
         setDatabaseId(profileId);
       } catch (err) {
         setError("Failed to load profile");

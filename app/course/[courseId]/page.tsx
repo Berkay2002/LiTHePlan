@@ -10,6 +10,97 @@ import CoursePageClient from "./CoursePageClient";
 // ISR: Revalidate every hour for fresh course data
 export const revalidate = 3600;
 
+const COURSE_NOT_FOUND_METADATA: Metadata = {
+  title: "Course Not Found",
+  description: "This course does not exist in our database.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+const COURSE_METADATA_FALLBACK: Metadata = {
+  title: "Course Details",
+  description:
+    "View course details at Linköping University using LiTHePlan, an unofficial student planning tool",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
+const getLevelText = (level: Course["level"]) =>
+  level === "avancerad nivå" ? "second-cycle" : "first-cycle";
+
+function buildCourseDescription(course: Course, courseId: string) {
+  const levelText = getLevelText(course.level);
+  const subjectArea = course.huvudomrade
+    ? course.huvudomrade.split(",")[0].trim()
+    : "Engineering";
+  const allPrograms = [...course.programs, ...(course.orientations ?? [])];
+  const topPrograms = allPrograms.slice(0, 2);
+  const baseParts = [
+    `${course.name} (${courseId})`,
+    `${course.credits}hp ${levelText} course`,
+    subjectArea,
+  ];
+  const additionalParts = [
+    `${course.campus} campus`,
+    topPrograms.length > 0 ? topPrograms.join(", ") : null,
+  ].filter((value): value is string => value !== null);
+
+  let description = `${baseParts.join(" - ")}. ${additionalParts.join(". ")}`;
+
+  if (description.length > 160) {
+    if (topPrograms.length > 0) {
+      description = `${baseParts.join(" - ")}. ${course.campus} campus`;
+    }
+
+    if (description.length > 160) {
+      description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course. ${course.campus} campus`;
+    }
+
+    if (description.length > 160) {
+      description = `${description.substring(0, 157)}...`;
+    }
+  }
+
+  if (description.length < 140 && course.examinator) {
+    const withExaminer = `${description}. ${course.examinator}`;
+    if (withExaminer.length <= 160) {
+      return withExaminer;
+    }
+  }
+
+  return description;
+}
+
+function buildCourseKeywords(course: Course, courseId: string) {
+  return [
+    courseId,
+    course.name,
+    `${course.name} ${courseId}`,
+    "Linköping University",
+    "Linköpings universitet",
+    "LiU",
+    "LiU course",
+    "course planning",
+    "master's program",
+    course.level,
+    course.campus,
+    `${course.credits}hp`,
+    ...course.programs,
+    ...(course.orientations ?? []),
+    ...(course.huvudomrade ? [course.huvudomrade] : []),
+    ...course.examination,
+    ...course.term.map((term: string) => `term ${term}`),
+    ...(course.examinator
+      ? [course.examinator, `${course.examinator} courses`]
+      : []),
+    ...(course.studierektor ? [course.studierektor] : []),
+  ].join(", ");
+}
+
 // Generate static params for all 339 courses at build time
 export async function generateStaticParams() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -60,107 +151,15 @@ export async function generateMetadata({
       .eq("id", courseId)
       .single();
 
-    if (!course) {
-      return {
-        title: "Course Not Found",
-        description: "This course does not exist in our database.",
-        robots: {
-          index: false,
-          follow: false,
-        },
-      };
+    const courseData = course as Course | null;
+
+    if (!courseData) {
+      return COURSE_NOT_FOUND_METADATA;
     }
 
-    // Build SEO-optimized description using English terminology
-    // Avoid generic "is a" pattern - use keyword-dense, action-oriented language
-    const levelText =
-      course.level === "avancerad nivå" 
-        ? "second-cycle" 
-        : "first-cycle";
-    const shortLevelText =
-      course.level === "avancerad nivå" ? "Advanced level" : "Basic level";
-    
-    // Feature subject area (huvudomrade) prominently - key for competitor ranking
-    const subjectArea = course.huvudomrade 
-      ? course.huvudomrade.split(",")[0].trim() // Use primary subject area only
-      : "Engineering";
-    
-    // Use top 2-3 program/orientation names instead of count for keyword density
-    const allPrograms = [...course.programs, ...(course.orientations || [])];
-    const topPrograms = allPrograms.slice(0, 2); // Limit to 2 for description length
-    
-    // Build keyword-rich description (target 150-160 chars)
-    // Pattern: "[Name] ([Code]) - [Credits]hp [cycle] course, [Subject]. [Campus]. [Programs]"
-    // Avoids generic "is a" while maintaining keyword density
-    const baseParts = [
-      `${course.name} (${courseId})`,
-      `${course.credits}hp ${levelText} course`,
-      subjectArea,
-    ];
-    
-    const additionalParts = [
-      `${course.campus} campus`,
-      topPrograms.length > 0 ? topPrograms.join(", ") : null,
-    ].filter(Boolean);
-    
-    // Build description with smart truncation
-    let description = `${baseParts.join(" - ")}. ${additionalParts.join(". ")}`;
-    
-    // Enforce 150-160 character optimal length for SERP snippets
-    if (description.length > 160) {
-      // Truncate programs first if needed
-      if (topPrograms.length > 0) {
-        description = `${baseParts.join(" - ")}. ${course.campus} campus`;
-      }
-      // Still too long? Truncate subject area
-      if (description.length > 160) {
-        description = `${course.name} (${courseId}) - ${course.credits}hp ${levelText} course. ${course.campus} campus`;
-      }
-      // Final truncation if still needed
-      if (description.length > 160) {
-        description = description.substring(0, 157) + "...";
-      }
-    }
-    
-    // Add examiner if we have room and it fits
-    if (description.length < 140 && course.examinator) {
-      const withExaminer = `${description}. ${course.examinator}`;
-      if (withExaminer.length <= 160) {
-        description = withExaminer;
-      }
-    }
-
-    const title = `${courseId} ${course.name} - LiTHePlan`;
-
-    // Enhanced keywords - add orientations (specializations) and study director
-    // Supports exact match queries like "Molecular Environmental Toxicology NBIC60"
-    // and specialization searches like "Computer Graphics courses LiU"
-    const keywordsArray = [
-      courseId,
-      course.name,
-      `${course.name} ${courseId}`, // Combined course name + code for queries like "Advanced Programming TSEA26"
-      "Linköping University",
-      "Linköpings universitet",
-      "LiU",
-      "LiU course",
-      "course planning",
-      "master's program",
-      course.level,
-      course.campus,
-      `${course.credits}hp`,
-      ...course.programs,
-      ...(course.orientations || []), // High-value specialization keywords
-      ...(course.huvudomrade ? [course.huvudomrade] : []),
-      ...course.examination,
-      ...course.term.map((t: string) => `term ${t}`),
-      ...(course.examinator
-        ? [course.examinator, `${course.examinator} courses`]
-        : []),
-      ...(course.studierektor ? [course.studierektor] : []), // Study director as secondary authority signal
-    ];
-
-    // Convert to comma-separated string
-    const keywords = keywordsArray.join(", ");
+    const description = buildCourseDescription(courseData, courseId);
+    const title = `${courseId} ${courseData.name} - LiTHePlan`;
+    const keywords = buildCourseKeywords(courseData, courseId);
 
     return {
       title,
@@ -187,16 +186,7 @@ export async function generateMetadata({
     };
   } catch (error) {
     console.error("Error generating course metadata:", error);
-
-    return {
-      title: "Course Details",
-      description:
-        "View course details at Linköping University using LiTHePlan, an unofficial student planning tool",
-      robots: {
-        index: false,
-        follow: false,
-      },
-    };
+    return COURSE_METADATA_FALLBACK;
   }
 }
 

@@ -9,7 +9,10 @@ import "./globals.css";
 import { JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -80,7 +83,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("font-mono", jetbrainsMono.variable)}>
+    <html
+      className={cn("font-mono", jetbrainsMono.variable)}
+      lang="en"
+      suppressHydrationWarning
+    >
       <head>
         <StructuredData />
       </head>
