@@ -42,33 +42,8 @@ export function LoginForm({
     }
   };
 
-  // Helper function to check if input is email or username
   const isEmail = (input: string): boolean =>
-    input.includes("@") && input.includes(".");
-
-  // Helper function to get email from username
-  const getEmailFromUsername = async (
-    username: string
-  ): Promise<string | null> => {
-    const supabase = getSupabaseClient();
-    if (!supabase) {
-      return null;
-    }
-
-    try {
-      const { data, error } = await supabase.rpc("get_email_from_username", {
-        input_username: username,
-      });
-
-      if (error || !data) {
-        return null;
-      }
-
-      return data as string;
-    } catch {
-      return null;
-    }
-  };
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,9 +57,7 @@ export function LoginForm({
     }
 
     try {
-      let result;
       const normalizedIdentity = emailOrUsername.trim();
-      let emailToUse = normalizedIdentity;
 
       if (isSignup) {
         // For signup, emailOrUsername should be an email
@@ -100,7 +73,7 @@ export function LoginForm({
           return;
         }
 
-        result = await supabase.auth.signUp({
+        const result = await supabase.auth.signUp({
           email: normalizeEmail(normalizedIdentity),
           password,
           options: {
@@ -109,30 +82,31 @@ export function LoginForm({
             },
           },
         });
-      } else {
-        // For login, check if input is username or email
-        if (!isEmail(normalizedIdentity)) {
-          // It's a username, look up the email
-          const lookedUpEmail =
-            await getEmailFromUsername(normalizedIdentity);
-          if (!lookedUpEmail) {
-            setError(INVALID_LOGIN_MESSAGE);
-            setLoading(false);
-            return;
-          }
-          emailToUse = lookedUpEmail;
-        } else {
-          emailToUse = normalizeEmail(normalizedIdentity);
+
+        if (result.error) {
+          setError(result.error.message);
+          return;
         }
 
-        result = await supabase.auth.signInWithPassword({
-          email: normalizeEmail(emailToUse),
-          password,
-        });
+        router.push("/");
+        router.refresh();
+        return;
       }
 
-      if (result.error) {
-        setError(isSignup ? result.error.message : INVALID_LOGIN_MESSAGE);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          identifier: normalizedIdentity,
+          password,
+        }),
+      });
+      const payload = (await response.json()) as { error?: string };
+
+      if (!response.ok) {
+        setError(payload.error ?? INVALID_LOGIN_MESSAGE);
       } else {
         router.push("/");
         router.refresh();

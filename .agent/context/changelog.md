@@ -1,5 +1,26 @@
 # Changelog
 
+## 2026-03-11 - Supabase Hardening Alignment Completed
+
+Aligned the local app and generated types with the already-applied Supabase hardening migration, then re-verified the build and advisor state.
+
+### Updated
+
+- Replaced `types/database.ts` with fresh Supabase-generated types from the live project so `public.courses.orientations` and the updated `get_related_courses` RPC contract are reflected locally
+- Confirmed the auth pages use `components/login-form.tsx`, which posts to `POST /api/auth/login` for email-or-username sign-in, while the older `components/auth/LoginForm.tsx` remains unused
+- Verified the server login route resolves usernames through `utils/supabase/admin.ts` and returns the same invalid-credentials response for unknown usernames and bad passwords, avoiding username-existence leaks
+- Verified the only remaining browser-side `profiles` read is the signed-in user's avatar lookup in `components/shared/DynamicNavbar.tsx`, which still works with owner-only `profiles` `SELECT`
+- Updated `.agent/context/architecture.md` and `.agent/context/commands.md` to document the server-only admin client, `SUPABASE_SERVICE_ROLE_KEY`, the tracked migration path, and the live type-generation workflow
+
+### Verification
+
+- `npm run typecheck`
+- `npm run build`
+- Supabase security advisors now only report the accepted auth warnings for OTP expiry and leaked-password protection
+- Supabase performance advisors no longer report exposed `public` backup tables; the remaining backup-table notices are limited to `archive.*` tables lacking primary keys
+
+---
+
 ## 2026-03-11 - Build Fixes And Dedicated Typecheck
 
 Made the production build pass locally and added a dedicated TypeScript validation command for faster feedback outside `next build`.

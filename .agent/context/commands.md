@@ -16,6 +16,8 @@ npm install
 npm run dev
 ```
 
+For username login and privileged profile lookups, `.env.local` also needs `SUPABASE_SERVICE_ROLE_KEY` on the server.
+
 ## Development
 
 ```powershell
@@ -29,6 +31,26 @@ npx tsc --watch --noEmit  # Type checking in separate terminal
 ```powershell
 npm run build      # Production build + TypeScript check
 npm start          # Serve production build
+```
+
+## Supabase Schema Workflow
+
+Tracked migration for the current hardening pass:
+
+```text
+supabase/migrations/20260311100000_harden_profiles_and_align_courses.sql
+```
+
+Regenerate `types/database.ts` from the live Supabase project after schema or RPC changes:
+
+```text
+Use Supabase MCP: generate TypeScript types and replace types/database.ts with the returned output
+```
+
+Equivalent CLI fallback if MCP is unavailable:
+
+```powershell
+npx supabase gen types typescript --project-id <project-ref> --schema public | Out-File -Encoding utf8 types/database.ts
 ```
 
 ## Code Quality
@@ -57,11 +79,19 @@ Required in `.env.local`:
 
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx...
+# or NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
+SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
 SENTRY_AUTH_TOKEN=sntrys_xxx
 UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
 UPSTASH_REDIS_REST_TOKEN=AXw-xxx
 ```
+
+Auth notes:
+
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is preferred; `NEXT_PUBLIC_SUPABASE_ANON_KEY` still works as a fallback in `utils/supabase/config.ts`
+- `SUPABASE_SERVICE_ROLE_KEY` must only be used from server-only modules such as `utils/supabase/admin.ts`
+- Login form submissions now post to `/api/auth/login`, which supports both email and username identifiers without exposing username existence
 
 ## Testing Checklist (Manual)
 
