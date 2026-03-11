@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Info, Minus, X } from "lucide-react";
+import { Check, Info, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -311,7 +311,7 @@ function FilterSectionHeader({
   return (
     <div className={cn("mb-3 flex items-center gap-2", className)}>
       <div className="h-px flex-1 bg-gradient-to-r from-sidebar-border/80 to-transparent" />
-      <h3 className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-sidebar-foreground/55">
+      <h3 className="flex items-center text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-sidebar-foreground/55">
         {children}
       </h3>
       <div className="h-px flex-1 bg-gradient-to-l from-sidebar-border/80 to-transparent" />
@@ -404,32 +404,10 @@ export function FilterPanelControls({
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
-      {/* Header with Reset */}
-      {onResetFilters && layout === "sidebar" ? (
-        <FilterSection className="flex items-center justify-between gap-3">
-          <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/40">
-            Filter Options
-          </span>
-          <Button
-            className={cn(
-              "h-7 px-3 text-xs transition-all duration-200",
-              !hasActiveFilters && "pointer-events-none opacity-40"
-            )}
-            onClick={onResetFilters}
-            size="sm"
-            type="button"
-            variant="ghost"
-          >
-            <Minus className="mr-1 h-3 w-3" />
-            Reset
-          </Button>
-        </FilterSection>
-      ) : null}
-
       {/* Program Section */}
       <FilterSection delay={50}>
-        <div className="flex items-center gap-2">
-          <FilterSectionHeader>Program</FilterSectionHeader>
+        <FilterSectionHeader className="mb-3">
+          Program
           <TooltipProvider>
             <Tooltip
               key={isMobile ? "mobile" : "desktop"}
@@ -439,7 +417,7 @@ export function FilterPanelControls({
                 render={
                   <button
                     aria-label="Show program info"
-                    className="flex h-5 w-5 items-center justify-center rounded-full text-sidebar-foreground/40 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground/70"
+                    className="ml-2 flex h-5 w-5 items-center justify-center rounded-full text-sidebar-foreground/40 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground/70"
                     onBlur={() => {
                       if (isMobile) {
                         setShowProgramTooltip(false);
@@ -464,10 +442,10 @@ export function FilterPanelControls({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </div>
+        </FilterSectionHeader>
 
         <MultiSelect
-          className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground/60"
+          className="text-sidebar-foreground [&>[role='combobox']]:min-h-11 [&>[role='combobox']]:rounded-xl [&>[role='combobox']]:border [&>[role='combobox']]:border-sidebar-border/60 [&>[role='combobox']]:bg-sidebar-accent/30 [&>[role='combobox']]:shadow-sm [&>[role='combobox']]:hover:border-sidebar-border [&>[role='combobox']]:hover:bg-sidebar-accent/50 [&_span.text-muted-foreground]:text-sidebar-foreground/60"
           defaultValue={filterState.programs}
           maxCount={0}
           onValueChange={(values) => {
@@ -486,7 +464,7 @@ export function FilterPanelControls({
       <FilterSection delay={100}>
         <FilterSectionHeader>Huvudområden</FilterSectionHeader>
         <MultiSelect
-          className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground/60"
+          className="text-sidebar-foreground [&>[role='combobox']]:min-h-11 [&>[role='combobox']]:rounded-xl [&>[role='combobox']]:border [&>[role='combobox']]:border-sidebar-border/60 [&>[role='combobox']]:bg-sidebar-accent/30 [&>[role='combobox']]:shadow-sm [&>[role='combobox']]:hover:border-sidebar-border [&>[role='combobox']]:hover:bg-sidebar-accent/50 [&_span.text-muted-foreground]:text-sidebar-foreground/60"
           defaultValue={filterState.huvudomraden}
           maxCount={1}
           onValueChange={(values) => {
