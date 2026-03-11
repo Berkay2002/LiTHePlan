@@ -1,10 +1,9 @@
 "use client";
 
-import { Info } from "lucide-react";
+import { Check, Info, Minus, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -26,6 +25,7 @@ const examinationOptions = [
 ] as const;
 
 type FilterSectionLayout = "card" | "sidebar";
+type ExaminationFilterMode = "include" | "exclude" | "ignore";
 
 interface CourseFilterOptions {
   block: number[];
@@ -38,7 +38,7 @@ interface CourseFilterOptions {
   term: number[];
 }
 
-export type ExaminationFilterMode = "include" | "exclude" | "ignore";
+export type { ExaminationFilterMode };
 
 export interface FilterState {
   block: number[];
@@ -182,32 +182,164 @@ const toggleFilterValue = (
   return nextFilters;
 };
 
-const headingClassNames: Record<FilterSectionLayout, string> = {
-  card: "text-xs",
-  sidebar: "text-[0.7rem]",
-};
-
-const sectionGridClassNames: Record<FilterSectionLayout, string> = {
-  card: "grid-cols-1 xl:grid-cols-2",
-  sidebar: "grid-cols-1 xl:grid-cols-2",
-};
-
-function FilterSectionHeading({
-  children,
-  layout,
+// Animated Examination Toggle Component
+function ExaminationToggle({
+  mode,
+  onChange,
+  label,
 }: {
-  children: string;
-  layout: FilterSectionLayout;
+  mode: ExaminationFilterMode;
+  onChange: (mode: Exclude<ExaminationFilterMode, "ignore">) => void;
+  label: string;
 }) {
   return (
-    <h3
+    <div className="group flex items-center justify-between gap-3 py-2">
+      <span className="text-sm font-medium text-sidebar-foreground/90 transition-colors group-hover:text-sidebar-foreground">
+        {label}
+      </span>
+      <div className="relative flex items-center rounded-lg bg-sidebar-accent/40 p-1 ring-1 ring-sidebar-border/50">
+        {/* Sliding background indicator */}
+        <div
+          className={cn(
+            "absolute h-6 w-14 rounded-md bg-background shadow-sm ring-1 ring-sidebar-border/30 transition-all duration-200 ease-out",
+            mode === "include" && "left-1 translate-x-0",
+            mode === "exclude" && "left-1 translate-x-[3.5rem]",
+            mode === "ignore" && "opacity-0 scale-90"
+          )}
+        />
+
+        <button
+          aria-pressed={mode === "include"}
+          className={cn(
+            "relative z-10 flex h-6 w-14 items-center justify-center gap-1 rounded-md text-xs font-medium transition-colors duration-200",
+            mode === "include"
+              ? "text-green-700"
+              : "text-sidebar-foreground/50 hover:text-sidebar-foreground/80"
+          )}
+          onClick={() => onChange("include")}
+          type="button"
+        >
+          <Check className="h-3 w-3" />
+          <span>In</span>
+        </button>
+
+        <button
+          aria-pressed={mode === "exclude"}
+          className={cn(
+            "relative z-10 flex h-6 w-14 items-center justify-center gap-1 rounded-md text-xs font-medium transition-colors duration-200",
+            mode === "exclude"
+              ? "text-red-700"
+              : "text-sidebar-foreground/50 hover:text-sidebar-foreground/80"
+          )}
+          onClick={() => onChange("exclude")}
+          type="button"
+        >
+          <X className="h-3 w-3" />
+          <span>Out</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Animated Checkbox Option Component
+function FilterCheckboxOption({
+  checked,
+  id,
+  label,
+  onChange,
+}: {
+  checked: boolean;
+  id: string;
+  label: React.ReactNode;
+  onChange: () => void;
+}) {
+  return (
+    <label
       className={cn(
-        "font-semibold uppercase tracking-[0.2em] text-sidebar-foreground",
-        headingClassNames[layout]
+        "group flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 transition-all duration-150",
+        "hover:bg-sidebar-accent/30",
+        checked && "bg-sidebar-accent/20"
       )}
+      htmlFor={id}
+    >
+      <div
+        className={cn(
+          "relative flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all duration-200",
+          checked
+            ? "border-primary bg-primary"
+            : "border-sidebar-border/70 bg-background group-hover:border-sidebar-border"
+        )}
+      >
+        <Check
+          className={cn(
+            "h-3 w-3 text-primary-foreground transition-all duration-200",
+            checked ? "scale-100 opacity-100" : "scale-50 opacity-0"
+          )}
+          strokeWidth={3}
+        />
+      </div>
+      <input
+        checked={checked}
+        className="sr-only"
+        id={id}
+        onChange={onChange}
+        type="checkbox"
+      />
+      <span
+        className={cn(
+          "text-sm font-medium leading-none transition-colors duration-150",
+          checked
+            ? "text-sidebar-foreground"
+            : "text-sidebar-foreground/70 group-hover:text-sidebar-foreground/90"
+        )}
+      >
+        {label}
+      </span>
+    </label>
+  );
+}
+
+// Section Header Component
+function FilterSectionHeader({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("mb-3 flex items-center gap-2", className)}>
+      <div className="h-px flex-1 bg-gradient-to-r from-sidebar-border/80 to-transparent" />
+      <h3 className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-sidebar-foreground/55">
+        {children}
+      </h3>
+      <div className="h-px flex-1 bg-gradient-to-l from-sidebar-border/80 to-transparent" />
+    </div>
+  );
+}
+
+// Filter Section Container
+function FilterSection({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  return (
+    <section
+      className={cn("animate-fade-in-up opacity-0", className)}
+      style={{
+        animationDelay: `${delay}ms`,
+        animationDuration: "400ms",
+        animationFillMode: "forwards",
+      }}
     >
       {children}
-    </h3>
+    </section>
   );
 }
 
@@ -271,29 +403,33 @@ export function FilterPanelControls({
   const hasActiveFilters = hasActiveFilterValues(filterState);
 
   return (
-    <div className={cn("flex flex-col gap-5", className)}>
+    <div className={cn("flex flex-col gap-6", className)}>
+      {/* Header with Reset */}
       {onResetFilters && layout === "sidebar" ? (
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-xs uppercase tracking-[0.18em] text-sidebar-foreground/55">
-            Filter stack
+        <FilterSection className="flex items-center justify-between gap-3">
+          <span className="text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-sidebar-foreground/40">
+            Filter Options
           </span>
           <Button
             className={cn(
-              !hasActiveFilters && "pointer-events-none opacity-50"
+              "h-7 px-3 text-xs transition-all duration-200",
+              !hasActiveFilters && "pointer-events-none opacity-40"
             )}
             onClick={onResetFilters}
             size="sm"
             type="button"
             variant="ghost"
           >
+            <Minus className="mr-1 h-3 w-3" />
             Reset
           </Button>
-        </div>
+        </FilterSection>
       ) : null}
 
-      <section className="flex flex-col gap-3">
+      {/* Program Section */}
+      <FilterSection delay={50}>
         <div className="flex items-center gap-2">
-          <FilterSectionHeading layout={layout}>Program</FilterSectionHeading>
+          <FilterSectionHeader>Program</FilterSectionHeader>
           <TooltipProvider>
             <Tooltip
               key={isMobile ? "mobile" : "desktop"}
@@ -303,7 +439,7 @@ export function FilterPanelControls({
                 render={
                   <button
                     aria-label="Show program info"
-                    className="flex items-center justify-center rounded-md p-1 text-sidebar-foreground/70 transition-colors duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                    className="flex h-5 w-5 items-center justify-center rounded-full text-sidebar-foreground/40 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground/70"
                     onBlur={() => {
                       if (isMobile) {
                         setShowProgramTooltip(false);
@@ -316,12 +452,12 @@ export function FilterPanelControls({
                     }}
                     type="button"
                   >
-                    <Info className="size-4" />
+                    <Info className="h-3.5 w-3.5" />
                   </button>
                 }
               />
               <TooltipContent sideOffset={4}>
-                <p>
+                <p className="max-w-[200px] text-xs">
                   Program indicates the main degree program, such as Media
                   Technology and Engineering.
                 </p>
@@ -331,7 +467,7 @@ export function FilterPanelControls({
         </div>
 
         <MultiSelect
-          className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
+          className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground/60"
           defaultValue={filterState.programs}
           maxCount={0}
           onValueChange={(values) => {
@@ -344,14 +480,13 @@ export function FilterPanelControls({
           placeholder="Select programs..."
           variant="secondary"
         />
-      </section>
+      </FilterSection>
 
-      <section className="flex flex-col gap-3">
-        <FilterSectionHeading layout={layout}>
-          Huvudomraden
-        </FilterSectionHeading>
+      {/* Huvudomraden Section */}
+      <FilterSection delay={100}>
+        <FilterSectionHeader>Huvudområden</FilterSectionHeader>
         <MultiSelect
-          className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground"
+          className="text-sidebar-foreground [&_span.text-muted-foreground]:text-sidebar-foreground/60"
           defaultValue={filterState.huvudomraden}
           maxCount={1}
           onValueChange={(values) => {
@@ -361,231 +496,159 @@ export function FilterPanelControls({
             label: huvudomrade,
             value: huvudomrade,
           }))}
-          placeholder="Select huvudomraden..."
+          placeholder="Select huvudområden..."
           variant="secondary"
         />
-      </section>
+      </FilterSection>
 
-      <section className="flex flex-col gap-3">
-        <FilterSectionHeading layout={layout}>Examination</FilterSectionHeading>
-        <div className="flex flex-col gap-2 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/20 p-3">
+      {/* Examination Section with Animated Toggles */}
+      <FilterSection delay={150}>
+        <FilterSectionHeader>Examination</FilterSectionHeader>
+        <div className="rounded-xl border border-sidebar-border/40 bg-sidebar-accent/15 p-4">
           {examinationOptions.map((option) => {
             const mode = filterState.examination[option.value] ?? "ignore";
             return (
-              <div
-                className="flex items-center justify-between gap-2"
+              <ExaminationToggle
                 key={option.value}
-              >
-                <span className="text-sm font-medium text-sidebar-foreground">
-                  {option.label}
-                </span>
-                <div className="flex items-center gap-1">
-                  <Button
-                    className={cn(
-                      "h-7 px-2 text-xs",
-                      mode === "include" &&
-                        "bg-green-600 text-white hover:bg-green-700"
-                    )}
-                    onClick={() => {
-                      handleExaminationChange(option.value, "include");
-                    }}
-                    size="sm"
-                    type="button"
-                    variant={mode === "include" ? "default" : "outline"}
-                  >
-                    Include
-                  </Button>
-                  <Button
-                    className={cn(
-                      "h-7 px-2 text-xs",
-                      mode === "exclude" &&
-                        "bg-red-600 text-white hover:bg-red-700"
-                    )}
-                    onClick={() => {
-                      handleExaminationChange(option.value, "exclude");
-                    }}
-                    size="sm"
-                    type="button"
-                    variant={mode === "exclude" ? "default" : "outline"}
-                  >
-                    Exclude
-                  </Button>
-                </div>
-              </div>
+                label={option.label}
+                mode={mode}
+                onChange={(newMode) => {
+                  handleExaminationChange(option.value, newMode);
+                }}
+              />
             );
           })}
         </div>
-      </section>
+      </FilterSection>
 
-      <div className={cn("grid gap-5", sectionGridClassNames[layout])}>
-        <section className="flex flex-col gap-3">
-          <FilterSectionHeading layout={layout}>Level</FilterSectionHeading>
-          <div className="grid gap-3">
+      {/* Level & Study Pace Grid */}
+      <FilterSection className="grid gap-6 sm:grid-cols-2" delay={200}>
+        <div>
+          <FilterSectionHeader>Level</FilterSectionHeader>
+          <div className="space-y-1">
             {filterOptions.level.map((level) => {
               const inputId = `${idPrefix}-level-${level}`;
               return (
-                <div className="group flex items-center gap-3" key={inputId}>
-                  <Checkbox
-                    checked={filterState.level.includes(level)}
-                    className="shrink-0 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
-                    id={inputId}
-                    onCheckedChange={() => {
-                      handleCheckboxChange("level", level);
-                    }}
-                  />
-                  <label
-                    className="cursor-pointer text-sm font-medium leading-none text-sidebar-foreground transition-colors group-hover:text-primary"
-                    htmlFor={inputId}
-                  >
-                    {level === "grundnivå" ? "Basic" : "Advanced"}
-                  </label>
-                </div>
+                <FilterCheckboxOption
+                  checked={filterState.level.includes(level)}
+                  id={inputId}
+                  key={inputId}
+                  label={level === "grundnivå" ? "Basic" : "Advanced"}
+                  onChange={() => {
+                    handleCheckboxChange("level", level);
+                  }}
+                />
               );
             })}
           </div>
-        </section>
+        </div>
 
-        <section className="flex flex-col gap-3">
-          <FilterSectionHeading layout={layout}>
-            Study Pace
-          </FilterSectionHeading>
-          <div className="grid gap-3">
+        <div>
+          <FilterSectionHeader>Study Pace</FilterSectionHeader>
+          <div className="space-y-1">
             {filterOptions.pace.map((pace) => {
               const inputId = `${idPrefix}-pace-${pace}`;
               return (
-                <div className="group flex items-center gap-3" key={inputId}>
-                  <Checkbox
-                    checked={filterState.pace.includes(pace)}
-                    className="shrink-0 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
-                    id={inputId}
-                    onCheckedChange={() => {
-                      handleCheckboxChange("pace", pace);
-                    }}
-                  />
-                  <label
-                    className="cursor-pointer text-sm font-medium leading-none text-sidebar-foreground transition-colors group-hover:text-primary"
-                    htmlFor={inputId}
-                  >
-                    {pace}
-                  </label>
-                </div>
+                <FilterCheckboxOption
+                  checked={filterState.pace.includes(pace)}
+                  id={inputId}
+                  key={inputId}
+                  label={pace}
+                  onChange={() => {
+                    handleCheckboxChange("pace", pace);
+                  }}
+                />
               );
             })}
           </div>
-        </section>
-      </div>
+        </div>
+      </FilterSection>
 
-      <div className={cn("grid gap-5", sectionGridClassNames[layout])}>
-        <section className="flex flex-col gap-3">
-          <FilterSectionHeading layout={layout}>Period</FilterSectionHeading>
-          <div className="grid gap-3">
+      {/* Period & Term Grid */}
+      <FilterSection className="grid gap-6 sm:grid-cols-2" delay={250}>
+        <div>
+          <FilterSectionHeader>Period</FilterSectionHeader>
+          <div className="space-y-1">
             {filterOptions.period.map((period) => {
               const inputId = `${idPrefix}-period-${period}`;
               return (
-                <div className="group flex items-center gap-3" key={inputId}>
-                  <Checkbox
-                    checked={filterState.period.includes(period)}
-                    className="shrink-0 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
-                    id={inputId}
-                    onCheckedChange={() => {
-                      handleCheckboxChange("period", period);
-                    }}
-                  />
-                  <label
-                    className="cursor-pointer text-sm font-medium leading-none text-sidebar-foreground transition-colors group-hover:text-primary"
-                    htmlFor={inputId}
-                  >
-                    {period}
-                  </label>
-                </div>
+                <FilterCheckboxOption
+                  checked={filterState.period.includes(period)}
+                  id={inputId}
+                  key={inputId}
+                  label={`Period ${period}`}
+                  onChange={() => {
+                    handleCheckboxChange("period", period);
+                  }}
+                />
               );
             })}
           </div>
-        </section>
+        </div>
 
-        <section className="flex flex-col gap-3">
-          <FilterSectionHeading layout={layout}>Term</FilterSectionHeading>
-          <div className="grid gap-3">
+        <div>
+          <FilterSectionHeader>Term</FilterSectionHeader>
+          <div className="space-y-1">
             {filterOptions.term.map((term) => {
               const inputId = `${idPrefix}-term-${term}`;
               return (
-                <div className="group flex items-center gap-3" key={inputId}>
-                  <Checkbox
-                    checked={filterState.term.includes(term)}
-                    className="shrink-0 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
-                    id={inputId}
-                    onCheckedChange={() => {
-                      handleCheckboxChange("term", term);
-                    }}
-                  />
-                  <label
-                    className="cursor-pointer text-sm font-medium leading-none text-sidebar-foreground transition-colors group-hover:text-primary"
-                    htmlFor={inputId}
-                  >
-                    {term === 7 ? "7 & 9" : term}
-                  </label>
-                </div>
+                <FilterCheckboxOption
+                  checked={filterState.term.includes(term)}
+                  id={inputId}
+                  key={inputId}
+                  label={term === 7 ? "7 & 9" : `${term}`}
+                  onChange={() => {
+                    handleCheckboxChange("term", term);
+                  }}
+                />
               );
             })}
           </div>
-        </section>
-      </div>
+        </div>
+      </FilterSection>
 
-      <div className={cn("grid gap-5", sectionGridClassNames[layout])}>
-        <section className="flex flex-col gap-3">
-          <FilterSectionHeading layout={layout}>Campus</FilterSectionHeading>
-          <div className="grid gap-3">
+      {/* Campus & Block Grid */}
+      <FilterSection className="grid gap-6 sm:grid-cols-2" delay={300}>
+        <div>
+          <FilterSectionHeader>Campus</FilterSectionHeader>
+          <div className="space-y-1">
             {filterOptions.campus.map((campus) => {
               const inputId = `${idPrefix}-campus-${campus}`;
               return (
-                <div className="group flex items-center gap-3" key={inputId}>
-                  <Checkbox
-                    checked={filterState.campus.includes(campus)}
-                    className="shrink-0 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
-                    id={inputId}
-                    onCheckedChange={() => {
-                      handleCheckboxChange("campus", campus);
-                    }}
-                  />
-                  <label
-                    className="cursor-pointer text-sm font-medium leading-none text-sidebar-foreground transition-colors group-hover:text-primary"
-                    htmlFor={inputId}
-                  >
-                    {campus}
-                  </label>
-                </div>
+                <FilterCheckboxOption
+                  checked={filterState.campus.includes(campus)}
+                  id={inputId}
+                  key={inputId}
+                  label={campus}
+                  onChange={() => {
+                    handleCheckboxChange("campus", campus);
+                  }}
+                />
               );
             })}
           </div>
-        </section>
+        </div>
 
-        <section className="flex flex-col gap-3">
-          <FilterSectionHeading layout={layout}>Block</FilterSectionHeading>
-          <div className="grid gap-3">
+        <div>
+          <FilterSectionHeader>Block</FilterSectionHeader>
+          <div className="space-y-1">
             {filterOptions.block.map((block) => {
               const inputId = `${idPrefix}-block-${block}`;
               return (
-                <div className="group flex items-center gap-3" key={inputId}>
-                  <Checkbox
-                    checked={filterState.block.includes(block)}
-                    className="shrink-0 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
-                    id={inputId}
-                    onCheckedChange={() => {
-                      handleCheckboxChange("block", block);
-                    }}
-                  />
-                  <label
-                    className="cursor-pointer text-sm font-medium leading-none text-sidebar-foreground transition-colors group-hover:text-primary"
-                    htmlFor={inputId}
-                  >
-                    {block}
-                  </label>
-                </div>
+                <FilterCheckboxOption
+                  checked={filterState.block.includes(block)}
+                  id={inputId}
+                  key={inputId}
+                  label={`Block ${block}`}
+                  onChange={() => {
+                    handleCheckboxChange("block", block);
+                  }}
+                />
               );
             })}
           </div>
-        </section>
-      </div>
+        </div>
+      </FilterSection>
     </div>
   );
 }
