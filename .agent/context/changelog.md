@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-03-11 - MultiSelect Compact Summary Fix
+
+Fixed the custom `components/ui/MultiSelect.tsx` behavior for dense filter UIs that pass `maxCount={0}`.
+
+### Updated
+
+- Added an explicit compact-summary mode so `maxCount={0}` now renders a single count badge like `2 selections` instead of falling through to the awkward `+ N more` overflow chip
+- Guarded the overflow-trimming path so the summary-only mode no longer routes through a zero-length slice
+- Kept the existing per-option badge rendering for positive `maxCount` values and reused the same animation hooks and variant styling
+- Updated `.agent/context/conventions.md` to document the `maxCount={0}` contract for future UI work
+
+### Verification
+
+- `npm run typecheck`
+- `npm run build`
+
+---
+
 ## 2026-03-11 - Conflict Resolution Modal Shell Alignment And Mobile Gutters
 
 Adjusted the conflict modal shell so its radius, spacing, and close affordance align cleanly on both desktop and mobile.

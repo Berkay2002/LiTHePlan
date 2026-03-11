@@ -480,6 +480,14 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
     };
 
     const responsiveSettings = getResponsiveSettings();
+    const visibleBadgeCount = Math.max(responsiveSettings.maxCount, 0);
+    const isSummaryOnlyMode = visibleBadgeCount === 0;
+    const hiddenSelectionCount = Math.max(
+      selectedValues.length - visibleBadgeCount,
+      0
+    );
+    const selectionSummaryText =
+      selectedValues.length === 1 ? "selection" : "selections";
 
     const getBadgeAnimationClass = () => {
       if (animationConfig?.badgeAnimation) {
@@ -639,11 +647,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
     };
 
     const clearExtraOptions = () => {
-      if (disabled) return;
-      const newSelectedValues = selectedValues.slice(
-        0,
-        responsiveSettings.maxCount
-      );
+      if (disabled || hiddenSelectionCount === 0 || isSummaryOnlyMode) return;
+      const newSelectedValues = selectedValues.slice(0, visibleBadgeCount);
       setSelectedValues(newSelectedValues);
       onValueChange(newSelectedValues);
     };
@@ -833,101 +838,131 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                         : {}
                     }
                   >
-                    {selectedValues
-                      .slice(0, responsiveSettings.maxCount)
-                      .map((value) => {
-                        const option = getOptionByValue(value);
-                        const IconComponent = option?.icon;
-                        const customStyle = option?.style;
-                        if (!option) {
-                          return null;
-                        }
-                        const badgeStyle: React.CSSProperties = {
-                          animationDuration: `${animation}s`,
-                          ...(customStyle?.badgeColor && {
-                            backgroundColor: customStyle.badgeColor,
-                          }),
-                          ...(customStyle?.gradient && {
-                            background: customStyle.gradient,
-                            color: "white",
-                          }),
-                        };
-                        return (
-                          <Badge
-                            className={cn(
-                              getBadgeAnimationClass(),
-                              multiSelectVariants({ variant }),
-                              customStyle?.gradient &&
-                                "text-white border-transparent",
-                              responsiveSettings.compactMode &&
-                                "text-xs px-1.5 py-0.5",
-                              screenSize === "mobile" &&
-                                "max-w-[120px] truncate",
-                              singleLine && "shrink-0 whitespace-nowrap",
-                              "[&>svg]:pointer-events-auto"
-                            )}
-                            key={value}
-                            style={{
-                              ...badgeStyle,
-                              animationDuration: `${
-                                animationConfig?.duration || animation
-                              }s`,
-                              animationDelay: `${animationConfig?.delay || 0}s`,
-                            }}
-                          >
-                            {IconComponent && !responsiveSettings.hideIcons && (
-                              <IconComponent
-                                className={cn(
-                                  "h-4 w-4 mr-2",
-                                  responsiveSettings.compactMode &&
-                                    "h-3 w-3 mr-1",
-                                  customStyle?.iconColor && "text-current"
-                                )}
-                                {...(customStyle?.iconColor && {
-                                  style: { color: customStyle.iconColor },
-                                })}
-                              />
-                            )}
-                            <span
+                    {isSummaryOnlyMode ? (
+                      <Badge
+                        aria-label={`${selectedValues.length} ${selectionSummaryText}`}
+                        className={cn(
+                          "border-dashed border-foreground/20 bg-foreground/[0.06] text-foreground shadow-sm hover:bg-foreground/[0.1]",
+                          getBadgeAnimationClass(),
+                          multiSelectVariants({ variant }),
+                          responsiveSettings.compactMode &&
+                            "text-xs px-1.5 py-0.5",
+                          singleLine && "shrink-0 whitespace-nowrap"
+                        )}
+                        style={{
+                          animationDuration: `${
+                            animationConfig?.duration || animation
+                          }s`,
+                          animationDelay: `${animationConfig?.delay || 0}s`,
+                        }}
+                      >
+                        <span className="font-semibold tabular-nums">
+                          {selectedValues.length}
+                        </span>
+                        <span className="ml-1 opacity-80">
+                          {selectionSummaryText}
+                        </span>
+                      </Badge>
+                    ) : (
+                      selectedValues
+                        .slice(0, visibleBadgeCount)
+                        .map((value) => {
+                          const option = getOptionByValue(value);
+                          const IconComponent = option?.icon;
+                          const customStyle = option?.style;
+                          if (!option) {
+                            return null;
+                          }
+                          const badgeStyle: React.CSSProperties = {
+                            animationDuration: `${animation}s`,
+                            ...(customStyle?.badgeColor && {
+                              backgroundColor: customStyle.badgeColor,
+                            }),
+                            ...(customStyle?.gradient && {
+                              background: customStyle.gradient,
+                              color: "white",
+                            }),
+                          };
+                          return (
+                            <Badge
                               className={cn(
-                                screenSize === "mobile" && "truncate"
+                                getBadgeAnimationClass(),
+                                multiSelectVariants({ variant }),
+                                customStyle?.gradient &&
+                                  "text-white border-transparent",
+                                responsiveSettings.compactMode &&
+                                  "text-xs px-1.5 py-0.5",
+                                screenSize === "mobile" &&
+                                  "max-w-[120px] truncate",
+                                singleLine && "shrink-0 whitespace-nowrap",
+                                "[&>svg]:pointer-events-auto"
                               )}
-                            >
-                              {option.label}
-                            </span>
-                            <div
-                              aria-label={`Remove ${option.label} from selection`}
-                              className="ml-2 h-4 w-4 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50 flex items-center justify-center"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                toggleOption(value);
+                              key={value}
+                              style={{
+                                ...badgeStyle,
+                                animationDuration: `${
+                                  animationConfig?.duration || animation
+                                }s`,
+                                animationDelay: `${
+                                  animationConfig?.delay || 0
+                                }s`,
                               }}
-                              onKeyDown={(event) => {
-                                if (
-                                  event.key === "Enter" ||
-                                  event.key === " "
-                                ) {
-                                  event.preventDefault();
+                            >
+                              {IconComponent &&
+                                !responsiveSettings.hideIcons && (
+                                  <IconComponent
+                                    className={cn(
+                                      "h-4 w-4 mr-2",
+                                      responsiveSettings.compactMode &&
+                                        "h-3 w-3 mr-1",
+                                      customStyle?.iconColor && "text-current"
+                                    )}
+                                    {...(customStyle?.iconColor && {
+                                      style: { color: customStyle.iconColor },
+                                    })}
+                                  />
+                                )}
+                              <span
+                                className={cn(
+                                  screenSize === "mobile" && "truncate"
+                                )}
+                              >
+                                {option.label}
+                              </span>
+                              <div
+                                aria-label={`Remove ${option.label} from selection`}
+                                className="ml-2 h-4 w-4 cursor-pointer hover:bg-white/20 rounded-sm p-0.5 -m-0.5 focus:outline-none focus:ring-1 focus:ring-white/50 flex items-center justify-center"
+                                onClick={(event) => {
                                   event.stopPropagation();
                                   toggleOption(value);
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              <XCircle
-                                className={cn(
-                                  "h-3 w-3",
-                                  responsiveSettings.compactMode &&
-                                    "h-2.5 w-2.5"
-                                )}
-                              />
-                            </div>
-                          </Badge>
-                        );
-                      })
-                      .filter(Boolean)}
-                    {selectedValues.length > responsiveSettings.maxCount && (
+                                }}
+                                onKeyDown={(event) => {
+                                  if (
+                                    event.key === "Enter" ||
+                                    event.key === " "
+                                  ) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    toggleOption(value);
+                                  }
+                                }}
+                                role="button"
+                                tabIndex={0}
+                              >
+                                <XCircle
+                                  className={cn(
+                                    "h-3 w-3",
+                                    responsiveSettings.compactMode &&
+                                      "h-2.5 w-2.5"
+                                  )}
+                                />
+                              </div>
+                            </Badge>
+                          );
+                        })
+                        .filter(Boolean)
+                    )}
+                    {!isSummaryOnlyMode && hiddenSelectionCount > 0 && (
                       <Badge
                         className={cn(
                           "bg-transparent text-foreground border-foreground/1 hover:bg-transparent",
@@ -945,9 +980,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                           animationDelay: `${animationConfig?.delay || 0}s`,
                         }}
                       >
-                        {`+ ${
-                          selectedValues.length - responsiveSettings.maxCount
-                        } more`}
+                        {`+ ${hiddenSelectionCount} more`}
                         <XCircle
                           className={cn(
                             "ml-2 h-4 w-4 cursor-pointer",

@@ -71,6 +71,10 @@ const response = await fetch("/api/courses?term=7");
 const courses = await supabase.from("courses").select("*");
 ```
 
+### Dense Filter Controls
+
+- `components/ui/MultiSelect` treats `maxCount={0}` as an intentional compact-summary mode for dense filter surfaces; it should render a count summary badge instead of zero visible selection chips
+
 ## Ultracite Linting Rules
 
 - No `console.log` in production code
