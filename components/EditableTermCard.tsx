@@ -16,6 +16,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  getAllPeriodConflicts,
+  getConflictBorderClass,
+} from "@/lib/conflict-utils";
 import { getLevelColor } from "@/lib/course-utils";
 import {
   MASTER_PROGRAM_TERM_EIGHT,
