@@ -71,7 +71,7 @@ export function PageLayout(props: PageLayoutProps) {
             ) : (
               <HomeSidebarMobileBar />
             )}
-            <div className="flex flex-col flex-1 overflow-y-auto">
+            <div className="flex flex-col flex-1 overflow-y-auto main-scroll">
               {children}
             </div>
           </SidebarInset>
