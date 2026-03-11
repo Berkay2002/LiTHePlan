@@ -1,5 +1,58 @@
 # Changelog
 
+## 2026-03-11 - Conflict Resolution Modal Shell Alignment And Mobile Gutters
+
+Adjusted the conflict modal shell so its radius, spacing, and close affordance align cleanly on both desktop and mobile.
+
+### Updated
+
+- Added a true outer mobile gutter to the dialog content so the modal no longer crowds the viewport edges on small screens
+- Disabled the shared dialog primitive's default close button for this modal and replaced it with an in-shell close control aligned to the modal frame
+- Tightened shell shadowing and spacing so the rounded border and edge depth read as one consistent surface instead of separate overlapping layers
+
+### Verification
+
+- `npm run typecheck`
+- `npx ultracite check components/course/ConflictResolutionModal.tsx`
+
+---
+
+## 2026-03-11 - Conflict Resolution Modal Visual Softening
+
+Toned down the conflict modal styling to a more luxury-minimal presentation without changing layout structure or interaction behavior.
+
+### Updated
+
+- Reduced the modal shell from glow-heavy gradients to a flatter card surface with lighter depth
+- Softened selected-state cards by replacing the stronger accent/primary gradients and shadows with restrained tinted fills and subtle shadowing
+- Reduced the intensity of badges, icon container treatments, and footer action surfaces so the modal reads calmer and more premium
+
+### Verification
+
+- `npm run typecheck`
+- `npx ultracite check components/course/ConflictResolutionModal.tsx`
+
+---
+
+## 2026-03-11 - Conflict Resolution Modal Accessibility And UI Refresh
+
+Refactored the course conflict modal into a keyboard-accessible comparison UI while preserving its callback contract and conflict-resolution flow.
+
+### Updated
+
+- Rebuilt `components/course/ConflictResolutionModal.tsx` around semantic `button type="button"` choice cards instead of clickable `div` containers
+- Added local helpers for selection-state copy, conflict-reason formatting, level badge labels, and selection reset logic to remove the nested conditional styling and duplicated reset code
+- Reworked the modal layout into a stronger two-column comparison between `Add new course` and `Keep existing`, using the existing turquoise/neutral theme tokens with clearer selection states, warning surfaces, and footer messaging
+- Kept the modal API and caller integration unchanged for both `CourseCard` and `CourseListItem`
+
+### Verification
+
+- `npm run typecheck`
+- `npx ultracite check components/course/ConflictResolutionModal.tsx`
+- `npm run build`
+
+---
+
 ## 2026-03-11 - Supabase Hardening Alignment Completed
 
 Aligned the local app and generated types with the already-applied Supabase hardening migration, then re-verified the build and advisor state.

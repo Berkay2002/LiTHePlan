@@ -112,8 +112,8 @@ export function Navbar({
           </div>
 
           {/* Center - Search Bar (Perfectly Centered) */}
-          <div className="flex-1 px-3">
-            <div className="relative max-w-sm mx-auto">
+          <div className="flex-1 px-2">
+            <div className="relative max-w-[160px] mx-auto">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-sidebar-foreground/60" />
               <Input
                 className="pl-10 pr-10 h-10 w-full bg-background text-foreground placeholder:text-muted-foreground border-2 border-sidebar-border focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200"
