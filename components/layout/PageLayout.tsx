@@ -64,7 +64,7 @@ export function PageLayout(props: PageLayoutProps) {
           }
         >
           {sidebar}
-          <SidebarInset className="min-h-screen bg-background">
+          <SidebarInset className="flex flex-col flex-1 overflow-auto">
             {isHomeSidebarSkeleton ? (
               <HomeSidebarMobileBarSkeleton />
             ) : (

@@ -219,7 +219,7 @@ function HomeContent() {
         sidebarOpen={storedSkeletonSidebarOpen}
       >
         <div
-          className="min-h-screen bg-background"
+          className="flex flex-col flex-1"
           style={
             homeProfileSidebarEnabled ? PROFILE_SIDEBAR_LAYOUT_STYLE : undefined
           }
@@ -276,7 +276,7 @@ function HomeContent() {
         }
         sidebarOpen={sidebarOpen}
       >
-        <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col flex-1 items-center justify-center">
           <div className="text-center">
             <p className="text-destructive mb-4">
               Error loading courses: {error}
@@ -316,7 +316,7 @@ function HomeContent() {
       sidebarOpen={sidebarOpen}
     >
       <div
-        className="min-h-screen bg-background"
+        className="flex flex-col flex-1"
         style={
           homeProfileSidebarEnabled ? PROFILE_SIDEBAR_LAYOUT_STYLE : undefined
         }
@@ -431,7 +431,7 @@ function HomeContentSkeleton() {
       sidebarOpen={storedSidebarOpen}
     >
       <div
-        className="min-h-screen bg-background"
+        className="flex flex-col flex-1"
         style={
           homeProfileSidebarEnabled ? PROFILE_SIDEBAR_LAYOUT_STYLE : undefined
         }
