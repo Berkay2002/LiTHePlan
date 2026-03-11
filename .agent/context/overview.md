@@ -46,3 +46,4 @@ The course database (339 curated courses) is **manually compiled, NOT officially
 - **Phase**: Production-ready MVP
 - **Deployment**: Live on Vercel
 - **Database**: Supabase with 339 active curated courses (475 total rows including deprecated)
+- **Homepage UX**: The main discovery page now uses a dedicated left `home-sidebar` shell for search, filters, and account actions while keeping the existing right `ProfileSidebar`

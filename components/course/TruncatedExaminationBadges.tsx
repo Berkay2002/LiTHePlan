@@ -61,13 +61,15 @@ export function TruncatedExaminationBadges({
       ))}
       {hasOverflow && (
         <Tooltip>
-          <TooltipTrigger asChild>
-            <Badge
-              className="text-[11px] px-2 py-0.5 font-semibold bg-muted/60 text-muted-foreground border border-border/40 cursor-help hover:bg-muted/80 transition-colors"
-              variant="outline"
-            >
-              +{hiddenExams.length}
-            </Badge>
+          <TooltipTrigger
+            render={
+              <Badge
+                className="text-[11px] px-2 py-0.5 font-semibold bg-muted/60 text-muted-foreground border border-border/40 cursor-help hover:bg-muted/80 transition-colors"
+                variant="outline"
+              />
+            }
+          >
+            +{hiddenExams.length}
           </TooltipTrigger>
           <TooltipContent className="max-w-xs" side="top">
             <div className="flex flex-col gap-1">

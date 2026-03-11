@@ -81,6 +81,7 @@ Required in `.env.local`:
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx...
 # or NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxx...
+NEXT_PUBLIC_ENABLE_HOME_PROFILE_SIDEBAR=false
 SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
 SENTRY_AUTH_TOKEN=sntrys_xxx
 UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
@@ -90,6 +91,7 @@ UPSTASH_REDIS_REST_TOKEN=AXw-xxx
 Auth notes:
 
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is preferred; `NEXT_PUBLIC_SUPABASE_ANON_KEY` still works as a fallback in `utils/supabase/config.ts`
+- `NEXT_PUBLIC_ENABLE_HOME_PROFILE_SIDEBAR` defaults to hidden when omitted; set it to `true` to restore the homepage right profile rail while the temporary kill switch exists
 - `SUPABASE_SERVICE_ROLE_KEY` must only be used from server-only modules such as `utils/supabase/admin.ts`
 - Login form submissions now post to `/api/auth/login`, which supports both email and username identifiers without exposing username existence
 

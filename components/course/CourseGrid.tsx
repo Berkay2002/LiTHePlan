@@ -47,20 +47,12 @@ export function CourseGrid({
 
   return (
     <div className="space-y-6 w-full">
-      {/* Course grid - auto-fit based on minimum card width */}
-      <div
-        className="grid gap-4 lg:gap-5 w-full justify-center"
-        style={{
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
-        }}
-      >
+      <div className="grid w-full grid-cols-1 gap-4 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))] lg:gap-5">
         {courses.map((course) => (
           <CourseCard course={course} key={course.id} />
         ))}
       </div>
 
-      {/* Pagination */}
       {currentPage &&
         totalPages &&
         totalCourses &&

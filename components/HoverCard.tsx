@@ -9,7 +9,7 @@ import {
 export function HoverCardDemo() {
   return (
     <HoverCard>
-      <HoverCardTrigger asChild>
+      <HoverCardTrigger>
         <Button variant="link">@nextjs</Button>
       </HoverCardTrigger>
       <HoverCardContent className="w-80">

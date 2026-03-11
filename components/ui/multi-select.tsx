@@ -18,10 +18,10 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { Popover as PopoverPrimitive } from "radix-ui";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
@@ -793,9 +793,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   .join(", ")}`}
           </div>
 
-          <PopoverTrigger asChild>
-            <Button
-              ref={buttonRef}
+          <Button
+              render={<PopoverPrimitive.Trigger ref={buttonRef} />}
               {...props}
               aria-controls={isPopoverOpen ? listboxId : undefined}
               aria-describedby={`${triggerDescriptionId} ${selectedCountId}`}
@@ -1033,7 +1032,6 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 </div>
               )}
             </Button>
-          </PopoverTrigger>
           <PopoverContent
             align="start"
             aria-label="Available options"

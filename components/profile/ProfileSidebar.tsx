@@ -1,7 +1,7 @@
 // components/profile/ProfileSidebar.tsx
 
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import { useState } from "react";
+import { type CSSProperties, useId, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +10,9 @@ import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
   PIE_CHART_RADIUS_FACTOR,
+  PROFILE_SIDEBAR_COLLAPSED_WIDTH,
+  PROFILE_SIDEBAR_DESKTOP_WIDTH,
+  PROFILE_SIDEBAR_DESKTOP_WIDTH_XL,
   PROFILE_SIDEBAR_PIE_CHART_SIZE,
 } from "@/lib/profile-constants";
 import { cn } from "@/lib/utils";
@@ -21,11 +24,18 @@ interface ProfileSidebarProps {
   profile: StudentProfile | null;
 }
 
+const EXPAND_PROFILE_RAIL_LABEL = "Expand profile rail";
+const COLLAPSE_PROFILE_RAIL_LABEL = "Collapse profile rail";
+const CLOSE_PROFILE_RAIL_LABEL = "Close profile rail";
+const DISMISS_PROFILE_RAIL_LABEL = "Dismiss profile rail overlay";
+
 export function ProfileSidebar({
   profile,
   isOpen,
   onToggle,
 }: ProfileSidebarProps) {
+  const sidebarId = useId();
+  const titleId = `${sidebarId}-title`;
   const [currentTermIndex, setCurrentTermIndex] = useState(0);
   const terms = MASTER_PROGRAM_TERMS;
 
@@ -97,177 +107,230 @@ export function ProfileSidebar({
   };
 
   const getTermLabel = (term: MasterProgramTerm) => `Term ${term}`;
+  const previousTerm =
+    terms[(currentTermIndex - 1 + terms.length) % terms.length] ?? currentTerm;
+  const followingTerm =
+    terms[(currentTermIndex + 1) % terms.length] ?? currentTerm;
+  const sidebarTitle = profile ? "Profile rail" : "Build your profile";
+  const sidebarDescription = profile
+    ? "Progress and current term selections"
+    : "Track credits and pinned courses here";
 
   return (
     <>
-      {/* Sidebar Overlay for Mobile */}
       {isOpen && (
         <button
-          aria-label="Close sidebar"
-          className="fixed inset-0 bg-foreground/50 z-40 lg:hidden w-full border-0 cursor-default"
+          aria-label={DISMISS_PROFILE_RAIL_LABEL}
+          className="fixed inset-0 z-40 w-full border-0 bg-foreground/45 lg:hidden"
           onClick={onToggle}
+          title={CLOSE_PROFILE_RAIL_LABEL}
           type="button"
         />
       )}
 
-      {/* Profile Sidebar - Fixed position */}
       <div
+        aria-labelledby={isOpen ? titleId : undefined}
         className={cn(
-          "fixed top-0 right-0 h-screen lg:top-16 lg:h-[calc(100vh-4rem)] bg-sidebar border-l-2 border-sidebar-border shadow-xl shadow-sidebar/20 z-50 transition-all duration-300 ease-in-out",
-          "flex flex-col ring-1 ring-sidebar-border/30",
-          isOpen ? "w-72 lg:w-80 xl:w-96" : "w-0 lg:w-12",
-          "lg:fixed lg:z-30 lg:shadow-2xl lg:shadow-sidebar/30"
+          "fixed right-0 top-0 z-50 h-screen border-l border-sidebar-border/70 bg-sidebar/95 text-sidebar-foreground shadow-[-12px_0_30px_-24px_hsl(var(--foreground)/0.45)] backdrop-blur supports-[backdrop-filter]:bg-sidebar/90 lg:z-30 lg:h-svh",
+          "transition-[transform,width] duration-300 ease-in-out",
+          isOpen
+            ? "w-[min(100vw,22rem)] translate-x-0 sm:w-80 lg:w-[var(--profile-sidebar-width)] xl:w-[var(--profile-sidebar-width-xl)]"
+            : "w-0 translate-x-full overflow-hidden lg:w-[var(--profile-sidebar-width-collapsed)] lg:translate-x-0"
         )}
+        id={sidebarId}
+        style={
+          {
+            "--profile-sidebar-width": PROFILE_SIDEBAR_DESKTOP_WIDTH,
+            "--profile-sidebar-width-collapsed":
+              PROFILE_SIDEBAR_COLLAPSED_WIDTH,
+            "--profile-sidebar-width-xl": PROFILE_SIDEBAR_DESKTOP_WIDTH_XL,
+          } as CSSProperties
+        }
       >
-        {/* Collapsed State - Modern Toggle Button (Desktop Only) */}
         {!isOpen && (
-          <div className="hidden lg:flex flex-col items-center justify-center h-full w-12 relative">
-            {/* Modern Floating Expand Button */}
-            <div className="relative group">
+          <div className="hidden h-full flex-col items-center bg-sidebar/95 px-2 py-4 lg:flex">
+            <div className="flex w-full justify-center">
               <Button
-                className="h-10 w-10 p-0 bg-sidebar-foreground/10 hover:bg-sidebar-foreground/20 backdrop-blur-sm border border-sidebar-foreground/20 hover:border-sidebar-foreground/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                aria-controls={sidebarId}
+                aria-expanded={false}
+                aria-label={EXPAND_PROFILE_RAIL_LABEL}
+                className="size-10 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/30 text-sidebar-foreground hover:bg-sidebar-accent"
                 onClick={onToggle}
                 size="sm"
+                title={EXPAND_PROFILE_RAIL_LABEL}
+                type="button"
                 variant="ghost"
               >
-                <ChevronLeft className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
+                <ChevronLeft className="h-4 w-4" />
               </Button>
-
-              {/* Tooltip on hover */}
-              <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-100">
-                {profile ? "Open Profile" : "Start Building Profile"}
-              </div>
+            </div>
+            <div className="mt-4 flex flex-1 items-center justify-center">
+              <span className="text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-sidebar-foreground/50 [writing-mode:vertical-rl]">
+                Profile
+              </span>
             </div>
           </div>
         )}
 
-        {/* Expanded State - Full Sidebar Content */}
         {isOpen && (
-          <div className="flex flex-col h-full relative">
-            {/* Modern Floating Collapse Button - Left Edge (Desktop Only) */}
-            <div
-              className="hidden lg:block absolute -left-6 top-1/2 z-50"
-              style={{ transform: "translateY(-50%)" }}
-            >
-              <div className="relative group">
-                <Button
-                  className="h-10 w-10 p-0 bg-sidebar-accent/80 hover:bg-sidebar-accent backdrop-blur-sm border border-sidebar-border hover:border-sidebar-border/80 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                  onClick={onToggle}
-                  size="sm"
-                  variant="ghost"
+          <div className="flex h-full flex-col">
+            <div className="flex items-start justify-between gap-3 border-b border-sidebar-border/70 bg-sidebar/95 px-4 py-3 xl:px-5">
+              <div className="min-w-0">
+                <h2
+                  className="text-sm font-semibold text-sidebar-foreground"
+                  id={titleId}
                 >
-                  <ChevronRight className="h-5 w-5 text-sidebar-foreground group-hover:text-primary transition-colors duration-200" />
-                </Button>
-
-                {/* Tooltip on hover */}
-                <div className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-popover text-popover-foreground border border-border shadow-xl text-sm font-medium px-4 py-2.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-100">
-                  {profile ? "Close Profile" : "Close Sidebar"}
-                </div>
-              </div>
-            </div>
-
-            {/* Mobile Header */}
-            <div className="shrink-0 p-4 border-b border-sidebar-border bg-sidebar-accent/30 lg:hidden">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-semibold text-sidebar-foreground">
-                  {profile ? "Profile Overview" : "Your Profile"}
+                  {sidebarTitle}
                 </h2>
+                <p className="mt-1 text-xs text-sidebar-foreground/65">
+                  {sidebarDescription}
+                </p>
+              </div>
+              <div className="flex shrink-0 items-center gap-2">
                 <Button
-                  className="h-10 w-10 p-0 text-sidebar-foreground hover:bg-sidebar-foreground/20 hover:scale-110 transition-all duration-200 rounded-full border border-sidebar-foreground/30 hover:border-sidebar-foreground/50"
+                  aria-controls={sidebarId}
+                  aria-expanded={isOpen}
+                  aria-label={COLLAPSE_PROFILE_RAIL_LABEL}
+                  className="hidden size-9 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/30 text-sidebar-foreground hover:bg-sidebar-accent lg:flex"
                   onClick={onToggle}
                   size="sm"
+                  title={COLLAPSE_PROFILE_RAIL_LABEL}
+                  type="button"
                   variant="ghost"
                 >
-                  <X className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+                <Button
+                  aria-controls={sidebarId}
+                  aria-expanded={isOpen}
+                  aria-label={CLOSE_PROFILE_RAIL_LABEL}
+                  className="size-9 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/30 text-sidebar-foreground hover:bg-sidebar-accent lg:hidden"
+                  onClick={onToggle}
+                  size="sm"
+                  title={CLOSE_PROFILE_RAIL_LABEL}
+                  type="button"
+                  variant="ghost"
+                >
+                  <X className="h-4 w-4" />
                 </Button>
               </div>
             </div>
 
-            {/* Scrollable Profile Content */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-4 xl:p-6 space-y-4 lg:space-y-4 xl:space-y-5 filter-panel-scroll">
+            <div className="filter-panel-scroll flex-1 overflow-y-auto overflow-x-hidden p-4 xl:p-5">
               {profile ? (
-                <>
-                  {/* Profile Progress Section */}
-                  <div className="space-y-3">
-                    <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
-                      Progress
-                    </h3>
-
-                    {/* Progress text */}
-                    <div className="text-center">
-                      <div className="text-lg font-bold text-sidebar-foreground">
-                        {currentCredits} / {targetCredits} hp
+                <div className="space-y-4">
+                  <section className="space-y-4 rounded-2xl border border-sidebar-border/70 bg-sidebar-accent/20 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-sidebar-foreground/55">
+                          Progress
+                        </p>
+                        <p className="mt-1 text-xs text-sidebar-foreground/65">
+                          Credit split across your plan
+                        </p>
                       </div>
-                      <div className="text-xs text-sidebar-foreground/80">
-                        {Math.round(percentage)}% complete
-                      </div>
+                      <Badge className="shrink-0" variant="secondary">
+                        {Math.round(percentage)}%
+                      </Badge>
                     </div>
 
-                    {/* Compact Pie Chart */}
-                    <div className="flex justify-center">
-                      <svg
-                        aria-label="Credit distribution pie chart"
-                        height={size}
-                        role="img"
-                        viewBox={`0 0 ${size} ${size}`}
-                        width={size}
-                      >
-                        {segmentsWithAngles.map((segment) => (
-                          <path
-                            d={createPath(segment.startAngle, segment.angle)}
-                            fill={segment.color}
-                            key={`segment-${segment.label}`}
-                            stroke="hsl(var(--background))"
-                            strokeWidth="2"
-                          />
-                        ))}
-                      </svg>
-                    </div>
-
-                    {/* Compact Legend */}
-                    <div className="space-y-1">
-                      {segmentsWithAngles.map((segment) => (
-                        <div
-                          className="flex items-center gap-2"
-                          key={`legend-${segment.label}`}
-                        >
-                          <div
-                            className="w-3 h-3 rounded-full shrink-0"
-                            style={{ backgroundColor: segment.color }}
-                          />
-                          <span className="text-xs text-sidebar-foreground flex-1">
-                            {segment.label}
-                          </span>
-                          <span className="text-xs text-sidebar-foreground font-medium">
-                            {segment.value}hp
+                    <div className="grid gap-4 xl:grid-cols-[auto,1fr] xl:items-center">
+                      <div className="mx-auto flex flex-col items-center justify-center text-center">
+                        <div className="text-xl font-semibold text-sidebar-foreground">
+                          {currentCredits}
+                          <span className="text-sm font-normal text-sidebar-foreground/65">
+                            {" "}
+                            / {targetCredits} hp
                           </span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                        <div className="mt-1 text-xs text-sidebar-foreground/70">
+                          completed credits
+                        </div>
+                      </div>
 
-                  {/* Term Cards Slider Section */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm lg:text-sm xl:text-sm font-semibold text-sidebar-foreground uppercase tracking-wide">
-                        Courses
-                      </h3>
-                      <div className="flex items-center gap-1">
+                      <div className="space-y-3">
+                        <div className="flex justify-center xl:justify-start">
+                          <svg
+                            aria-label="Credit distribution pie chart"
+                            height={size}
+                            role="img"
+                            viewBox={`0 0 ${size} ${size}`}
+                            width={size}
+                          >
+                            {segmentsWithAngles.map((segment) => (
+                              <path
+                                d={createPath(
+                                  segment.startAngle,
+                                  segment.angle
+                                )}
+                                fill={segment.color}
+                                key={`segment-${segment.label}`}
+                                stroke="hsl(var(--background))"
+                                strokeWidth="2"
+                              />
+                            ))}
+                          </svg>
+                        </div>
+
+                        <div className="space-y-2">
+                          {segmentsWithAngles.map((segment) => (
+                            <div
+                              className="flex items-center gap-2 text-xs"
+                              key={`legend-${segment.label}`}
+                            >
+                              <div
+                                className="h-3 w-3 shrink-0 rounded-full"
+                                style={{ backgroundColor: segment.color }}
+                              />
+                              <span className="flex-1 text-sidebar-foreground/75">
+                                {segment.label}
+                              </span>
+                              <span className="font-medium text-sidebar-foreground">
+                                {segment.value} hp
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section className="space-y-3 rounded-2xl border border-sidebar-border/70 bg-sidebar-accent/15 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-sidebar-foreground/55">
+                          Course preview
+                        </p>
+                        <h3 className="mt-1 text-sm font-semibold text-sidebar-foreground">
+                          {getTermLabel(currentTerm)}
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-1 rounded-xl border border-sidebar-border/70 bg-background/70 p-1">
                         <Button
-                          className="h-6 w-6 p-0 text-sidebar-foreground hover:bg-sidebar-foreground/20"
+                          aria-label={`Show previous term (${getTermLabel(previousTerm)})`}
+                          className="h-7 w-7 p-0 text-sidebar-foreground hover:bg-sidebar-accent"
                           onClick={prevTerm}
                           size="sm"
+                          title={`Show previous term (${getTermLabel(previousTerm)})`}
+                          type="button"
                           variant="ghost"
                         >
                           <ChevronLeft className="h-3 w-3" />
                         </Button>
-                        <span className="text-xs text-sidebar-foreground/80 min-w-[60px] text-center">
-                          {getTermLabel(currentTerm)}
+                        <span className="min-w-[4.75rem] text-center text-xs text-sidebar-foreground/75">
+                          {currentTermCourses.reduce(
+                            (sum, course) => sum + course.credits,
+                            0
+                          )}{" "}
+                          hp
                         </span>
                         <Button
-                          className="h-6 w-6 p-0 text-sidebar-foreground hover:bg-sidebar-foreground/20"
+                          aria-label={`Show next term (${getTermLabel(followingTerm)})`}
+                          className="h-7 w-7 p-0 text-sidebar-foreground hover:bg-sidebar-accent"
                           onClick={nextTerm}
                           size="sm"
+                          title={`Show next term (${getTermLabel(followingTerm)})`}
+                          type="button"
                           variant="ghost"
                         >
                           <ChevronRight className="h-3 w-3" />
@@ -275,10 +338,9 @@ export function ProfileSidebar({
                       </div>
                     </div>
 
-                    {/* Current Term Card */}
-                    <Card className="bg-background border-border">
+                    <Card className="border-sidebar-border/70 bg-background/80 shadow-none">
                       <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium flex items-center justify-between text-foreground">
+                        <CardTitle className="flex items-center justify-between text-sm font-medium text-foreground">
                           {getTermLabel(currentTerm)}
                           <Badge className="text-xs" variant="secondary">
                             {currentTermCourses.reduce(
@@ -289,21 +351,21 @@ export function ProfileSidebar({
                           </Badge>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="pt-0">
                         {currentTermCourses.length === 0 ? (
-                          <div className="text-center py-4 text-muted-foreground">
+                          <div className="rounded-xl border border-dashed border-sidebar-border/70 bg-sidebar-accent/10 py-5 text-center text-muted-foreground">
                             <p className="text-xs">No courses selected</p>
                           </div>
                         ) : (
                           <div className="space-y-2">
                             {currentTermCourses.map((course) => (
                               <div
-                                className="p-2 rounded border border-primary/20 bg-primary/10 hover:bg-primary/15 transition-colors"
+                                className="rounded-xl border border-sidebar-border/70 bg-sidebar-accent/10 px-3 py-2 transition-colors hover:bg-sidebar-accent/20"
                                 key={course.id}
                               >
-                                <div className="flex items-center justify-between">
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-medium truncate text-foreground">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="min-w-0 flex-1">
+                                    <p className="truncate text-xs font-medium text-foreground">
                                       {course.name}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
@@ -317,32 +379,32 @@ export function ProfileSidebar({
                         )}
                       </CardContent>
                     </Card>
-                  </div>
-                </>
+                  </section>
+                </div>
               ) : (
-                /* Empty State - No Profile */
-                <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-                  <div className="space-y-4">
-                    <div className="w-16 h-16 bg-sidebar-foreground/10 rounded-full flex items-center justify-center mx-auto">
+                <div className="flex h-full items-center">
+                  <div className="w-full space-y-4 rounded-2xl border border-dashed border-sidebar-border/70 bg-sidebar-accent/15 p-5 text-center">
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sidebar-accent/35">
                       <ChevronRight className="h-8 w-8 text-sidebar-foreground/60" />
                     </div>
                     <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-sidebar-foreground">
-                        Start Building Your Profile
+                      <h3 className="text-base font-semibold text-sidebar-foreground">
+                        Start building your profile
                       </h3>
-                      <p className="text-sm text-sidebar-foreground/80 max-w-xs">
-                        Add courses to start seeing your progress and term
-                        planning here. Browse the course catalog and click the
-                        &ldquo;+&rdquo; button to add courses to your profile.
+                      <p className="text-sm text-sidebar-foreground/75">
+                        Add courses to see your progress and term plan here. Use
+                        the course catalog and the &ldquo;+&rdquo; action to
+                        build the rail.
                       </p>
                     </div>
-                  </div>
-                  <div className="space-y-2 text-xs text-sidebar-foreground/60">
-                    <p>
-                      💡 Tip: You can add up to {MASTER_PROGRAM_TARGET_CREDITS}{" "}
-                      credits
-                    </p>
-                    <p>📚 Mix advanced and basic level courses</p>
+                    <div className="space-y-2 text-left text-xs text-sidebar-foreground/65">
+                      <div className="rounded-xl border border-sidebar-border/60 bg-background/65 px-3 py-2">
+                        Plan up to {MASTER_PROGRAM_TARGET_CREDITS} hp in total.
+                      </div>
+                      <div className="rounded-xl border border-sidebar-border/60 bg-background/65 px-3 py-2">
+                        Mix advanced and basic level courses across terms.
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

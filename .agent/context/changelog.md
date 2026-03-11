@@ -1,5 +1,46 @@
 # Changelog
 
+## 2026-03-11 - Homepage Profile Sidebar Kill Switch
+
+Temporarily hid the homepage right profile sidebar behind a client-safe flag so the rail and its layout offsets can be disabled together.
+
+### Updated
+
+- Added `lib/ui-feature-flags.ts` with an env-backed `NEXT_PUBLIC_ENABLE_HOME_PROFILE_SIDEBAR` boolean parser that defaults the homepage profile rail to hidden
+- Updated `app/page.tsx` to skip rendering `ProfileSidebar` and `ProfileSidebarSkeleton` when the flag is off, and to remove the corresponding desktop content offsets in loading, skeleton, and live states
+- Updated `.agent/context/architecture.md`, `.agent/context/conventions.md`, and `.agent/context/commands.md` to document the client-safe flag pattern and the new env toggle
+
+### Verification
+
+- `npm exec -- ultracite check app/page.tsx lib/ui-feature-flags.ts`
+- `npm run typecheck` still fails due to pre-existing unresolved identifiers in `components/EditableTermCard.tsx` (`getAllPeriodConflicts`, `getConflictBorderClass`)
+
+## 2026-03-11 - Collapsed Profile Rail Gap On Home Grid
+
+Added a small desktop-only buffer between the homepage content area and the collapsed profile rail so the rightmost course cards do not sit flush against the rail.
+
+### Updated
+
+- Added a dedicated collapsed-rail gap token in `app/page.tsx`
+- Increased the home content wrapper's collapsed desktop right offset using `calc(...)` while leaving the expanded profile rail spacing unchanged
+
+### Verification
+
+- `npm exec -- ultracite check app/page.tsx`
+
+## 2026-03-11 - Revert Desktop Profile Rail Structural Layout
+
+Reverted the later desktop homepage/profile-rail structural refactor and restored the prior overlay-based profile sidebar behavior.
+
+### Updated
+
+- Restored the previous homepage content-wrapper approach in `app/page.tsx` instead of the experimental two-column desktop shell
+- Reverted `components/profile/ProfileSidebar.tsx` and `components/profile/ProfileSidebarSkeleton.tsx` from sticky desktop positioning back to the prior fixed desktop rail behavior
+
+### Verification
+
+- Not rerun: this change restores the immediately previous layout state rather than introducing new behavior
+
 ## 2026-03-11 - MultiSelect Compact Summary Fix
 
 Fixed the custom `components/ui/MultiSelect.tsx` behavior for dense filter UIs that pass `maxCount={0}`.

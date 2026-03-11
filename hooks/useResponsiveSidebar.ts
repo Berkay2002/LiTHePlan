@@ -45,17 +45,24 @@ export function useResponsiveSidebar(breakpoint: number = DEFAULT_BREAKPOINT) {
     };
   }, [breakpoint, hasManuallyToggled]);
 
-  const toggle = useCallback(() => {
-    setIsOpen((prev) => {
-      const newState = !prev;
-      // Save manual toggle preference to localStorage
-      localStorage.setItem(SIDEBAR_STORAGE_KEY, String(newState));
-      return newState;
-    });
-    setHasManuallyToggled(true);
-  }, []);
+  const updateOpenState = useCallback(
+    (value: boolean | ((open: boolean) => boolean)) => {
+      setIsOpen((previous) => {
+        const nextState = typeof value === "function" ? value(previous) : value;
 
-  return { isOpen, toggle };
+        localStorage.setItem(SIDEBAR_STORAGE_KEY, String(nextState));
+        return nextState;
+      });
+      setHasManuallyToggled(true);
+    },
+    []
+  );
+
+  const toggle = useCallback(() => {
+    updateOpenState((previous) => !previous);
+  }, [updateOpenState]);
+
+  return { isOpen, setIsOpen: updateOpenState, toggle };
 }
 
 // Export helper to read stored state for use in skeleton components

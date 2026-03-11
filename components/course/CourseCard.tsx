@@ -1,7 +1,6 @@
 import {
   AlertTriangle,
   Check,
-  Clock,
   ExternalLink,
   Info,
   MapPin,
@@ -9,11 +8,17 @@ import {
   Trash2,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -23,6 +28,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import {
   formatBlocks,
+  formatPace,
   getAvailableTerms,
   isMultiTermCourse,
 } from "@/lib/course-utils";
@@ -46,25 +52,88 @@ interface CourseCardActionState {
   wouldHaveConflicts: boolean;
 }
 
+interface CourseMetadataItemProps {
+  icon?: ReactNode;
+  label: string;
+  value: ReactNode;
+}
+
+interface CourseSummaryTileProps {
+  icon?: ReactNode;
+  label: string;
+  value: ReactNode;
+}
+
+interface CourseNotesIndicatorProps {
+  isMobile: boolean;
+  note: string;
+  onOpenChange: (isOpen: boolean) => void;
+  showNotesTooltip: boolean;
+}
+
+const getPrimaryCourseTerm = (course: Course): string =>
+  Array.isArray(course.term) ? course.term[0] : course.term;
+
+const getDefaultCourseTerm = (course: Course): MasterProgramTerm | null => {
+  const parsedTerm = Number.parseInt(getPrimaryCourseTerm(course), 10);
+
+  if (
+    !(
+      Number.isInteger(parsedTerm) &&
+      MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
+    )
+  ) {
+    return null;
+  }
+
+  return parsedTerm as MasterProgramTerm;
+};
+
+const getCourseLevelLabel = (level: Course["level"]): string =>
+  level === "avancerad nivå" ? "Advanced" : "Basic";
+
+const getCourseLevelBadgeClassName = (level: Course["level"]): string =>
+  level === "avancerad nivå"
+    ? "border-primary/25 bg-primary/10 text-primary"
+    : "border-chart-2/30 bg-chart-2/10 text-chart-2";
+
+const formatCourseTerms = (
+  isMultiTerm: boolean,
+  availableTerms: MasterProgramTerm[],
+  course: Course
+): string =>
+  isMultiTerm
+    ? `T${availableTerms.join(", ")}`
+    : `T${getPrimaryCourseTerm(course)}`;
+
+const formatCourseSchedule = (course: Course): string => {
+  const periodLabel = `P${course.period.join(", ")}`;
+  const blockLabel = `B${formatBlocks(course.block)}`;
+
+  return `${periodLabel} • ${blockLabel}`;
+};
+
 const getCourseCardActionButtonClassName = ({
   isHovered,
   isPinned,
   wouldHaveConflicts,
 }: CourseCardActionState): string => {
   const baseClassName =
-    "h-9 text-xs font-bold transition-all duration-200 shadow-md";
+    "h-10 w-full justify-center rounded-md border text-sm font-semibold shadow-sm transition-colors";
+
+  if (isPinned && isHovered) {
+    return `${baseClassName} border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90`;
+  }
 
   if (isPinned) {
-    return isHovered
-      ? `${baseClassName} bg-destructive hover:bg-destructive/90 text-destructive-foreground`
-      : `${baseClassName} bg-primary hover:bg-primary/90 text-primary-foreground`;
+    return `${baseClassName} border-primary bg-primary text-primary-foreground hover:bg-primary/90`;
   }
 
   if (wouldHaveConflicts) {
-    return `${baseClassName} bg-chart-4 hover:bg-chart-4/90 text-white border-2 border-chart-4/60`;
+    return `${baseClassName} border-chart-4/35 bg-chart-4/15 text-chart-4 hover:bg-chart-4/20`;
   }
 
-  return `${baseClassName} bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg`;
+  return `${baseClassName} border-primary bg-primary text-primary-foreground hover:bg-primary/90`;
 };
 
 const getCourseCardActionButtonContent = ({
@@ -75,7 +144,7 @@ const getCourseCardActionButtonContent = ({
   if (isPinned && isHovered) {
     return (
       <>
-        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+        <Trash2 data-icon="inline-start" />
         Remove
       </>
     );
@@ -84,7 +153,7 @@ const getCourseCardActionButtonContent = ({
   if (isPinned) {
     return (
       <>
-        <Check className="h-3.5 w-3.5 mr-1.5" />
+        <Check data-icon="inline-start" />
         Added
       </>
     );
@@ -93,7 +162,7 @@ const getCourseCardActionButtonContent = ({
   if (wouldHaveConflicts) {
     return (
       <>
-        <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
+        <AlertTriangle data-icon="inline-start" />
         Conflict
       </>
     );
@@ -101,311 +170,388 @@ const getCourseCardActionButtonContent = ({
 
   return (
     <>
-      <Plus className="h-3.5 w-3.5 mr-1.5" />
-      Add
+      <Plus data-icon="inline-start" />
+      Add Course
     </>
   );
 };
 
+function CourseMetadataItem({ icon, label, value }: CourseMetadataItemProps) {
+  return (
+    <div className="flex flex-col gap-3 rounded-md border border-border/40 bg-muted/20 p-3.5">
+      <div className="flex items-center gap-2 text-[0.68rem] font-semibold tracking-[0.22em] text-muted-foreground uppercase">
+        {icon ? <span className="text-foreground/70">{icon}</span> : null}
+        <span>{label}</span>
+      </div>
+      <div className="text-sm font-medium leading-snug text-foreground">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function CourseSummaryTile({ icon, label, value }: CourseSummaryTileProps) {
+  return (
+    <div className="rounded-xl border border-border/45 bg-muted/15 px-3 py-2.5">
+      <div className="flex items-center gap-1.5 text-[0.62rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+        {icon ? <span className="text-foreground/65">{icon}</span> : null}
+        <span>{label}</span>
+      </div>
+      <div className="mt-1.5 text-sm font-medium leading-tight text-foreground">
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function CourseNotesIndicator({
+  isMobile,
+  note,
+  onOpenChange,
+  showNotesTooltip,
+}: CourseNotesIndicatorProps) {
+  return (
+    <Tooltip
+      key={isMobile ? "mobile" : "desktop"}
+      onOpenChange={isMobile ? onOpenChange : undefined}
+      open={isMobile ? showNotesTooltip : undefined}
+    >
+      <TooltipTrigger
+        className="inline-flex shrink-0 items-center gap-1 rounded-full border border-chart-4/30 bg-chart-4/10 px-2.5 py-1 text-[0.68rem] font-semibold tracking-[0.18em] text-chart-4 uppercase transition-colors hover:bg-chart-4/15"
+        onClick={() => {
+          if (isMobile) {
+            onOpenChange(!showNotesTooltip);
+          }
+        }}
+        type="button"
+      >
+        <AlertTriangle className="size-3" />
+        <span>Note</span>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-xs" side="top">
+        <p>{note}</p>
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 export function CourseCard({ course }: CourseCardProps) {
   const { state, addCourse, removeCourse } = useProfile();
-  const isPinned = state.current_profile
-    ? isCourseInProfile(state.current_profile, course.id)
-    : false;
   const [isHovered, setIsHovered] = useState(false);
   const [showTermModal, setShowTermModal] = useState(false);
   const [showConflictModal, setShowConflictModal] = useState(false);
-  const [, setPendingTerm] = useState<MasterProgramTerm | null>(null);
   const [conflictingCourses, setConflictingCourses] = useState<
     { conflictingCourse: Course; conflictingCourseId: string }[]
   >([]);
   const [showNotesTooltip, setShowNotesTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  // Check if this course is available in multiple terms
+  const isPinned = state.current_profile
+    ? isCourseInProfile(state.current_profile, course.id)
+    : false;
   const isMultiTerm = isMultiTermCourse(course);
   const availableTerms = getAvailableTerms(course);
-
-  // Check if adding this course would cause conflicts
   const wouldHaveConflicts = state.current_profile
     ? findCourseConflicts(course, state.current_profile).length > 0
     : false;
   const actionState = { isHovered, isPinned, wouldHaveConflicts };
+  const courseLevelLabel = getCourseLevelLabel(course.level);
+  const courseLevelBadgeClassName = getCourseLevelBadgeClassName(course.level);
+  const courseTermLabel = formatCourseTerms(
+    isMultiTerm,
+    availableTerms,
+    course
+  );
+  const courseScheduleLabel = formatCourseSchedule(course);
+  const coursePaceLabel = formatPace(course.pace);
 
-  // This function is no longer used since we always check conflicts first
+  const resetConflictState = () => {
+    setConflictingCourses([]);
+    setShowConflictModal(false);
+  };
 
-  // Handle adding course - always check conflicts first, then handle term selection
-  const handleAddCourse = () => {
-    console.log("🎯 handleAddCourse clicked for course:", course.id);
-    console.log(
-      "🔄 isMultiTerm:",
-      isMultiTerm,
-      "availableTerms:",
-      availableTerms
-    );
-
-    // Always check conflicts first, regardless of term count
+  const handleAddCourse = async () => {
     const conflicts = state.current_profile
       ? findCourseConflicts(course, state.current_profile)
       : [];
 
     if (conflicts.length > 0) {
-      // Show conflict modal first
-      console.log("⚠️ Conflicts detected, showing conflict modal first");
       setConflictingCourses(conflicts);
-      setPendingTerm(null); // Will be set after conflict resolution
       setShowConflictModal(true);
       return;
     }
 
-    // No conflicts, proceed with term selection or direct add
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log("📋 No conflicts, showing term selection modal");
       setShowTermModal(true);
-    } else {
-      // Single term course - add directly
-      const termToAdd = Array.isArray(course.term)
-        ? course.term[0]
-        : course.term;
-      const parsedTerm = Number.parseInt(termToAdd, 10);
-      console.log(
-        "➕ No conflicts, adding directly - termToAdd:",
-        termToAdd,
-        "parsedTerm:",
-        parsedTerm
-      );
+      return;
+    }
 
-      if (
-        Number.isInteger(parsedTerm) &&
-        MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
-      ) {
-        console.log("✅ Adding course with:", {
-          course: course.id,
-          term: parsedTerm,
-        });
-        addCourse(course, parsedTerm as MasterProgramTerm);
-      } else {
-        console.error("❌ Invalid term for course:", {
-          courseId: course.id,
-          termToAdd,
-          parsedTerm,
-        });
-      }
+    const defaultTerm = getDefaultCourseTerm(course);
+
+    if (defaultTerm !== null) {
+      await addCourse(course, defaultTerm);
     }
   };
 
-  // Handle term selection from modal (conflicts already checked)
   const handleTermSelected = async (
     selectedCourse: Course,
     selectedTerm: MasterProgramTerm
   ) => {
-    console.log(
-      "🔄 Term selected:",
-      selectedTerm,
-      "for course:",
-      selectedCourse.id
-    );
     setShowTermModal(false);
-
-    // Add course directly since conflicts were already checked
-    console.log("✅ Adding course with selected term (conflicts pre-checked)");
     await addCourse(selectedCourse, selectedTerm);
   };
 
-  // Handle conflict resolution - user chooses new course
   const handleChooseNewCourse = async (newCourse: Course) => {
-    console.log("✅ User chose new course:", newCourse.id);
-    setShowConflictModal(false);
+    resetConflictState();
 
-    // Remove conflicting courses first
     for (const { conflictingCourseId } of conflictingCourses) {
-      console.log("🗑️ Removing conflicting course:", conflictingCourseId);
       removeCourse(conflictingCourseId);
     }
 
-    // Now handle term selection for the new course
     if (isMultiTerm && availableTerms.length > 1) {
-      console.log(
-        "📋 Showing term selection for new course after conflict resolution"
-      );
       setShowTermModal(true);
-    } else {
-      const termToAdd = Array.isArray(newCourse.term)
-        ? newCourse.term[0]
-        : newCourse.term;
-      const parsedTerm = Number.parseInt(termToAdd, 10) as MasterProgramTerm;
-      console.log("➕ Adding new course with default term:", parsedTerm);
-      await addCourse(newCourse, parsedTerm);
+      return;
     }
 
-    // Reset state
-    setConflictingCourses([]);
-    setPendingTerm(null);
+    const defaultTerm = getDefaultCourseTerm(newCourse);
+
+    if (defaultTerm !== null) {
+      await addCourse(newCourse, defaultTerm);
+    }
   };
 
-  // Handle conflict resolution - user chooses existing course
-  const handleChooseExistingCourse = (existingCourse: Course) => {
-    console.log("📚 User chose to keep existing course:", existingCourse.id);
-    setShowConflictModal(false);
-    setConflictingCourses([]);
-    setPendingTerm(null);
-    // No action needed - existing course stays in profile
+  const handleChooseExistingCourse = () => {
+    resetConflictState();
   };
 
-  // Handle conflict resolution - user cancels
   const handleCancelConflictResolution = () => {
-    console.log("❌ User cancelled conflict resolution");
-    setShowConflictModal(false);
-    setConflictingCourses([]);
-    setPendingTerm(null);
+    resetConflictState();
+  };
+
+  const handlePrimaryAction = async () => {
+    if (isPinned && isHovered) {
+      removeCourse(course.id);
+      return;
+    }
+
+    if (!isPinned) {
+      await handleAddCourse();
+    }
   };
 
   return (
-    <Card className="group h-full flex flex-col transition-all duration-200 hover:shadow-xl border-2 border-primary/20 bg-background hover:border-primary/50 hover:scale-[1.01]">
-      <CardContent className="flex-1 flex flex-col gap-2.5 p-4">
-        {/* SCANNABLE HEADER - Course ID + Level + Warnings in single row */}
-        <div className="flex items-center justify-between gap-2 -mb-1">
-          {/* Left: Course ID + Level Badge */}
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-mono font-extrabold text-primary tracking-tight">
-              {course.id}
-            </span>
-            <Badge
-              className={`px-2 py-0.5 text-xs font-bold border-0 shadow-sm ${
-                course.level === "avancerad nivå"
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-chart-2 text-white"
-              }`}
+    <Card className="h-full w-full border border-primary/15 bg-card/95 py-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-xl hover:shadow-primary/5">
+      <div className="flex h-full flex-col md:hidden">
+        <CardHeader className="gap-3 border-b border-border/40 px-3.5 py-3.5">
+          <div className="flex items-start justify-between gap-2.5">
+            <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+              <span className="font-mono text-[0.78rem] font-semibold tracking-[0.24em] text-primary/90 uppercase">
+                {course.id}
+              </span>
+              <Badge className={courseLevelBadgeClassName} variant="outline">
+                {courseLevelLabel}
+              </Badge>
+              {course.notes ? (
+                <CourseNotesIndicator
+                  isMobile={isMobile}
+                  note={course.notes}
+                  onOpenChange={setShowNotesTooltip}
+                  showNotesTooltip={showNotesTooltip}
+                />
+              ) : null}
+            </div>
+
+            <a
+              aria-label={`Open ${course.id} on LiU`}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background/80 text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+              href={`https://studieinfo.liu.se/kurs/${course.id}`}
+              rel="noopener noreferrer"
+              target="_blank"
+              title="View on LiU"
             >
-              {course.level === "avancerad nivå" ? "ADVANCED" : "BASIC"}
-            </Badge>
-            {course.notes && (
-              <Tooltip open={isMobile ? showNotesTooltip : undefined}>
-                <TooltipTrigger asChild>
-                  <button
-                    className="shrink-0 flex items-center gap-1 bg-chart-4/20 text-chart-4 px-2 py-0.5 rounded border border-chart-4/40 hover:bg-chart-4/30 transition-colors"
-                    onBlur={() => isMobile && setShowNotesTooltip(false)}
-                    onClick={() =>
-                      isMobile && setShowNotesTooltip(!showNotesTooltip)
-                    }
-                    type="button"
-                  >
-                    <AlertTriangle className="h-3.5 w-3.5" />
-                    <span className="text-xs font-bold">NOTE</span>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent
-                  onPointerDownOutside={() =>
-                    isMobile && setShowNotesTooltip(false)
-                  }
-                  side="top"
-                >
-                  <p>{course.notes}</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
+              <ExternalLink className="size-4" />
+            </a>
           </div>
 
-          {/* Right: External link */}
-          <a
-            className="shrink-0 text-muted-foreground/60 hover:text-primary transition-colors hover:scale-110"
-            href={`https://studieinfo.liu.se/kurs/${course.id}`}
-            rel="noopener noreferrer"
-            target="_blank"
-            title="View on LiU"
-          >
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        </div>
+          <div className="space-y-1.5">
+            <p className="text-[0.67rem] font-medium tracking-[0.22em] text-muted-foreground uppercase">
+              {course.credits} credits
+            </p>
+            <CardTitle className="text-[1.05rem] font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover/card:text-primary">
+              {course.name}
+            </CardTitle>
+            {course.examinator ? (
+              <p className="text-xs leading-snug text-muted-foreground">
+                Examiner {course.examinator}
+              </p>
+            ) : null}
+          </div>
+        </CardHeader>
 
-        {/* COURSE NAME - Prominent, readable */}
-        <h3 className="text-sm font-bold text-foreground leading-snug line-clamp-2 group-hover:text-primary transition-colors min-h-[2.5rem]">
-          {course.name}
-        </h3>
+        <CardContent className="flex flex-1 flex-col gap-3 px-3.5 py-3">
+          <div className="grid grid-cols-2 gap-2">
+            <CourseSummaryTile label="Term" value={courseTermLabel} />
+            <CourseSummaryTile label="Schedule" value={courseScheduleLabel} />
+            <CourseSummaryTile
+              icon={<MapPin className="size-3.5" />}
+              label="Campus"
+              value={course.campus}
+            />
+            <CourseSummaryTile label="Pace" value={coursePaceLabel} />
+          </div>
 
-        {/* CRITICAL METADATA - Visual badges for instant recognition */}
-        <div className="flex items-center flex-wrap gap-1.5">
-          {/* Term Badge - Most critical for planning */}
-          <Badge className="px-2.5 py-1 font-bold text-xs bg-primary/95 text-primary-foreground border-0 shadow-sm">
-            T{isMultiTerm ? availableTerms.join(",") : course.term}
-          </Badge>
-
-          {/* Period Badge - Only for 100% courses */}
-          {course.pace === "100%" && (
-            <Badge className="px-2.5 py-1 font-bold text-xs bg-primary/85 text-primary-foreground border-0">
-              P{course.period}
-            </Badge>
-          )}
-
-          {/* Block Badge - Same color family for visual grouping */}
-          <Badge className="px-2.5 py-1 font-bold text-xs bg-primary/75 text-primary-foreground border-0">
-            B{formatBlocks(course.block)}
-          </Badge>
-
-          {/* Campus + Pace - Condensed info */}
-          <div className="flex items-center gap-1.5 ml-auto text-xs text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <MapPin className="h-3.5 w-3.5" />
-              <span className="font-semibold">{course.campus.slice(0, 3)}</span>
-            </div>
-            {course.pace !== "100%" && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-3.5 w-3.5" />
-                <span className="font-semibold">{course.pace}</span>
+          {course.examination.length > 0 ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[0.66rem] font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+                  Assessment
+                </p>
+                <p className="text-[0.68rem] text-muted-foreground">
+                  {course.examination.length} type
+                  {course.examination.length === 1 ? "" : "s"}
+                </p>
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* EXAMINATION TYPES - Subdued secondary info */}
-        <div className="flex items-center gap-1 pt-0.5">
-          <TruncatedExaminationBadges
-            examinations={course.examination}
-            maxVisible={5}
-            shortMode={true}
-          />
-        </div>
-
-        {/* SECONDARY INFO - Clear separation with subtle styling */}
-        <div className="flex-1 min-h-0 pt-1 border-t border-border/20">
-          {course.examinator && (
-            <div className="text-[11px] text-muted-foreground/80 truncate">
-              <span className="font-medium">Examiner:</span>{" "}
-              <span className="font-normal">{course.examinator}</span>
+              <TruncatedExaminationBadges
+                className="gap-1.5"
+                examinations={course.examination}
+                maxVisible={2}
+                shortMode={true}
+              />
             </div>
-          )}
-        </div>
+          ) : null}
+        </CardContent>
 
-        {/* ACTIONS - Clear, large touch targets */}
-        <div className="grid grid-cols-2 gap-2 pt-2 border-t border-border/30">
-          <Button
-            className={getCourseCardActionButtonClassName(actionState)}
-            onClick={() => {
-              if (isPinned && isHovered) {
-                removeCourse(course.id);
-              } else if (!isPinned) {
-                handleAddCourse();
-              }
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            {getCourseCardActionButtonContent(actionState)}
-          </Button>
-          <Link className="w-full" href={`/course/${course.id}`}>
+        <CardFooter className="border-t border-border/40 px-3.5 py-3">
+          <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-2">
             <Button
-              className="h-9 text-xs font-semibold bg-secondary/20 border-2 border-border/50 text-foreground hover:bg-secondary/30 hover:border-primary/30 hover:text-primary transition-all w-full"
-              size="sm"
-              variant="ghost"
+              className={`${getCourseCardActionButtonClassName(actionState)} h-11 rounded-lg text-sm`}
+              onClick={handlePrimaryAction}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              size="lg"
             >
-              <Info className="h-3.5 w-3.5 mr-1.5" />
-              Details
+              {getCourseCardActionButtonContent(actionState)}
             </Button>
-          </Link>
-        </div>
-      </CardContent>
 
-      {/* Term Selection Modal */}
+            <Link className="min-w-0" href={`/course/${course.id}`}>
+              <Button
+                className="h-11 min-w-[5.5rem] justify-center rounded-lg border-border/50 bg-transparent px-3 text-sm text-muted-foreground hover:border-primary/20 hover:bg-muted/30 hover:text-foreground"
+                size="lg"
+                variant="outline"
+              >
+                <Info data-icon="inline-start" />
+                Details
+              </Button>
+            </Link>
+          </div>
+        </CardFooter>
+      </div>
+
+      <div className="hidden h-full flex-col md:flex">
+        <CardHeader className="gap-4 border-b border-border/40 px-4 py-4">
+          <div className="flex items-start justify-between gap-3 border-b border-border/35 pb-3">
+            <div className="flex min-w-0 flex-wrap items-center gap-2.5">
+              <span className="font-mono text-[0.9rem] font-semibold tracking-[0.28em] text-primary/90 uppercase lg:text-[0.98rem]">
+                {course.id}
+              </span>
+              <Badge className={courseLevelBadgeClassName} variant="outline">
+                {courseLevelLabel}
+              </Badge>
+              {course.notes ? (
+                <CourseNotesIndicator
+                  isMobile={isMobile}
+                  note={course.notes}
+                  onOpenChange={setShowNotesTooltip}
+                  showNotesTooltip={showNotesTooltip}
+                />
+              ) : null}
+            </div>
+
+            <a
+              aria-label={`Open ${course.id} on LiU`}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-full border border-border/50 bg-background/80 text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+              href={`https://studieinfo.liu.se/kurs/${course.id}`}
+              rel="noopener noreferrer"
+              target="_blank"
+              title="View on LiU"
+            >
+              <ExternalLink className="size-4" />
+            </a>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <p className="text-[0.68rem] font-medium tracking-[0.26em] text-muted-foreground uppercase">
+              {course.credits} credits
+            </p>
+            <CardTitle className="line-clamp-2 text-balance text-xl font-semibold leading-tight tracking-tight text-foreground transition-colors group-hover/card:text-primary">
+              {course.name}
+            </CardTitle>
+            {course.examinator ? (
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Examiner {course.examinator}
+              </p>
+            ) : null}
+          </div>
+        </CardHeader>
+
+        <CardContent className="flex flex-1 flex-col gap-4 px-4 py-4">
+          <div className="grid gap-3 lg:grid-cols-2">
+            <CourseMetadataItem label="Term" value={courseTermLabel} />
+            <CourseMetadataItem label="Schedule" value={courseScheduleLabel} />
+            <CourseMetadataItem
+              icon={<MapPin className="size-3.5" />}
+              label="Campus"
+              value={course.campus}
+            />
+            <CourseMetadataItem label="Pace" value={coursePaceLabel} />
+          </div>
+
+          <CourseMetadataItem
+            label="Assessment"
+            value={
+              <div className="flex flex-col gap-2">
+                <TruncatedExaminationBadges
+                  className="gap-1.5"
+                  examinations={course.examination}
+                  maxVisible={4}
+                  shortMode={true}
+                />
+                {course.studierektor ? (
+                  <p className="text-xs font-normal text-muted-foreground">
+                    Director {course.studierektor}
+                  </p>
+                ) : null}
+              </div>
+            }
+          />
+        </CardContent>
+
+        <CardFooter className="border-t border-border/40 px-4 py-4">
+          <div className="grid w-full gap-2 lg:grid-cols-[minmax(0,1fr)_auto]">
+            <Button
+              className={getCourseCardActionButtonClassName(actionState)}
+              onClick={handlePrimaryAction}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              size="lg"
+            >
+              {getCourseCardActionButtonContent(actionState)}
+            </Button>
+
+            <Link className="w-full lg:w-auto" href={`/course/${course.id}`}>
+              <Button
+                className="h-10 w-full min-w-32 justify-center rounded-md border-border/50 bg-transparent text-muted-foreground hover:border-primary/20 hover:bg-muted/30 hover:text-foreground"
+                size="lg"
+                variant="outline"
+              >
+                <Info data-icon="inline-start" />
+                Details
+              </Button>
+            </Link>
+          </div>
+        </CardFooter>
+      </div>
+
       <TermSelectionModal
         availableTerms={availableTerms}
         course={course}
@@ -414,7 +560,6 @@ export function CourseCard({ course }: CourseCardProps) {
         onTermSelected={handleTermSelected}
       />
 
-      {/* Conflict Resolution Modal */}
       <ConflictResolutionModal
         conflictingCourses={conflictingCourses}
         isOpen={showConflictModal}
@@ -422,7 +567,7 @@ export function CourseCard({ course }: CourseCardProps) {
         onCancel={handleCancelConflictResolution}
         onChooseExisting={handleChooseExistingCourse}
         onChooseNew={handleChooseNewCourse}
-        onClose={() => setShowConflictModal(false)}
+        onClose={handleCancelConflictResolution}
       />
     </Card>
   );

@@ -166,13 +166,13 @@ function RelatedCoursesSection({
       </div>
 
       {isLoadingRelated ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))]">
           {RELATED_COURSE_SKELETON_KEYS.map((key) => (
             <CourseCardSkeleton key={key} />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-x-visible pb-4 sm:pb-0">
+        <div className="grid grid-cols-1 gap-4 overflow-x-auto pb-4 sm:overflow-x-visible sm:pb-0 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))]">
           {relatedCourses.map((relatedCourse) => (
             <CourseCard course={relatedCourse} key={relatedCourse.id} />
           ))}

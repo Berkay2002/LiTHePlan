@@ -68,16 +68,20 @@ function ComboboxInput({
       />
       <InputGroupAddon align="inline-end">
         {showTrigger && (
-          <InputGroupButton
-            size="icon-xs"
-            variant="ghost"
-            asChild
-            data-slot="input-group-button"
-            className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
-            disabled={disabled}
+          <ComboboxPrimitive.Trigger
+            data-slot="combobox-trigger"
+            render={
+              <InputGroupButton
+                size="icon-xs"
+                variant="ghost"
+                data-slot="input-group-button"
+                className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
+                disabled={disabled}
+              />
+            }
           >
-            <ComboboxTrigger />
-          </InputGroupButton>
+            <CaretDownIcon className="pointer-events-none size-3.5 text-muted-foreground" />
+          </ComboboxPrimitive.Trigger>
         )}
         {showClear && <ComboboxClear disabled={disabled} />}
       </InputGroupAddon>

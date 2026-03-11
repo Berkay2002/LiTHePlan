@@ -161,9 +161,11 @@ export function DraggableTermCard({
             Period {currentPeriod} Block Timeline:
           </div>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-            </TooltipTrigger>
+            <TooltipTrigger
+              render={
+                <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+              }
+            />
             <TooltipContent>
               <p>
                 Shows course distribution across 4 study blocks. Number
@@ -271,10 +273,12 @@ export function DraggableTermCard({
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default">
-                            {course.name}
-                          </h4>
+                        <TooltipTrigger
+                          render={
+                            <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default" />
+                          }
+                        >
+                          {course.name}
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{course.name}</p>
@@ -386,10 +390,12 @@ export function DraggableTermCard({
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default">
-                      {course.name}
-                    </h4>
+                  <TooltipTrigger
+                    render={
+                      <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default" />
+                    }
+                  >
+                    {course.name}
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>{course.name}</p>

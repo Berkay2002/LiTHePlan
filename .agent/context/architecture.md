@@ -24,6 +24,7 @@ LiTHePlan/
 │   └── profile/[id]/        # Profile view
 ├── components/
 │   ├── course/              # CourseCard, FilterPanel, ConflictModal
+│   ├── home-sidebar/        # Homepage-only left shell (filters/search/account)
 │   ├── profile/             # ProfileContext (CRITICAL), ProfilePinboard
 │   ├── shared/              # AlertBanner, CommandPalette, Navbar
 │   └── ui/                  # shadcn/ui primitives (don't edit)
@@ -74,6 +75,14 @@ User saves profile
 User Action → ProfileContext.action() → Validate → Check Conflicts
     → Dispatch Reducer → Update State → Save to Storage → Re-render
 ```
+
+### Homepage Shell Pattern
+
+- `app/page.tsx` now routes through `PageLayout` with `mainShell="home-sidebar"` so the homepage can use shadcn `SidebarProvider`/`Sidebar`/`SidebarInset` without changing other `navbarMode="main"` consumers such as the course detail page
+- `components/home-sidebar/` owns the homepage-only shell pieces: header/mobile bar, shared filter surface wrapper, account footer, and the matching skeleton
+- `components/course/FilterPanel.tsx` now owns the canonical filter controls (`FilterPanelControls`) so the homepage sidebar and any card-based filter surface reuse the same filter UI and behavior
+- The homepage left sidebar open state is still persisted through `hooks/useResponsiveSidebar.ts`, while the right `ProfileSidebar` remains an independent persisted surface
+- Temporary client-consumed homepage UI kill switches belong in `lib/ui-feature-flags.ts`; the right profile rail is currently controlled by `NEXT_PUBLIC_ENABLE_HOME_PROFILE_SIDEBAR` so the homepage can remove both the rail and its layout offsets without importing the server-side Hypertune adapter into a client component
 
 ## Database Schema
 

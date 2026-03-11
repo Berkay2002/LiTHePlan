@@ -1,18 +1,22 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import {
+  type CSSProperties,
+  Suspense,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { TopControlsSkeleton } from "@/components/course/ControlsSkeleton";
 import { CourseGridSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseGrid } from "@/components/course/CourseGrid";
 import { CourseList } from "@/components/course/CourseList";
 import { CourseListSkeleton } from "@/components/course/CourseListSkeleton";
-import {
-  CollapsibleFilterSidebar,
-  type FilterState,
-} from "@/components/course/FilterPanel";
-import { FilterSidebarSkeleton } from "@/components/course/FilterSidebarSkeleton";
+import type { FilterState } from "@/components/course/FilterPanel";
 import { type ViewMode, ViewToggle } from "@/components/course/ViewToggle";
+import { HomeSidebar } from "@/components/home-sidebar/home-sidebar";
+import { HomeSidebarSkeleton } from "@/components/home-sidebar/home-sidebar-skeleton";
 import { InfoBanner } from "@/components/InfoBanner";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useProfile } from "@/components/profile/ProfileContext";
@@ -34,11 +38,29 @@ import {
   parseViewMode,
   VIEW_MODE_STORAGE_KEY,
 } from "@/lib/courseFiltering";
+import {
+  PROFILE_SIDEBAR_COLLAPSED_WIDTH,
+  PROFILE_SIDEBAR_DESKTOP_WIDTH,
+  PROFILE_SIDEBAR_DESKTOP_WIDTH_XL,
+} from "@/lib/profile-constants";
+import { homeProfileSidebarEnabled } from "@/lib/ui-feature-flags";
 
 const COURSES_PER_PAGE = 60;
 const PROFILE_SIDEBAR_STORAGE_KEY = "profile-sidebar-open";
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
+const PROFILE_SIDEBAR_COLLAPSED_GAP = "0.75rem";
 const noop = () => undefined;
+const PROFILE_SIDEBAR_LAYOUT_STYLE = {
+  "--profile-sidebar-width": PROFILE_SIDEBAR_DESKTOP_WIDTH,
+  "--profile-sidebar-width-collapsed": PROFILE_SIDEBAR_COLLAPSED_WIDTH,
+  "--profile-sidebar-collapsed-gap": PROFILE_SIDEBAR_COLLAPSED_GAP,
+  "--profile-sidebar-width-xl": PROFILE_SIDEBAR_DESKTOP_WIDTH_XL,
+} as CSSProperties;
+const PROFILE_SIDEBAR_CONTENT_OFFSET_CLASS =
+  "lg:mr-[calc(var(--profile-sidebar-width-collapsed)+var(--profile-sidebar-collapsed-gap))] data-[profile-sidebar-open=true]:lg:mr-[var(--profile-sidebar-width)] data-[profile-sidebar-open=true]:xl:mr-[var(--profile-sidebar-width-xl)]";
+const HOME_CONTENT_WRAPPER_BASE_CLASS =
+  "w-full transition-[margin] duration-300 ease-in-out";
+const HOME_CONTENT_WRAPPER_CLASS = `w-full transition-[margin] duration-300 ease-in-out ${PROFILE_SIDEBAR_CONTENT_OFFSET_CLASS}`;
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -111,11 +133,20 @@ function HomeContent() {
     }
   );
 
-  const { isOpen: sidebarOpen, toggle: toggleSidebar } = useResponsiveSidebar();
+  const {
+    isOpen: sidebarOpen,
+    setIsOpen: setSidebarOpen,
+    toggle: toggleSidebar,
+  } = useResponsiveSidebar();
   const { value: profileSidebarOpen, toggle: toggleProfileSidebar } = useToggle(
     false,
     PROFILE_SIDEBAR_STORAGE_KEY
   );
+  const effectiveProfileSidebarOpen =
+    homeProfileSidebarEnabled && profileSidebarOpen;
+  const homeContentWrapperClass = homeProfileSidebarEnabled
+    ? HOME_CONTENT_WRAPPER_CLASS
+    : HOME_CONTENT_WRAPPER_BASE_CLASS;
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -178,37 +209,44 @@ function HomeContent() {
     return (
       <PageLayout
         isMobileMenuOpen={storedSkeletonSidebarOpen}
+        mainShell="home-sidebar"
         navbarMode="main"
         onMobileMenuToggle={noop}
         onSearchChange={handleSearchChange}
+        onSidebarOpenChange={noop}
         searchQuery={filterState.search}
+        sidebar={<HomeSidebarSkeleton />}
+        sidebarOpen={storedSkeletonSidebarOpen}
       >
-        <div className="min-h-screen bg-background">
-          <div className="flex">
-            <FilterSidebarSkeleton
-              isOpen={storedSkeletonSidebarOpen}
-              onToggle={noop}
-            />
-
+        <div
+          className="min-h-screen bg-background"
+          style={
+            homeProfileSidebarEnabled ? PROFILE_SIDEBAR_LAYOUT_STYLE : undefined
+          }
+        >
+          {homeProfileSidebarEnabled ? (
             <ProfileSidebarSkeleton
               isOpen={storedSkeletonProfileSidebarOpen}
               onToggle={noop}
             />
+          ) : null}
 
-            <div
-              className={`w-full pt-20 ${
-                storedSkeletonSidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
-              } ${storedSkeletonProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
-            >
-              <div className="container mx-auto px-4 py-8">
-                <TopControlsSkeleton />
+          <div
+            className={homeContentWrapperClass}
+            data-profile-sidebar-open={
+              homeProfileSidebarEnabled && storedSkeletonProfileSidebarOpen
+                ? "true"
+                : "false"
+            }
+          >
+            <div className="container mx-auto px-4 pt-4 pb-8">
+              <TopControlsSkeleton />
 
-                {storedSkeletonViewMode === "grid" ? (
-                  <CourseGridSkeleton count={COURSES_PER_PAGE} />
-                ) : (
-                  <CourseListSkeleton count={COURSES_PER_PAGE} />
-                )}
-              </div>
+              {storedSkeletonViewMode === "grid" ? (
+                <CourseGridSkeleton count={COURSES_PER_PAGE} />
+              ) : (
+                <CourseListSkeleton count={COURSES_PER_PAGE} />
+              )}
             </div>
           </div>
         </div>
@@ -220,10 +258,23 @@ function HomeContent() {
     return (
       <PageLayout
         isMobileMenuOpen={sidebarOpen}
+        mainShell="home-sidebar"
         navbarMode="main"
         onMobileMenuToggle={toggleSidebar}
         onSearchChange={handleSearchChange}
+        onSidebarOpenChange={setSidebarOpen}
         searchQuery={filterState.search}
+        sidebar={
+          <HomeSidebar
+            courses={courses}
+            filterState={filterState}
+            onFilterChange={handleFilterChange}
+            onResetFilters={handleResetFilters}
+            onSearchChange={handleSearchChange}
+            searchQuery={filterState.search}
+          />
+        }
+        sidebarOpen={sidebarOpen}
       >
         <div className="min-h-screen bg-background flex items-center justify-center">
           <div className="text-center">
@@ -246,23 +297,31 @@ function HomeContent() {
   return (
     <PageLayout
       isMobileMenuOpen={sidebarOpen}
+      mainShell="home-sidebar"
       navbarMode="main"
       onMobileMenuToggle={toggleSidebar}
       onSearchChange={handleSearchChange}
+      onSidebarOpenChange={setSidebarOpen}
       searchQuery={filterState.search}
+      sidebar={
+        <HomeSidebar
+          courses={courses}
+          filterState={filterState}
+          onFilterChange={handleFilterChange}
+          onResetFilters={handleResetFilters}
+          onSearchChange={handleSearchChange}
+          searchQuery={filterState.search}
+        />
+      }
+      sidebarOpen={sidebarOpen}
     >
-      <div className="min-h-screen bg-background">
-        <div className="flex">
-          <CollapsibleFilterSidebar
-            courses={courses}
-            filterState={filterState}
-            isOpen={sidebarOpen}
-            onFilterChange={handleFilterChange}
-            onResetFilters={handleResetFilters}
-            onToggle={toggleSidebar}
-          />
-
-          {/* PPR: Wrap ProfileSidebar in Suspense for dynamic user data */}
+      <div
+        className="min-h-screen bg-background"
+        style={
+          homeProfileSidebarEnabled ? PROFILE_SIDEBAR_LAYOUT_STYLE : undefined
+        }
+      >
+        {homeProfileSidebarEnabled ? (
           <Suspense
             fallback={
               <ProfileSidebarSkeleton
@@ -277,61 +336,52 @@ function HomeContent() {
               profile={state.current_profile}
             />
           </Suspense>
+        ) : null}
 
-          <div
-            className={`w-full transition-all duration-300 ease-in-out pt-20 ${
-              sidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
-            } ${profileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
-          >
-            <div className="container mx-auto px-4 py-8">
-              {/* Wrapper grid to constrain all content to match CourseGrid width */}
-              <div
-                className="grid gap-4 lg:gap-5 w-full justify-center"
-                style={{
-                  gridTemplateColumns:
-                    "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
-                }}
-              >
-                {/* InfoBanner spans all columns */}
-                <div className="col-start-1 -col-end-1 mb-2">
-                  <InfoBanner />
-                </div>
+        <div
+          className={homeContentWrapperClass}
+          data-profile-sidebar-open={
+            effectiveProfileSidebarOpen ? "true" : "false"
+          }
+        >
+          <div className="container mx-auto px-4 pt-4 pb-8">
+            <div className="flex w-full flex-col gap-4">
+              <div>
+                <InfoBanner />
+              </div>
 
-                {/* ViewToggle spans all columns, aligned to the right */}
-                <div className="col-start-1 -col-end-1 flex justify-end mb-2">
-                  <ViewToggle
-                    onViewModeChange={setViewMode}
-                    viewMode={viewMode}
+              <div className="flex justify-end">
+                <ViewToggle
+                  onViewModeChange={setViewMode}
+                  viewMode={viewMode}
+                />
+              </div>
+
+              <div>
+                {viewMode === "grid" ? (
+                  <CourseGrid
+                    courses={paginatedCourses}
+                    currentPage={currentPage}
+                    isFiltered={hasActiveFilters(filterState)}
+                    itemsPerPage={COURSES_PER_PAGE}
+                    onPageChange={handlePageChange}
+                    profileSidebarOpen={effectiveProfileSidebarOpen}
+                    sidebarOpen={sidebarOpen}
+                    totalCourses={filteredCourses.length}
+                    totalPages={totalPages}
                   />
-                </div>
-
-                {/* Course display spans all columns */}
-                <div className="col-start-1 -col-end-1">
-                  {viewMode === "grid" ? (
-                    <CourseGrid
-                      courses={paginatedCourses}
-                      currentPage={currentPage}
-                      isFiltered={hasActiveFilters(filterState)}
-                      itemsPerPage={COURSES_PER_PAGE}
-                      onPageChange={handlePageChange}
-                      profileSidebarOpen={profileSidebarOpen}
-                      sidebarOpen={sidebarOpen}
-                      totalCourses={filteredCourses.length}
-                      totalPages={totalPages}
-                    />
-                  ) : (
-                    <CourseList
-                      activeFilters={filterState}
-                      courses={paginatedCourses}
-                      currentPage={currentPage}
-                      isFiltered={hasActiveFilters(filterState)}
-                      itemsPerPage={COURSES_PER_PAGE}
-                      onPageChange={handlePageChange}
-                      totalCourses={filteredCourses.length}
-                      totalPages={totalPages}
-                    />
-                  )}
-                </div>
+                ) : (
+                  <CourseList
+                    activeFilters={filterState}
+                    courses={paginatedCourses}
+                    currentPage={currentPage}
+                    isFiltered={hasActiveFilters(filterState)}
+                    itemsPerPage={COURSES_PER_PAGE}
+                    onPageChange={handlePageChange}
+                    totalCourses={filteredCourses.length}
+                    totalPages={totalPages}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -371,45 +421,51 @@ function HomeContentSkeleton() {
   return (
     <PageLayout
       isMobileMenuOpen={storedSidebarOpen}
+      mainShell="home-sidebar"
       navbarMode="main"
       onMobileMenuToggle={noop}
       onSearchChange={noop}
+      onSidebarOpenChange={noop}
       searchQuery=""
+      sidebar={<HomeSidebarSkeleton />}
+      sidebarOpen={storedSidebarOpen}
     >
-      <div className="min-h-screen bg-background">
-        <div className="flex">
-          <FilterSidebarSkeleton isOpen={storedSidebarOpen} onToggle={noop} />
+      <div
+        className="min-h-screen bg-background"
+        style={
+          homeProfileSidebarEnabled ? PROFILE_SIDEBAR_LAYOUT_STYLE : undefined
+        }
+      >
+        {homeProfileSidebarEnabled ? (
           <ProfileSidebarSkeleton
             isOpen={storedProfileSidebarOpen}
             onToggle={noop}
           />
-          <div
-            className={`w-full pt-20 ${
-              storedSidebarOpen ? "lg:ml-80 xl:ml-96" : "lg:ml-12"
-            } ${storedProfileSidebarOpen ? "lg:mr-80 xl:mr-96" : "lg:mr-12"}`}
-          >
-            <div className="container mx-auto px-4 py-8">
-              {/* Wrapper grid to constrain all content to match CourseGrid width */}
-              <div
-                className="grid gap-4 lg:gap-5 w-full justify-center"
-                style={{
-                  gridTemplateColumns:
-                    "repeat(auto-fit, minmax(min(100%, 260px), min(100%, 300px)))",
-                }}
-              >
-                {/* TopControls (InfoBanner + ViewToggle) already has grid structure */}
-                <div className="col-start-1 -col-end-1">
-                  <TopControlsSkeleton />
-                </div>
+        ) : null}
+        <div
+          className={
+            homeProfileSidebarEnabled
+              ? HOME_CONTENT_WRAPPER_CLASS
+              : HOME_CONTENT_WRAPPER_BASE_CLASS
+          }
+          data-profile-sidebar-open={
+            homeProfileSidebarEnabled && storedProfileSidebarOpen
+              ? "true"
+              : "false"
+          }
+        >
+          <div className="container mx-auto px-4 pt-4 pb-8">
+            <div className="flex w-full flex-col gap-4">
+              <div>
+                <TopControlsSkeleton />
+              </div>
 
-                {/* Course display skeleton spans all columns */}
-                <div className="col-start-1 -col-end-1">
-                  {storedViewMode === "grid" ? (
-                    <CourseGridSkeleton count={COURSES_PER_PAGE} />
-                  ) : (
-                    <CourseListSkeleton count={COURSES_PER_PAGE} />
-                  )}
-                </div>
+              <div>
+                {storedViewMode === "grid" ? (
+                  <CourseGridSkeleton count={COURSES_PER_PAGE} />
+                ) : (
+                  <CourseListSkeleton count={COURSES_PER_PAGE} />
+                )}
               </div>
             </div>
           </div>
