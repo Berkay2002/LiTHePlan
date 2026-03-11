@@ -179,7 +179,14 @@ function HomeContent() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const insetScroller = document.querySelector(
+      "[data-slot='sidebar-inset'] > div"
+    );
+    if (insetScroller) {
+      insetScroller.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   // Track stored values for skeleton display (client-side only)

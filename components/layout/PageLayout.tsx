@@ -54,6 +54,7 @@ export function PageLayout(props: PageLayoutProps) {
 
       return (
         <SidebarProvider
+          className="h-svh overflow-hidden"
           onOpenChange={handleSidebarOpenChange}
           open={controlledSidebarOpen}
           style={
@@ -64,13 +65,15 @@ export function PageLayout(props: PageLayoutProps) {
           }
         >
           {sidebar}
-          <SidebarInset className="flex flex-col flex-1 overflow-auto">
+          <SidebarInset className="flex flex-col overflow-hidden md:h-[calc(100svh-1rem)]">
             {isHomeSidebarSkeleton ? (
               <HomeSidebarMobileBarSkeleton />
             ) : (
               <HomeSidebarMobileBar />
             )}
-            {children}
+            <div className="flex flex-col flex-1 overflow-y-auto">
+              {children}
+            </div>
           </SidebarInset>
         </SidebarProvider>
       );

@@ -47,7 +47,7 @@ export function CourseGrid({
 
   return (
     <div className="space-y-6 w-full">
-      <div className="grid w-full grid-cols-1 gap-4 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))] lg:gap-5">
+      <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(100%,320px),1fr))] lg:gap-5">
         {courses.map((course) => (
           <CourseCard course={course} key={course.id} />
         ))}
