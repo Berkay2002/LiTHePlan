@@ -3,13 +3,18 @@
 "use client";
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
+import { Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DraggableTermCard } from "@/components/DraggableTermCard";
 import { EditableTermCard } from "@/components/EditableTermCard";
+import { ProfileEditSidebarContent } from "@/components/home-sidebar/profile-edit-sidebar-content";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileSkeletonLoader } from "@/components/ProfileSkeletonLoader";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { useProfile } from "@/components/profile/ProfileContext";
+import { ShareButtons } from "@/components/ShareButtons";
+import { Button } from "@/components/ui/button";
+import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
 import {
   IMMUTABLE_MASTER_PROGRAM_TERMS,
   MASTER_PROGRAM_TERMS,
@@ -24,6 +29,8 @@ function ProfileEditPageContent() {
   const { state, removeCourse, moveCourse, clearTerm } = useProfile();
   const [isMobile, setIsMobile] = useState(false);
   const [showBlockTimeline, setShowBlockTimeline] = useState(true);
+  const { isOpen: sidebarOpen, setIsOpen: setSidebarOpen } =
+    useResponsiveSidebar();
 
   // Track loading state with minimum display time for better UX
   const [isLoading, setIsLoading] = useState(true);
@@ -128,9 +135,8 @@ function ProfileEditPageContent() {
   if (showLoading || !currentProfile) {
     return (
       <PageLayout
-        navbarMode="profile-edit"
-        onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
-        showBlockTimeline={showBlockTimeline}
+        onSidebarOpenChange={setSidebarOpen}
+        sidebarOpen={sidebarOpen}
       >
         <ProfileSkeletonLoader />
       </PageLayout>
@@ -139,12 +145,35 @@ function ProfileEditPageContent() {
 
   return (
     <PageLayout
-      navbarMode="profile-edit"
-      onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
-      showBlockTimeline={showBlockTimeline}
+      mobileBarRightSlot={
+        <>
+          <Button
+            className="size-9 rounded-xl border-border/70 bg-transparent text-foreground/86 transition-colors duration-150 hover:bg-muted/38 hover:text-foreground"
+            onClick={() => setShowBlockTimeline(!showBlockTimeline)}
+            size="icon"
+            variant="outline"
+          >
+            {showBlockTimeline ? (
+              <EyeOff className="size-4" />
+            ) : (
+              <Eye className="size-4" />
+            )}
+          </Button>
+          <ShareButtons hideTextOnMobile profile={currentProfile} />
+        </>
+      }
+      onSidebarOpenChange={setSidebarOpen}
+      sidebarContent={
+        <ProfileEditSidebarContent
+          onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
+          profile={currentProfile}
+          showBlockTimeline={showBlockTimeline}
+        />
+      }
+      sidebarOpen={sidebarOpen}
     >
       <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="min-h-screen bg-background pt-20">
+        <div className="min-h-screen bg-background">
           <div className="container mx-auto px-4 py-8 space-y-8">
             {/* Profile Statistics Card */}
             <ProfileStatsCard profile={currentProfile} />

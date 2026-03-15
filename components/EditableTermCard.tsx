@@ -178,11 +178,9 @@ export function EditableTermCard({
             Period {currentPeriod} Block Timeline:
           </div>
           <Tooltip>
-            <TooltipTrigger
-              render={
-                <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-              }
-            />
+            <TooltipTrigger asChild>
+              <Info className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+            </TooltipTrigger>
             <TooltipContent>
               <p>
                 Shows course distribution across 4 study blocks. Number
@@ -278,12 +276,10 @@ export function EditableTermCard({
               <div className="flex items-start justify-between">
                 <div className="flex-1 min-w-0">
                   <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <h4 className="font-medium text-sm leading-tight truncate text-foreground cursor-default" />
-                      }
-                    >
-                      {course.name}
+                    <TooltipTrigger asChild>
+                      <h4 className="font-medium text-sm leading-tight truncate text-foreground cursor-default">
+                        {course.name}
+                      </h4>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>{course.name}</p>

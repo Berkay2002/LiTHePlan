@@ -80,24 +80,28 @@ function GuestFooter({ isCollapsed }: { isCollapsed: boolean }) {
       <FooterActionMenu isCollapsed={isCollapsed}>
         <SidebarMenuItem>
           <SidebarMenuButton
+            asChild
             className={collapsedFooterButtonClassName}
-            render={<Link href="/login" />}
             size="lg"
             tooltip="Log in"
           >
-            <LogIn />
-            {isCollapsed ? null : <span>Log in</span>}
+            <Link href="/login">
+              <LogIn />
+              {isCollapsed ? null : <span>Log in</span>}
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
         <SidebarMenuItem>
           <SidebarMenuButton
+            asChild
             className={collapsedFooterButtonClassName}
-            render={<Link href="/profile/edit" />}
             size="lg"
             tooltip="Course Profile"
           >
-            <UserRound />
-            {isCollapsed ? null : <span>Course Profile</span>}
+            <Link href="/profile/edit">
+              <UserRound />
+              {isCollapsed ? null : <span>Course Profile</span>}
+            </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </FooterActionMenu>
@@ -123,6 +127,34 @@ function SignedInFooter({
   return (
     <FooterShell isCollapsed={isCollapsed}>
       <div className="flex flex-col gap-3">
+        <FooterActionMenu isCollapsed={isCollapsed}>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className={cn("cursor-pointer", collapsedFooterButtonClassName)}
+              size="lg"
+              tooltip="Course Profile"
+            >
+              <Link href="/profile/edit">
+                <UserRound />
+                {isCollapsed ? null : <span>Course Profile</span>}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              className={cn("cursor-pointer", collapsedFooterButtonClassName)}
+              onClick={onSignOut}
+              size="lg"
+              tooltip="Sign out"
+              type="button"
+            >
+              <LogOut />
+              {isCollapsed ? null : <span>Sign out</span>}
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </FooterActionMenu>
+
         <div
           className={cn(
             "flex items-center gap-3 rounded-2xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3",
@@ -147,32 +179,6 @@ function SignedInFooter({
             </div>
           )}
         </div>
-
-        <FooterActionMenu isCollapsed={isCollapsed}>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              className={cn("cursor-pointer", collapsedFooterButtonClassName)}
-              render={<Link href="/profile/edit" />}
-              size="lg"
-              tooltip="Course Profile"
-            >
-              <UserRound />
-              {isCollapsed ? null : <span>Course Profile</span>}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              className={cn("cursor-pointer", collapsedFooterButtonClassName)}
-              onClick={onSignOut}
-              size="lg"
-              tooltip="Sign out"
-              type="button"
-            >
-              <LogOut />
-              {isCollapsed ? null : <span>Sign out</span>}
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </FooterActionMenu>
       </div>
     </FooterShell>
   );

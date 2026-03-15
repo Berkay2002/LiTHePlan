@@ -46,21 +46,19 @@ export function PinnedCourseCard({
                   onOpenChange={isMobile ? setShowNotesTooltip : undefined}
                   open={isMobile ? showNotesTooltip : undefined}
                 >
-                  <TooltipTrigger
-                    render={
-                      <button
-                        className="flex items-center gap-1 rounded border border-chart-4/30 bg-chart-4/15 px-1.5 py-0.5 text-chart-4 transition-colors cursor-pointer shrink-0 hover:bg-chart-4/20"
-                        onBlur={() => isMobile && setShowNotesTooltip(false)}
-                        onClick={() =>
-                          isMobile && setShowNotesTooltip(!showNotesTooltip)
-                        }
-                        type="button"
-                      >
-                        <AlertTriangle className="h-3 w-3" />
-                        <span className="text-xs font-bold">OBS</span>
-                      </button>
-                    }
-                  />
+                  <TooltipTrigger asChild>
+                    <button
+                      className="flex items-center gap-1 rounded border border-chart-4/30 bg-chart-4/15 px-1.5 py-0.5 text-chart-4 transition-colors cursor-pointer shrink-0 hover:bg-chart-4/20"
+                      onBlur={() => isMobile && setShowNotesTooltip(false)}
+                      onClick={() =>
+                        isMobile && setShowNotesTooltip(!showNotesTooltip)
+                      }
+                      type="button"
+                    >
+                      <AlertTriangle className="h-3 w-3" />
+                      <span className="text-xs font-bold">OBS</span>
+                    </button>
+                  </TooltipTrigger>
                   <TooltipContent side="top">
                     <p>{course.notes}</p>
                   </TooltipContent>
@@ -140,16 +138,14 @@ export function PinnedCourseCard({
                 ))}
                 {allProgramsAndOrientations.length > 2 && (
                   <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <Badge
-                          className="cursor-help px-2 py-0.5 text-xs"
-                          variant="outline"
-                        >
-                          +{allProgramsAndOrientations.length - 2} more
-                        </Badge>
-                      }
-                    />
+                    <TooltipTrigger asChild>
+                      <Badge
+                        className="cursor-help px-2 py-0.5 text-xs"
+                        variant="outline"
+                      >
+                        +{allProgramsAndOrientations.length - 2} more
+                      </Badge>
+                    </TooltipTrigger>
                     <TooltipContent side="top">
                       <div className="space-y-1">
                         <p className="font-medium">Additional programs:</p>

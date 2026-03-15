@@ -11,7 +11,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import { CaretDownIcon, XIcon, CheckIcon } from "@phosphor-icons/react"
+import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react"
 
 const Combobox = ComboboxPrimitive.Root
 
@@ -31,7 +31,7 @@ function ComboboxTrigger({
       {...props}
     >
       {children}
-      <CaretDownIcon className="pointer-events-none size-3.5 text-muted-foreground" />
+      <ChevronDownIcon className="pointer-events-none size-3.5 text-muted-foreground" />
     </ComboboxPrimitive.Trigger>
   )
 }
@@ -68,20 +68,16 @@ function ComboboxInput({
       />
       <InputGroupAddon align="inline-end">
         {showTrigger && (
-          <ComboboxPrimitive.Trigger
-            data-slot="combobox-trigger"
-            render={
-              <InputGroupButton
-                size="icon-xs"
-                variant="ghost"
-                data-slot="input-group-button"
-                className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
-                disabled={disabled}
-              />
-            }
+          <InputGroupButton
+            size="icon-xs"
+            variant="ghost"
+            asChild
+            data-slot="input-group-button"
+            className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
+            disabled={disabled}
           >
-            <CaretDownIcon className="pointer-events-none size-3.5 text-muted-foreground" />
-          </ComboboxPrimitive.Trigger>
+            <ComboboxTrigger />
+          </InputGroupButton>
         )}
         {showClear && <ComboboxClear disabled={disabled} />}
       </InputGroupAddon>

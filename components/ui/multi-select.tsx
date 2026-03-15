@@ -793,8 +793,8 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   .join(", ")}`}
           </div>
 
+          <PopoverPrimitive.Trigger asChild ref={buttonRef}>
           <Button
-              render={<PopoverPrimitive.Trigger ref={buttonRef} />}
               {...props}
               aria-controls={isPopoverOpen ? listboxId : undefined}
               aria-describedby={`${triggerDescriptionId} ${selectedCountId}`}
@@ -1032,6 +1032,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                 </div>
               )}
             </Button>
+          </PopoverPrimitive.Trigger>
           <PopoverContent
             align="start"
             aria-label="Available options"

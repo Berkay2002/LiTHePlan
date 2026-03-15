@@ -39,6 +39,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
 import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
 import type { Course } from "@/types/course";
@@ -55,8 +56,6 @@ const RELATED_COURSE_SKELETON_KEYS = [
   "related-course-skeleton-5",
   "related-course-skeleton-6",
 ] as const;
-
-const noop = () => undefined;
 
 const buildStableStringItems = (values: string[]) => {
   const occurrences = new Map<string, number>();
@@ -183,8 +182,9 @@ function RelatedCoursesSection({
 }
 
 function CoursePageContent({ course }: CoursePageClientProps) {
+  const { isOpen: sidebarOpen, setIsOpen: setSidebarOpen } =
+    useResponsiveSidebar();
   const [isTermModalOpen, setIsTermModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const [relatedCourses, setRelatedCourses] = useState<Course[]>([]);
@@ -216,16 +216,30 @@ function CoursePageContent({ course }: CoursePageClientProps) {
 
   // Scroll to top handler
   useEffect(() => {
+    const scroller =
+      document.querySelector<HTMLElement>(
+        "[data-slot='sidebar-inset'] > div"
+      ) ?? window;
+
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      const scrollY =
+        scroller instanceof HTMLElement ? scroller.scrollTop : window.scrollY;
+      setShowScrollTop(scrollY > 400);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    scroller.addEventListener("scroll", handleScroll);
+    return () => scroller.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const scroller = document.querySelector<HTMLElement>(
+      "[data-slot='sidebar-inset'] > div"
+    );
+    if (scroller) {
+      scroller.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   // Handle term selection from modal
@@ -247,17 +261,11 @@ function CoursePageContent({ course }: CoursePageClientProps) {
   const allPrograms = [...course.programs, ...(course.orientations || [])];
 
   return (
-    <PageLayout
-      isMobileMenuOpen={false}
-      navbarMode="main"
-      onMobileMenuToggle={noop}
-      onSearchChange={setSearchQuery}
-      searchQuery={searchQuery}
-    >
+    <PageLayout onSidebarOpenChange={setSidebarOpen} sidebarOpen={sidebarOpen}>
       <CourseStructuredData course={course} />
       <CourseFAQSchema course={course} />
 
-      <div className="min-h-screen bg-background pt-20">
+      <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8 pb-24 sm:pb-8 max-w-5xl">
           {/* Breadcrumb Navigation */}
           <Breadcrumb className="mb-6">

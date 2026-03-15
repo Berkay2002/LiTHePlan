@@ -413,27 +413,25 @@ export function FilterPanelControls({
               key={isMobile ? "mobile" : "desktop"}
               open={isMobile ? showProgramTooltip : undefined}
             >
-              <TooltipTrigger
-                render={
-                  <button
-                    aria-label="Show program info"
-                    className="ml-2 flex h-5 w-5 items-center justify-center rounded-full text-sidebar-foreground/40 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground/70"
-                    onBlur={() => {
-                      if (isMobile) {
-                        setShowProgramTooltip(false);
-                      }
-                    }}
-                    onClick={() => {
-                      if (isMobile) {
-                        setShowProgramTooltip((previous) => !previous);
-                      }
-                    }}
-                    type="button"
-                  >
-                    <Info className="h-3.5 w-3.5" />
-                  </button>
-                }
-              />
+              <TooltipTrigger asChild>
+                <button
+                  aria-label="Show program info"
+                  className="ml-2 flex h-5 w-5 items-center justify-center rounded-full text-sidebar-foreground/40 transition-all duration-200 hover:bg-sidebar-accent hover:text-sidebar-foreground/70"
+                  onBlur={() => {
+                    if (isMobile) {
+                      setShowProgramTooltip(false);
+                    }
+                  }}
+                  onClick={() => {
+                    if (isMobile) {
+                      setShowProgramTooltip((previous) => !previous);
+                    }
+                  }}
+                  type="button"
+                >
+                  <Info className="h-3.5 w-3.5" />
+                </button>
+              </TooltipTrigger>
               <TooltipContent sideOffset={4}>
                 <p className="max-w-[200px] text-xs">
                   Program indicates the main degree program, such as Media

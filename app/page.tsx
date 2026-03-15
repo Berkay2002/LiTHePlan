@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   type CSSProperties,
@@ -15,13 +16,14 @@ import { CourseList } from "@/components/course/CourseList";
 import { CourseListSkeleton } from "@/components/course/CourseListSkeleton";
 import type { FilterState } from "@/components/course/FilterPanel";
 import { type ViewMode, ViewToggle } from "@/components/course/ViewToggle";
-import { HomeSidebar } from "@/components/home-sidebar/home-sidebar";
-import { HomeSidebarSkeleton } from "@/components/home-sidebar/home-sidebar-skeleton";
+import { HomeSidebarContent } from "@/components/home-sidebar/home-sidebar-content";
 import { InfoBanner } from "@/components/InfoBanner";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { ProfileSidebar } from "@/components/profile/ProfileSidebar";
 import { ProfileSidebarSkeleton } from "@/components/profile/ProfileSidebarSkeleton";
+import { SearchBar } from "@/components/shared/SearchBar";
+import { Button } from "@/components/ui/button";
 import { useCourses } from "@/hooks/useCourses";
 import { usePersistentState } from "@/hooks/usePersistentState";
 import {
@@ -61,6 +63,20 @@ const PROFILE_SIDEBAR_CONTENT_OFFSET_CLASS =
 const HOME_CONTENT_WRAPPER_BASE_CLASS =
   "w-full transition-[margin] duration-300 ease-in-out";
 const HOME_CONTENT_WRAPPER_CLASS = `w-full transition-[margin] duration-300 ease-in-out ${PROFILE_SIDEBAR_CONTENT_OFFSET_CLASS}`;
+
+const mobileBarRightSlot = (
+  <Button
+    asChild
+    className="h-9 rounded-xl border-border/70 bg-transparent px-3 text-[0.72rem] font-medium tracking-[0.02em] text-foreground/86 transition-[background-color,border-color,color] duration-150 hover:bg-muted/38 hover:text-foreground focus-visible:border-ring focus-visible:bg-muted/38 focus-visible:text-foreground focus-visible:ring-ring/20"
+    size="sm"
+    variant="outline"
+  >
+    <Link href="/profile/edit">
+      <span className="max-[359px]:hidden">Course </span>
+      <span>Profile</span>
+    </Link>
+  </Button>
+);
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -133,11 +149,8 @@ function HomeContent() {
     }
   );
 
-  const {
-    isOpen: sidebarOpen,
-    setIsOpen: setSidebarOpen,
-    toggle: toggleSidebar,
-  } = useResponsiveSidebar();
+  const { isOpen: sidebarOpen, setIsOpen: setSidebarOpen } =
+    useResponsiveSidebar();
   const { value: profileSidebarOpen, toggle: toggleProfileSidebar } = useToggle(
     false,
     PROFILE_SIDEBAR_STORAGE_KEY
@@ -215,14 +228,8 @@ function HomeContent() {
   if (showLoading) {
     return (
       <PageLayout
-        isMobileMenuOpen={storedSkeletonSidebarOpen}
-        mainShell="home-sidebar"
-        navbarMode="main"
-        onMobileMenuToggle={noop}
-        onSearchChange={handleSearchChange}
+        mobileBarRightSlot={mobileBarRightSlot}
         onSidebarOpenChange={noop}
-        searchQuery={filterState.search}
-        sidebar={<HomeSidebarSkeleton />}
         sidebarOpen={storedSkeletonSidebarOpen}
       >
         <div
@@ -264,21 +271,22 @@ function HomeContent() {
   if (error) {
     return (
       <PageLayout
-        isMobileMenuOpen={sidebarOpen}
-        mainShell="home-sidebar"
-        navbarMode="main"
-        onMobileMenuToggle={toggleSidebar}
-        onSearchChange={handleSearchChange}
+        mobileBarRightSlot={mobileBarRightSlot}
         onSidebarOpenChange={setSidebarOpen}
-        searchQuery={filterState.search}
-        sidebar={
-          <HomeSidebar
+        sidebarContent={
+          <HomeSidebarContent
             courses={courses}
             filterState={filterState}
             onFilterChange={handleFilterChange}
             onResetFilters={handleResetFilters}
-            onSearchChange={handleSearchChange}
-            searchQuery={filterState.search}
+          />
+        }
+        sidebarHeaderExtra={
+          <SearchBar
+            className="max-w-none border-sidebar-border/80 bg-sidebar-accent/20"
+            onChange={handleSearchChange}
+            placeholder="Search courses by name or code..."
+            value={filterState.search}
           />
         }
         sidebarOpen={sidebarOpen}
@@ -303,21 +311,22 @@ function HomeContent() {
 
   return (
     <PageLayout
-      isMobileMenuOpen={sidebarOpen}
-      mainShell="home-sidebar"
-      navbarMode="main"
-      onMobileMenuToggle={toggleSidebar}
-      onSearchChange={handleSearchChange}
+      mobileBarRightSlot={mobileBarRightSlot}
       onSidebarOpenChange={setSidebarOpen}
-      searchQuery={filterState.search}
-      sidebar={
-        <HomeSidebar
+      sidebarContent={
+        <HomeSidebarContent
           courses={courses}
           filterState={filterState}
           onFilterChange={handleFilterChange}
           onResetFilters={handleResetFilters}
-          onSearchChange={handleSearchChange}
-          searchQuery={filterState.search}
+        />
+      }
+      sidebarHeaderExtra={
+        <SearchBar
+          className="max-w-none border-sidebar-border/80 bg-sidebar-accent/20"
+          onChange={handleSearchChange}
+          placeholder="Search courses by name or code..."
+          value={filterState.search}
         />
       }
       sidebarOpen={sidebarOpen}
@@ -427,14 +436,8 @@ function HomeContentSkeleton() {
 
   return (
     <PageLayout
-      isMobileMenuOpen={storedSidebarOpen}
-      mainShell="home-sidebar"
-      navbarMode="main"
-      onMobileMenuToggle={noop}
-      onSearchChange={noop}
+      mobileBarRightSlot={mobileBarRightSlot}
       onSidebarOpenChange={noop}
-      searchQuery=""
-      sidebar={<HomeSidebarSkeleton />}
       sidebarOpen={storedSidebarOpen}
     >
       <div

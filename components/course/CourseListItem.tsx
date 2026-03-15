@@ -246,27 +246,25 @@ function CourseNotesBadge({
       onOpenChange={isMobile ? onOpenChange : undefined}
       open={isMobile ? showNotesTooltip : undefined}
     >
-      <TooltipTrigger
-        render={
-          <button
-            className={buttonClassName}
-            onBlur={() => {
-              if (isMobile) {
-                onOpenChange(false);
-              }
-            }}
-            onClick={() => {
-              if (isMobile) {
-                onOpenChange(!showNotesTooltip);
-              }
-            }}
-            type="button"
-          >
-            <AlertTriangle className={iconClassName} />
-            <span className="text-xs font-bold">OBS</span>
-          </button>
-        }
-      />
+      <TooltipTrigger asChild>
+        <button
+          className={buttonClassName}
+          onBlur={() => {
+            if (isMobile) {
+              onOpenChange(false);
+            }
+          }}
+          onClick={() => {
+            if (isMobile) {
+              onOpenChange(!showNotesTooltip);
+            }
+          }}
+          type="button"
+        >
+          <AlertTriangle className={iconClassName} />
+          <span className="text-xs font-bold">OBS</span>
+        </button>
+      </TooltipTrigger>
       <TooltipContent className={tooltipClassName} side="top">
         <p className={textClassName}>{note}</p>
       </TooltipContent>

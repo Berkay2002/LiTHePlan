@@ -1,96 +1,48 @@
 "use client";
 
-import { type CSSProperties, isValidElement, type ReactNode } from "react";
-import { HomeSidebarMobileBar } from "@/components/home-sidebar/home-sidebar";
-import {
-  HomeSidebarMobileBarSkeleton,
-  HomeSidebarSkeleton,
-} from "@/components/home-sidebar/home-sidebar-skeleton";
-import { DynamicNavbar } from "@/components/shared/DynamicNavbar";
+import type { CSSProperties, ReactNode } from "react";
+import { AppSidebar } from "@/components/home-sidebar/app-sidebar";
+import { AppSidebarMobileBar } from "@/components/home-sidebar/app-sidebar-mobile-bar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 const noop = () => undefined;
 
-interface MainPageLayoutProps {
+interface PageLayoutProps {
   children: ReactNode;
-  isMobileMenuOpen?: boolean;
-  mainShell?: "home-sidebar" | "navbar";
-  navbarMode: "main";
-  onMobileMenuToggle?: () => void;
-  onSearchChange: (query: string) => void;
+  mobileBarRightSlot?: ReactNode;
   onSidebarOpenChange?: (open: boolean) => void;
-  searchQuery: string;
-  sidebar?: ReactNode;
+  sidebarContent?: ReactNode;
+  sidebarHeaderExtra?: ReactNode;
   sidebarOpen?: boolean;
 }
 
-interface ProfileEditPageLayoutProps {
-  children: ReactNode;
-  navbarMode: "profile-edit";
-  onToggleBlockTimeline?: () => void;
-  profileId?: string;
-  showBlockTimeline?: boolean;
-}
-
-type PageLayoutProps = MainPageLayoutProps | ProfileEditPageLayoutProps;
-
-export function PageLayout(props: PageLayoutProps) {
-  if (props.navbarMode === "main") {
-    const {
-      children,
-      mainShell = "navbar",
-      navbarMode,
-      onSidebarOpenChange,
-      sidebar,
-      sidebarOpen,
-      ...navbarProps
-    } = props;
-
-    if (mainShell === "home-sidebar" && sidebar) {
-      const controlledSidebarOpen = sidebarOpen ?? false;
-      const handleSidebarOpenChange = onSidebarOpenChange ?? noop;
-      const isHomeSidebarSkeleton =
-        isValidElement(sidebar) && sidebar.type === HomeSidebarSkeleton;
-
-      return (
-        <SidebarProvider
-          className="h-svh overflow-hidden"
-          onOpenChange={handleSidebarOpenChange}
-          open={controlledSidebarOpen}
-          style={
-            {
-              "--sidebar-width": "23rem",
-              "--sidebar-width-icon": "4.5rem",
-            } as CSSProperties
-          }
-        >
-          {sidebar}
-          <SidebarInset className="flex flex-col overflow-hidden md:h-[calc(100svh-1rem)]">
-            {isHomeSidebarSkeleton ? (
-              <HomeSidebarMobileBarSkeleton />
-            ) : (
-              <HomeSidebarMobileBar />
-            )}
-            <div className="flex flex-col flex-1 overflow-y-auto main-scroll">
-              {children}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
-      );
-    }
-
-    return (
-      <>
-        <DynamicNavbar {...navbarProps} mode={navbarMode} />
-        {children}
-      </>
-    );
-  }
-  const { navbarMode, children, ...navbarProps } = props;
+export function PageLayout({
+  children,
+  mobileBarRightSlot,
+  onSidebarOpenChange,
+  sidebarContent,
+  sidebarHeaderExtra,
+  sidebarOpen,
+}: PageLayoutProps) {
   return (
-    <>
-      <DynamicNavbar {...navbarProps} mode={navbarMode} />
-      {children}
-    </>
+    <SidebarProvider
+      className="h-svh overflow-hidden"
+      onOpenChange={onSidebarOpenChange ?? noop}
+      open={sidebarOpen ?? false}
+      style={
+        {
+          "--sidebar-width": "23rem",
+          "--sidebar-width-icon": "4.5rem",
+        } as CSSProperties
+      }
+    >
+      <AppSidebar headerExtra={sidebarHeaderExtra}>{sidebarContent}</AppSidebar>
+      <SidebarInset className="flex flex-col overflow-hidden md:h-[calc(100svh-1rem)]">
+        <AppSidebarMobileBar rightSlot={mobileBarRightSlot} />
+        <div className="flex flex-1 flex-col overflow-y-auto main-scroll">
+          {children}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

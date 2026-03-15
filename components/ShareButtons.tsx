@@ -2,7 +2,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
-import { Check, Share2, User as UserIcon } from "lucide-react";
+import { Check, Share2 } from "lucide-react";
 import type { ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { createClient } from "@/utils/supabase/client";
 
 interface ShareButtonsProps {
   hideTextOnMobile?: boolean;
+  iconOnly?: boolean;
   profile?: StudentProfile; // For cloud storage when authenticated
   profileId?: string;
 }
@@ -296,6 +297,7 @@ const getShareButtonContent = ({
 export function ShareButtons({
   profileId,
   hideTextOnMobile = false,
+  iconOnly = false,
   profile,
 }: ShareButtonsProps) {
   const [saving, setSaving] = useState(false);
@@ -333,9 +335,10 @@ export function ShareButtons({
   };
 
   const buttonState: ShareButtonVisualState = saving ? "saving" : shareState;
+  const effectiveHideText = iconOnly || hideTextOnMobile;
   const buttonContent = getShareButtonContent({
     state: buttonState,
-    hideTextOnMobile,
+    hideTextOnMobile: effectiveHideText,
   });
 
   return (
@@ -363,9 +366,13 @@ export function ShareButtons({
           title="Sign up to save profiles permanently and share with others"
           variant="ghost"
         >
-          <UserIcon className="w-4 h-4" />
-          <span className="hidden sm:inline">Sign Up to Share</span>
-          <span className="sm:hidden">Sign Up</span>
+          <Share2 className="w-4 h-4" />
+          {iconOnly ? null : (
+            <>
+              <span className="hidden sm:inline">Sign Up to Share</span>
+              <span className="sm:hidden">Sign Up</span>
+            </>
+          )}
         </Button>
       )}
     </div>

@@ -6,6 +6,7 @@ import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { SimpleTermCard } from "@/components/SimpleTermCard";
 import { SharedProfileBanner } from "@/components/shared/AlertBanner";
 import { Card, CardContent } from "@/components/ui/card";
+import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
 import type { StudentProfile } from "@/types/profile";
 
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
@@ -63,9 +64,10 @@ export default function ProfilePageClient({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { isOpen: sidebarOpen, setIsOpen: setSidebarOpen } =
+    useResponsiveSidebar();
   const [profileId, setProfileId] = useState<string>("");
   const [profile, setProfile] = useState<StudentProfile | null>(null);
-  const [databaseId, setDatabaseId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showLoading, setShowLoading] = useState(true);
   const [loadingStartTime] = useState(() => Date.now());
@@ -96,7 +98,6 @@ export default function ProfilePageClient({
         const profileData = unwrapSharedProfileResponse(responseData);
 
         setProfile(normalizeSharedProfile(profileData));
-        setDatabaseId(profileId);
       } catch (err) {
         setError("Failed to load profile");
         console.error("Error loading profile:", err);
@@ -125,7 +126,10 @@ export default function ProfilePageClient({
 
   if (showLoading) {
     return (
-      <PageLayout navbarMode="profile-edit">
+      <PageLayout
+        onSidebarOpenChange={setSidebarOpen}
+        sidebarOpen={sidebarOpen}
+      >
         <div className="min-h-screen bg-background">
           <div className="container mx-auto px-4 py-8">
             <div className="flex items-center justify-center min-h-[400px]">
@@ -142,7 +146,10 @@ export default function ProfilePageClient({
 
   if (error || !profile) {
     return (
-      <PageLayout navbarMode="profile-edit">
+      <PageLayout
+        onSidebarOpenChange={setSidebarOpen}
+        sidebarOpen={sidebarOpen}
+      >
         <div className="min-h-screen bg-background">
           <div className="container mx-auto px-4 py-8">
             <div className="flex items-center justify-center min-h-[400px]">
@@ -165,8 +172,8 @@ export default function ProfilePageClient({
   }
 
   return (
-    <PageLayout navbarMode="profile-edit" profileId={databaseId || undefined}>
-      <div className="min-h-screen bg-background pt-20">
+    <PageLayout onSidebarOpenChange={setSidebarOpen} sidebarOpen={sidebarOpen}>
+      <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8 space-y-8">
           {/* Shared Profile Header */}
           <SharedProfileBanner />
