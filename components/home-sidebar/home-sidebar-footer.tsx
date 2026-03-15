@@ -57,18 +57,36 @@ function FooterActionMenu({
 function LoadingFooter({ isCollapsed }: { isCollapsed: boolean }) {
   return (
     <FooterShell isCollapsed={isCollapsed}>
-      <div
-        className={cn(
-          "flex items-center gap-3 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3 text-sidebar-foreground/75",
-          isCollapsed && "justify-center px-0 py-4"
-        )}
-      >
-        <LoaderCircle
-          className={cn("size-4 animate-spin", isCollapsed && "size-5")}
-        />
-        {isCollapsed ? null : (
-          <span className="text-sm font-medium">Loading account</span>
-        )}
+      <div className="flex flex-col gap-3">
+        <FooterActionMenu isCollapsed={isCollapsed}>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className={cn("cursor-pointer", collapsedFooterButtonClassName)}
+              size="lg"
+              tooltip="Course Profile"
+            >
+              <Link href="/profile/edit">
+                <UserRound />
+                {isCollapsed ? null : <span>Course Profile</span>}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </FooterActionMenu>
+
+        <div
+          className={cn(
+            "flex items-center gap-3 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3 text-sidebar-foreground/75",
+            isCollapsed && "justify-center px-0 py-4"
+          )}
+        >
+          <LoaderCircle
+            className={cn("size-4 animate-spin", isCollapsed && "size-5")}
+          />
+          {isCollapsed ? null : (
+            <span className="text-sm font-medium">Loading account</span>
+          )}
+        </div>
       </div>
     </FooterShell>
   );

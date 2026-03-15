@@ -29,13 +29,15 @@ import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
+import { createEmptyProfile } from "@/lib/profile-utils";
 
 const DESKTOP_BREAKPOINT_PX = 1024;
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
 const TERM_DROPPABLE_ID_PATTERN = /term-(\d+)(?:-period-\d+)?$/;
 
 function ProfileEditPageContent() {
-  const { state, removeCourse, moveCourse, clearTerm } = useProfile();
+  const { state, profileLoading, removeCourse, moveCourse, clearTerm } =
+    useProfile();
   const [isMobile, setIsMobile] = useState(false);
   const [showBlockTimeline, setShowBlockTimeline] = useState(true);
   const { isOpen: sidebarOpen, setIsOpen: setSidebarOpen } =
@@ -60,7 +62,7 @@ function ProfileEditPageContent() {
 
   // Handle minimum loading time for smooth UX
   useEffect(() => {
-    if (state.current_profile && isLoading) {
+    if (!profileLoading && isLoading) {
       setIsLoading(false);
 
       // Calculate remaining time to show skeleton
@@ -71,7 +73,7 @@ function ProfileEditPageContent() {
         setShowLoading(false);
       }, remaining);
     }
-  }, [state.current_profile, isLoading, loadingStartTime]);
+  }, [profileLoading, isLoading, loadingStartTime]);
 
   const handleDragEnd = async (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -140,8 +142,9 @@ function ProfileEditPageContent() {
   };
 
   const { current_profile: currentProfile } = state;
+  const displayProfile = currentProfile ?? createEmptyProfile();
 
-  if (showLoading || !currentProfile) {
+  if (showLoading) {
     return (
       <PageLayout
         onSidebarOpenChange={setSidebarOpen}
@@ -206,14 +209,14 @@ function ProfileEditPageContent() {
               <Eye className="size-4" />
             )}
           </Button>
-          <ShareButtons hideTextOnMobile profile={currentProfile} />
+          <ShareButtons hideTextOnMobile profile={displayProfile} />
         </>
       }
       onSidebarOpenChange={setSidebarOpen}
       sidebarContent={
         <ProfileEditSidebarContent
           onToggleBlockTimeline={() => setShowBlockTimeline(!showBlockTimeline)}
-          profile={currentProfile}
+          profile={displayProfile}
           showBlockTimeline={showBlockTimeline}
         />
       }
@@ -227,7 +230,7 @@ function ProfileEditPageContent() {
         <div className="min-h-screen bg-background">
           <div className="container mx-auto px-4 pb-8 space-y-8">
             {/* Profile Statistics Card */}
-            <ProfileStatsCard profile={currentProfile} />
+            <ProfileStatsCard profile={displayProfile} />
 
             {/* Term Cards (Draggable on Desktop) */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -237,7 +240,7 @@ function ProfileEditPageContent() {
                       IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
                     return (
                       <EditableTermCard
-                        courses={currentProfile.terms[term]}
+                        courses={displayProfile.terms[term]}
                         key={term}
                         onClearTerm={clearTerm}
                         onMoveCourse={isImmutable ? undefined : moveCourse}
@@ -252,7 +255,7 @@ function ProfileEditPageContent() {
                       IMMUTABLE_MASTER_PROGRAM_TERMS.includes(term);
                     return (
                       <DraggableTermCard
-                        courses={currentProfile.terms[term]}
+                        courses={displayProfile.terms[term]}
                         isDragDisabled={isImmutable}
                         key={term}
                         onClearTerm={clearTerm}

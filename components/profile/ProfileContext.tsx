@@ -56,6 +56,7 @@ interface ProfileContextType {
     fromTerm: MasterProgramTerm,
     toTerm: MasterProgramTerm
   ) => Promise<void>;
+  profileLoading: boolean;
   removeCourse: (courseId: string) => Promise<void>;
   setEditing: (isEditing: boolean) => void;
   setUnsavedChanges: (hasChanges: boolean) => void;
@@ -221,6 +222,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     is_editing: false,
     unsaved_changes: false,
   });
+  const [profileLoading, setProfileLoading] = useState(true);
 
   // Hybrid storage functions
   const saveProfileToCloud = async (
@@ -343,6 +345,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
       if (savedProfile) {
         dispatch({ type: "LOAD_PROFILE", profile: savedProfile });
       }
+      setProfileLoading(false);
     };
 
     loadInitialProfile();
@@ -440,6 +443,7 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
 
   const value: ProfileContextType = {
     state,
+    profileLoading,
     addCourse,
     removeCourse,
     moveCourse,
