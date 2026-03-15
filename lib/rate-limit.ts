@@ -6,40 +6,52 @@ import { Redis } from "@upstash/redis";
  * Prevents API abuse with per-IP limits on different endpoint types
  */
 
-// Initialize Upstash Redis client from environment variables
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL as string,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
-});
+const isRedisConfigured =
+  !!process.env.UPSTASH_REDIS_REST_URL &&
+  !!process.env.UPSTASH_REDIS_REST_TOKEN;
+
+const redis = isRedisConfigured
+  ? new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL as string,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN as string,
+    })
+  : undefined;
+
+const noopLimiter = {
+  limit: async () => ({
+    success: true,
+    limit: 0,
+    remaining: 0,
+    reset: 0,
+  }),
+};
+
+function createLimiter(
+  window: Parameters<typeof Ratelimit.slidingWindow>,
+  prefix: string
+) {
+  if (!redis) {
+    return noopLimiter;
+  }
+  return new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(...window),
+    analytics: true,
+    prefix,
+  });
+}
 
 // Rate limiters for different endpoint types
-export const coursesLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(100, "1 m"), // 100 requests per minute
-  analytics: true,
-  prefix: "@ratelimit/courses",
-});
-
-export const profileReadLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(50, "1 m"), // 50 requests per minute
-  analytics: true,
-  prefix: "@ratelimit/profile-read",
-});
-
-export const profileWriteLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, "1 m"), // 10 requests per minute
-  analytics: true,
-  prefix: "@ratelimit/profile-write",
-});
-
-export const authLimiter = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(30, "1 m"), // 30 requests per minute
-  analytics: true,
-  prefix: "@ratelimit/auth",
-});
+export const coursesLimiter = createLimiter([100, "1 m"], "@ratelimit/courses");
+export const profileReadLimiter = createLimiter(
+  [50, "1 m"],
+  "@ratelimit/profile-read"
+);
+export const profileWriteLimiter = createLimiter(
+  [10, "1 m"],
+  "@ratelimit/profile-write"
+);
+export const authLimiter = createLimiter([30, "1 m"], "@ratelimit/auth");
 
 // Type for rate limit results
 export interface RateLimitResult {

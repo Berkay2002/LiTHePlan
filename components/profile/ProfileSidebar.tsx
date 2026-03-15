@@ -96,7 +96,7 @@ export function ProfileSidebar({
 
   const currentTerm = terms[currentTermIndex] ?? terms[0];
   const currentTermCourses =
-    currentTerm !== undefined ? (profile?.terms[currentTerm] ?? []) : [];
+    currentTerm === undefined ? [] : (profile?.terms[currentTerm] ?? []);
 
   const nextTerm = () => {
     setCurrentTermIndex((prev) => (prev + 1) % terms.length);

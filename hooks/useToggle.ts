@@ -10,7 +10,7 @@ function getInitialToggleState(
   }
 
   const stored = localStorage.getItem(storageKey);
-  return stored !== null ? stored === "true" : initialState;
+  return stored === null ? initialState : stored === "true";
 }
 
 export function useToggle(initialState = false, storageKey?: string) {
@@ -42,5 +42,5 @@ export function getStoredToggleState(
   }
 
   const stored = localStorage.getItem(storageKey);
-  return stored !== null ? stored === "true" : defaultValue;
+  return stored === null ? defaultValue : stored === "true";
 }

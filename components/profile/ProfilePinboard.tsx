@@ -52,7 +52,7 @@ export function ProfilePinboard({
               </CardTitle>
               <div className="flex items-center gap-2">
                 <Badge className="text-xs" variant="outline">
-                  {courses.length} course{courses.length !== 1 ? "s" : ""}
+                  {courses.length} course{courses.length === 1 ? "" : "s"}
                 </Badge>
                 <Badge className="text-xs" variant="secondary">
                   {termCredits}hp

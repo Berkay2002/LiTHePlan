@@ -187,8 +187,9 @@ export default function CourseStructuredData({
       "@type": "CourseInstance",
       courseMode: course.campus === "Distans" ? "online" : "onsite",
       location:
-        course.campus !== "Distans"
-          ? {
+        course.campus === "Distans"
+          ? undefined
+          : {
               "@type": "Place",
               name: getCampusDisplayName(course.campus),
               address: {
@@ -196,8 +197,7 @@ export default function CourseStructuredData({
                 addressCountry: "SE",
                 addressLocality: getAddressLocality(course.campus),
               },
-            }
-          : undefined,
+            },
       courseSchedule: {
         "@type": "Schedule",
         repeatCount: 1,

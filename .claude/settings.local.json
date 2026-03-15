@@ -30,7 +30,14 @@
       "mcp__shadcn__get_project_registries",
       "mcp__shadcn__search_items_in_registries",
       "Bash(npx ultracite fix)",
-      "Bash(npm exec:*)"
+      "Bash(npm exec:*)",
+      "Bash(npm run:*)",
+      "Bash(bun:*)",
+      "mcp__plugin_supabase_supabase__list_projects",
+      "mcp__plugin_supabase_supabase__get_project_url",
+      "mcp__plugin_supabase_supabase__get_publishable_keys",
+      "mcp__plugin_supabase_supabase__list_tables",
+      "mcp__plugin_supabase_supabase__execute_sql"
     ],
     "deny": []
   },

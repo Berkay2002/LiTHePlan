@@ -9,6 +9,15 @@
             "command": "npx ultracite fix"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=$(echo \"$CLAUDE_TOOL_INPUT\" | python3 -c \"import json,sys; print(json.load(sys.stdin).get('file_path',''))\" 2>/dev/null); case \"$file\" in *.ts|*.tsx) cd /Volumes/extSSD/work/LiTHePlan && bun run typecheck 2>&1 | tail -30 ;; *) exit 0 ;; esac"
+          }
+        ]
       }
     ]
   }
