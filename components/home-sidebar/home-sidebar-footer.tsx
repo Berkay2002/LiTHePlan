@@ -12,6 +12,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { Tables } from "@/types/database";
 import { createClient } from "@/utils/supabase/client";
@@ -74,19 +79,19 @@ function LoadingFooter({ isCollapsed }: { isCollapsed: boolean }) {
           </SidebarMenuItem>
         </FooterActionMenu>
 
-        <div
-          className={cn(
-            "flex items-center gap-3 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3 text-sidebar-foreground/75",
-            isCollapsed && "justify-center px-0 py-4"
-          )}
-        >
-          <LoaderCircle
-            className={cn("size-4 animate-spin", isCollapsed && "size-5")}
-          />
-          {isCollapsed ? null : (
+        {isCollapsed ? (
+          <>
+            <div className="border-t border-sidebar-border/60" />
+            <div className="flex justify-center py-2">
+              <LoaderCircle className="size-5 animate-spin text-sidebar-foreground/75" />
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-3 rounded-xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3 text-sidebar-foreground/75">
+            <LoaderCircle className="size-4 animate-spin" />
             <span className="text-sm font-medium">Loading account</span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </FooterShell>
   );
@@ -173,20 +178,33 @@ function SignedInFooter({
           </SidebarMenuItem>
         </FooterActionMenu>
 
-        <div
-          className={cn(
-            "flex items-center gap-3 rounded-2xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3",
-            isCollapsed && "justify-center px-0 py-4"
-          )}
-        >
-          <Avatar className={cn("size-10 shrink-0", isCollapsed && "size-12")}>
-            <AvatarImage
-              alt={`${displayName} avatar`}
-              src={profile?.avatar_url ?? undefined}
-            />
-            <AvatarFallback>{avatarFallback}</AvatarFallback>
-          </Avatar>
-          {isCollapsed ? null : (
+        {isCollapsed ? (
+          <>
+            <div className="border-t border-sidebar-border/60" />
+            <div className="flex justify-center py-2">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Avatar className="size-10 shrink-0 cursor-default">
+                    <AvatarImage
+                      alt={`${displayName} avatar`}
+                      src={profile?.avatar_url ?? undefined}
+                    />
+                    <AvatarFallback>{avatarFallback}</AvatarFallback>
+                  </Avatar>
+                </TooltipTrigger>
+                <TooltipContent side="right">{displayName}</TooltipContent>
+              </Tooltip>
+            </div>
+          </>
+        ) : (
+          <div className="flex items-center gap-3 rounded-2xl border border-sidebar-border/70 bg-sidebar-accent/35 px-3 py-3">
+            <Avatar className="size-10 shrink-0">
+              <AvatarImage
+                alt={`${displayName} avatar`}
+                src={profile?.avatar_url ?? undefined}
+              />
+              <AvatarFallback>{avatarFallback}</AvatarFallback>
+            </Avatar>
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-sidebar-foreground">
                 {displayName}
@@ -195,8 +213,8 @@ function SignedInFooter({
                 {secondaryText}
               </p>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </FooterShell>
   );

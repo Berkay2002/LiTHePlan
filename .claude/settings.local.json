@@ -42,7 +42,9 @@
       "Bash(npx next:*)",
       "Bash(bunx next:*)",
       "Read(//Users/berkay/.claude/plugins/**)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(/Users/berkay/.claude/skills/brainstorming/scripts/start-server.sh --project-dir /Volumes/extSSD/work/LiTHePlan)",
+      "Bash(bunx biome:*)"
     ],
     "deny": []
   },

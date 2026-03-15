@@ -2,6 +2,7 @@ import { addBreadcrumb, captureException } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { logger } from "@/lib/logger";
 import { authLimiter, getClientIP } from "@/lib/rate-limit";
+import { createAdminClient } from "@/utils/supabase/admin";
 import { createClient } from "@/utils/supabase/server";
 
 export async function GET(request: NextRequest) {
@@ -33,9 +34,26 @@ export async function GET(request: NextRequest) {
     });
 
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // Sync avatar from OAuth provider (e.g. Google) on every login
+      try {
+        const avatarUrl = data.session?.user?.user_metadata?.avatar_url;
+        if (avatarUrl && data.session?.user?.id) {
+          const adminClient = createAdminClient();
+          await adminClient
+            .from("profiles")
+            .update({ avatar_url: avatarUrl })
+            .eq("id", data.session.user.id);
+        }
+      } catch (avatarError) {
+        logger.warn("Failed to sync avatar from OAuth provider", {
+          requestId,
+          error: avatarError,
+        });
+      }
+
       logger.info("Auth code exchange successful", {
         requestId,
         nextPath: next,
