@@ -4,6 +4,7 @@
 
 import { DragDropContext, type DropResult } from "@hello-pangea/dnd";
 import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { DraggableTermCard } from "@/components/DraggableTermCard";
 import { EditableTermCard } from "@/components/EditableTermCard";
@@ -13,6 +14,14 @@ import { ProfileSkeletonLoader } from "@/components/ProfileSkeletonLoader";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { useProfile } from "@/components/profile/ProfileContext";
 import { ShareButtons } from "@/components/ShareButtons";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
 import {
@@ -143,8 +152,46 @@ function ProfileEditPageContent() {
     );
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Edit Profile",
+        item: `${baseUrl}/profile/edit`,
+      },
+    ],
+  };
+
   return (
     <PageLayout
+      breadcrumbs={
+        <div className="container mx-auto px-4 pt-8">
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Edit Profile</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      }
       mobileBarRightSlot={
         <>
           <Button
@@ -172,9 +219,13 @@ function ProfileEditPageContent() {
       }
       sidebarOpen={sidebarOpen}
     >
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        type="application/ld+json"
+      />
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-4 py-8 space-y-8">
+          <div className="container mx-auto px-4 pb-8 space-y-8">
             {/* Profile Statistics Card */}
             <ProfileStatsCard profile={currentProfile} />
 

@@ -1,10 +1,19 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { ProfileStatsCard } from "@/components/ProfileStatsCard";
 import { SimpleTermCard } from "@/components/SimpleTermCard";
 import { SharedProfileBanner } from "@/components/shared/AlertBanner";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Card, CardContent } from "@/components/ui/card";
 import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
 import type { StudentProfile } from "@/types/profile";
@@ -171,10 +180,56 @@ export default function ProfilePageClient({
     );
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const displayName = profile.name || `Profile ${profileId}`;
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: baseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: displayName,
+        item: `${baseUrl}/profile/${profileId}`,
+      },
+    ],
+  };
+
   return (
-    <PageLayout onSidebarOpenChange={setSidebarOpen} sidebarOpen={sidebarOpen}>
+    <PageLayout
+      breadcrumbs={
+        <div className="container mx-auto px-4 pt-8">
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href="/">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{displayName}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      }
+      onSidebarOpenChange={setSidebarOpen}
+      sidebarOpen={sidebarOpen}
+    >
+      <script
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        type="application/ld+json"
+      />
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 space-y-8">
+        <div className="container mx-auto px-4 pb-8 space-y-8">
           {/* Shared Profile Header */}
           <SharedProfileBanner />
 

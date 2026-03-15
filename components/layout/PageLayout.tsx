@@ -8,6 +8,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 const noop = () => undefined;
 
 interface PageLayoutProps {
+  breadcrumbs?: ReactNode;
   children: ReactNode;
   mobileBarRightSlot?: ReactNode;
   onSidebarOpenChange?: (open: boolean) => void;
@@ -17,6 +18,7 @@ interface PageLayoutProps {
 }
 
 export function PageLayout({
+  breadcrumbs,
   children,
   mobileBarRightSlot,
   onSidebarOpenChange,
@@ -40,6 +42,7 @@ export function PageLayout({
       <SidebarInset className="flex flex-col overflow-hidden md:h-[calc(100svh-1rem)]">
         <AppSidebarMobileBar rightSlot={mobileBarRightSlot} />
         <div className="flex flex-1 flex-col overflow-y-auto main-scroll">
+          {breadcrumbs}
           {children}
         </div>
       </SidebarInset>

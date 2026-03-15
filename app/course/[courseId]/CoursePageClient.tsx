@@ -165,13 +165,13 @@ function RelatedCoursesSection({
       </div>
 
       {isLoadingRelated ? (
-        <div className="grid grid-cols-1 gap-4 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))]">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(100%,320px),1fr))] lg:gap-5">
           {RELATED_COURSE_SKELETON_KEYS.map((key) => (
             <CourseCardSkeleton key={key} />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 overflow-x-auto pb-4 sm:overflow-x-visible sm:pb-0 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))]">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(100%,320px),1fr))] lg:gap-5">
           {relatedCourses.map((relatedCourse) => (
             <CourseCard course={relatedCourse} key={relatedCourse.id} />
           ))}
@@ -261,13 +261,9 @@ function CoursePageContent({ course }: CoursePageClientProps) {
   const allPrograms = [...course.programs, ...(course.orientations || [])];
 
   return (
-    <PageLayout onSidebarOpenChange={setSidebarOpen} sidebarOpen={sidebarOpen}>
-      <CourseStructuredData course={course} />
-      <CourseFAQSchema course={course} />
-
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 pb-24 sm:pb-8 max-w-5xl">
-          {/* Breadcrumb Navigation */}
+    <PageLayout
+      breadcrumbs={
+        <div className="container mx-auto px-4 pt-8">
           <Breadcrumb className="mb-6">
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -284,7 +280,16 @@ function CoursePageContent({ course }: CoursePageClientProps) {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+        </div>
+      }
+      onSidebarOpenChange={setSidebarOpen}
+      sidebarOpen={sidebarOpen}
+    >
+      <CourseStructuredData course={course} />
+      <CourseFAQSchema course={course} />
 
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 pb-24 sm:pb-8">
           {/* Course Hero with CTA */}
           <CourseHero course={course}>
             <Button
