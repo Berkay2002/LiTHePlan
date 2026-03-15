@@ -95,20 +95,15 @@ function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
   const getTermLabel = (term: MasterProgramTerm) => `Termin ${term}`;
 
   return (
-    <Card className="bg-background border-border h-fit shadow-lg">
+    <Card className="h-full bg-background border-border shadow-lg flex flex-col">
       <CardHeader className="pb-3">
-        <div className="flex justify-between items-center">
-          <CardTitle className="text-lg font-semibold text-card-foreground">
-            {getTermLabel(termNumber)}
-          </CardTitle>
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-6 w-12 rounded-full" />
-            <Skeleton className="h-6 w-6 rounded" />
-          </div>
-        </div>
+        <CardTitle className="text-lg font-semibold flex items-center justify-between text-foreground">
+          {getTermLabel(termNumber)}
+          <Skeleton className="h-6 w-12 rounded-full" />
+        </CardTitle>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 flex-1 flex flex-col">
         {/* Period 1 Skeleton */}
         <div>
           <div className="flex items-center justify-between mb-3">
@@ -124,28 +119,14 @@ function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <Skeleton className="h-4 w-32 mb-1" />
-                        <Skeleton className="h-3 w-24" />
-                      </div>
-                      <Skeleton className="h-6 w-6 rounded" />
-                    </div>
+                    <Skeleton className="h-4 w-32 mb-1" />
+                    <Skeleton className="h-3 w-24" />
                   </div>
-                  <Skeleton className="h-6 w-6 rounded ml-2" />
                 </div>
 
-                <div className="flex items-center gap-1 mt-2">
-                  <Skeleton className="h-3 w-12" />
-                  <Skeleton className="h-5 w-8 rounded" />
-                  <Skeleton className="h-5 w-8 rounded" />
-                </div>
-
-                <div className="flex items-center justify-between gap-2 mt-3">
-                  <div className="flex flex-wrap gap-1">
-                    <Skeleton className="h-5 w-16 rounded" />
-                    <Skeleton className="h-5 w-20 rounded" />
-                  </div>
+                <div className="flex flex-wrap gap-1 mt-3">
+                  <Skeleton className="h-5 w-16 rounded" />
+                  <Skeleton className="h-5 w-14 rounded" />
                 </div>
               </div>
             ))}
@@ -167,28 +148,14 @@ function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <Skeleton className="h-4 w-32 mb-1" />
-                        <Skeleton className="h-3 w-24" />
-                      </div>
-                      <Skeleton className="h-6 w-6 rounded" />
-                    </div>
+                    <Skeleton className="h-4 w-32 mb-1" />
+                    <Skeleton className="h-3 w-24" />
                   </div>
-                  <Skeleton className="h-6 w-6 rounded ml-2" />
                 </div>
 
-                <div className="flex items-center gap-1 mt-2">
-                  <Skeleton className="h-3 w-12" />
-                  <Skeleton className="h-5 w-8 rounded" />
-                  <Skeleton className="h-5 w-8 rounded" />
-                </div>
-
-                <div className="flex items-center justify-between gap-2 mt-3">
-                  <div className="flex flex-wrap gap-1">
-                    <Skeleton className="h-5 w-16 rounded" />
-                    <Skeleton className="h-5 w-20 rounded" />
-                  </div>
+                <div className="flex flex-wrap gap-1 mt-3">
+                  <Skeleton className="h-5 w-16 rounded" />
+                  <Skeleton className="h-5 w-14 rounded" />
                 </div>
               </div>
             ))}
@@ -202,7 +169,7 @@ function TermCardSkeleton({ termNumber }: { termNumber: MasterProgramTerm }) {
 // Main Profile Skeleton Loader
 export function ProfileSkeletonLoader() {
   return (
-    <div className="min-h-screen bg-background pt-20">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Profile Statistics Card Skeleton */}
         <ProfileStatsCardSkeleton />

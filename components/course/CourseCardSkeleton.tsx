@@ -121,7 +121,7 @@ export function CourseCardSkeleton() {
 
 export function CourseGridSkeleton({ count = 12 }: { count?: number }) {
   return (
-    <div className="grid w-full grid-cols-1 gap-4 sm:[grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),min(100%,360px)))] lg:gap-5">
+    <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(min(100%,320px),1fr))] lg:gap-5">
       {getCourseCardSkeletonKeys(count).map((itemKey) => (
         <CourseCardSkeleton key={itemKey} />
       ))}
