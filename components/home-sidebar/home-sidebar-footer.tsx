@@ -223,6 +223,17 @@ function useSidebarAccountState() {
   useEffect(() => {
     const supabase = createClient();
     let isMounted = true;
+    let resolved = false;
+
+    const finishLoading = () => {
+      if (isMounted && !resolved) {
+        resolved = true;
+        setLoading(false);
+      }
+    };
+
+    // Timeout fallback: if auth never resolves, show guest state
+    const timeout = setTimeout(finishLoading, 5000);
 
     const syncAccount = async (nextUser: User | null) => {
       if (!isMounted) {
@@ -233,7 +244,7 @@ function useSidebarAccountState() {
 
       if (!nextUser) {
         setProfile(null);
-        setLoading(false);
+        finishLoading();
         return;
       }
 
@@ -253,45 +264,22 @@ function useSidebarAccountState() {
         setProfile(null);
       }
 
-      setLoading(false);
+      finishLoading();
     };
-
-    const hydrateAccount = async () => {
-      setLoading(true);
-
-      try {
-        const {
-          data: { user: nextUser },
-        } = await supabase.auth.getUser();
-
-        await syncAccount(nextUser);
-      } catch {
-        if (isMounted) {
-          setUser(null);
-          setProfile(null);
-          setLoading(false);
-        }
-      }
-    };
-
-    hydrateAccount();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setLoading(true);
-
       try {
         await syncAccount(session?.user ?? null);
       } catch {
-        if (isMounted) {
-          setLoading(false);
-        }
+        finishLoading();
       }
     });
 
     return () => {
       isMounted = false;
+      clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, []);
