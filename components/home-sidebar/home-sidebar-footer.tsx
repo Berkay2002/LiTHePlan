@@ -219,24 +219,41 @@ function useSidebarAccountState() {
         return;
       }
 
-      const nextProfile = await fetchProfileSummary(supabase, nextUser.id);
+      try {
+        const nextProfile = await fetchProfileSummary(supabase, nextUser.id);
 
-      if (!isMounted) {
-        return;
+        if (!isMounted) {
+          return;
+        }
+
+        setProfile(nextProfile);
+      } catch {
+        if (!isMounted) {
+          return;
+        }
+
+        setProfile(null);
       }
 
-      setProfile(nextProfile);
       setLoading(false);
     };
 
     const hydrateAccount = async () => {
       setLoading(true);
 
-      const {
-        data: { user: nextUser },
-      } = await supabase.auth.getUser();
+      try {
+        const {
+          data: { user: nextUser },
+        } = await supabase.auth.getUser();
 
-      await syncAccount(nextUser);
+        await syncAccount(nextUser);
+      } catch {
+        if (isMounted) {
+          setUser(null);
+          setProfile(null);
+          setLoading(false);
+        }
+      }
     };
 
     hydrateAccount();
@@ -245,7 +262,14 @@ function useSidebarAccountState() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setLoading(true);
-      await syncAccount(session?.user ?? null);
+
+      try {
+        await syncAccount(session?.user ?? null);
+      } catch {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
     });
 
     return () => {
