@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { UUIDSchema } from "@/lib/api-validation";
 import { logger } from "@/lib/logger";
+import { withEvaluatedProfileMetadata } from "@/lib/profile-evaluation";
 import { getClientIP, profileReadLimiter } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
 
@@ -59,12 +60,18 @@ export async function GET(
     if (data) {
       logger.info("Profile retrieved by ID", { requestId, profileId });
 
-      return NextResponse.json(successResponse(data.profile_data, requestId), {
-        headers: {
-          "Cache-Control": "public, max-age=60",
-          "X-Request-ID": requestId,
-        },
-      });
+      return NextResponse.json(
+        successResponse(
+          withEvaluatedProfileMetadata(data.profile_data),
+          requestId
+        ),
+        {
+          headers: {
+            "Cache-Control": "public, max-age=60",
+            "X-Request-ID": requestId,
+          },
+        }
+      );
     }
 
     // If not found by profile ID, check if it might be a user ID (backward compatibility)

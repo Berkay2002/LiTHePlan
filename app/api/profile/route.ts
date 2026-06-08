@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { errorResponse, successResponse } from "@/lib/api-response";
 import { ProfileDataSchema, UUIDSchema } from "@/lib/api-validation";
 import { logger } from "@/lib/logger";
+import { withEvaluatedProfileMetadata } from "@/lib/profile-evaluation";
 import {
   getClientIP,
   profileReadLimiter,
@@ -90,9 +91,19 @@ export async function POST(request: NextRequest) {
     }
 
     const validatedProfile = validationResult.data;
+    const profileToPersist = withEvaluatedProfileMetadata({
+      ...validatedProfile,
+      created_at: new Date(),
+      metadata: validatedProfile.metadata ?? {
+        advanced_credits: 0,
+        is_valid: false,
+        total_credits: 0,
+      },
+      updated_at: new Date(),
+    });
 
     // Calculate profile size for logging
-    const coursesCount = Object.values(validatedProfile.terms).reduce(
+    const coursesCount = Object.values(profileToPersist.terms).reduce(
       (sum, termCourses) => sum + termCourses.length,
       0
     );
@@ -108,8 +119,8 @@ export async function POST(request: NextRequest) {
       .from("academic_profiles")
       .insert({
         user_id: user.id,
-        name: validatedProfile.name || "My Course Profile",
-        profile_data: validatedProfile,
+        name: profileToPersist.name || "My Course Profile",
+        profile_data: profileToPersist,
         is_public: true,
       })
       .select("id")
@@ -229,12 +240,18 @@ export async function GET(request: NextRequest) {
 
       logger.info("Profile retrieved by ID", { requestId, profileId });
 
-      return NextResponse.json(successResponse(data.profile_data, requestId), {
-        headers: {
-          "Cache-Control": "public, max-age=60",
-          "X-Request-ID": requestId,
-        },
-      });
+      return NextResponse.json(
+        successResponse(
+          withEvaluatedProfileMetadata(data.profile_data),
+          requestId
+        ),
+        {
+          headers: {
+            "Cache-Control": "public, max-age=60",
+            "X-Request-ID": requestId,
+          },
+        }
+      );
     }
 
     if (userId) {
@@ -281,7 +298,9 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json(
         successResponse(
-          data.map((p) => p.profile_data),
+          data.map((profileRow) =>
+            withEvaluatedProfileMetadata(profileRow.profile_data)
+          ),
           requestId
         ),
         {

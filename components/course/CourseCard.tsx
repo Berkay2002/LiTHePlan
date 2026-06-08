@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
-import { useProfile } from "@/components/profile/ProfileContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,18 +24,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { findCourseConflicts } from "@/lib/course-conflict-utils";
-import {
-  formatBlocks,
-  formatPace,
-  getAvailableTerms,
-  isMultiTermCourse,
-} from "@/lib/course-utils";
-import {
-  MASTER_PROGRAM_TERMS,
-  type MasterProgramTerm,
-} from "@/lib/profile-constants";
-import { isCourseInProfile } from "@/lib/profile-utils";
+import { useProfilePlanningCommand } from "@/hooks/useProfilePlanningCommand";
+import { formatBlocks, formatPace } from "@/lib/course-utils";
+import type { MasterProgramTerm } from "@/lib/profile-constants";
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import { TermSelectionModal } from "./TermSelectionModal";
@@ -73,21 +63,6 @@ interface CourseNotesIndicatorProps {
 
 const getPrimaryCourseTerm = (course: Course): string =>
   Array.isArray(course.term) ? course.term[0] : course.term;
-
-const getDefaultCourseTerm = (course: Course): MasterProgramTerm | null => {
-  const parsedTerm = Number.parseInt(getPrimaryCourseTerm(course), 10);
-
-  if (
-    !(
-      Number.isInteger(parsedTerm) &&
-      MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
-    )
-  ) {
-    return null;
-  }
-
-  return parsedTerm as MasterProgramTerm;
-};
 
 const getCourseLevelLabel = (level: Course["level"]): string =>
   level === "avancerad nivå" ? "Advanced" : "Basic";
@@ -236,25 +211,24 @@ function CourseNotesIndicator({
 }
 
 export function CourseCard({ course }: CourseCardProps) {
-  const { state, addCourse, removeCourse } = useProfile();
+  const {
+    actionState: profileActionState,
+    conflictModal,
+    requestAdd,
+    requestRemove,
+    termModal,
+  } = useProfilePlanningCommand(course);
   const [isHovered, setIsHovered] = useState(false);
-  const [showTermModal, setShowTermModal] = useState(false);
-  const [showConflictModal, setShowConflictModal] = useState(false);
-  const [conflictingCourses, setConflictingCourses] = useState<
-    { conflictingCourse: Course; conflictingCourseId: string }[]
-  >([]);
   const [showNotesTooltip, setShowNotesTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const isPinned = state.current_profile
-    ? isCourseInProfile(state.current_profile, course.id)
-    : false;
-  const isMultiTerm = isMultiTermCourse(course);
-  const availableTerms = getAvailableTerms(course);
-  const wouldHaveConflicts = state.current_profile
-    ? findCourseConflicts(course, state.current_profile).length > 0
-    : false;
-  const actionState = { isHovered, isPinned, wouldHaveConflicts };
+  const { availableTerms, isPinned, wouldHaveConflicts } = profileActionState;
+  const isMultiTerm = availableTerms.length > 1;
+  const actionState = {
+    isHovered,
+    isPinned,
+    wouldHaveConflicts,
+  };
   const courseLevelLabel = getCourseLevelLabel(course.level);
   const courseLevelBadgeClassName = getCourseLevelBadgeClassName(course.level);
   const courseTermLabel = formatCourseTerms(
@@ -265,77 +239,14 @@ export function CourseCard({ course }: CourseCardProps) {
   const courseScheduleLabel = formatCourseSchedule(course);
   const coursePaceLabel = formatPace(course.pace);
 
-  const resetConflictState = () => {
-    setConflictingCourses([]);
-    setShowConflictModal(false);
-  };
-
-  const handleAddCourse = async () => {
-    const conflicts = state.current_profile
-      ? findCourseConflicts(course, state.current_profile)
-      : [];
-
-    if (conflicts.length > 0) {
-      setConflictingCourses(conflicts);
-      setShowConflictModal(true);
-      return;
-    }
-
-    if (isMultiTerm && availableTerms.length > 1) {
-      setShowTermModal(true);
-      return;
-    }
-
-    const defaultTerm = getDefaultCourseTerm(course);
-
-    if (defaultTerm !== null) {
-      await addCourse(course, defaultTerm);
-    }
-  };
-
-  const handleTermSelected = async (
-    selectedCourse: Course,
-    selectedTerm: MasterProgramTerm
-  ) => {
-    setShowTermModal(false);
-    await addCourse(selectedCourse, selectedTerm);
-  };
-
-  const handleChooseNewCourse = async (newCourse: Course) => {
-    resetConflictState();
-
-    for (const { conflictingCourseId } of conflictingCourses) {
-      removeCourse(conflictingCourseId);
-    }
-
-    if (isMultiTerm && availableTerms.length > 1) {
-      setShowTermModal(true);
-      return;
-    }
-
-    const defaultTerm = getDefaultCourseTerm(newCourse);
-
-    if (defaultTerm !== null) {
-      await addCourse(newCourse, defaultTerm);
-    }
-  };
-
-  const handleChooseExistingCourse = () => {
-    resetConflictState();
-  };
-
-  const handleCancelConflictResolution = () => {
-    resetConflictState();
-  };
-
   const handlePrimaryAction = async () => {
     if (isPinned && isHovered) {
-      removeCourse(course.id);
+      await requestRemove();
       return;
     }
 
     if (!isPinned) {
-      await handleAddCourse();
+      await requestAdd();
     }
   };
 
@@ -552,23 +463,9 @@ export function CourseCard({ course }: CourseCardProps) {
         </CardFooter>
       </div>
 
-      <TermSelectionModal
-        availableTerms={availableTerms}
-        course={course}
-        isOpen={showTermModal}
-        onClose={() => setShowTermModal(false)}
-        onTermSelected={handleTermSelected}
-      />
+      <TermSelectionModal {...termModal} />
 
-      <ConflictResolutionModal
-        conflictingCourses={conflictingCourses}
-        isOpen={showConflictModal}
-        newCourse={course}
-        onCancel={handleCancelConflictResolution}
-        onChooseExisting={handleChooseExistingCourse}
-        onChooseNew={handleChooseNewCourse}
-        onClose={handleCancelConflictResolution}
-      />
+      <ConflictResolutionModal {...conflictModal} />
     </Card>
   );
 }

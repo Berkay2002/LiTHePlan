@@ -4,6 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLevelColor } from "@/lib/course-utils";
 import type { MasterProgramTerm } from "@/lib/profile-constants";
+import {
+  createTermPlanSchedule,
+  STUDY_PERIODS,
+  type TermPlanPeriodSchedule,
+} from "@/lib/term-plan-schedule";
 import type { Course } from "@/types/course";
 
 interface SimpleTermCardProps {
@@ -17,22 +22,13 @@ export function SimpleTermCard({
   courses,
   className,
 }: SimpleTermCardProps) {
-  const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
+  const schedule = createTermPlanSchedule(courses);
+  const totalCredits = schedule.totalCredits;
 
   const getTermLabel = (term: MasterProgramTerm) => `Termin ${term}`;
 
-  // Group courses by period - 50% courses appear in both periods
-  const coursesByPeriod = {
-    1: courses.filter(
-      (course) => course.period.includes("1") || course.pace === "50%"
-    ),
-    2: courses.filter(
-      (course) => course.period.includes("2") || course.pace === "50%"
-    ),
-  };
-
-  const renderCoursesList = (periodCourses: Course[]) => {
-    if (periodCourses.length === 0) {
+  const renderCoursesList = (periodSchedule: TermPlanPeriodSchedule) => {
+    if (periodSchedule.courses.length === 0) {
       return (
         <div className="text-center py-4 text-muted-foreground">
           <p className="text-xs">No courses</p>
@@ -40,10 +36,10 @@ export function SimpleTermCard({
       );
     }
 
-    return periodCourses.map((course) => (
+    return periodSchedule.courses.map((course) => (
       <div
         className="p-4 rounded-lg border hover:bg-background/30 transition-colors"
-        key={course.id}
+        key={`${course.id}-period-${periodSchedule.period}`}
       >
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1 min-w-0">
@@ -100,65 +96,24 @@ export function SimpleTermCard({
             <p className="text-sm">No courses selected</p>
           </div>
         ) : (
-          <>
-            {/* Period 1 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Period 1
-                </h4>
-                <Badge className="text-xs" variant="outline">
-                  {coursesByPeriod[1]
-                    .filter(
-                      (course) =>
-                        course.period.includes("1") || course.pace === "50%"
-                    )
-                    .reduce((sum, course) => {
-                      // For 50% courses, only count half the credits per period
-                      return (
-                        sum +
-                        (course.pace === "50%"
-                          ? course.credits / 2
-                          : course.credits)
-                      );
-                    }, 0)}{" "}
-                  hp
-                </Badge>
+          STUDY_PERIODS.map((period) => {
+            const periodSchedule = schedule.periods[period];
+            return (
+              <div key={period}>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-medium text-muted-foreground">
+                    Period {period}
+                  </h4>
+                  <Badge className="text-xs" variant="outline">
+                    {periodSchedule.credits} hp
+                  </Badge>
+                </div>
+                <div className="space-y-3">
+                  {renderCoursesList(periodSchedule)}
+                </div>
               </div>
-              <div className="space-y-3">
-                {renderCoursesList(coursesByPeriod[1])}
-              </div>
-            </div>
-
-            {/* Period 2 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Period 2
-                </h4>
-                <Badge className="text-xs" variant="outline">
-                  {coursesByPeriod[2]
-                    .filter(
-                      (course) =>
-                        course.period.includes("2") || course.pace === "50%"
-                    )
-                    .reduce((sum, course) => {
-                      // For 50% courses, only count half the credits per period
-                      return (
-                        sum +
-                        (course.pace === "50%"
-                          ? course.credits / 2
-                          : course.credits)
-                      );
-                    }, 0)}{" "}
-                  hp
-                </Badge>
-              </div>
-              <div className="space-y-3">
-                {renderCoursesList(coursesByPeriod[2])}
-              </div>
-            </div>
-          </>
+            );
+          })
         )}
       </CardContent>
     </Card>

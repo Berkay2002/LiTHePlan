@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ConflictResolutionModal } from "@/components/course/ConflictResolutionModal";
 import { CourseCard } from "@/components/course/CourseCard";
 import { CourseCardSkeleton } from "@/components/course/CourseCardSkeleton";
 import { CourseHero } from "@/components/course/CourseHero";
@@ -18,7 +19,6 @@ import { CourseOverview } from "@/components/course/CourseOverview";
 import { ProgramsList } from "@/components/course/ProgramsList";
 import { TermSelectionModal } from "@/components/course/TermSelectionModal";
 import { PageLayout } from "@/components/layout/PageLayout";
-import { useProfile } from "@/components/profile/ProfileContext";
 import { CourseFAQSchema } from "@/components/seo/CourseFAQSchema";
 import CourseStructuredData from "@/components/seo/CourseStructuredData";
 import { Badge } from "@/components/ui/badge";
@@ -39,9 +39,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { useProfilePlanningCommand } from "@/hooks/useProfilePlanningCommand";
 import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
-import { findCourseConflicts } from "@/lib/course-conflict-utils";
 import { fetchRelatedCourses, formatBlocks } from "@/lib/course-utils";
+import type { CourseProfileConflict } from "@/lib/profile-planning-command";
 import type { Course } from "@/types/course";
 
 interface CoursePageClientProps {
@@ -74,7 +75,7 @@ const buildStableStringItems = (values: string[]) => {
 function CourseConflictWarning({
   conflicts,
 }: {
-  conflicts: ReturnType<typeof findCourseConflicts>;
+  conflicts: CourseProfileConflict[];
 }) {
   if (conflicts.length === 0) {
     return null;
@@ -184,23 +185,12 @@ function RelatedCoursesSection({
 function CoursePageContent({ course }: CoursePageClientProps) {
   const { isOpen: sidebarOpen, setIsOpen: setSidebarOpen } =
     useResponsiveSidebar();
-  const [isTermModalOpen, setIsTermModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isLoadingRelated, setIsLoadingRelated] = useState(true);
   const [relatedCourses, setRelatedCourses] = useState<Course[]>([]);
-  const { state, addCourse } = useProfile();
-
-  const conflicts = state.current_profile
-    ? findCourseConflicts(course, state.current_profile)
-    : [];
-
-  // Check if course is already in profile and which term
-  const profileTerm = state.current_profile
-    ? (Object.entries(state.current_profile.terms).find(([_, termCourses]) =>
-        termCourses.some((c) => c.id === course.id)
-      )?.[0] as "7" | "8" | "9" | undefined)
-    : undefined;
-  const isInProfile = !!profileTerm;
+  const { actionState, conflictModal, requestAdd, termModal } =
+    useProfilePlanningCommand(course);
+  const { conflicts, isPinned: isInProfile } = actionState;
 
   // Fetch related courses from API
   useEffect(() => {
@@ -242,20 +232,9 @@ function CoursePageContent({ course }: CoursePageClientProps) {
     }
   };
 
-  // Handle term selection from modal
-  const handleTermSelected = async (
-    selectedCourse: Course,
-    selectedTerm: 7 | 8 | 9
-  ) => {
-    setIsTermModalOpen(false);
-    await addCourse(selectedCourse, selectedTerm);
-  };
-
   // Truncate course name for mobile breadcrumb (increased from 30 to 45 chars for Swedish course names)
   const truncatedName =
-    course.name.length > 45
-      ? `${course.name.substring(0, 45)}...`
-      : course.name;
+    course.name.length > 45 ? `${course.name.slice(0, 45)}...` : course.name;
 
   // Combine programs and orientations
   const allPrograms = [...course.programs, ...(course.orientations || [])];
@@ -295,11 +274,11 @@ function CoursePageContent({ course }: CoursePageClientProps) {
             <Button
               className="w-full sm:w-auto hidden sm:flex shadow-md hover:shadow-lg transition-shadow"
               disabled={isInProfile}
-              onClick={() => setIsTermModalOpen(true)}
+              onClick={requestAdd}
               size="lg"
             >
               <Plus className="h-5 w-5 mr-2" />
-              {isInProfile ? `Added to Term ${profileTerm}` : "Add to Profile"}
+              {isInProfile ? "Added to Profile" : "Add to Profile"}
             </Button>
           </CourseHero>
 
@@ -308,11 +287,11 @@ function CoursePageContent({ course }: CoursePageClientProps) {
             <Button
               className="w-full shadow-md"
               disabled={isInProfile}
-              onClick={() => setIsTermModalOpen(true)}
+              onClick={requestAdd}
               size="lg"
             >
               <Plus className="h-5 w-5 mr-2" />
-              {isInProfile ? `Added to Term ${profileTerm}` : "Add to Profile"}
+              {isInProfile ? "Added to Profile" : "Add to Profile"}
             </Button>
           </div>
 
@@ -478,16 +457,8 @@ function CoursePageContent({ course }: CoursePageClientProps) {
         </Button>
       )}
 
-      {/* Term Selection Modal */}
-      <TermSelectionModal
-        availableTerms={course.term.map(
-          (t: string) => Number.parseInt(t, 10) as 7 | 8 | 9
-        )}
-        course={course}
-        isOpen={isTermModalOpen}
-        onClose={() => setIsTermModalOpen(false)}
-        onTermSelected={handleTermSelected}
-      />
+      <TermSelectionModal {...termModal} />
+      <ConflictResolutionModal {...conflictModal} />
     </PageLayout>
   );
 }

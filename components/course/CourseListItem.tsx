@@ -8,7 +8,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { useProfile } from "@/components/profile/ProfileContext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,18 +17,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { findCourseConflicts } from "@/lib/course-conflict-utils";
-import {
-  formatBlocks,
-  formatPace,
-  getAvailableTerms,
-  isMultiTermCourse,
-} from "@/lib/course-utils";
-import {
-  MASTER_PROGRAM_TERMS,
-  type MasterProgramTerm,
-} from "@/lib/profile-constants";
-import { isCourseInProfile } from "@/lib/profile-utils";
+import { useProfilePlanningCommand } from "@/hooks/useProfilePlanningCommand";
+import { formatBlocks, formatPace } from "@/lib/course-utils";
 import type { Course } from "@/types/course";
 import { ConflictResolutionModal } from "./ConflictResolutionModal";
 import type { FilterState } from "./FilterPanel";
@@ -98,24 +87,6 @@ type HideableFilterField =
   | "pace"
   | "period"
   | "term";
-
-const getPrimaryCourseTerm = (course: Course): string =>
-  Array.isArray(course.term) ? course.term[0] : course.term;
-
-const getDefaultCourseTerm = (course: Course): MasterProgramTerm | null => {
-  const parsedTerm = Number.parseInt(getPrimaryCourseTerm(course), 10);
-
-  if (
-    !(
-      Number.isInteger(parsedTerm) &&
-      MASTER_PROGRAM_TERMS.includes(parsedTerm as MasterProgramTerm)
-    )
-  ) {
-    return null;
-  }
-
-  return parsedTerm as MasterProgramTerm;
-};
 
 const shouldHideField = (
   activeFilters: FilterState,
@@ -634,128 +605,27 @@ export function CourseListItem({
   activeFilters = DEFAULT_FILTER_STATE,
   course,
 }: CourseListItemProps) {
-  const { state, addCourse, removeCourse } = useProfile();
+  const { actionState, conflictModal, requestAdd, requestRemove, termModal } =
+    useProfilePlanningCommand(course);
   const [isHovered, setIsHovered] = useState(false);
-  const [showTermModal, setShowTermModal] = useState(false);
-  const [showConflictModal, setShowConflictModal] = useState(false);
-  const [conflictingCourses, setConflictingCourses] = useState<
-    { conflictingCourse: Course; conflictingCourseId: string }[]
-  >([]);
   const [showNotesTooltip, setShowNotesTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
 
-  const isPinned = state.current_profile
-    ? isCourseInProfile(state.current_profile, course.id)
-    : false;
-  const isMultiTerm = isMultiTermCourse(course);
-  const availableTerms = getAvailableTerms(course);
+  const { availableTerms, isPinned, wouldHaveConflicts } = actionState;
+  const isMultiTerm = availableTerms.length > 1;
   const visibleExaminations = getVisibleExaminations(
     course.examination,
     activeFilters.examination
   );
-  const wouldHaveConflicts = state.current_profile
-    ? findCourseConflicts(course, state.current_profile).length > 0
-    : false;
 
-  const handleAddCourse = async () => {
-    console.log("🎯 handleAddCourse clicked for course:", course.id);
-
-    const conflicts = state.current_profile
-      ? findCourseConflicts(course, state.current_profile)
-      : [];
-
-    if (conflicts.length > 0) {
-      console.log("⚠️ Conflicts detected, showing conflict modal first");
-      setConflictingCourses(conflicts);
-      setShowConflictModal(true);
-      return;
-    }
-
-    if (isMultiTerm && availableTerms.length > 1) {
-      console.log("📋 No conflicts, showing term selection modal");
-      setShowTermModal(true);
-      return;
-    }
-
-    const defaultTerm = getDefaultCourseTerm(course);
-
-    if (defaultTerm !== null) {
-      console.log("✅ Adding course with:", {
-        course: course.id,
-        term: defaultTerm,
-      });
-      await addCourse(course, defaultTerm);
-      return;
-    }
-
-    console.error("❌ Invalid term for course:", {
-      courseId: course.id,
-      parsedTerm: Number.parseInt(getPrimaryCourseTerm(course), 10),
-      termToAdd: getPrimaryCourseTerm(course),
-    });
-  };
-
-  const handleTermSelected = async (
-    selectedCourse: Course,
-    selectedTerm: MasterProgramTerm
-  ) => {
-    console.log(
-      "🔄 Term selected:",
-      selectedTerm,
-      "for course:",
-      selectedCourse.id
-    );
-    setShowTermModal(false);
-    console.log("✅ Adding course with selected term (conflicts pre-checked)");
-    await addCourse(selectedCourse, selectedTerm);
-  };
-
-  const handleChooseNewCourse = async (newCourse: Course) => {
-    console.log("✅ User chose new course:", newCourse.id);
-    setShowConflictModal(false);
-
-    for (const { conflictingCourseId } of conflictingCourses) {
-      console.log("🗑️ Removing conflicting course:", conflictingCourseId);
-      removeCourse(conflictingCourseId);
-    }
-
-    if (isMultiTerm && availableTerms.length > 1) {
-      console.log(
-        "📋 Showing term selection for new course after conflict resolution"
-      );
-      setShowTermModal(true);
-    } else {
-      const defaultTerm = getDefaultCourseTerm(newCourse);
-
-      if (defaultTerm !== null) {
-        console.log("➕ Adding new course with default term:", defaultTerm);
-        await addCourse(newCourse, defaultTerm);
-      }
-    }
-
-    setConflictingCourses([]);
-  };
-
-  const handleChooseExistingCourse = (existingCourse: Course) => {
-    console.log("📚 User chose to keep existing course:", existingCourse.id);
-    setShowConflictModal(false);
-    setConflictingCourses([]);
-  };
-
-  const handleCancelConflictResolution = () => {
-    console.log("❌ User cancelled conflict resolution");
-    setShowConflictModal(false);
-    setConflictingCourses([]);
-  };
-
-  const handleActionClick = () => {
+  const handleActionClick = async () => {
     if (isPinned && isHovered) {
-      removeCourse(course.id);
+      await requestRemove();
       return;
     }
 
     if (!isPinned) {
-      handleAddCourse();
+      await requestAdd();
     }
   };
 
@@ -795,23 +665,9 @@ export function CourseListItem({
         />
       </CardContent>
 
-      <TermSelectionModal
-        availableTerms={availableTerms}
-        course={course}
-        isOpen={showTermModal}
-        onClose={() => setShowTermModal(false)}
-        onTermSelected={handleTermSelected}
-      />
+      <TermSelectionModal {...termModal} />
 
-      <ConflictResolutionModal
-        conflictingCourses={conflictingCourses}
-        isOpen={showConflictModal}
-        newCourse={course}
-        onCancel={handleCancelConflictResolution}
-        onChooseExisting={handleChooseExistingCourse}
-        onChooseNew={handleChooseNewCourse}
-        onClose={() => setShowConflictModal(false)}
-      />
+      <ConflictResolutionModal {...conflictModal} />
     </Card>
   );
 }

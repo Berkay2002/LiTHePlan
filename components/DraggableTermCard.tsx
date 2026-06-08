@@ -20,11 +20,17 @@ import {
 } from "@/components/ui/tooltip";
 import {
   type ConflictInfo,
-  getAllPeriodConflicts,
   getConflictBorderClass,
 } from "@/lib/conflict-utils";
 import { getLevelColor } from "@/lib/course-utils";
 import type { MasterProgramTerm } from "@/lib/profile-constants";
+import {
+  createTermPlanSchedule,
+  getCourseBlocksForPeriod,
+  STUDY_PERIODS,
+  type StudyPeriod,
+  type TermPlanPeriodSchedule,
+} from "@/lib/term-plan-schedule";
 import type { Course } from "@/types/course";
 
 interface DraggableTermCardProps {
@@ -52,25 +58,10 @@ export function DraggableTermCard({
   isDragDisabled = false,
   showBlockTimeline = true,
 }: DraggableTermCardProps) {
-  const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
+  const schedule = createTermPlanSchedule(courses);
+  const totalCredits = schedule.totalCredits;
 
   const getTermLabel = (term: MasterProgramTerm) => `Termin ${term}`;
-
-  // Group courses by period - 50% courses appear in both periods
-  const coursesByPeriod = {
-    1: courses.filter(
-      (course) =>
-        (Array.isArray(course.period)
-          ? course.period.includes("1")
-          : course.period === "1") || course.pace === "50%"
-    ),
-    2: courses.filter(
-      (course) =>
-        (Array.isArray(course.period)
-          ? course.period.includes("2")
-          : course.period === "2") || course.pace === "50%"
-    ),
-  };
 
   const getBlockBadgeColor = (_blockNum: number) => {
     // Use muted colors for all blocks - no color overload
@@ -87,18 +78,12 @@ export function DraggableTermCard({
     return "border-primary/30 bg-primary/10 text-primary shadow-sm hover:bg-primary/15 hover:border-primary/40";
   };
 
-  const renderBlockIndicators = (course: Course, currentPeriod: 1 | 2) => {
+  const renderBlockIndicators = (
+    course: Course,
+    currentPeriod: StudyPeriod
+  ) => {
     const is50Percent = course.pace === "50%";
-    let blocks: number[];
-
-    if (is50Percent && Array.isArray(course.block)) {
-      // For 50% courses: block[0] = period 1, block[1] = period 2
-      blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
-    } else {
-      blocks = Array.isArray(course.block)
-        ? course.block.map((b) => Number.parseInt(b, 10))
-        : [Number.parseInt(course.block, 10)];
-    }
+    const blocks = getCourseBlocksForPeriod(course, currentPeriod);
 
     return (
       <div className="flex items-center gap-1 mt-2">
@@ -125,34 +110,9 @@ export function DraggableTermCard({
   };
 
   const renderPeriodBlockTimeline = (
-    periodCourses: Course[],
-    currentPeriod: 1 | 2
+    periodSchedule: TermPlanPeriodSchedule
   ) => {
-    // Create a visual timeline showing which blocks are occupied for this specific period
-    const blockOccupancy: {
-      [key: number]: Array<{ course: Course; is50Percent: boolean }>;
-    } = { 1: [], 2: [], 3: [], 4: [] };
-
-    for (const course of periodCourses) {
-      let blocks: number[];
-      const is50Percent = course.pace === "50%";
-
-      if (is50Percent && Array.isArray(course.block)) {
-        // For 50% courses: use the block for the current period
-        blocks = [Number.parseInt(course.block[currentPeriod - 1], 10)];
-      } else {
-        blocks = Array.isArray(course.block)
-          ? course.block.map((b) => Number.parseInt(b, 10))
-          : [Number.parseInt(course.block, 10)];
-      }
-
-      for (const blockNum of blocks) {
-        blockOccupancy[blockNum as keyof typeof blockOccupancy].push({
-          course,
-          is50Percent,
-        });
-      }
-    }
+    const currentPeriod = periodSchedule.period;
 
     return (
       <div className="mb-3 p-3 bg-muted/30 rounded-lg">
@@ -173,25 +133,23 @@ export function DraggableTermCard({
           </Tooltip>
         </div>
         <div className="grid grid-cols-4 gap-1">
-          {[1, 2, 3, 4].map((blockNum) => {
-            const courses =
-              blockOccupancy[blockNum as keyof typeof blockOccupancy];
-            const hasConflict = courses.length > 1;
-            const isActive = courses.length > 0;
+          {periodSchedule.blockOccupancy.map((block) => {
+            const hasConflict = block.conflict;
+            const isActive = block.courseCount > 0;
 
             return (
-              <div className="text-center" key={blockNum}>
+              <div className="text-center" key={block.block}>
                 <div
                   className={`text-xs font-medium mb-1 ${hasConflict ? "text-destructive" : "text-foreground"}`}
                 >
-                  B{blockNum}
+                  B{block.block}
                 </div>
                 <div
                   className={`h-8 rounded border flex items-center justify-center text-xs transition-all duration-200 ${getBlockClassName(isActive, hasConflict)}`}
                 >
-                  {courses.length > 0 && (
+                  {block.courseCount > 0 && (
                     <div className="flex flex-col items-center">
-                      <div className="font-medium">{courses.length}</div>
+                      <div className="font-medium">{block.courseCount}</div>
                     </div>
                   )}
                 </div>
@@ -199,15 +157,12 @@ export function DraggableTermCard({
             );
           })}
         </div>
-        {Object.entries(blockOccupancy).some(
-          ([, courses]) => courses.length > 1
-        ) && (
+        {periodSchedule.conflictBlocks.length > 0 && (
           <div className="text-xs text-destructive mt-2 flex items-center">
             <span className="mr-1">⚠️</span>
             Scheduling conflicts detected in block
-            {Object.entries(blockOccupancy)
-              .filter(([, courses]) => courses.length > 1)
-              .map(([blockNum]) => ` ${blockNum}`)
+            {periodSchedule.conflictBlocks
+              .map((block) => ` ${block}`)
               .join(",")}
           </div>
         )}
@@ -230,7 +185,7 @@ export function DraggableTermCard({
   const renderDraggableCourse = (
     course: Course,
     index: number,
-    currentPeriod: 1 | 2,
+    currentPeriod: StudyPeriod,
     conflictMap: Map<string, ConflictInfo>
   ) => {
     const uniqueId = `${course.id}-term${termNumber}-period${currentPeriod}`;
@@ -367,7 +322,7 @@ export function DraggableTermCard({
 
   const renderNonDraggableCourse = (
     course: Course,
-    currentPeriod: 1 | 2,
+    currentPeriod: StudyPeriod,
     conflictMap: Map<string, ConflictInfo>
   ) => {
     const hasConflict = conflictMap.has(course.id);
@@ -448,11 +403,10 @@ export function DraggableTermCard({
   };
 
   const renderPeriodCourses = (
-    periodCourses: Course[],
-    currentPeriod: 1 | 2,
+    periodSchedule: TermPlanPeriodSchedule,
     isDraggable = true
   ) => {
-    if (periodCourses.length === 0) {
+    if (periodSchedule.courses.length === 0) {
       return (
         <div className="text-center py-4 text-muted-foreground">
           <p className="text-xs">No courses</p>
@@ -460,19 +414,41 @@ export function DraggableTermCard({
       );
     }
 
-    // Get all conflicts for this period
-    const conflictMap = getAllPeriodConflicts(periodCourses, currentPeriod);
+    const conflictMap = periodSchedule.conflicts;
+    const currentPeriod = periodSchedule.period;
 
     if (!isDraggable) {
-      return periodCourses.map((course) =>
+      return periodSchedule.courses.map((course) =>
         renderNonDraggableCourse(course, currentPeriod, conflictMap)
       );
     }
 
-    return periodCourses.map((course, index) =>
+    return periodSchedule.courses.map((course, index) =>
       renderDraggableCourse(course, index, currentPeriod, conflictMap)
     );
   };
+
+  const renderPeriodSection = (
+    periodSchedule: TermPlanPeriodSchedule,
+    isDraggable = true
+  ) => (
+    <div key={periodSchedule.period}>
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="text-sm font-medium text-muted-foreground">
+          Period {periodSchedule.period}
+        </h4>
+        <Badge className="text-xs" variant="outline">
+          {periodSchedule.credits} hp
+        </Badge>
+      </div>
+      {showBlockTimeline &&
+        periodSchedule.courses.length > 0 &&
+        renderPeriodBlockTimeline(periodSchedule)}
+      <div className="space-y-3 min-h-[60px]">
+        {renderPeriodCourses(periodSchedule, isDraggable)}
+      </div>
+    </div>
+  );
 
   return (
     <Card
@@ -536,71 +512,9 @@ export function DraggableTermCard({
         {/* Only make terms 7 and 9 droppable, term 8 should not be droppable */}
         {courses.length > 0 && termNumber === 8 && (
           <div className="space-y-4">
-            {/* Period 1 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Period 1
-                </h4>
-                <Badge className="text-xs" variant="outline">
-                  {coursesByPeriod[1]
-                    .filter(
-                      (course) =>
-                        (Array.isArray(course.period)
-                          ? course.period.includes("1")
-                          : course.period === "1") || course.pace === "50%"
-                    )
-                    .reduce(
-                      (sum, course) =>
-                        sum +
-                        (course.pace === "50%"
-                          ? course.credits / 2
-                          : course.credits),
-                      0
-                    )}{" "}
-                  hp
-                </Badge>
-              </div>
-              {showBlockTimeline &&
-                coursesByPeriod[1].length > 0 &&
-                renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
-              <div className="space-y-3 min-h-[60px]">
-                {renderPeriodCourses(coursesByPeriod[1], 1, false)}
-              </div>
-            </div>
-
-            {/* Period 2 */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <h4 className="text-sm font-medium text-muted-foreground">
-                  Period 2
-                </h4>
-                <Badge className="text-xs" variant="outline">
-                  {coursesByPeriod[2]
-                    .filter(
-                      (course) =>
-                        (Array.isArray(course.period)
-                          ? course.period.includes("2")
-                          : course.period === "2") || course.pace === "50%"
-                    )
-                    .reduce(
-                      (sum, course) =>
-                        sum +
-                        (course.pace === "50%"
-                          ? course.credits / 2
-                          : course.credits),
-                      0
-                    )}{" "}
-                  hp
-                </Badge>
-              </div>
-              {showBlockTimeline &&
-                coursesByPeriod[2].length > 0 &&
-                renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
-              <div className="space-y-3 min-h-[60px]">
-                {renderPeriodCourses(coursesByPeriod[2], 2, false)}
-              </div>
-            </div>
+            {STUDY_PERIODS.map((period) =>
+              renderPeriodSection(schedule.periods[period], false)
+            )}
           </div>
         )}
         {courses.length > 0 && termNumber !== 8 && (
@@ -615,72 +529,9 @@ export function DraggableTermCard({
                     : ""
                 }`}
               >
-                {/* Period 1 */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Period 1
-                    </h4>
-                    <Badge className="text-xs" variant="outline">
-                      {coursesByPeriod[1]
-                        .filter(
-                          (course) =>
-                            (Array.isArray(course.period)
-                              ? course.period.includes("1")
-                              : course.period === "1") || course.pace === "50%"
-                        )
-                        .reduce(
-                          (sum, course) =>
-                            sum +
-                            (course.pace === "50%"
-                              ? course.credits / 2
-                              : course.credits),
-                          0
-                        )}{" "}
-                      hp
-                    </Badge>
-                  </div>
-                  {showBlockTimeline &&
-                    coursesByPeriod[1].length > 0 &&
-                    renderPeriodBlockTimeline(coursesByPeriod[1], 1)}
-                  <div className="space-y-3 min-h-[60px]">
-                    {renderPeriodCourses(coursesByPeriod[1], 1)}
-                  </div>
-                </div>
-
-                {/* Period 2 */}
-                <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-sm font-medium text-muted-foreground">
-                      Period 2
-                    </h4>
-                    <Badge className="text-xs" variant="outline">
-                      {coursesByPeriod[2]
-                        .filter(
-                          (course) =>
-                            (Array.isArray(course.period)
-                              ? course.period.includes("2")
-                              : course.period === "2") || course.pace === "50%"
-                        )
-                        .reduce(
-                          (sum, course) =>
-                            sum +
-                            (course.pace === "50%"
-                              ? course.credits / 2
-                              : course.credits),
-                          0
-                        )}{" "}
-                      hp
-                    </Badge>
-                  </div>
-                  {showBlockTimeline &&
-                    coursesByPeriod[2].length > 0 &&
-                    renderPeriodBlockTimeline(coursesByPeriod[2], 2)}
-                  <div className="space-y-3 min-h-[60px]">
-                    {renderPeriodCourses(coursesByPeriod[2], 2)}
-                  </div>
-                </div>
-
+                {STUDY_PERIODS.map((period) =>
+                  renderPeriodSection(schedule.periods[period])
+                )}
                 {provided.placeholder}
               </div>
             )}

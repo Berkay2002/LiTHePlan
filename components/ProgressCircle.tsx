@@ -5,6 +5,7 @@ import {
   PROGRESS_CIRCLE_SIZE,
   PROGRESS_CIRCLE_STROKE_WIDTH,
 } from "@/lib/profile-constants";
+import { evaluateProfile } from "@/lib/profile-evaluation";
 import type { StudentProfile } from "@/types/profile";
 
 interface ProgressCircleProps {
@@ -16,7 +17,7 @@ export function ProgressCircle({
   profile,
   targetCredits = MASTER_PROGRAM_TARGET_CREDITS,
 }: ProgressCircleProps) {
-  const currentCredits = profile.metadata.total_credits;
+  const currentCredits = evaluateProfile(profile).totalCredits;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate SVG circle properties
@@ -31,8 +32,10 @@ export function ProgressCircle({
     <div className="flex items-center justify-center">
       <div className="relative">
         <svg
+          aria-label="Profile credit progress"
           className="transform -rotate-90"
           height={size}
+          role="img"
           viewBox={`0 0 ${size} ${size}`}
           width={size}
         >

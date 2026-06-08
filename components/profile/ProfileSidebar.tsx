@@ -15,6 +15,8 @@ import {
   PROFILE_SIDEBAR_DESKTOP_WIDTH_XL,
   PROFILE_SIDEBAR_PIE_CHART_SIZE,
 } from "@/lib/profile-constants";
+import { evaluateProfile } from "@/lib/profile-evaluation";
+import { createTermPlanSchedule } from "@/lib/term-plan-schedule";
 import { cn } from "@/lib/utils";
 import type { StudentProfile } from "@/types/profile";
 
@@ -40,13 +42,14 @@ export function ProfileSidebar({
   const terms = MASTER_PROGRAM_TERMS;
 
   // Calculate values only if profile exists
-  const currentCredits = profile?.metadata.total_credits ?? 0;
+  const evaluation = profile ? evaluateProfile(profile) : null;
+  const currentCredits = evaluation?.totalCredits ?? 0;
   const targetCredits = MASTER_PROGRAM_TARGET_CREDITS;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate advanced credits
-  const advancedCredits = profile?.metadata.advanced_credits ?? 0;
-  const basicCredits = currentCredits - advancedCredits;
+  const advancedCredits = evaluation?.advancedCredits ?? 0;
+  const basicCredits = evaluation?.basicCredits ?? 0;
 
   // Pie chart segments
   const remaining = targetCredits - currentCredits;
@@ -97,6 +100,7 @@ export function ProfileSidebar({
   const currentTerm = terms[currentTermIndex] ?? terms[0];
   const currentTermCourses =
     currentTerm === undefined ? [] : (profile?.terms[currentTerm] ?? []);
+  const currentTermSchedule = createTermPlanSchedule(currentTermCourses);
 
   const nextTerm = () => {
     setCurrentTermIndex((prev) => (prev + 1) % terms.length);
@@ -128,7 +132,7 @@ export function ProfileSidebar({
         />
       )}
 
-      <div
+      <aside
         aria-labelledby={isOpen ? titleId : undefined}
         className={cn(
           "fixed right-0 top-0 z-50 h-screen border-l border-sidebar-border/70 bg-sidebar/95 text-sidebar-foreground shadow-[-12px_0_30px_-24px_hsl(var(--foreground)/0.45)] backdrop-blur supports-[backdrop-filter]:bg-sidebar/90 lg:z-30 lg:h-svh",
@@ -318,11 +322,7 @@ export function ProfileSidebar({
                           <ChevronLeft className="h-3 w-3" />
                         </Button>
                         <span className="min-w-[4.75rem] text-center text-xs text-sidebar-foreground/75">
-                          {currentTermCourses.reduce(
-                            (sum, course) => sum + course.credits,
-                            0
-                          )}{" "}
-                          hp
+                          {currentTermSchedule.totalCredits} hp
                         </span>
                         <Button
                           aria-label={`Show next term (${getTermLabel(followingTerm)})`}
@@ -343,11 +343,7 @@ export function ProfileSidebar({
                         <CardTitle className="flex items-center justify-between text-sm font-medium text-foreground">
                           {getTermLabel(currentTerm)}
                           <Badge className="text-xs" variant="secondary">
-                            {currentTermCourses.reduce(
-                              (sum, course) => sum + course.credits,
-                              0
-                            )}{" "}
-                            hp
+                            {currentTermSchedule.totalCredits} hp
                           </Badge>
                         </CardTitle>
                       </CardHeader>
@@ -411,7 +407,7 @@ export function ProfileSidebar({
             </div>
           </div>
         )}
-      </div>
+      </aside>
     </>
   );
 }

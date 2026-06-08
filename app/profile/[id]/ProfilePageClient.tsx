@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Card, CardContent } from "@/components/ui/card";
 import { useResponsiveSidebar } from "@/hooks/useResponsiveSidebar";
+import { withEvaluatedProfileMetadata } from "@/lib/profile-evaluation";
 import type { StudentProfile } from "@/types/profile";
 
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
@@ -55,7 +56,7 @@ const unwrapSharedProfileResponse = (
 function normalizeSharedProfile(
   profileData: SharedProfilePayload
 ): StudentProfile {
-  return {
+  return withEvaluatedProfileMetadata({
     ...profileData,
     terms: profileData.terms ?? DEFAULT_PROFILE_TERMS,
     metadata: profileData.metadata ?? DEFAULT_PROFILE_METADATA,
@@ -65,7 +66,7 @@ function normalizeSharedProfile(
     updated_at: profileData.updated_at
       ? new Date(profileData.updated_at)
       : new Date(),
-  };
+  });
 }
 
 export default function ProfilePageClient({
@@ -224,10 +225,9 @@ export default function ProfilePageClient({
       onSidebarOpenChange={setSidebarOpen}
       sidebarOpen={sidebarOpen}
     >
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        type="application/ld+json"
-      />
+      <script type="application/ld+json">
+        {JSON.stringify(breadcrumbSchema)}
+      </script>
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 pb-8 space-y-8">
           {/* Shared Profile Header */}

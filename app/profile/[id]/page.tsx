@@ -3,6 +3,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ProfileDataSkeleton } from "@/components/profile/ProfileDataSkeleton";
+import {
+  evaluateProfile,
+  withEvaluatedProfileMetadata,
+} from "@/lib/profile-evaluation";
 import { createClient } from "@/utils/supabase/server";
 import ProfilePageClient from "./ProfilePageClient";
 
@@ -37,13 +41,11 @@ export async function generateMetadata({
     }
 
     // Calculate course statistics for description
-    const profile = profileData.profile_data;
-    const totalCourses =
-      (profile.terms?.[7]?.length || 0) +
-      (profile.terms?.[8]?.length || 0) +
-      (profile.terms?.[9]?.length || 0);
-    const totalCredits = profile.metadata?.total_credits || 0;
-    const advancedCredits = profile.metadata?.advanced_credits || 0;
+    const profile = withEvaluatedProfileMetadata(profileData.profile_data);
+    const evaluation = evaluateProfile(profile);
+    const totalCourses = evaluation.totalCourses;
+    const totalCredits = evaluation.totalCredits;
+    const advancedCredits = evaluation.advancedCredits;
 
     const description = `View ${profileData.name}'s master's program plan at Linköping University. ${totalCourses} courses totaling ${totalCredits}hp (${advancedCredits}hp advanced level) across terms 7-9. Created using LiTHePlan, an unofficial student tool.`;
 

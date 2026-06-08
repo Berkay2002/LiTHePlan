@@ -6,11 +6,11 @@ import { Progress } from "@/components/ui/progress";
 import {
   MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
   MASTER_PROGRAM_TARGET_CREDITS,
-  MASTER_PROGRAM_TERMS,
   PIE_CHART_RADIUS_FACTOR,
   PROFILE_STATS_PIE_CHART_SIZE,
   PROGRAM_FOCUS_TARGET_CREDITS,
 } from "@/lib/profile-constants";
+import { evaluateProfile } from "@/lib/profile-evaluation";
 import type { StudentProfile } from "@/types/profile";
 
 interface ProfileStatsCardProps {
@@ -22,48 +22,22 @@ export function ProfileStatsCard({
   profile,
   className,
 }: ProfileStatsCardProps) {
-  const currentCredits = profile.metadata.total_credits;
+  const evaluation = evaluateProfile(profile);
+  const currentCredits = evaluation.totalCredits;
   const targetCredits = MASTER_PROGRAM_TARGET_CREDITS;
   const percentage = Math.min((currentCredits / targetCredits) * 100, 100);
 
   // Calculate advanced credits
-  const advancedCredits = profile.metadata.advanced_credits;
-  const basicCredits = currentCredits - advancedCredits;
+  const advancedCredits = evaluation.advancedCredits;
+  const basicCredits = evaluation.basicCredits;
   const minAdvancedCredits = MASTER_PROGRAM_MIN_ADVANCED_CREDITS;
   const advancedPercentage = Math.min(
     (advancedCredits / minAdvancedCredits) * 100,
     100
   );
 
-  // Calculate program distribution (advanced courses only)
-  const programCredits: Record<string, number> = {};
-
-  MASTER_PROGRAM_TERMS.forEach((term) => {
-    profile.terms[term].forEach((course) => {
-      // Only count advanced courses for Top Programs
-      if (course.level === "avancerad nivå") {
-        // Count both programs and orientations
-        const allProgramsAndOrientations = [
-          ...course.programs,
-          ...(course.orientations || []),
-        ];
-        allProgramsAndOrientations.forEach((program) => {
-          programCredits[program] =
-            (programCredits[program] || 0) + course.credits;
-        });
-      }
-    });
-  });
-
   // Get top 3 programs
-  const top3Programs = Object.entries(programCredits)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 3)
-    .map(([program, credits]) => ({
-      program,
-      credits,
-      percentage: Math.min((credits / PROGRAM_FOCUS_TARGET_CREDITS) * 100, 100), // Assuming PROGRAM_FOCUS_TARGET_CREDITS hp target per program
-    }));
+  const top3Programs = evaluation.topPrograms.slice(0, 3);
 
   // Pie chart segments - using CSS custom properties for theme compatibility
   const remaining = targetCredits - currentCredits;
@@ -129,12 +103,18 @@ export function ProfileStatsCard({
 
             {/* Proper Pie Chart (no center hole) */}
             <div>
-              <svg height={size} viewBox={`0 0 ${size} ${size}`} width={size}>
-                {segmentsWithAngles.map((segment, index) => (
+              <svg
+                aria-label="Credit distribution pie chart"
+                height={size}
+                role="img"
+                viewBox={`0 0 ${size} ${size}`}
+                width={size}
+              >
+                {segmentsWithAngles.map((segment) => (
                   <path
                     d={createPath(segment.startAngle, segment.angle)}
                     fill={segment.color}
-                    key={`segment-${segment.label}-${index}`}
+                    key={`segment-${segment.label}`}
                     stroke="hsl(var(--card))"
                     strokeWidth="2"
                   />
@@ -144,10 +124,10 @@ export function ProfileStatsCard({
 
             {/* Simple Legend */}
             <div className="flex flex-wrap gap-4 justify-center">
-              {segmentsWithAngles.map((segment, index) => (
+              {segmentsWithAngles.map((segment) => (
                 <div
                   className="flex items-center gap-2"
-                  key={`legend-${segment.label}-${index}`}
+                  key={`legend-${segment.label}`}
                 >
                   <div
                     className="w-3 h-3 rounded-full"
@@ -203,7 +183,7 @@ export function ProfileStatsCard({
                   Top Programs
                 </h3>
                 <Badge className="text-xs font-medium" variant="outline">
-                  {Object.keys(programCredits).length} total
+                  {evaluation.topPrograms.length} total
                 </Badge>
               </div>
 
