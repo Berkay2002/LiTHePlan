@@ -52,7 +52,6 @@ Avoid adding dependencies unless the benefit is concrete and the tradeoff is wor
 - `supabase/`: Supabase config and migrations. Keep schema, RLS, auth assumptions, and generated TypeScript types aligned.
 - `tests/`: Playwright end-to-end tests. Prefer user-facing locators and add focused coverage for changed flows.
 - `public/`: Static assets, app icons, manifest files, logos, and screenshots.
-- `.github/instructions`: Detailed project instructions for Next.js, TypeScript, Ultracite, Playwright, SEO, Markdown, and PowerShell work. Read the relevant file before substantial changes in that area.
 - `.agents/skills` and `.claude/skills`: Local skills and reference material for agents. Treat them as project guidance, not app source.
 
 ## Development Commands
