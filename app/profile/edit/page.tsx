@@ -29,7 +29,7 @@ import {
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
-import { createEmptyProfile } from "@/lib/profile-utils";
+import { createEmptyProfile } from "@/types/profile";
 
 const DESKTOP_BREAKPOINT_PX = 1024;
 const MIN_LOADING_TIME_MS = 400; // Minimum time to show skeleton for UX
@@ -222,10 +222,9 @@ function ProfileEditPageContent() {
       }
       sidebarOpen={sidebarOpen}
     >
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
-        type="application/ld+json"
-      />
+      <script type="application/ld+json">
+        {JSON.stringify(breadcrumbSchema)}
+      </script>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="min-h-screen bg-background">
           <div className="container mx-auto px-4 pb-8 space-y-8">

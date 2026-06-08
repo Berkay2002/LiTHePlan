@@ -9,21 +9,23 @@ import {
   useContext,
   useEffect,
   useReducer,
+  useRef,
   useState,
 } from "react";
-import { useRealtimeProfiles } from "@/hooks/useRealtimeProfiles";
 import type { MasterProgramTerm } from "@/lib/profile-constants";
+import { createBrowserProfilePersistence } from "@/lib/profile-persistence";
 import {
   addCourseToProfile,
   clearProfile as clearProfileUtil,
   clearTermInProfile,
-  createEmptyProfile,
-  loadProfileFromStorage,
   moveCourseInProfile,
   removeCourseFromProfile,
-  saveProfileToStorage,
 } from "@/lib/profile-utils";
-import type { ProfileState, StudentProfile } from "@/types/profile";
+import {
+  createEmptyProfile,
+  type ProfileState,
+  type StudentProfile,
+} from "@/types/profile";
 import { createClient } from "@/utils/supabase/client";
 
 type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
@@ -85,7 +87,6 @@ function profileReducer(
           action.course,
           action.term
         );
-        saveProfileToStorage(updatedProfile);
         return {
           ...state,
           current_profile: updatedProfile,
@@ -98,7 +99,6 @@ function profileReducer(
         action.course,
         action.term
       );
-      saveProfileToStorage(updatedProfile);
       return {
         ...state,
         current_profile: updatedProfile,
@@ -114,7 +114,6 @@ function profileReducer(
         state.current_profile,
         action.courseId
       );
-      saveProfileToStorage(updatedProfile);
       return {
         ...state,
         current_profile: updatedProfile,
@@ -132,7 +131,6 @@ function profileReducer(
         action.fromTerm,
         action.toTerm
       );
-      saveProfileToStorage(movedProfile);
       return {
         ...state,
         current_profile: movedProfile,
@@ -148,7 +146,6 @@ function profileReducer(
         state.current_profile,
         action.term
       );
-      saveProfileToStorage(clearedTermProfile);
       return {
         ...state,
         current_profile: clearedTermProfile,
@@ -161,7 +158,6 @@ function profileReducer(
         return state;
       }
       const emptyProfile = clearProfileUtil(state.current_profile);
-      saveProfileToStorage(emptyProfile);
       return {
         ...state,
         current_profile: emptyProfile,
@@ -193,6 +189,13 @@ interface ProfileProviderProps {
 export function ProfileProvider({ children }: ProfileProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const profilePersistenceRef = useRef<ReturnType<
+    typeof createBrowserProfilePersistence
+  > | null>(null);
+  const getProfilePersistence = useCallback(() => {
+    profilePersistenceRef.current ??= createBrowserProfilePersistence();
+    return profilePersistenceRef.current;
+  }, []);
 
   // Handle auth state
   useEffect(() => {
@@ -224,115 +227,14 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   });
   const [profileLoading, setProfileLoading] = useState(true);
 
-  // Hybrid storage functions
-  const saveProfileToCloud = async (
-    profile: StudentProfile,
-    userId: string,
-    userEmail: string | undefined
-  ) => {
-    console.log("🔐 Attempting to save profile for user:", {
-      userId,
-      userEmail,
-      profileName: profile.name,
-    });
-
-    const supabase = createClient();
-
-    console.log("🔍 Checking for existing profile...");
-    const { data: existing, error: selectError } = await supabase
-      .from("academic_profiles")
-      .select("id")
-      .eq("user_id", userId)
-      .single();
-
-    if (selectError && selectError.code !== "PGRST116") {
-      console.error("❌ Error checking existing profile:", selectError);
-      throw selectError;
-    }
-
-    if (existing) {
-      console.log("📝 Updating existing profile:", existing.id);
-      const { error } = await supabase
-        .from("academic_profiles")
-        .update({
-          profile_data: profile,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", existing.id);
-
-      if (error) {
-        throw error;
-      }
-      console.log("💾 Profile updated in cloud");
-    } else {
-      console.log("➕ Creating new profile...");
-      const { data: newProfile, error } = await supabase
-        .from("academic_profiles")
-        .insert({
-          user_id: userId,
-          name: profile.name || "My Course Profile",
-          profile_data: profile,
-          is_public: true,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
-      }
-      console.log("💾 New profile saved to cloud:", newProfile);
-    }
-  };
-
   const saveProfile = async (profile: StudentProfile) => {
-    if (user) {
-      try {
-        await saveProfileToCloud(profile, user.id, user.email);
-      } catch (error) {
-        console.error(
-          "❌ Failed to save to cloud, falling back to localStorage:",
-          error
-        );
-        saveProfileToStorage(profile);
-      }
-    } else {
-      // Save to localStorage when not authenticated
-      saveProfileToStorage(profile);
-    }
+    await getProfilePersistence().saveProfile(profile, user);
   };
 
-  const loadProfile = useCallback(async () => {
-    if (user) {
-      // Load from Supabase when authenticated - use Supabase client directly
-      try {
-        const supabase = createClient();
-        const { data, error } = await supabase
-          .from("academic_profiles")
-          .select("*")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("❌ Supabase load error:", error);
-          throw error;
-        }
-
-        if (data && data.length > 0) {
-          const latestProfile = data[0].profile_data; // Get most recent profile
-          console.log("☁️ Loaded profile from cloud");
-          return latestProfile;
-        }
-      } catch (error) {
-        console.error(
-          "❌ Failed to load from cloud, falling back to localStorage:",
-          error
-        );
-      }
-    }
-
-    // Fallback to localStorage (for non-authenticated users or cloud failure)
-    return loadProfileFromStorage();
-  }, [user]);
+  const loadProfile = useCallback(
+    () => getProfilePersistence().loadProfile(user),
+    [getProfilePersistence, user]
+  );
 
   // Load profile on mount and when authentication state changes
   useEffect(() => {
@@ -351,24 +253,20 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     loadInitialProfile();
   }, [authLoading, loadProfile]);
 
-  // Set up Realtime subscriptions for authenticated users
-  useRealtimeProfiles(
-    user,
-    // onProfileUpdate
-    (updatedProfile) => {
-      console.log("🔄 Profile updated via Realtime:", updatedProfile);
-      dispatch({ type: "LOAD_PROFILE", profile: updatedProfile.profile_data });
-    },
-    // onProfileInsert
-    (newProfile) => {
-      console.log("➕ New profile via Realtime:", newProfile);
-      dispatch({ type: "LOAD_PROFILE", profile: newProfile.profile_data });
-    },
-    // onProfileDelete
-    (profileId) => {
-      console.log("🗑️ Profile deleted via Realtime:", profileId);
-      // Could clear the current profile if it matches
-    }
+  useEffect(
+    () =>
+      getProfilePersistence().subscribeToProfileChanges(user, {
+        onDelete: () => {
+          // A deleted remote profile does not imply local guest state should be cleared.
+        },
+        onInsert: (profile) => {
+          dispatch({ type: "LOAD_PROFILE", profile });
+        },
+        onUpdate: (profile) => {
+          dispatch({ type: "LOAD_PROFILE", profile });
+        },
+      }),
+    [getProfilePersistence, user]
   );
 
   const addCourse = async (course: ProfileCourse, term: MasterProgramTerm) => {

@@ -7,69 +7,12 @@ import {
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
 import {
-  createEmptyProfile,
   createEmptyTerms,
   type StudentProfile,
   validateProfile,
 } from "@/types/profile";
 
 type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
-
-// Re-export createEmptyProfile for convenience
-export { createEmptyProfile };
-
-const PROFILE_STORAGE_KEY = "student_profile";
-
-/**
- * Save profile to localStorage
- */
-export function saveProfileToStorage(profile: StudentProfile): void {
-  try {
-    const profileData = {
-      ...profile,
-      created_at: profile.created_at.toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profileData));
-  } catch (error) {
-    console.error("Failed to save profile to localStorage:", error);
-  }
-}
-
-/**
- * Load profile from localStorage
- */
-export function loadProfileFromStorage(): StudentProfile | null {
-  try {
-    const profileData = localStorage.getItem(PROFILE_STORAGE_KEY);
-    if (!profileData) {
-      return null;
-    }
-
-    const parsed = JSON.parse(profileData);
-    const profile: StudentProfile = {
-      ...parsed,
-      created_at: new Date(parsed.created_at),
-      updated_at: new Date(parsed.updated_at),
-    };
-
-    return profile;
-  } catch (error) {
-    console.error("Failed to load profile from localStorage:", error);
-    return null;
-  }
-}
-
-/**
- * Clear profile from localStorage
- */
-export function clearProfileFromStorage(): void {
-  try {
-    localStorage.removeItem(PROFILE_STORAGE_KEY);
-  } catch (error) {
-    console.error("Failed to clear profile from localStorage:", error);
-  }
-}
 
 /**
  * Check if a course is already in the profile
@@ -114,7 +57,7 @@ export function addCourseToProfile(
   // Validate course is available in target term
   const isAvailableInTerm = Array.isArray(course.term)
     ? course.term.includes(term.toString())
-    : Number.parseInt(course.term) === term;
+    : Number.parseInt(course.term, 10) === term;
 
   if (!isAvailableInTerm) {
     const availableTerms = Array.isArray(course.term)
