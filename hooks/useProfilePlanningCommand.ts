@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import { useProfile } from "@/components/profile/ProfileContext";
 import type { MasterProgramTerm } from "@/lib/profile-constants";
 import {
@@ -24,6 +25,8 @@ type PostConflictDecision = Extract<
 >;
 
 interface PendingConflictReplacement {
+  conflicts: CourseProfileConflict[];
+  course: Course;
   decision: PostConflictDecision;
   remainingConflictIds: string[];
 }
@@ -123,6 +126,23 @@ export function useProfilePlanningCommand(
       return;
     }
 
+    const clearPendingReplacement = () => {
+      setPendingReplacement(null);
+      isProcessingPendingReplacement.current = false;
+    };
+
+    const showReplacementFailure = (message: string) => {
+      toast.error(message);
+    };
+
+    const restoreConflictModal = () => {
+      setConflictModalState({
+        conflicts: pendingReplacement.conflicts,
+        course: pendingReplacement.course,
+        isOpen: true,
+      });
+    };
+
     const [nextConflictId, ...remainingConflictIds] =
       pendingReplacement.remainingConflictIds;
 
@@ -132,15 +152,22 @@ export function useProfilePlanningCommand(
       const completePendingReplacement = async () => {
         try {
           await handleDecision(pendingReplacement.decision);
-        } finally {
           setPendingReplacement(null);
+        } catch {
+          showReplacementFailure(
+            `Could not add ${pendingReplacement.course.id}. Your profile was not updated.`
+          );
+          setPendingReplacement(null);
+        } finally {
           isProcessingPendingReplacement.current = false;
         }
       };
 
       completePendingReplacement().catch(() => {
-        setPendingReplacement(null);
-        isProcessingPendingReplacement.current = false;
+        showReplacementFailure(
+          `Could not add ${pendingReplacement.course.id}. Your profile was not updated.`
+        );
+        clearPendingReplacement();
       });
       return;
     }
@@ -163,6 +190,10 @@ export function useProfilePlanningCommand(
           remainingConflictIds,
         });
       } catch {
+        showReplacementFailure(
+          `Could not replace the conflicting course with ${pendingReplacement.course.id}. Try again or remove the existing course manually.`
+        );
+        restoreConflictModal();
         setPendingReplacement(null);
       } finally {
         isProcessingPendingReplacement.current = false;
@@ -170,8 +201,11 @@ export function useProfilePlanningCommand(
     };
 
     removeNextConflict().catch(() => {
-      setPendingReplacement(null);
-      isProcessingPendingReplacement.current = false;
+      showReplacementFailure(
+        `Could not replace the conflicting course with ${pendingReplacement.course.id}. Try again or remove the existing course manually.`
+      );
+      restoreConflictModal();
+      clearPendingReplacement();
     });
   }, [currentProfile, handleDecision, pendingReplacement, removeCourse]);
 
@@ -213,11 +247,18 @@ export function useProfilePlanningCommand(
       }
 
       setPendingReplacement({
+        conflicts: conflictModalState.conflicts,
+        course: conflictModalState.course ?? newCourse,
         decision: nextDecision,
         remainingConflictIds: conflictIds,
       });
     },
-    [closeConflictModal, conflictModalState.conflicts, handleDecision]
+    [
+      closeConflictModal,
+      conflictModalState.conflicts,
+      conflictModalState.course,
+      handleDecision,
+    ]
   );
 
   return {

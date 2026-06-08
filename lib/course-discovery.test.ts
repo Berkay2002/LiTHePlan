@@ -4,6 +4,7 @@ import {
   createCourseDatabaseConstraints,
   createCourseFiltersFromSearchParams,
   filterCourses,
+  parseStoredCourseFilters,
 } from "./course-discovery";
 
 const createCourse = (overrides: Partial<Course>): Course => ({
@@ -129,5 +130,21 @@ describe("course discovery filters", () => {
         values: ["Software Engineering"],
       },
     ]);
+  });
+
+  it("keeps legacy stored numeric filter strings", () => {
+    expect(
+      parseStoredCourseFilters(
+        JSON.stringify({
+          block: ["1", 2, "not-a-block"],
+          period: ["1", "2"],
+          term: ["7", "8"],
+        })
+      )
+    ).toMatchObject({
+      block: [1, 2],
+      period: [1, 2],
+      term: [7, 8],
+    });
   });
 });

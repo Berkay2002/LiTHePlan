@@ -64,6 +64,7 @@ interface SearchParamsLike {
 }
 
 const MAX_FILTER_VALUE_LENGTH = 120;
+const INTEGER_FILTER_VALUE_PATTERN = /^-?\d+$/;
 const DATABASE_PACE_BY_LABEL: Record<string, number> = {
   "100%": 1,
   "50%": 0.5,
@@ -401,9 +402,28 @@ function getStoredNumberArray(value: unknown): number[] {
     return [];
   }
 
-  return uniqueValues(
-    value.filter((item): item is number => Number.isInteger(item))
-  );
+  return uniqueValues(value.map(parseStoredInteger).filter(isNumber));
+}
+
+function parseStoredInteger(value: unknown): number | null {
+  if (typeof value === "number" && Number.isInteger(value)) {
+    return value;
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmedValue = value.trim();
+  if (!INTEGER_FILTER_VALUE_PATTERN.test(trimmedValue)) {
+    return null;
+  }
+
+  return Number.parseInt(trimmedValue, 10);
+}
+
+function isNumber(value: number | null): value is number {
+  return value !== null;
 }
 
 function getStoredExaminationFilters(value: unknown): ExaminationFilters {

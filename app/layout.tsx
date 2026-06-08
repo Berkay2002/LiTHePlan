@@ -4,6 +4,7 @@ import StructuredData from "@/components/seo/StructuredData";
 import { CommandPaletteProvider } from "@/components/shared/CommandPaletteContext";
 import { GlobalCommandPalette } from "@/components/shared/GlobalCommandPalette";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { geistMono, geistSans } from "./fonts";
 import "./globals.css";
@@ -106,6 +107,7 @@ export default function RootLayout({
               <ProfileProvider>
                 {children}
                 <GlobalCommandPalette />
+                <Toaster />
               </ProfileProvider>
             </CommandPaletteProvider>
           </TooltipProvider>
