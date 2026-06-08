@@ -15,12 +15,12 @@
   [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?logo=supabase)](https://supabase.com/)
   [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://litheplan.tech)
   
-  [Live Demo](https://litheplan.tech) · [Report Bug](https://github.com/Berkay2002/LiTHePlan/issues) · [Request Feature](https://github.com/Berkay2002/LiTHePlan/issues)
+  [Website](https://litheplan.tech) · [Report Bug](https://github.com/Berkay2002/LiTHePlan/issues) · [Request Feature](https://github.com/Berkay2002/LiTHePlan/issues)
 </div>
 
 ---
 
-## 📸 Overview
+## Overview
 
 <div align="center">
   <img src="public/litheplan-screenshot.png" alt="LiTHePlan Application Screenshot" width="100%"/>
@@ -37,15 +37,15 @@ LiTHePlan is a modern web application that solves the course planning challenge 
 
 ### The Solution
 
-- 🔍 **Unified Course Catalog**: 339 master's level courses (terms 7-9) with advanced filtering
-- 📌 **Interactive Profile Builder**: Visual drag-and-drop pinboard with real-time validation
-- ✅ **Automatic Validation**: Ensures 90hp total and 60hp advanced-level requirements
-- 🔗 **Profile Sharing**: Cloud-synced profiles with unique URLs for advisor collaboration
-- 💾 **Hybrid Storage**: Guest users get localStorage persistence, authenticated users get cloud sync
+- **Unified Course Catalog**: 339 master's level courses (terms 7-9) with advanced filtering
+- **Interactive Profile Builder**: Visual drag-and-drop pinboard with real-time validation
+- **Automatic Validation**: Ensures 90hp total and 60hp advanced-level requirements
+- **Profile Sharing**: Cloud-synced profiles with unique URLs for advisor collaboration
+- **Hybrid Storage**: Guest users get localStorage persistence, authenticated users get cloud sync
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 ### Smart Course Discovery
 - **Comprehensive Catalog**: 339 curated master's level courses (terms 7-9) from 29 program specializations
@@ -76,107 +76,28 @@ LiTHePlan is a modern web application that solves the course planning challenge 
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 ### Frontend
-- **Next.js 16.0.1** with App Router (Server Components by default)
-- **React 19.2** with TypeScript 5 (strict mode)
-- **Tailwind CSS v4** with PostCSS architecture
-- **shadcn/ui** component library (built on Radix UI primitives)
+- **Next.js 16**
+- **React 19.2**
+- **TypeScript**
+- **Tailwind CSS v4**
+- **shadcn/ui** component library
 - **Lucide React** icons
 
 ### Backend & Data
 - **Next.js API Routes** for serverless backend
-- **Supabase** (PostgreSQL) with 339 curated courses
+- **Supabase** (PostgreSQL)
 - **Row-Level Security (RLS)** for data protection
 - **Real-time Subscriptions** for profile sync
 
 ### State Management
-- **React Context API** with useReducer for global profile state
-- **ProfileProvider** wrapping entire application
-- **Type-safe operations** with TypeScript interfaces
-
-### Developer Experience
-- **Ultracite** (Biome-based) linting with 200+ strict rules
-- **TypeScript** strict mode (no `any` types allowed)
-- **Playwright** for end-to-end testing
-- **Sentry** error tracking and monitoring
-- **Upstash Redis** for API rate limiting
-
-### Production Infrastructure
-- **Vercel** deployment with edge functions
-- **Rate Limiting**: Sliding window algorithm (100 req/min for catalog, 10 req/min for writes)
-- **Structured Logging**: JSON logs with request correlation IDs
-- **Input Validation**: Zod schemas with strict mode (prevents injection attacks)
-- **HTTP Caching**: TTL-based caching (5min client, 10min CDN for courses)
+- **React Context API**
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js 18.18.0 or higher
-- npm, yarn, or pnpm
-- Supabase account (free tier)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Berkay2002/LiTHePlan.git
-   cd LiTHePlan
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   
-   Create `.env.local` in the project root:
-   ```bash
-   # Supabase
-   NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
-   SUPABASE_SECRET_KEY=your_secret_key
-   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-   # Sentry (Optional - Error Tracking)
-   SENTRY_AUTH_TOKEN=your_sentry_token
-   SENTRY_ORG=your_org
-   SENTRY_PROJECT=your_project
-
-   # Upstash Redis (Optional - Rate Limiting)
-   UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
-   UPSTASH_REDIS_REST_TOKEN=your_token
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-### Available Scripts
-
-```bash
-npm run dev          # Start development server (localhost:3000)
-npm run build        # Production build with TypeScript checking
-npm start            # Serve production build
-npm run lint         # Run Ultracite linter
-npm run format       # Auto-fix code style
-npm run test         # Run Playwright tests
-npm run test:ui      # Open Playwright test UI
-```
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 LiTHePlan/
@@ -251,43 +172,7 @@ Civil engineering programs in Computer Science, Electrical Engineering, Mechanic
 
 > **Note on Data Currency**: The course database is maintained through an automated crawler that runs periodically (every 3-6 months) to update course information, remove deprecated courses, and add new offerings. While this ensures reasonable data freshness, always verify critical course details with official Linköping University sources and your academic advisor before finalizing your study plan.
 
-**Database Schema:**
-
-```sql
--- courses table (339 active courses)
-CREATE TABLE courses (
-  id TEXT PRIMARY KEY,              -- Course code (e.g., 'TSBK02')
-  name TEXT NOT NULL,
-  credits NUMERIC NOT NULL,         -- HP (usually 6)
-  level TEXT NOT NULL,              -- 'grundnivå' | 'avancerad nivå'
-  term TEXT[] NOT NULL,             -- ['7', '8', '9']
-  period TEXT[] NOT NULL,           -- ['1', '2']
-  block TEXT[] NOT NULL,            -- ['1', '2', '3', '4']
-  pace NUMERIC NOT NULL,            -- 1.0 = 100%, 0.5 = 50%
-  examination TEXT[] NOT NULL,      -- ['TEN', 'LAB', 'PROJ']
-  campus TEXT NOT NULL,
-  programs TEXT[] NOT NULL,         -- 29 programs
-  huvudomrade TEXT,                 -- Subject area (Swedish)
-  examinator TEXT,                  -- Course examiner
-  studierektor TEXT,                -- Study director
-  notes TEXT                        -- Restrictions, conflicts
-);
-
--- academic_profiles table (user profiles)
-CREATE TABLE academic_profiles (
-  id UUID PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id),
-  name TEXT NOT NULL,
-  profile_data JSONB NOT NULL,      -- StudentProfile JSON
-  is_public BOOLEAN DEFAULT false,
-  created_at TIMESTAMPTZ,
-  updated_at TIMESTAMPTZ
-);
-```
-
----
-
-## 🏗 Architecture Highlights
+## Architecture Highlights
 
 ### Hybrid Storage Pattern
 
@@ -350,49 +235,6 @@ if (conflicts.length > 0) {
 
 ---
 
-## 🚀 Deployment
-
-### Vercel Deployment
-
-The application is deployed on [Vercel](https://vercel.com) at [litheplan.tech](https://litheplan.tech).
-
-**Deployment Configuration:**
-- **Framework**: Next.js 16
-- **Build Command**: `npm run build`
-- **Output Directory**: `.next`
-- **Node Version**: 20.9+
-
-**Environment Variables** must be configured in Vercel dashboard:
-- Supabase credentials (`NEXT_PUBLIC_*` and service keys)
-- Sentry authentication token
-- Upstash Redis credentials
-
-**Automatic Deployments:**
-- Push to `main` branch triggers production deployment
-- Pull requests create preview deployments
-
----
-
-## 🧪 Testing
-
-### Playwright End-to-End Tests
-
-```bash
-npm run test              # Run all tests
-npm run test:ui           # Open Playwright UI
-npm run test:chromium     # Run in Chromium only
-npm run test:report       # View test report
-```
-
-**Test Coverage:**
-- Course search and filtering
-- Profile creation and validation
-- Conflict detection modals
-- Authentication flows
-- Mobile responsive interactions
-
----
-
 ## 🔒 Security & Performance
 
 ### Security Measures
@@ -403,39 +245,6 @@ npm run test:report       # View test report
   - Profile writes: 10 requests/minute per IP
 - **HTTPS Only**: Enforced in production
 - **No Sensitive Data**: Stack traces and debug info excluded from production responses
-
-### Performance Optimizations
-
-#### Database Indexing Strategy
-**Critical for sub-500ms query performance** - The application uses a comprehensive PostgreSQL indexing strategy:
-
-**Courses Table (14 indexes):**
-- **GIN Indexes** (array columns): `term`, `period`, `block`, `programs` - Enable fast `@>` (contains) queries for multi-select filters
-- **B-tree Indexes** (scalar columns): `level`, `campus`, `credits`, `huvudomrade` - Optimize equality and range queries
-- **Composite Index**: `(huvudomrade, level, campus)` - Powers related courses feature (<50ms response time)
-
-**Academic Profiles Table (4 indexes):**
-- **B-tree Index**: `user_id` - Fast user profile lookups
-- **Partial Index**: `is_public WHERE is_public = true` - Efficient public profile queries
-- **B-tree Index**: `created_at DESC` - Sorted profile listings
-
-**Impact:** Without these indexes, course filtering queries would require full table scans (339 rows), increasing response time from ~100ms to 2-3 seconds. GIN indexes enable PostgreSQL to filter array columns efficiently, critical for multi-criteria searches.
-
-#### Other Optimizations
-- **Server Components**: Reduce client-side JavaScript bundle
-- **Edge Functions**: Low-latency API responses via Vercel Edge Network
-- **HTTP Caching**: 5-minute client cache, 10-minute CDN cache for courses
-- **Code Splitting**: Automatic route-based splitting with Next.js 16
-- **Image Optimization**: Next.js Image component with WebP format
-
-**Performance Metrics:**
-- LCP (Largest Contentful Paint): < 2.5s
-- FID (First Input Delay): < 100ms
-- CLS (Cumulative Layout Shift): < 0.1
-- Course API Response: < 500ms (avg ~100ms)
-- Related Courses Query: < 50ms (with composite index)
-
----
 
 ## 🤝 Contributing
 
@@ -457,19 +266,9 @@ This project was developed to improve student experience at Linköping Universit
 
 ---
 
-## 📄 License
+## License
 
 This project is developed for educational purposes at Linköping University.
-
----
-
-## 🙏 Acknowledgments
-
-- **Linköping University** for the educational context and course data
-- **shadcn/ui** for the exceptional component library
-- **Vercel** for Next.js and deployment infrastructure
-- **Supabase** for the database and authentication platform
-- **Academic advisors** who provided insights into student planning challenges
 
 ---
 
