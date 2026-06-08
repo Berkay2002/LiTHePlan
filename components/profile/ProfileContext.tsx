@@ -200,13 +200,25 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
   // Handle auth state
   useEffect(() => {
     const supabase = createClient();
+    let mounted = true;
 
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setAuthLoading(false);
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (mounted) {
+          setUser(user);
+        }
+      } catch {
+        if (mounted) {
+          setUser(null);
+        }
+      } finally {
+        if (mounted) {
+          setAuthLoading(false);
+        }
+      }
     };
 
     getUser();
@@ -214,11 +226,16 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setAuthLoading(false);
+      if (mounted) {
+        setUser(session?.user ?? null);
+        setAuthLoading(false);
+      }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
   const [state, dispatch] = useReducer(profileReducer, {
     current_profile: null,
@@ -243,11 +260,14 @@ export function ProfileProvider({ children }: ProfileProviderProps) {
     }
 
     const loadInitialProfile = async () => {
-      const savedProfile = await loadProfile();
-      if (savedProfile) {
-        dispatch({ type: "LOAD_PROFILE", profile: savedProfile });
+      try {
+        const savedProfile = await loadProfile();
+        if (savedProfile) {
+          dispatch({ type: "LOAD_PROFILE", profile: savedProfile });
+        }
+      } finally {
+        setProfileLoading(false);
       }
-      setProfileLoading(false);
     };
 
     loadInitialProfile();

@@ -241,11 +241,9 @@ function useSidebarAccountState() {
   useEffect(() => {
     const supabase = createClient();
     let isMounted = true;
-    let resolved = false;
 
     const finishLoading = () => {
-      if (isMounted && !resolved) {
-        resolved = true;
+      if (isMounted) {
         setLoading(false);
       }
     };
@@ -253,44 +251,34 @@ function useSidebarAccountState() {
     // Timeout fallback: if auth never resolves, show guest state
     const timeout = setTimeout(finishLoading, 5000);
 
-    const syncAccount = async (nextUser: User | null) => {
-      if (!isMounted) {
-        return;
-      }
-
-      setUser(nextUser);
-
-      if (!nextUser) {
-        setProfile(null);
-        finishLoading();
-        return;
-      }
-
+    const loadUser = async () => {
       try {
-        const nextProfile = await fetchProfileSummary(supabase, nextUser.id);
-
-        if (!isMounted) {
-          return;
+        const {
+          data: { user: currentUser },
+        } = await supabase.auth.getUser();
+        if (isMounted) {
+          setUser(currentUser);
         }
-
-        setProfile(nextProfile);
       } catch {
         if (!isMounted) {
           return;
         }
 
+        setUser(null);
         setProfile(null);
+      } finally {
+        clearTimeout(timeout);
+        finishLoading();
       }
-
-      finishLoading();
     };
+
+    loadUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        await syncAccount(session?.user ?? null);
-      } catch {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (isMounted) {
+        setUser(session?.user ?? null);
         finishLoading();
       }
     });
@@ -301,6 +289,36 @@ function useSidebarAccountState() {
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setProfile(null);
+      return;
+    }
+
+    const supabase = createClient();
+    let isMounted = true;
+
+    const loadProfile = async () => {
+      try {
+        const nextProfile = await fetchProfileSummary(supabase, user.id);
+
+        if (isMounted) {
+          setProfile(nextProfile);
+        }
+      } catch {
+        if (isMounted) {
+          setProfile(null);
+        }
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   return {
     loading,
