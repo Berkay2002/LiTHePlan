@@ -10,6 +10,7 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+import type { CSSProperties } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -202,120 +203,125 @@ export function DraggableTermCard({
         isDragDisabled={isDragDisabled || termNumber === 8}
         key={uniqueId} // Disable drag for term 8
       >
-        {(provided, snapshot) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            className={`p-4 rounded-lg border transition-colors group ${
-              snapshot.isDragging
-                ? "shadow-lg border-primary/50 bg-primary/5"
-                : "hover:bg-card/10"
-            } ${isDragDisabled || termNumber === 8 ? "opacity-75" : ""} ${conflictBorderClass}`}
-          >
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex items-start gap-2 flex-1 min-w-0">
-                {!isDragDisabled && termNumber !== 8 && (
-                  <div
-                    {...provided.dragHandleProps}
-                    className="mt-1 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing"
-                  >
-                    <GripVertical className="h-4 w-4" />
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default">
-                            {course.name}
-                          </h4>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{course.name}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {course.id} • {course.credits} hp
-                      </p>
+        {(provided, snapshot) => {
+          const { style, ...draggableProps } = provided.draggableProps;
+
+          return (
+            <div
+              ref={provided.innerRef}
+              {...draggableProps}
+              className={`p-4 rounded-lg border transition-colors group ${
+                snapshot.isDragging
+                  ? "shadow-lg border-primary/50 bg-primary/5"
+                  : "hover:bg-card/10"
+              } ${isDragDisabled || termNumber === 8 ? "opacity-75" : ""} ${conflictBorderClass}`}
+              style={style as CSSProperties | undefined}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <div className="flex items-start gap-2 flex-1 min-w-0">
+                  {!isDragDisabled && termNumber !== 8 && (
+                    <div
+                      {...provided.dragHandleProps}
+                      className="mt-1 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing"
+                    >
+                      <GripVertical className="h-4 w-4" />
                     </div>
-                    <Button
-                      className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent!"
-                      onClick={() => {
-                        window.open(
-                          `https://studieinfo.liu.se/kurs/${course.id}`,
-                          "_blank",
-                          "noopener,noreferrer"
-                        );
-                      }}
-                      size="sm"
-                      title="View course on LiU website"
-                      variant="ghost"
-                    >
-                      <ExternalLink className="h-3 w-3" />
-                    </Button>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <h4 className="font-medium text-sm leading-tight text-foreground truncate cursor-default">
+                              {course.name}
+                            </h4>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{course.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {course.id} • {course.credits} hp
+                        </p>
+                      </div>
+                      <Button
+                        className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent!"
+                        onClick={() => {
+                          window.open(
+                            `https://studieinfo.liu.se/kurs/${course.id}`,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }}
+                        size="sm"
+                        title="View course on LiU website"
+                        variant="ghost"
+                      >
+                        <ExternalLink className="h-3 w-3" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <Button
-                className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent! ml-2"
-                onClick={() => onRemoveCourse(course.id)}
-                size="sm"
-                variant="ghost"
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </div>
-
-            {/* Enhanced Block Indicators */}
-            {renderBlockIndicators(course, currentPeriod)}
-
-            <div className="flex items-center justify-between gap-2 mt-3">
-              <div className="flex flex-wrap gap-1">
-                <Badge
-                  className={`text-xs ${getLevelColor(course.level)}`}
-                  variant="secondary"
+                <Button
+                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground! hover:bg-transparent! ml-2"
+                  onClick={() => onRemoveCourse(course.id)}
+                  size="sm"
+                  variant="ghost"
                 >
-                  {course.level === "avancerad nivå" ? "Advanced" : "Basic"}
-                </Badge>
-
-                {course.campus && (
-                  <Badge className="text-xs" variant="outline">
-                    {course.campus}
-                  </Badge>
-                )}
+                  <X className="h-3 w-3" />
+                </Button>
               </div>
 
-              {/* Transfer buttons - aligned with badges, only show for terms 7 and 9, and when onMoveCourse is available */}
-              {onMoveCourse && termNumber !== 8 && (
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {termNumber === 7 && (
-                    <Button
-                      className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
-                      onClick={() => onMoveCourse(course.id, 7, 9)}
-                      size="sm"
-                      title="Move to Term 9"
-                    >
-                      <ArrowRight className="h-3 w-3 mr-1" />
-                      Term 9
-                    </Button>
-                  )}
-                  {termNumber === 9 && (
-                    <Button
-                      className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
-                      onClick={() => onMoveCourse(course.id, 9, 7)}
-                      size="sm"
-                      title="Move to Term 7"
-                    >
-                      <ArrowLeft className="h-3 w-3 mr-1" />
-                      Term 7
-                    </Button>
+              {/* Enhanced Block Indicators */}
+              {renderBlockIndicators(course, currentPeriod)}
+
+              <div className="flex items-center justify-between gap-2 mt-3">
+                <div className="flex flex-wrap gap-1">
+                  <Badge
+                    className={`text-xs ${getLevelColor(course.level)}`}
+                    variant="secondary"
+                  >
+                    {course.level === "avancerad nivå" ? "Advanced" : "Basic"}
+                  </Badge>
+
+                  {course.campus && (
+                    <Badge className="text-xs" variant="outline">
+                      {course.campus}
+                    </Badge>
                   )}
                 </div>
-              )}
+
+                {/* Transfer buttons - aligned with badges, only show for terms 7 and 9, and when onMoveCourse is available */}
+                {onMoveCourse && termNumber !== 8 && (
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {termNumber === 7 && (
+                      <Button
+                        className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
+                        onClick={() => onMoveCourse(course.id, 7, 9)}
+                        size="sm"
+                        title="Move to Term 9"
+                      >
+                        <ArrowRight className="h-3 w-3 mr-1" />
+                        Term 9
+                      </Button>
+                    )}
+                    {termNumber === 9 && (
+                      <Button
+                        className="h-6 px-2 text-xs bg-muted text-muted-foreground hover:bg-muted/70 border border-border"
+                        onClick={() => onMoveCourse(course.id, 9, 7)}
+                        size="sm"
+                        title="Move to Term 7"
+                      >
+                        <ArrowLeft className="h-3 w-3 mr-1" />
+                        Term 7
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        }}
       </Draggable>
     );
   };
