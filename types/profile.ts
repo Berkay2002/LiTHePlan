@@ -1,8 +1,6 @@
 // types/profile.ts
 
 import {
-  MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
-  MASTER_PROGRAM_TARGET_CREDITS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
@@ -121,77 +119,5 @@ export function createEmptyProfile(name = "My Master's Plan"): StudentProfile {
       advanced_credits: 0,
       is_valid: true,
     },
-  };
-}
-
-/**
- * Validate a student profile and return validation results
- */
-export function validateProfile(
-  profile: StudentProfile
-): ProfileValidationResult {
-  const errors: string[] = [];
-  const warnings: string[] = [];
-
-  let totalCredits = 0;
-  let advancedCredits = 0;
-  const courseIds = new Set<string>();
-
-  // Validate each term
-  for (const term of MASTER_PROGRAM_TERMS) {
-    const termCourses = profile.terms[term];
-
-    if (!Array.isArray(termCourses)) {
-      errors.push(`Term ${term} courses must be an array`);
-      continue;
-    }
-
-    for (const course of termCourses) {
-      // Check for duplicate courses
-      if (courseIds.has(course.id)) {
-        errors.push(`Duplicate course found: ${course.id} (${course.name})`);
-      } else {
-        courseIds.add(course.id);
-      }
-
-      // Validate course term matches profile term
-      // For multi-term courses, check if the profile term is one of the available terms
-      const courseTerms = Array.isArray(course.term)
-        ? course.term
-        : [course.term];
-      if (!courseTerms.includes(term.toString())) {
-        errors.push(
-          `Course ${course.id} term (${courseTerms.join(", ")}) doesn't include profile term (${term})`
-        );
-      }
-
-      // Calculate credits
-      totalCredits += course.credits;
-      if (course.level === "avancerad nivå") {
-        advancedCredits += course.credits;
-      }
-    }
-  }
-
-  // Check advanced credits requirement (60hp minimum)
-  if (advancedCredits < MASTER_PROGRAM_MIN_ADVANCED_CREDITS) {
-    warnings.push(
-      `Advanced credits (${advancedCredits}hp) is below the recommended ${MASTER_PROGRAM_MIN_ADVANCED_CREDITS}hp minimum`
-    );
-  }
-
-  // Check total credits (90hp target)
-  if (totalCredits !== MASTER_PROGRAM_TARGET_CREDITS) {
-    warnings.push(
-      `Total credits (${totalCredits}hp) doesn't match the ${MASTER_PROGRAM_TARGET_CREDITS}hp target`
-    );
-  }
-
-  return {
-    is_valid: errors.length === 0,
-    errors,
-    warnings,
-    total_credits: totalCredits,
-    advanced_credits: advancedCredits,
   };
 }

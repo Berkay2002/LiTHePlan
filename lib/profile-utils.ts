@@ -1,16 +1,14 @@
 // lib/profile-utils.ts
 
 import {
-  MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
-  MASTER_PROGRAM_TARGET_CREDITS,
   MASTER_PROGRAM_TERMS,
   type MasterProgramTerm,
 } from "@/lib/profile-constants";
 import {
-  createEmptyTerms,
-  type StudentProfile,
-  validateProfile,
-} from "@/types/profile";
+  evaluateProfile,
+  withEvaluatedProfileMetadata,
+} from "@/lib/profile-evaluation";
+import { createEmptyTerms, type StudentProfile } from "@/types/profile";
 
 type ProfileCourse = StudentProfile["terms"][MasterProgramTerm][number];
 
@@ -83,15 +81,7 @@ export function addCourseToProfile(
     },
   };
 
-  // Update metadata
-  const validation = validateProfile(updatedProfile);
-  updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
-  };
-
-  return updatedProfile;
+  return withEvaluatedProfileMetadata(updatedProfile);
 }
 
 /**
@@ -115,15 +105,7 @@ export function removeCourseFromProfile(
     },
   };
 
-  // Update metadata
-  const validation = validateProfile(updatedProfile);
-  updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
-  };
-
-  return updatedProfile;
+  return withEvaluatedProfileMetadata(updatedProfile);
 }
 
 /**
@@ -163,15 +145,7 @@ export function moveCourseInProfile(
     },
   };
 
-  // Update metadata
-  const validation = validateProfile(updatedProfile);
-  updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
-  };
-
-  return updatedProfile;
+  return withEvaluatedProfileMetadata(updatedProfile);
 }
 
 /**
@@ -190,15 +164,7 @@ export function clearTermInProfile(
     },
   };
 
-  // Update metadata
-  const validation = validateProfile(updatedProfile);
-  updatedProfile.metadata = {
-    total_credits: validation.total_credits,
-    advanced_credits: validation.advanced_credits,
-    is_valid: validation.is_valid,
-  };
-
-  return updatedProfile;
+  return withEvaluatedProfileMetadata(updatedProfile);
 }
 
 /**
@@ -213,33 +179,24 @@ export function clearProfile(profile: StudentProfile): StudentProfile {
     terms: {
       ...emptyTerms,
     },
-    metadata: {
-      total_credits: 0,
-      advanced_credits: 0,
-      is_valid: true,
-    },
   };
 
-  return updatedProfile;
+  return withEvaluatedProfileMetadata(updatedProfile);
 }
 
 /**
  * Get profile summary statistics
  */
 export function getProfileSummary(profile: StudentProfile) {
-  const validation = validateProfile(profile);
+  const evaluation = evaluateProfile(profile);
 
   return {
-    totalCourses: MASTER_PROGRAM_TERMS.reduce(
-      (sum, term) => sum + profile.terms[term].length,
-      0
-    ),
-    totalCredits: validation.total_credits,
-    advancedCredits: validation.advanced_credits,
-    isComplete: validation.total_credits === MASTER_PROGRAM_TARGET_CREDITS,
-    meetsAdvancedRequirement:
-      validation.advanced_credits >= MASTER_PROGRAM_MIN_ADVANCED_CREDITS,
-    errors: validation.errors,
-    warnings: validation.warnings,
+    advancedCredits: evaluation.advancedCredits,
+    errors: evaluation.errors,
+    isComplete: evaluation.isComplete,
+    meetsAdvancedRequirement: evaluation.meetsAdvancedRequirement,
+    totalCourses: evaluation.totalCourses,
+    totalCredits: evaluation.totalCredits,
+    warnings: evaluation.warnings,
   };
 }
