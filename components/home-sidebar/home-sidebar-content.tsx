@@ -24,6 +24,7 @@ const hasActiveFilterValues = (
   Object.keys(filterState.examination).length > 0 ||
   filterState.huvudomraden.length > 0 ||
   filterState.level.length > 0 ||
+  filterState.orientations.length > 0 ||
   filterState.pace.length > 0 ||
   filterState.period.length > 0 ||
   filterState.programs.length > 0 ||

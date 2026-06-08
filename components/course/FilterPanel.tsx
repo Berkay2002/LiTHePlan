@@ -13,19 +13,20 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import {
+  COURSE_EXAMINATION_TYPES,
+  type CourseDiscoveryFilters,
+  type ExaminationFilterMode as CourseExaminationFilterMode,
+} from "@/lib/course-discovery";
 import { cn } from "@/lib/utils";
 import type { Course } from "@/types/course";
 
-const examinationOptions = [
-  { value: "TEN", label: "TEN" },
-  { value: "LAB", label: "LAB" },
-  { value: "PROJ", label: "PROJ" },
-  { value: "SEM", label: "SEM" },
-  { value: "UPG", label: "UPG" },
-] as const;
+const examinationOptions = COURSE_EXAMINATION_TYPES.map((value) => ({
+  label: value,
+  value,
+}));
 
 type FilterSectionLayout = "card" | "sidebar";
-type ExaminationFilterMode = "include" | "exclude" | "ignore";
 
 interface CourseFilterOptions {
   block: number[];
@@ -38,20 +39,8 @@ interface CourseFilterOptions {
   term: number[];
 }
 
-export type { ExaminationFilterMode };
-
-export interface FilterState {
-  block: number[];
-  campus: string[];
-  examination: Record<string, ExaminationFilterMode>;
-  huvudomraden: string[];
-  level: string[];
-  pace: string[];
-  period: number[];
-  programs: string[];
-  search: string;
-  term: number[];
-}
+export type FilterState = CourseDiscoveryFilters;
+export type ExaminationFilterMode = CourseExaminationFilterMode;
 
 export interface FilterPanelProps {
   courses: Course[];
@@ -132,18 +121,6 @@ const getFilterOptions = (courses: Course[]): CourseFilterOptions => ({
   ).sort(),
   term: getTermOptions(courses),
 });
-
-const hasActiveFilterValues = (filterState: FilterState): boolean =>
-  filterState.search.trim().length > 0 ||
-  filterState.block.length > 0 ||
-  filterState.campus.length > 0 ||
-  Object.keys(filterState.examination).length > 0 ||
-  filterState.huvudomraden.length > 0 ||
-  filterState.level.length > 0 ||
-  filterState.pace.length > 0 ||
-  filterState.period.length > 0 ||
-  filterState.programs.length > 0 ||
-  filterState.term.length > 0;
 
 const toggleFilterValue = (
   filterState: FilterState,
@@ -347,10 +324,8 @@ export function FilterPanelControls({
   courses,
   filterState,
   onFilterChange,
-  onResetFilters,
   className,
   idPrefix = "filters",
-  layout = "card",
 }: FilterPanelControlsProps) {
   const [showProgramTooltip, setShowProgramTooltip] = useState(false);
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -399,8 +374,6 @@ export function FilterPanelControls({
 
     onFilterChange(nextFilters);
   };
-
-  const hasActiveFilters = hasActiveFilterValues(filterState);
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>

@@ -83,6 +83,7 @@ const DEFAULT_FILTER_STATE: FilterState = {
   examination: {},
   huvudomraden: [],
   level: [],
+  orientations: [],
   pace: [],
   period: [],
   programs: [],

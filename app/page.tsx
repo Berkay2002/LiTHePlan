@@ -31,6 +31,7 @@ import {
   useResponsiveSidebar,
 } from "@/hooks/useResponsiveSidebar";
 import { getStoredToggleState, useToggle } from "@/hooks/useToggle";
+import { createCourseFiltersFromSearchParams } from "@/lib/course-discovery";
 import {
   createDefaultFilterState,
   FILTER_STORAGE_KEY,
@@ -115,28 +116,9 @@ function HomeContent() {
 
   // Apply URL query parameters to filters on mount
   useEffect(() => {
-    const programsParam = searchParams.get("programs");
-    const levelParam = searchParams.get("level");
-    const huvudomradenParam = searchParams.get("huvudomraden");
-    const campusParam = searchParams.get("campus");
-
-    if (programsParam || levelParam || huvudomradenParam || campusParam) {
-      // Start with default state, then apply ONLY the URL params
-      const newState = createDefaultFilterState();
-      if (programsParam) {
-        newState.programs = [programsParam];
-      }
-      if (levelParam) {
-        newState.level = [levelParam];
-      }
-      if (huvudomradenParam) {
-        newState.huvudomraden = [huvudomradenParam];
-      }
-      if (campusParam) {
-        newState.campus = [campusParam];
-      }
-
-      setFilterState(newState);
+    const nextFilters = createCourseFiltersFromSearchParams(searchParams);
+    if (hasActiveFilters(nextFilters)) {
+      setFilterState(nextFilters);
     }
   }, [searchParams, setFilterState]);
 

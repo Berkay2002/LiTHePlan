@@ -1,7 +1,14 @@
 import { captureException } from "@sentry/nextjs";
 import { type NextRequest, NextResponse } from "next/server";
 import { errorResponse, successResponse } from "@/lib/api-response";
-import { CourseFiltersSchema } from "@/lib/api-validation";
+import {
+  buildCourseSearchFilter,
+  buildSubjectAreaFilter,
+  CourseFiltersSchema,
+  createCourseDatabaseConstraints,
+  formatPostgresArray,
+  getRawCourseFilters,
+} from "@/lib/course-discovery";
 import { logger } from "@/lib/logger";
 import { coursesLimiter, getClientIP } from "@/lib/rate-limit";
 import { createClient } from "@/utils/supabase/server";
@@ -17,21 +24,6 @@ interface CourseRow {
   pace?: number | string | null;
   [key: string]: unknown;
 }
-
-const getRawCourseFilters = (searchParams: URLSearchParams) => ({
-  page: searchParams.get("page") || "1",
-  limit: searchParams.get("limit") || "50",
-  loadAll: searchParams.get("loadAll") || "false",
-  level: searchParams.getAll("level"),
-  term: searchParams.getAll("term"),
-  period: searchParams.getAll("period"),
-  block: searchParams.getAll("block"),
-  pace: searchParams.getAll("pace"),
-  campus: searchParams.getAll("campus"),
-  orientations: searchParams.getAll("orientations"),
-  programs: searchParams.get("programs") || undefined,
-  search: searchParams.get("search") || undefined,
-});
 
 const normalizePace = (pace: CourseRow["pace"]) => {
   if (typeof pace !== "number") {
@@ -54,42 +46,33 @@ const buildCoursesQuery = (
   const offset = (page - 1) * limit;
   let query = supabase.from("courses").select("*", { count: "exact" });
 
-  if (filters.level.length > 0) {
-    query = query.in("level", filters.level);
-  }
-
-  if (filters.term.length > 0) {
-    query = query.overlaps("term", filters.term);
-  }
-
-  if (filters.period.length > 0) {
-    query = query.overlaps("period", filters.period);
-  }
-
-  if (filters.block.length > 0) {
-    query = query.overlaps("block", filters.block);
-  }
-
-  if (filters.pace.length > 0) {
-    query = query.in("pace", filters.pace);
-  }
-
-  if (filters.campus.length > 0) {
-    query = query.in("campus", filters.campus);
-  }
-
-  if (filters.programs) {
-    query = query.contains("programs", [filters.programs]);
-  }
-
-  if (filters.orientations.length > 0) {
-    query = query.overlaps("orientations", filters.orientations);
-  }
-
-  if (filters.search) {
-    query = query.or(
-      `id.ilike.%${filters.search}%,name.ilike.%${filters.search}%,examinator.ilike.%${filters.search}%,studierektor.ilike.%${filters.search}%,programs.cs.{${filters.search}}`
-    );
+  for (const constraint of createCourseDatabaseConstraints(filters)) {
+    switch (constraint.kind) {
+      case "contains":
+        query = query.contains(constraint.column, constraint.values);
+        break;
+      case "in":
+        query = query.in(constraint.column, constraint.values);
+        break;
+      case "notOverlaps":
+        query = query.not(
+          constraint.column,
+          "ov",
+          formatPostgresArray(constraint.values)
+        );
+        break;
+      case "overlaps":
+        query = query.overlaps(constraint.column, constraint.values);
+        break;
+      case "search":
+        query = query.or(buildCourseSearchFilter(constraint.value));
+        break;
+      case "subjectArea":
+        query = query.or(buildSubjectAreaFilter(constraint.values));
+        break;
+      default:
+        break;
+    }
   }
 
   if (!loadAll) {

@@ -1,4 +1,9 @@
 import { z } from "zod";
+import { CourseFiltersSchema as DiscoveryCourseFiltersSchema } from "./course-discovery";
+
+export type { CourseApiFilters as CourseFilters } from "./course-discovery";
+
+export const CourseFiltersSchema = DiscoveryCourseFiltersSchema;
 
 /**
  * Validation schemas for API routes using Zod strict mode
@@ -9,29 +14,6 @@ import { z } from "zod";
 export const UUIDSchema = z.string().uuid({
   message: "Invalid ID format - must be a valid UUID",
 });
-
-// Course filters validation (GET /api/courses)
-export const CourseFiltersSchema = z
-  .object({
-    // Pagination
-    page: z.coerce.number().int().min(1).default(1),
-    limit: z.coerce.number().int().min(1).max(100).default(50),
-    loadAll: z.coerce.boolean().default(false),
-
-    // Filters (arrays)
-    level: z.array(z.string()).default([]),
-    term: z.array(z.string()).default([]),
-    period: z.array(z.string()).default([]),
-    block: z.array(z.string()).default([]),
-    pace: z.array(z.string()).default([]),
-    campus: z.array(z.string()).default([]),
-    orientations: z.array(z.string()).default([]),
-
-    // Single value filters
-    programs: z.string().optional(),
-    search: z.string().max(200).optional(),
-  })
-  .strict(); // Reject unknown fields
 
 // Course schema for profile validation
 const CourseSchema = z.object({
@@ -81,6 +63,5 @@ export const ProfileQuerySchema = z
   });
 
 // Type exports for use in API routes
-export type CourseFilters = z.infer<typeof CourseFiltersSchema>;
 export type ProfileData = z.infer<typeof ProfileDataSchema>;
 export type ProfileQuery = z.infer<typeof ProfileQuerySchema>;
