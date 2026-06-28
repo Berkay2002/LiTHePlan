@@ -8,14 +8,16 @@
         "-y",
         "@supabase/mcp-server-supabase",
         "--project-ref=hzshoimagashvzbeuhtx"
-      ],
-      "env": {
-        "SUPABASE_ACCESS_TOKEN": ""
-      }
+      ]
     },
     "shadcn": {
       "command": "cmd",
-      "args": ["/c", "npx", "shadcn@latest", "mcp"]
+      "args": [
+        "/c",
+        "npx",
+        "shadcn@latest",
+        "mcp"
+      ]
     }
   }
 }
