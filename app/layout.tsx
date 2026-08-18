@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech"
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app"
   ),
   title: {
     template: "%s | LiTHePlan",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "LiTHePlan Team" }],
   alternates: {
-    canonical: "https://litheplan.tech",
+    canonical: "https://litheplan.vercel.app",
   },
   icons: {
     icon: [
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     siteName: "LiTHePlan",
-    url: "https://litheplan.tech",
+    url: "https://litheplan.vercel.app",
   },
   twitter: {
     card: "summary_large_image",

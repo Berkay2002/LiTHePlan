@@ -6,7 +6,8 @@ import type { MetadataRoute } from "next";
 export const revalidate = 86_400; // 24 hours
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
 
   try {
     // Use public anon key for reading public course data

@@ -155,7 +155,8 @@ function ProfileEditPageContent() {
     );
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",

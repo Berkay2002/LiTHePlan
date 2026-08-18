@@ -15,7 +15,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
 
   try {
     const { id: profileId } = await params;

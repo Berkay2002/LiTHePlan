@@ -1,7 +1,8 @@
 "use client";
 
 export default function StructuredData() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
 
   const schema = {
     "@context": "https://schema.org",

@@ -25,7 +25,7 @@ Project maintainers are responsible for clarifying and enforcing our standards o
 This Code of Conduct applies within all project spaces, including the repository, issue tracker, pull requests, documentation, and any other community interaction channels. It also applies when an individual is officially representing the project in public spaces.
 
 ### Enforcement
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the maintainers at security@litheplan.tech. Reports will be reviewed promptly and confidentially. Maintainers are obligated to respect the privacy and security of the reporter of any incident.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the maintainers at Berkayorhan@hotmail.se. Reports will be reviewed promptly and confidentially. Maintainers are obligated to respect the privacy and security of the reporter of any incident.
 
 ### Enforcement Guidelines
 Maintainers will follow these Community Impact Guidelines in determining the consequences for any action they deem in violation of this Code of Conduct:

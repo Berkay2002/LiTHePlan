@@ -13,9 +13,9 @@
   [![React](https://img.shields.io/badge/React-19.2-blue?logo=react)](https://react.dev/)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
   [![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?logo=supabase)](https://supabase.com/)
-  [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://litheplan.tech)
+  [![Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://litheplan.vercel.app)
   
-  [Website](https://litheplan.tech) · [Report Bug](https://github.com/Berkay2002/LiTHePlan/issues) · [Request Feature](https://github.com/Berkay2002/LiTHePlan/issues)
+  [Website](https://litheplan.vercel.app) · [Report Bug](https://github.com/Berkay2002/LiTHePlan/issues) · [Request Feature](https://github.com/Berkay2002/LiTHePlan/issues)
 </div>
 
 ---
@@ -275,7 +275,7 @@ This project is developed for educational purposes at Linköping University.
 <div align="center">
   <p>Built with ❤️ for Linköping University civil engineering students</p>
   <p>
-    <a href="https://litheplan.tech">Live Demo</a> ·
+    <a href="https://litheplan.vercel.app">Live Demo</a> ·
     <a href="https://github.com/Berkay2002/LiTHePlan/issues">Report Bug</a> ·
     <a href="https://github.com/Berkay2002/LiTHePlan/issues">Request Feature</a>
   </p>

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     follow: false,
   },
   alternates: {
-    canonical: "https://litheplan.tech/login",
+    canonical: "https://litheplan.vercel.app/login",
   },
 };
 

@@ -55,7 +55,8 @@ function safeJoin(
 export default function CourseStructuredData({
   course,
 }: CourseStructuredDataProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
 
   // Convert Swedish level to Schema.org educationalLevel
   const educationalLevel =

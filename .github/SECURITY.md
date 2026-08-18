@@ -5,8 +5,7 @@ LiTHePlan only releases from the default `main` branch. Security fixes are appli
 
 ### Reporting a Vulnerability
 If you discover a security issue, please help us keep LiTHePlan safe for students and advisors:
-- Email the maintainers at security@litheplan.tech with the details of the vulnerability, the impact, and reproduction steps.
-- Alternatively, submit a private security advisory via GitHub at https://github.com/Berkay2002/LiTHePlan/security/advisories/new.
+- Submit a private security advisory via GitHub at https://github.com/Berkay2002/LiTHePlan/security/advisories/new with the details of the vulnerability, the impact, and reproduction steps.
 - Do not open public issues for vulnerabilities. We will acknowledge receipt within two business days.
 
 ### Response Process

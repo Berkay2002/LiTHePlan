@@ -134,7 +134,8 @@ export async function generateMetadata({
 }: {
   params: Promise<{ courseId: string }>;
 }): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
 
   try {
     const { courseId } = await params;

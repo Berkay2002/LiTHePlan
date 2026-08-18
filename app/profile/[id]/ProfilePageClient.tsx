@@ -181,7 +181,8 @@ export default function ProfilePageClient({
     );
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.tech";
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://litheplan.vercel.app";
   const displayName = profile.name || `Profile ${profileId}`;
 
   const breadcrumbSchema = {
